@@ -1,6 +1,6 @@
 ﻿// Gapotchenko.FX
-// Copyright © Gapotchenko and Contributors
 //
+// Copyright © Gapotchenko and Contributors
 // Portions © .NET Foundation and its Licensors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -23,15 +23,15 @@ public static class VfsStorageExtensions
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
-    /// <param name="file">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
+    /// <param name="storage">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
     /// <param name="path">The file to be opened for reading.</param>
     /// <param name="options">The storage options.</param>
     /// <returns>A read-only <typeparamref name="TVfs"/> instance opened for the specified path.</returns>
-    public static TVfs ReadFile<TVfs, TOptions>(this IVfsStorage<TVfs, TOptions> file, string path, TOptions? options = null)
+    public static TVfs ReadFile<TVfs, TOptions>(this IVfsStorage<TVfs, TOptions> storage, string path, TOptions? options = null)
         where TVfs : IVirtualFileSystem
         where TOptions : VfsOptions
     {
-        return ReadFile(file, FileSystemView.Local, path, options);
+        return ReadFile(storage, FileSystemView.Local, path, options);
     }
 
     /// <summary>
@@ -40,23 +40,23 @@ public static class VfsStorageExtensions
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
-    /// <param name="file">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
+    /// <param name="storage">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
     /// <param name="view">The file system view to open the file at.</param>
     /// <param name="path">The file to be opened for reading.</param>
     /// <param name="options">The storage options.</param>
     /// <returns>A read-only <typeparamref name="TVfs"/> instance opened for the specified path.</returns>
     public static TVfs ReadFile<TVfs, TOptions>(
-        this IVfsStorage<TVfs, TOptions> file,
+        this IVfsStorage<TVfs, TOptions> storage,
         IReadOnlyFileSystemView view,
         string path,
         TOptions? options = null)
         where TVfs : IVirtualFileSystem
         where TOptions : VfsOptions
     {
-        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(storage);
         ArgumentNullException.ThrowIfNull(view);
 
-        return file.Format.Mount(view.ReadFile(path), options: options);
+        return storage.Format.Mount(view.ReadFile(path), options: options);
     }
 
     /// <summary>
@@ -64,15 +64,15 @@ public static class VfsStorageExtensions
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
-    /// <param name="file">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
+    /// <param name="storage">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
     /// <param name="path">The file to be opened for writing.</param>
     /// <param name="options">The storage options.</param>
     /// <returns>An unshared <typeparamref name="TVfs"/> instance opened for the specified path with read/write access.</returns>
-    public static TVfs WriteFile<TVfs, TOptions>(this IVfsStorage<TVfs, TOptions> file, string path, TOptions? options = null)
+    public static TVfs WriteFile<TVfs, TOptions>(this IVfsStorage<TVfs, TOptions> storage, string path, TOptions? options = null)
         where TVfs : IVirtualFileSystem
         where TOptions : VfsOptions
     {
-        return WriteFile(file, FileSystemView.Local, path, options);
+        return WriteFile(storage, FileSystemView.Local, path, options);
     }
 
     /// <summary>
@@ -81,23 +81,23 @@ public static class VfsStorageExtensions
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
-    /// <param name="file">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
+    /// <param name="storage">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
     /// <param name="view">The file system view to open the file at.</param>
     /// <param name="path">The file to be opened for writing.</param>
     /// <param name="options">The storage options.</param>
     /// <returns>An unshared <typeparamref name="TVfs"/> instance opened for the specified path with read/write access.</returns>
     public static TVfs WriteFile<TVfs, TOptions>(
-        this IVfsStorage<TVfs, TOptions> file,
+        this IVfsStorage<TVfs, TOptions> storage,
         IFileSystemView view,
         string path,
         TOptions? options = null)
         where TVfs : IVirtualFileSystem
         where TOptions : VfsOptions
     {
-        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(storage);
         ArgumentNullException.ThrowIfNull(view);
 
-        return WriteFileCore(file.Format, view, path, FileAccess.ReadWrite, FileShare.None, options);
+        return WriteFileCore(storage.Format, view, path, FileAccess.ReadWrite, FileShare.None, options);
     }
 
     /// <summary>
@@ -105,17 +105,17 @@ public static class VfsStorageExtensions
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
-    /// <param name="file">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
+    /// <param name="storage">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
     /// <param name="path">The path of the file create.</param>
     /// <param name="options">The storage options.</param>
     public static TVfs CreateFile<TVfs, TOptions>(
-        this IVfsStorage<TVfs, TOptions> file,
+        this IVfsStorage<TVfs, TOptions> storage,
         string path,
         TOptions? options = null)
         where TVfs : IVirtualFileSystem
         where TOptions : VfsOptions
     {
-        return CreateFile(file, FileSystemView.Local, path, options);
+        return CreateFile(storage, FileSystemView.Local, path, options);
     }
 
     /// <summary>
@@ -124,22 +124,22 @@ public static class VfsStorageExtensions
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
-    /// <param name="file">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
+    /// <param name="storage">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
     /// <param name="view">The file system view to create the file at.</param>
     /// <param name="path">The path of the file create.</param>
     /// <param name="options">The storage options.</param>
     public static TVfs CreateFile<TVfs, TOptions>(
-        this IVfsStorage<TVfs, TOptions> file,
+        this IVfsStorage<TVfs, TOptions> storage,
         IFileSystemView view,
         string path,
         TOptions? options = null)
         where TVfs : IVirtualFileSystem
         where TOptions : VfsOptions
     {
-        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(storage);
         ArgumentNullException.ThrowIfNull(view);
 
-        return OpenNewFileCore(file.Format, view, path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, options);
+        return OpenNewFileCore(storage.Format, view, path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, options);
     }
 
     /// <summary>
@@ -148,7 +148,7 @@ public static class VfsStorageExtensions
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
-    /// <param name="file">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
+    /// <param name="storage">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
     /// <param name="path">The file to open.</param>
     /// <param name="mode">The file mode.</param>
     /// <param name="access">The file access.</param>
@@ -156,7 +156,7 @@ public static class VfsStorageExtensions
     /// <param name="options">The storage options.</param>
     /// <returns>An <typeparamref name="TVfs"/> instance opened for the specified path with the specified mode, access, and sharing options taken into account.</returns>
     public static TVfs OpenFile<TVfs, TOptions>(
-        this IVfsStorage<TVfs, TOptions> file,
+        this IVfsStorage<TVfs, TOptions> storage,
         string path,
         FileMode mode,
         FileAccess access = FileAccess.ReadWrite,
@@ -165,7 +165,7 @@ public static class VfsStorageExtensions
         where TVfs : IVirtualFileSystem
         where TOptions : VfsOptions
     {
-        return OpenFile(file, FileSystemView.Local, path, mode, access, share, options);
+        return OpenFile(storage, FileSystemView.Local, path, mode, access, share, options);
     }
 
     /// <summary>
@@ -175,7 +175,7 @@ public static class VfsStorageExtensions
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
     /// <typeparam name="TOptions">The type of the file storage options.</typeparam>
-    /// <param name="file">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
+    /// <param name="storage">The <see cref="IVfsStorage{TVfs, TOptions}"/> instance.</param>
     /// <param name="view">The file system view to open the file at.</param>
     /// <param name="path">The file to open.</param>
     /// <param name="mode">The file mode.</param>
@@ -184,7 +184,7 @@ public static class VfsStorageExtensions
     /// <param name="options">The storage options.</param>
     /// <returns>An <typeparamref name="TVfs"/> instance opened for the specified path with the specified mode, access, and sharing options taken into account.</returns>
     public static TVfs OpenFile<TVfs, TOptions>(
-        this IVfsStorage<TVfs, TOptions> file,
+        this IVfsStorage<TVfs, TOptions> storage,
         IFileSystemView view,
         string path,
         FileMode mode,
@@ -194,14 +194,14 @@ public static class VfsStorageExtensions
         where TVfs : IVirtualFileSystem
         where TOptions : VfsOptions
     {
-        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(storage);
         ArgumentNullException.ThrowIfNull(view);
 
         VfsValidationKit.Arguments.ValidateFileAccess(access);
         if (access == FileAccess.Write)
             throw new ArgumentException("File storage cannot be opened when only write access is requested.", nameof(access));
 
-        var format = file.Format;
+        var format = storage.Format;
 
         switch (mode)
         {

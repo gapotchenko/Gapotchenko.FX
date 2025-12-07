@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -30,7 +31,7 @@ partial class ZipArchiveTestKit
         archive.SetLastWriteTime(hostFxrPath, VfsTestContentKit.SpecialUtcTime1);
         Assert.AreEqual(VfsTestContentKit.SpecialUtcTime1, archive.GetLastWriteTime(hostFxrPath));
 
-        Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(hostFxrPath));
+        Assert.ThrowsExactly<IOException>(() => archive.DeleteDirectory(hostFxrPath));
         archive.DeleteDirectory(hostFxrPath, true);
         Assert.IsFalse(
             archive.DirectoryExists(hostFxrPath),

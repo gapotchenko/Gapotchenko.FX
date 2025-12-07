@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -53,11 +54,11 @@ partial class ZipArchiveTestKit
 
         var stream = new StreamDiagnostics(Assets.OpenStream("Invalid/ZeroLength.zip"));
 
-        Assert.ThrowsException<InvalidDataException>(() => format.Mount(stream, leaveOpen: true));
+        Assert.ThrowsExactly<InvalidDataException>(() => format.Mount(stream, leaveOpen: true));
         Assert.IsFalse(stream.IsClosed);
         stream.Position = 0;
 
-        Assert.ThrowsException<InvalidDataException>(() => format.Mount(stream));
+        Assert.ThrowsExactly<InvalidDataException>(() => format.Mount(stream));
         Assert.IsTrue(stream.IsClosed);
     }
 
@@ -87,7 +88,7 @@ partial class ZipArchiveTestKit
         using var stream = Assets.OpenStream("Invalid/ZeroLength.zip");
 
         Assert.IsFalse(format.IsMountable(stream));
-        Assert.ThrowsException<InvalidDataException>(() => format.Mount(stream));
+        Assert.ThrowsExactly<InvalidDataException>(() => format.Mount(stream));
     }
 
     [TestMethod]
@@ -100,7 +101,7 @@ partial class ZipArchiveTestKit
         using var stream = Assets.OpenStream("Invalid/Noise.zip");
 
         Assert.IsFalse(format.IsMountable(stream));
-        Assert.ThrowsException<InvalidDataException>(() => format.Mount(stream));
+        Assert.ThrowsExactly<InvalidDataException>(() => format.Mount(stream));
     }
 
     #endregion

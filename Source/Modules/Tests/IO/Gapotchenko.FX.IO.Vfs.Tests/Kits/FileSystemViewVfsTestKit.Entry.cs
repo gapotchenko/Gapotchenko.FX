@@ -82,7 +82,7 @@ partial class FileSystemViewVfsTestKit
 
             if (!supportsXxxTime(vfs))
             {
-                Assert.ThrowsException<NotSupportedException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent"), specialTime));
+                Assert.ThrowsExactly<NotSupportedException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent"), specialTime));
                 return;
             }
 
@@ -90,7 +90,7 @@ partial class FileSystemViewVfsTestKit
 
             #region Arguments
 
-            Assert.ThrowsException<ArgumentException>(() => setXxxTime(vfs, "", specialTime));
+            Assert.ThrowsExactly<ArgumentException>(() => setXxxTime(vfs, "", specialTime));
 
             #endregion
 
@@ -107,15 +107,15 @@ partial class FileSystemViewVfsTestKit
 
             char dsc = vfs.DirectorySeparatorChar;
 
-            Assert.ThrowsException<FileNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent"), specialTime));
-            Assert.ThrowsException<FileNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent" + dsc), specialTime));
-            Assert.ThrowsException<DirectoryNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent-container", "nonexistent"), specialTime));
-            Assert.ThrowsException<DirectoryNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent-container", "nonexistent") + dsc, specialTime));
+            Assert.ThrowsExactly<FileNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent"), specialTime));
+            Assert.ThrowsExactly<FileNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent" + dsc), specialTime));
+            Assert.ThrowsExactly<DirectoryNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent-container", "nonexistent"), specialTime));
+            Assert.ThrowsExactly<DirectoryNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent-container", "nonexistent") + dsc, specialTime));
 
             setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "directory-a"), specialTime);
             setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "directory-b") + dsc, specialTime);
             setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "file"), specialTime);
-            Assert.ThrowsException<IOException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "file") + dsc, specialTime));
+            Assert.ThrowsExactly<IOException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "file") + dsc, specialTime));
         }
 
         void Verify(IReadOnlyFileSystemView vfs, string rootPath)
@@ -124,7 +124,7 @@ partial class FileSystemViewVfsTestKit
 
             if (!supportsXxxTime(vfs))
             {
-                Assert.ThrowsException<NotSupportedException>(() => getXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent")));
+                Assert.ThrowsExactly<NotSupportedException>(() => getXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent")));
                 return;
             }
 
@@ -132,7 +132,7 @@ partial class FileSystemViewVfsTestKit
 
             #region Arguments
 
-            Assert.ThrowsException<ArgumentException>(() => getXxxTime(vfs, ""));
+            Assert.ThrowsExactly<ArgumentException>(() => getXxxTime(vfs, ""));
 
             #endregion
 
@@ -222,10 +222,10 @@ partial class FileSystemViewVfsTestKit
                     Assert.IsTrue(entryPaths.SetEquals(vfs.EnumerateEntries(directoryPath, "*", SearchOption.TopDirectoryOnly)));
                     Assert.IsTrue(entryPaths.SetEquals(vfs.EnumerateEntries(directoryPath, "*", defaultEnumerationOptions)));
 
-                    Assert.ThrowsException<IOException>(() => DiscardAll(vfs.EnumerateEntries(filePath)));
-                    Assert.ThrowsException<IOException>(() => DiscardAll(vfs.EnumerateEntries(filePath, "*")));
-                    Assert.ThrowsException<IOException>(() => DiscardAll(vfs.EnumerateEntries(filePath, "*", SearchOption.TopDirectoryOnly)));
-                    Assert.ThrowsException<IOException>(() => DiscardAll(vfs.EnumerateEntries(filePath, "*", defaultEnumerationOptions)));
+                    Assert.ThrowsExactly<IOException>(() => DiscardAll(vfs.EnumerateEntries(filePath)));
+                    Assert.ThrowsExactly<IOException>(() => DiscardAll(vfs.EnumerateEntries(filePath, "*")));
+                    Assert.ThrowsExactly<IOException>(() => DiscardAll(vfs.EnumerateEntries(filePath, "*", SearchOption.TopDirectoryOnly)));
+                    Assert.ThrowsExactly<IOException>(() => DiscardAll(vfs.EnumerateEntries(filePath, "*", defaultEnumerationOptions)));
                 }
                 else
                 {
@@ -242,10 +242,10 @@ partial class FileSystemViewVfsTestKit
                         Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*", SearchOption.TopDirectoryOnly)));
                         Assert.IsTrue(filePaths.SetEquals(vfs.EnumerateFiles(directoryPath, "*", defaultEnumerationOptions)));
 
-                        Assert.ThrowsException<IOException>(() => DiscardAll(vfs.EnumerateFiles(filePath)));
-                        Assert.ThrowsException<IOException>(() => DiscardAll(vfs.EnumerateFiles(filePath, "*")));
-                        Assert.ThrowsException<IOException>(() => DiscardAll(vfs.EnumerateFiles(filePath, "*", SearchOption.TopDirectoryOnly)));
-                        Assert.ThrowsException<IOException>(() => DiscardAll(vfs.EnumerateFiles(filePath, "*", defaultEnumerationOptions)));
+                        Assert.ThrowsExactly<IOException>(() => DiscardAll(vfs.EnumerateFiles(filePath)));
+                        Assert.ThrowsExactly<IOException>(() => DiscardAll(vfs.EnumerateFiles(filePath, "*")));
+                        Assert.ThrowsExactly<IOException>(() => DiscardAll(vfs.EnumerateFiles(filePath, "*", SearchOption.TopDirectoryOnly)));
+                        Assert.ThrowsExactly<IOException>(() => DiscardAll(vfs.EnumerateFiles(filePath, "*", defaultEnumerationOptions)));
                     }
 
                     if (enumerateDirectories)
@@ -261,10 +261,10 @@ partial class FileSystemViewVfsTestKit
                         Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*", SearchOption.TopDirectoryOnly)));
                         Assert.IsTrue(directoryPaths.SetEquals(vfs.EnumerateDirectories(directoryPath, "*", defaultEnumerationOptions)));
 
-                        Assert.ThrowsException<IOException>(() => DiscardAll(vfs.EnumerateDirectories(filePath)));
-                        Assert.ThrowsException<IOException>(() => DiscardAll(vfs.EnumerateDirectories(filePath, "*")));
-                        Assert.ThrowsException<IOException>(() => DiscardAll(vfs.EnumerateDirectories(filePath, "*", SearchOption.TopDirectoryOnly)));
-                        Assert.ThrowsException<IOException>(() => DiscardAll(vfs.EnumerateDirectories(filePath, "*", defaultEnumerationOptions)));
+                        Assert.ThrowsExactly<IOException>(() => DiscardAll(vfs.EnumerateDirectories(filePath)));
+                        Assert.ThrowsExactly<IOException>(() => DiscardAll(vfs.EnumerateDirectories(filePath, "*")));
+                        Assert.ThrowsExactly<IOException>(() => DiscardAll(vfs.EnumerateDirectories(filePath, "*", SearchOption.TopDirectoryOnly)));
+                        Assert.ThrowsExactly<IOException>(() => DiscardAll(vfs.EnumerateDirectories(filePath, "*", defaultEnumerationOptions)));
                     }
                 }
             }

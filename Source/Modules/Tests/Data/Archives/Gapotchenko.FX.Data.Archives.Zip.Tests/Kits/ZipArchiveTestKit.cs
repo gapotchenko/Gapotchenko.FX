@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -52,8 +53,8 @@ public abstract partial class ZipArchiveTestKit
         Assert.IsFalse(archive.FileExists(ads));
         Assert.IsFalse(archive.FileExists("."));
 
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadTextFile("File.txt"));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadTextFile(archive.JoinPaths("Directory", "File.txt")));
+        Assert.ThrowsExactly<FileNotFoundException>(() => archive.ReadTextFile("File.txt"));
+        Assert.ThrowsExactly<DirectoryNotFoundException>(() => archive.ReadTextFile(archive.JoinPaths("Directory", "File.txt")));
     }
 
     [TestMethod]
@@ -131,7 +132,7 @@ public abstract partial class ZipArchiveTestKit
         Assert.AreEqual("The first file.", archive.ReadAllFileText(filePath1));
         Assert.AreEqual("The second file.", archive.ReadAllFileText(filePath2));
 
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "3.txt")));
+        Assert.ThrowsExactly<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "3.txt")));
     }
 
     [TestMethod]
@@ -151,15 +152,15 @@ public abstract partial class ZipArchiveTestKit
 
         Assert.AreEqual("The first file.", archive.ReadAllFileText(filePath1));
         Assert.AreEqual("The second file.", archive.ReadAllFileText(filePath2));
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "Container", "3.txt")));
+        Assert.ThrowsExactly<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "Container", "3.txt")));
 
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "1.txt")));
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "2.txt")));
-        Assert.ThrowsException<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "3.txt")));
+        Assert.ThrowsExactly<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "1.txt")));
+        Assert.ThrowsExactly<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "2.txt")));
+        Assert.ThrowsExactly<FileNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "3.txt")));
 
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "Other", "1.txt")));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "Other", "2.txt")));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "Other", "3.txt")));
+        Assert.ThrowsExactly<DirectoryNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "Other", "1.txt")));
+        Assert.ThrowsExactly<DirectoryNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "Other", "2.txt")));
+        Assert.ThrowsExactly<DirectoryNotFoundException>(() => archive.ReadAllFileText(archive.JoinPaths(ds, "Other", "3.txt")));
     }
 
     [TestMethod]
@@ -173,7 +174,7 @@ public abstract partial class ZipArchiveTestKit
         archive.DeleteFile(filePath);
         Assert.IsFalse(archive.FileExists(filePath));
 
-        Assert.ThrowsException<FileNotFoundException>(() => archive.DeleteFile(filePath));
+        Assert.ThrowsExactly<FileNotFoundException>(() => archive.DeleteFile(filePath));
     }
 
     [TestMethod]
@@ -188,7 +189,7 @@ public abstract partial class ZipArchiveTestKit
         Assert.IsFalse(archive.FileExists(path));
         Assert.IsTrue(archive.DirectoryExists(archive.GetDirectoryName(path)));
 
-        Assert.ThrowsException<FileNotFoundException>(() => archive.DeleteFile(path));
+        Assert.ThrowsExactly<FileNotFoundException>(() => archive.DeleteFile(path));
     }
 
     [TestMethod]
@@ -202,7 +203,7 @@ public abstract partial class ZipArchiveTestKit
         archive.DeleteDirectory(directoryPath);
         Assert.IsFalse(archive.DirectoryExists(directoryPath));
 
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.DeleteDirectory(directoryPath));
+        Assert.ThrowsExactly<DirectoryNotFoundException>(() => archive.DeleteDirectory(directoryPath));
     }
 
     [TestMethod]
@@ -214,12 +215,12 @@ public abstract partial class ZipArchiveTestKit
 
         Assert.IsTrue(archive.DirectoryExists(direcotyPath));
 
-        Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(direcotyPath));
-        Assert.ThrowsException<IOException>(() => archive.DeleteDirectory(direcotyPath, false));
+        Assert.ThrowsExactly<IOException>(() => archive.DeleteDirectory(direcotyPath));
+        Assert.ThrowsExactly<IOException>(() => archive.DeleteDirectory(direcotyPath, false));
         archive.DeleteDirectory(direcotyPath, true);
 
         Assert.IsFalse(archive.DirectoryExists(direcotyPath));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.DeleteDirectory(direcotyPath));
-        Assert.ThrowsException<DirectoryNotFoundException>(() => archive.DeleteDirectory(direcotyPath, true));
+        Assert.ThrowsExactly<DirectoryNotFoundException>(() => archive.DeleteDirectory(direcotyPath));
+        Assert.ThrowsExactly<DirectoryNotFoundException>(() => archive.DeleteDirectory(direcotyPath, true));
     }
 }

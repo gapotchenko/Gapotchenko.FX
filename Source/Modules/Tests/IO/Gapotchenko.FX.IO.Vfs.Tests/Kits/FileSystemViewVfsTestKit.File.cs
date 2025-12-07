@@ -43,7 +43,7 @@ partial class FileSystemViewVfsTestKit
         {
             string entryPath = vfs.CombinePaths(rootPath, entryName);
             vfs.CreateDirectory(entryPath);
-            Assert.ThrowsException<UnauthorizedAccessException>(() => vfs.CreateFile(entryPath));
+            Assert.ThrowsExactly<UnauthorizedAccessException>(() => vfs.CreateFile(entryPath));
         }
 
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
@@ -231,15 +231,15 @@ partial class FileSystemViewVfsTestKit
             vfs.CopyFile(filePathA, filePathB);
             Assert.IsTrue(vfs.FileExists(filePathA));
 
-            Assert.ThrowsException<IOException>(() => vfs.CopyFile(filePathA, filePathB));
-            Assert.ThrowsException<IOException>(() => vfs.CopyFile(filePathA, filePathB, false));
+            Assert.ThrowsExactly<IOException>(() => vfs.CopyFile(filePathA, filePathB));
+            Assert.ThrowsExactly<IOException>(() => vfs.CopyFile(filePathA, filePathB, false));
             vfs.CopyFile(filePathA, filePathB, true);
 
             string filePathC = vfs.CombinePaths(rootPath, fileNameC);
-            Assert.ThrowsException<FileNotFoundException>(() => vfs.CopyFile(filePathC, filePathA));
+            Assert.ThrowsExactly<FileNotFoundException>(() => vfs.CopyFile(filePathC, filePathA));
 
             string filePathD = vfs.CombinePaths(rootPath, fileNameD);
-            Assert.ThrowsException<DirectoryNotFoundException>(() => vfs.CopyFile(filePathB, filePathD));
+            Assert.ThrowsExactly<DirectoryNotFoundException>(() => vfs.CopyFile(filePathB, filePathD));
             vfs.CreateDirectory(vfs.CombinePaths(filePathD, ".."));
             vfs.CopyFile(filePathB, filePathD);
 
@@ -419,18 +419,18 @@ partial class FileSystemViewVfsTestKit
             Assert.IsFalse(vfs.FileExists(filePathA));
 
             vfs.CopyFile(filePathB, filePathA);
-            Assert.ThrowsException<IOException>(() => vfs.MoveFile(filePathB, filePathA));
-            Assert.ThrowsException<IOException>(() => vfs.MoveFile(filePathB, filePathA, false));
+            Assert.ThrowsExactly<IOException>(() => vfs.MoveFile(filePathB, filePathA));
+            Assert.ThrowsExactly<IOException>(() => vfs.MoveFile(filePathB, filePathA, false));
             vfs.MoveFile(filePathB, filePathA, true);
 
             vfs.MoveFile(filePathA, filePathB);
             vfs.CopyFile(filePathB, filePathA);
 
             string filePathC = vfs.CombinePaths(rootPath, fileNameC);
-            Assert.ThrowsException<FileNotFoundException>(() => vfs.MoveFile(filePathC, filePathA));
+            Assert.ThrowsExactly<FileNotFoundException>(() => vfs.MoveFile(filePathC, filePathA));
 
             string filePathD = vfs.CombinePaths(rootPath, fileNameD);
-            Assert.ThrowsException<DirectoryNotFoundException>(() => vfs.MoveFile(filePathA, filePathD));
+            Assert.ThrowsExactly<DirectoryNotFoundException>(() => vfs.MoveFile(filePathA, filePathD));
             vfs.CreateDirectory(vfs.CombinePaths(filePathD, ".."));
             vfs.MoveFile(filePathA, filePathD);
         }

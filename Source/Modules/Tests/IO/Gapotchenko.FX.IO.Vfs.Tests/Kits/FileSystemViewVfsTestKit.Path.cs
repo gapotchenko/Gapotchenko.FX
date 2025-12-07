@@ -103,7 +103,7 @@ partial class FileSystemViewVfsTestKit
         static void Test(IReadOnlyFileSystemView vfs, string rootPath)
         {
             Assert.IsNull(GetFullPath(null));
-            Assert.ThrowsException<ArgumentException>(() => GetFullPath(""));
+            Assert.ThrowsExactly<ArgumentException>(() => GetFullPath(""));
             Assert.IsFalse(string.IsNullOrEmpty(GetFullPath("entry")));
 
             [return: NotNullIfNotNull(nameof(path))]
