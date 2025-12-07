@@ -1,7 +1,6 @@
 ﻿// Gapotchenko.FX
 //
 // Copyright © Gapotchenko and Contributors
-// Portions © .NET Foundation and its Licensors
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
@@ -37,7 +36,10 @@ public static class VfsStorageExtensions
     {
         ArgumentNullException.ThrowIfNull(storage);
 
-        return storage.Format.Mount(location.View.ReadFile(location.Path), options: options);
+        return storage.Format.Mount(
+            location.View.ReadFile(location.Path),
+            options: options,
+            context: CreateStorageContext(location));
     }
 
     /// <summary>
@@ -165,7 +167,8 @@ public static class VfsStorageExtensions
         return format.Mount(
             location.View.OpenFile(location.Path, mode, access, share),
             (access & FileAccess.Write) != 0,
-            options: options);
+            options: options,
+            context: CreateStorageContext(location));
     }
 
     static TVfs OpenNewFileCore<TVfs, TOptions>(
@@ -180,6 +183,15 @@ public static class VfsStorageExtensions
     {
         return format.Create(
             location.View.OpenFile(location.Path, mode, access, share),
-            options: options);
+            options: options,
+            context: CreateStorageContext(location));
+    }
+
+    static VfsStorageContext CreateStorageContext(VfsReadOnlyLocation location)
+    {
+        return new()
+        {
+            StorageLocation = location
+        };
     }
 }

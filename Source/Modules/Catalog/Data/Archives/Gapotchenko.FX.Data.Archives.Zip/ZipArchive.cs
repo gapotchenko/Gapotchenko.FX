@@ -51,7 +51,8 @@ public sealed partial class ZipArchive :
     internal ZipArchive(Stream stream, bool writable, bool leaveOpen, ZipArchiveOptions? options, VfsStorageContext? context) :
         this(stream, writable, leaveOpen)
     {
-        Location = context?.Location;
+        if (options?.TrackStorageLocation ?? true)
+            StorageLocation = context?.StorageLocation;
     }
 
     /// <summary>
@@ -78,7 +79,7 @@ public sealed partial class ZipArchive :
     }
 
     /// <inheritdoc/>
-    public VfsReadOnlyLocation? Location { get; }
+    public VfsReadOnlyLocation? StorageLocation { get; }
 
     static IZipArchiveView<System.IO.Compression.ZipArchive> CreateViewOnBclImpl(
         Stream stream,

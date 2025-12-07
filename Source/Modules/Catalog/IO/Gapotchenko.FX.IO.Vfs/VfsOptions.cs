@@ -12,4 +12,13 @@ namespace Gapotchenko.FX.IO.Vfs;
 [ImmutableObject(true)]
 public abstract record VfsOptions
 {
+    /// <summary>
+    /// Gets or initializes the value indicating whether to track
+    /// a virtual file system's storage location in the parent file system.
+    /// </summary>
+    /// <remarks>
+    /// The value of this property affects the presence of <see cref="IReadOnlyVirtualFileSystem.StorageLocation"/> value
+    /// in a mounted file system.
+    /// </remarks>
+    public bool TrackStorageLocation { get; init; } = true;
 }

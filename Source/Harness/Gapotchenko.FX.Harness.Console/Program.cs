@@ -149,6 +149,8 @@ class Program
 
         var interval = Interval.Empty<int>();
         Console.WriteLine(interval.IsEmpty);
+
+        //var archive = ZipArchive.Storage.ReadFile(@"123");
     }
 
     static void _RunTopologicalSort()
