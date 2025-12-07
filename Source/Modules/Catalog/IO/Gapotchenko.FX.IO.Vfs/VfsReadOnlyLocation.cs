@@ -5,6 +5,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using System.Text;
+
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
@@ -32,7 +34,7 @@ public readonly struct VfsReadOnlyLocation
     /// <see cref="IReadOnlyFileSystemView"/> and
     /// file-system entry path.
     /// </summary>
-    /// <param name="view">The file system view.</param>
+    /// <param name="view">The file system view containing a file-system entry.</param>
     /// <param name="path">The path of a file-system entry.</param>
     [SetsRequiredMembers]
     public VfsReadOnlyLocation(IReadOnlyFileSystemView view, string path)
@@ -45,7 +47,7 @@ public readonly struct VfsReadOnlyLocation
     }
 
     /// <summary>
-    /// Gets or initializes the read-only file system view.
+    /// Gets or initializes the read-only file system view containing a file-system entry.
     /// </summary>
     public IReadOnlyFileSystemView View { get; init; }
 
@@ -60,4 +62,29 @@ public readonly struct VfsReadOnlyLocation
     /// </summary>
     /// <param name="path">The path of a file-system entry.</param>
     public static implicit operator VfsReadOnlyLocation(string path) => new(path);
+
+    /// <inheritdoc/>
+    public override string ToString() => VfsLocationFormatter.GetString(View, Path);
+}
+
+static class VfsLocationFormatter
+{
+    public static string GetString(IReadOnlyFileSystemView view, string path)
+    {
+        var sb = new StringBuilder();
+        BuildString(sb, view, path);
+        return sb.ToString();
+    }
+
+    static void BuildString(StringBuilder sb, IReadOnlyFileSystemView view, string path)
+    {
+        if (view is IReadOnlyVirtualFileSystem fs &&
+            fs.StorageLocation is { } storageLocation)
+        {
+            var storageView = storageLocation.View;
+            BuildString(sb, storageView, storageLocation.Path);
+            sb.Append(storageView.DirectorySeparatorChar);
+        }
+        sb.Append(path);
+    }
 }

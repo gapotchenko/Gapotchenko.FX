@@ -32,7 +32,7 @@ public readonly struct VfsLocation
     /// <see cref="IFileSystemView"/> and
     /// file-system entry path.
     /// </summary>
-    /// <param name="view">The file system view.</param>
+    /// <param name="view">The file system view containing a file-system entry.</param>
     /// <param name="path">The path of a file-system entry.</param>
     [SetsRequiredMembers]
     public VfsLocation(IFileSystemView view, string path)
@@ -45,7 +45,7 @@ public readonly struct VfsLocation
     }
 
     /// <summary>
-    /// Gets or initializes the file system view.
+    /// Gets or initializes the file system view containing a file-system entry.
     /// </summary>
     public required IFileSystemView View { get; init; }
 
@@ -66,4 +66,7 @@ public readonly struct VfsLocation
     /// </summary>
     /// <param name="location">The location.</param>
     public static implicit operator VfsReadOnlyLocation(VfsLocation location) => new(location.View, location.Path);
+
+    /// <inheritdoc/>
+    public override string ToString() => VfsLocationFormatter.GetString(View, Path);
 }
