@@ -45,6 +45,8 @@ public static class VfsSearchKit
     /// </returns>
     public static int GetMaxRecursionDepth(EnumerationOptions enumerationOptions)
     {
+        ArgumentNullException.ThrowIfNull(enumerationOptions);
+
         int maxRecursionDepth;
         if (enumerationOptions.RecurseSubdirectories)
         {
@@ -76,6 +78,8 @@ public static class VfsSearchKit
     /// </returns>
     public static VfsSearchExpressionOptions GetSearchExpressionOptions(IReadOnlyFileSystemView view, MatchCasing matchCasing)
     {
+        ArgumentNullException.ThrowIfNull(view);
+
         var effectiveMatchCasing =
             Empty.Nullify(matchCasing, MatchCasing.PlatformDefault) ??
             GetDefaultMatchCasing(view);
@@ -99,6 +103,8 @@ public static class VfsSearchKit
     /// </returns>
     public static bool IsDefaultMatchCasing(IReadOnlyFileSystemView view, MatchCasing matchCasing)
     {
+        ArgumentNullException.ThrowIfNull(view);
+
         return
             matchCasing == MatchCasing.PlatformDefault ||
             matchCasing == GetDefaultMatchCasing(view);
@@ -133,6 +139,8 @@ public static class VfsSearchKit
     /// <exception cref="ArgumentException">Second path fragment defined by <paramref name="searchPattern"/> must be rooted.</exception>
     public static void AdjustPatternPath(IReadOnlyFileSystemView view, ref string path, ref string searchPattern)
     {
+        ArgumentNullException.ThrowIfNull(view);
+
         if (view.IsPathRooted(searchPattern))
             throw new ArgumentException(VfsResourceKit.SecondPathFragmentMustNotBeRooted, nameof(searchPattern));
 

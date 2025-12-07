@@ -8,7 +8,7 @@
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Provides description and operations for the virtual file system format.
+/// Provides description and operations for the virtual file system storage format.
 /// </summary>
 public interface IVfsStorageFormat
 {
@@ -25,9 +25,10 @@ public interface IVfsStorageFormat
     /// otherwise, <see langword="false"/>.
     /// </param>
     /// <param name="options">The file system options.</param>
+    /// <param name="context">The storage context.</param>
     /// <returns>The <see cref="IVirtualFileSystem"/> instance for the created file system.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
-    IVirtualFileSystem Create(Stream stream, bool leaveOpen = false, VfsOptions? options = null);
+    IVirtualFileSystem Create(Stream stream, bool leaveOpen = false, VfsOptions? options = null, VfsStorageContext? context = null);
 
     /// <summary>
     /// Mounts (opens) an existing file system
@@ -52,26 +53,28 @@ public interface IVfsStorageFormat
     /// otherwise, <see langword="false"/>.
     /// </param>
     /// <param name="options">The file system options.</param>
+    /// <param name="context">The storage context.</param>
     /// <returns>The <see cref="IVirtualFileSystem"/> instance representing the mounted file system.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
-    IVirtualFileSystem Mount(Stream stream, bool writable = false, bool leaveOpen = false, VfsOptions? options = null);
+    IVirtualFileSystem Mount(Stream stream, bool writable = false, bool leaveOpen = false, VfsOptions? options = null, VfsStorageContext? context = null);
 
     /// <summary>
     /// Determines whether the specified data stream can be mounted using the current storage format.
     /// </summary>
     /// <param name="stream">The stream.</param>
     /// <param name="options">The file system options.</param>
+    /// <param name="context">The storage context.</param>
     /// <returns>
     /// <see langword="true"/> if the <paramref name="stream"/> can be mounted using the current storage format;
     /// otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
     /// <exception cref="NotSupportedException"><paramref name="stream"/> does not support seeking.</exception>
-    bool IsMountable(Stream stream, VfsOptions? options = null);
+    bool IsMountable(Stream stream, VfsOptions? options = null, VfsStorageContext? context = null);
 }
 
 /// <summary>
-/// Provides strongly typed description and operations for the virtual file system format.
+/// Provides strongly typed description and operations for the virtual file system storage format.
 /// </summary>
 /// <typeparam name="TVfs">The type of the virtual file system.</typeparam>
 /// <typeparam name="TOptions">The type of the virtual file system options.</typeparam>
@@ -89,9 +92,10 @@ public interface IVfsStorageFormat<out TVfs, TOptions> : IVfsStorageFormat
     /// otherwise, <see langword="false"/>.
     /// </param>
     /// <param name="options"><inheritdoc/></param>
+    /// <param name="context"><inheritdoc/></param>
     /// <returns>The <typeparamref name="TVfs"/> instance for the created storage.</returns>
-    /// <inheritdoc cref="IVfsStorageFormat.Create(Stream, bool, VfsOptions?)"/>
-    TVfs Create(Stream stream, bool leaveOpen = false, TOptions? options = null);
+    /// <inheritdoc cref="IVfsStorageFormat.Create(Stream, bool, VfsOptions?, VfsStorageContext?)"/>
+    TVfs Create(Stream stream, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null);
 
     /// <summary>
     /// Mounts (opens) an existing <typeparamref name="TVfs"/> storage
@@ -113,10 +117,11 @@ public interface IVfsStorageFormat<out TVfs, TOptions> : IVfsStorageFormat
     /// otherwise, <see langword="false"/>.
     /// </param>
     /// <param name="options"><inheritdoc/></param>
+    /// <param name="context"><inheritdoc/></param>
     /// <returns>The <typeparamref name="TVfs"/> instance representing the mounted storage.</returns>
-    /// <inheritdoc cref="IVfsStorageFormat.Mount(Stream, bool, bool, VfsOptions?)"/>
-    TVfs Mount(Stream stream, bool writable = false, bool leaveOpen = false, TOptions? options = null);
+    /// <inheritdoc cref="IVfsStorageFormat.Mount(Stream, bool, bool, VfsOptions?, VfsStorageContext?)"/>
+    TVfs Mount(Stream stream, bool writable = false, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null);
 
-    /// <inheritdoc cref="IVfsStorageFormat.IsMountable(Stream, VfsOptions?)"/>
-    bool IsMountable(Stream stream, TOptions? options = null);
+    /// <inheritdoc cref="IVfsStorageFormat.IsMountable(Stream, VfsOptions?, VfsStorageContext?)"/>
+    bool IsMountable(Stream stream, TOptions? options = null, VfsStorageContext? context = null);
 }

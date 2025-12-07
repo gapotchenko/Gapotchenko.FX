@@ -17,7 +17,7 @@ namespace Gapotchenko.FX.Data.Archives.Zip;
 public sealed partial class ZipArchive :
     FileSystemViewProxyKit<IZipArchiveView<System.IO.Compression.ZipArchive>>,
     IZipArchive,
-    IFileMountableDataArchive<IZipArchive, ZipArchiveOptions>
+    IStorageMountableDataArchive<IZipArchive, ZipArchiveOptions>
 {
     // For now, the implementation is just a wrapper around System.IO.Compression.ZipArchive,
     // which is not ideal because System.IO.Compression.ZipArchive is somewhat lacking
@@ -48,9 +48,10 @@ public sealed partial class ZipArchive :
     {
     }
 
-    internal ZipArchive(Stream stream, bool writable, bool leaveOpen, ZipArchiveOptions? options) :
+    internal ZipArchive(Stream stream, bool writable, bool leaveOpen, ZipArchiveOptions? options, VfsStorageContext? context) :
         this(stream, writable, leaveOpen)
     {
+        Location = context?.Location;
     }
 
     /// <summary>
@@ -75,6 +76,9 @@ public sealed partial class ZipArchive :
                 leaveOpen))
     {
     }
+
+    /// <inheritdoc/>
+    public VfsReadOnlyLocation? Location { get; }
 
     static IZipArchiveView<System.IO.Compression.ZipArchive> CreateViewOnBclImpl(
         Stream stream,

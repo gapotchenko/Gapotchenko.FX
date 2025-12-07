@@ -7,6 +7,7 @@
 
 using Gapotchenko.FX.Data.Archives.Kits;
 using Gapotchenko.FX.IO;
+using Gapotchenko.FX.IO.Vfs;
 
 namespace Gapotchenko.FX.Data.Archives.Zip;
 
@@ -16,18 +17,18 @@ sealed class ZipArchiveFormat : DataArchiveFormatKit<IZipArchive, ZipArchiveOpti
 
     protected override IReadOnlyList<string> GetFileExtensionsCore() => [".zip"];
 
-    protected override IZipArchive CreateCore(Stream stream, bool leaveOpen, ZipArchiveOptions? options)
+    protected override IZipArchive CreateCore(Stream stream, bool leaveOpen, ZipArchiveOptions? options, VfsStorageContext? context)
     {
         stream.SetLength(0);
-        return new ZipArchive(stream, true, leaveOpen, options);
+        return new ZipArchive(stream, true, leaveOpen, options, context);
     }
 
-    protected override IZipArchive MountCore(Stream stream, bool writable, bool leaveOpen, ZipArchiveOptions? options)
+    protected override IZipArchive MountCore(Stream stream, bool writable, bool leaveOpen, ZipArchiveOptions? options, VfsStorageContext? context)
     {
-        return new ZipArchive(stream, writable, leaveOpen, options);
+        return new ZipArchive(stream, writable, leaveOpen, options, context);
     }
 
-    protected override bool IsMountableCore(Stream stream, ZipArchiveOptions? options)
+    protected override bool IsMountableCore(Stream stream, ZipArchiveOptions? options, VfsStorageContext? context)
     {
         // This is a simplistic implementation which does not cover self-extracting archives:
         // https://stackoverflow.com/a/1887113

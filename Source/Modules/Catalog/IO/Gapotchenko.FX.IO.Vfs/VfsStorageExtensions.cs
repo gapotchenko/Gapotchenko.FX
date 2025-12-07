@@ -54,6 +54,7 @@ public static class VfsStorageExtensions
         where TOptions : VfsOptions
     {
         ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(view);
 
         return file.Format.Mount(view.ReadFile(path), options: options);
     }
@@ -94,6 +95,7 @@ public static class VfsStorageExtensions
         where TOptions : VfsOptions
     {
         ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(view);
 
         return WriteFileCore(file.Format, view, path, FileAccess.ReadWrite, FileShare.None, options);
     }
@@ -135,6 +137,7 @@ public static class VfsStorageExtensions
         where TOptions : VfsOptions
     {
         ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(view);
 
         return OpenNewFileCore(file.Format, view, path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, options);
     }
@@ -192,6 +195,7 @@ public static class VfsStorageExtensions
         where TOptions : VfsOptions
     {
         ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(view);
 
         VfsValidationKit.Arguments.ValidateFileAccess(access);
         if (access == FileAccess.Write)

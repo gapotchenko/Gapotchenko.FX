@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -11,4 +12,9 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// </summary>
 public interface IReadOnlyVirtualFileSystem : IReadOnlyFileSystemView, IDisposable
 {
+    /// <summary>
+    /// Gets the virtual file system storage location in the parent file system,
+    /// or <see langword="null"/> if the location is not tracked.
+    /// </summary>
+    VfsReadOnlyLocation? Location { get; }
 }

@@ -25,39 +25,39 @@ public abstract class DataArchiveFormatKit<TArchive, TOptions> : IDataArchiveFor
     /// <inheritdoc cref="FileExtensions"/>
     protected abstract IReadOnlyList<string> GetFileExtensionsCore();
 
-    IVirtualFileSystem IVfsStorageFormat.Create(Stream stream, bool leaveOpen, VfsOptions? options) =>
-        Create(stream, leaveOpen, (TOptions?)options);
+    IVirtualFileSystem IVfsStorageFormat.Create(Stream stream, bool leaveOpen, VfsOptions? options, VfsStorageContext? context) =>
+        Create(stream, leaveOpen, (TOptions?)options, context);
 
     /// <inheritdoc/>
-    public TArchive Create(Stream stream, bool leaveOpen = false, TOptions? options = null)
+    public TArchive Create(Stream stream, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null)
     {
         ArgumentNullException.ThrowIfNull(stream);
 
-        return CreateCore(stream, leaveOpen, options);
+        return CreateCore(stream, leaveOpen, options, context);
     }
 
-    /// <inheritdoc cref="Create(Stream, bool, TOptions?)"/>
-    protected abstract TArchive CreateCore(Stream stream, bool leaveOpen, TOptions? options);
+    /// <inheritdoc cref="Create(Stream, bool, TOptions?, VfsStorageContext?)"/>
+    protected abstract TArchive CreateCore(Stream stream, bool leaveOpen, TOptions? options, VfsStorageContext? context);
 
-    IVirtualFileSystem IVfsStorageFormat.Mount(Stream stream, bool writable, bool leaveOpen, VfsOptions? options) =>
-        Mount(stream, writable, leaveOpen, (TOptions?)options);
+    IVirtualFileSystem IVfsStorageFormat.Mount(Stream stream, bool writable, bool leaveOpen, VfsOptions? options, VfsStorageContext? context) =>
+        Mount(stream, writable, leaveOpen, (TOptions?)options, context);
 
     /// <inheritdoc/>
-    public TArchive Mount(Stream stream, bool writable = false, bool leaveOpen = false, TOptions? options = null)
+    public TArchive Mount(Stream stream, bool writable = false, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null)
     {
         ArgumentNullException.ThrowIfNull(stream);
 
-        return MountCore(stream, writable, leaveOpen, options);
+        return MountCore(stream, writable, leaveOpen, options, context);
     }
 
-    /// <inheritdoc cref="Mount(Stream, bool, bool, TOptions?)"/>
-    protected abstract TArchive MountCore(Stream stream, bool writable, bool leaveOpen, TOptions? options);
+    /// <inheritdoc cref="Mount(Stream, bool, bool, TOptions?, VfsStorageContext?)"/>
+    protected abstract TArchive MountCore(Stream stream, bool writable, bool leaveOpen, TOptions? options, VfsStorageContext? context);
 
-    bool IVfsStorageFormat.IsMountable(Stream stream, VfsOptions? options) =>
-        IsMountable(stream, (TOptions?)options);
+    bool IVfsStorageFormat.IsMountable(Stream stream, VfsOptions? options, VfsStorageContext? context) =>
+        IsMountable(stream, (TOptions?)options, context);
 
     /// <inheritdoc/>
-    public bool IsMountable(Stream stream, TOptions? options = null)
+    public bool IsMountable(Stream stream, TOptions? options = null, VfsStorageContext? context = null)
     {
         ArgumentNullException.ThrowIfNull(stream);
 
@@ -65,7 +65,7 @@ public abstract class DataArchiveFormatKit<TArchive, TOptions> : IDataArchiveFor
         long oldPosition = stream.Position;
         try
         {
-            return IsMountableCore(stream, options);
+            return IsMountableCore(stream, options, context);
         }
         catch
         {
@@ -85,10 +85,6 @@ public abstract class DataArchiveFormatKit<TArchive, TOptions> : IDataArchiveFor
         }
     }
 
-    /// <summary>
-    /// <inheritdoc cref="IsMountable(Stream, TOptions?)"/>
-    /// </summary>
-    /// <param name="stream"><inheritdoc cref="IsMountable(Stream, TOptions?)"/></param>
-    /// <param name="options"><inheritdoc cref="IsMountable(Stream, TOptions?)"/></param>
-    protected abstract bool IsMountableCore(Stream stream, TOptions? options);
+    /// <inheritdoc cref="IsMountable(Stream, TOptions?, VfsStorageContext?)"/>
+    protected abstract bool IsMountableCore(Stream stream, TOptions? options, VfsStorageContext? context);
 }

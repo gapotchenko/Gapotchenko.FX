@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  
   <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj" />

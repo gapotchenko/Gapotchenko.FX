@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Data.Archives.Zip;
 partial class ZipArchive
 {
     /// <summary>
-    /// Gets the object for ZIP files manipulation.
+    /// Gets the object for ZIP storage manipulation.
     /// </summary>
     public static IDataArchiveStorage<IZipArchive, ZipArchiveOptions> Storage => ZipArchiveStorage.Instance;
 

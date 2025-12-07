@@ -10,11 +10,11 @@ using Gapotchenko.FX.IO.Vfs;
 namespace Gapotchenko.FX.Data.Archives;
 
 /// <summary>
-/// Defines the interface of a data archive mountable on a file.
+/// Defines the interface of a data archive mountable on a storage.
 /// </summary>
 /// <typeparam name="TArchive">The type of the data archive.</typeparam>
 /// <typeparam name="TOptions">The type of the data archive options.</typeparam>
-public interface IFileMountableDataArchive<out TArchive, TOptions> :
+public interface IStorageMountableDataArchive<out TArchive, TOptions> :
     IDataArchive,
     IStorageMountableVfs<TArchive, TOptions>
     where TArchive : IDataArchive
@@ -22,7 +22,7 @@ public interface IFileMountableDataArchive<out TArchive, TOptions> :
 {
 #if TFF_STATIC_INTERFACE
     /// <summary>
-    /// Gets the object for <typeparamref name="TArchive"/> files manipulation.
+    /// Gets the object for <typeparamref name="TArchive"/> storage manipulation.
     /// </summary>
     static new abstract IDataArchiveStorage<TArchive, TOptions> Storage { get; }
 #endif

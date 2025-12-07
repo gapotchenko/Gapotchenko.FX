@@ -39,6 +39,9 @@ abstract class ZipArchiveBase : FileSystemViewKit, IZipArchive
     /// <inheritdoc/>
     public sealed override StringComparison PathComparison => StringComparison.Ordinal;
 
+    /// <inheritdoc/>
+    public virtual VfsReadOnlyLocation? Location => null;
+
     /// <summary>
     /// Gets the path string prefixed by the specified path.
     /// </summary>
