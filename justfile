@@ -78,3 +78,12 @@ test configuration="Release":
 publish:
     dotnet clean -c Release
     dotnet pack -c Release
+
+# Deploy published artifacts to a point of delivery
+[group("publication")]
+deploy:
+    dotnet nuget push '**\bin\Release\nuget\*.nupkg' --source "$GP_OSS_NUGET_SOURCE"
+
+# Make a release by testing, publishing and deploying the project artifacts
+[group("publication")]
+release: test publish deploy
