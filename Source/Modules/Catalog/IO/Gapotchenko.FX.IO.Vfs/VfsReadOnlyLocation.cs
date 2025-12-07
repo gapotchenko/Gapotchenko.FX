@@ -8,13 +8,14 @@
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Represents a file-system entry location in <see cref="IReadOnlyFileSystemView"/>.
+/// The path of a file-system entry associated with an <see cref="IReadOnlyFileSystemView"/>.
 /// </summary>
 public readonly struct VfsReadOnlyLocation
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="VfsReadOnlyLocation"/> struct using the specified path
-    /// and <see cref="IReadOnlyFileSystemView"/> of the local file system.
+    /// Initializes a new instance of the <see cref="VfsLocation"/> structure using
+    /// the <see cref="FileSystemView.Local">local</see> <see cref="IReadOnlyFileSystemView"/> and
+    /// the specified file-system entry path.
     /// </summary>
     /// <param name="path">The path of a file-system entry.</param>
     [SetsRequiredMembers]
@@ -27,11 +28,11 @@ public readonly struct VfsReadOnlyLocation
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VfsReadOnlyLocation"/> struct
-    /// using the specified path and
-    /// <see cref="IReadOnlyFileSystemView"/> instance.
+    /// Initializes a new instance of the <see cref="VfsReadOnlyLocation"/> structure using the specified
+    /// <see cref="IReadOnlyFileSystemView"/> and
+    /// file-system entry path.
     /// </summary>
-    /// <param name="view">The read-only file system view.</param>
+    /// <param name="view">The file system view.</param>
     /// <param name="path">The path of a file-system entry.</param>
     [SetsRequiredMembers]
     public VfsReadOnlyLocation(IReadOnlyFileSystemView view, string path)

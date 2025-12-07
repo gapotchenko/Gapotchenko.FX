@@ -8,13 +8,14 @@
 namespace Gapotchenko.FX.IO.Vfs;
 
 /// <summary>
-/// Represents a file-system entry location in <see cref="IFileSystemView"/>.
+/// The path of a file-system entry associated with an <see cref="IFileSystemView"/>.
 /// </summary>
 public readonly struct VfsLocation
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="VfsLocation"/> struct using the specified path
-    /// and <see cref="IFileSystemView"/> of the local file system.
+    /// Initializes a new instance of the <see cref="VfsLocation"/> structure using
+    /// the <see cref="FileSystemView.Local">local</see> <see cref="IFileSystemView"/> and
+    /// the specified file-system entry path.
     /// </summary>
     /// <param name="path">The path of a file-system entry.</param>
     [SetsRequiredMembers]
@@ -27,9 +28,9 @@ public readonly struct VfsLocation
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VfsLocation"/> struct
-    /// using the specified path and
-    /// <see cref="IFileSystemView"/> instance.
+    /// Initializes a new instance of the <see cref="VfsLocation"/> structure using the specified
+    /// <see cref="IFileSystemView"/> and
+    /// file-system entry path.
     /// </summary>
     /// <param name="view">The file system view.</param>
     /// <param name="path">The path of a file-system entry.</param>

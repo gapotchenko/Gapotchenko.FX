@@ -55,11 +55,11 @@ partial class FileSystemViewExtensions
     /// Copies an existing directory to a new directory in the specified destination <see cref="IFileSystemView"/> .
     /// Overwriting a directory of the same name is not allowed.
     /// </summary>
-    /// <inheritdoc cref="CopyDirectory(IReadOnlyFileSystemView, string, IFileSystemView, string, bool, VfsCopyOptions)"/>
+    /// <inheritdoc cref="CopyDirectory(IReadOnlyFileSystemView, string, VfsLocation, bool, VfsCopyOptions)"/>
     public static void CopyDirectory(
         this IReadOnlyFileSystemView sourceView, string sourcePath,
-        IFileSystemView destinationView, string destinationPath) =>
-        CopyDirectory(sourceView, sourcePath, destinationView, destinationPath, false, VfsCopyOptions.None);
+        VfsLocation destination) =>
+        CopyDirectory(sourceView, sourcePath, destination, false, VfsCopyOptions.None);
 
     /// <summary>
     /// Copies an existing directory to a new directory in the specified destination <see cref="IFileSystemView"/>.
@@ -68,8 +68,7 @@ partial class FileSystemViewExtensions
     /// </summary>
     /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> of the directory to copy.</param>
     /// <param name="sourcePath">The path of the directory to copy.</param>
-    /// <param name="destinationView">The destination <see cref="IFileSystemView"/> to copy the directory to.</param>
-    /// <param name="destinationPath">The path of the destination directory in the specified <see cref="IFileSystemView"/>.</param>
+    /// <param name="destination">The destination <see cref="VfsLocation"/> to copy the directory to.</param>
     /// <param name="overwrite">
     /// <inheritdoc cref="IFileSystemView.CopyDirectory(string, string, bool, VfsCopyOptions)" path="//param[@name='overwrite']"/>
     /// </param>
@@ -78,17 +77,16 @@ partial class FileSystemViewExtensions
     /// </param>
     public static void CopyDirectory(
         this IReadOnlyFileSystemView sourceView, string sourcePath,
-        IFileSystemView destinationView, string destinationPath,
+        VfsLocation destination,
         bool overwrite = false,
         VfsCopyOptions options = VfsCopyOptions.None)
     {
         ArgumentNullException.ThrowIfNull(sourceView);
-        ArgumentNullException.ThrowIfNull(destinationView);
         VfsValidationKit.Arguments.ValidateCopyOptions(options);
 
         IOHelper.CopyDirectoryOptimized(
-            sourceView, sourcePath,
-            destinationView, destinationPath,
+            new(sourceView, sourcePath),
+            destination,
             overwrite,
             options);
     }
@@ -133,34 +131,31 @@ partial class FileSystemViewExtensions
     /// Moves a specified directory to a new location,
     /// providing the option to specify a new directory name.
     /// </summary>
-    /// <inheritdoc cref="MoveDirectory(IFileSystemView, string, IFileSystemView, string, bool, VfsMoveOptions)"/>
+    /// <inheritdoc cref="MoveDirectory(IFileSystemView, string, VfsLocation, bool, VfsMoveOptions)"/>
     public static void MoveDirectory(
         this IFileSystemView sourceView,
         string sourcePath,
-        IFileSystemView destinationView,
-        string destinationPath) =>
-        MoveDirectory(sourceView, sourcePath, destinationView, destinationPath, false, VfsMoveOptions.None);
+        VfsLocation destination) =>
+        MoveDirectory(sourceView, sourcePath, destination, false, VfsMoveOptions.None);
 
     /// <inheritdoc cref="IFileSystemView.MoveDirectory(string, string, bool, VfsMoveOptions)"/>
     /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> of the directory to move.</param>
     /// <param name="sourcePath">The path of the directory to move.</param>
-    /// <param name="destinationView">The destination <see cref="IFileSystemView"/> to move the directory to.</param>
-    /// <param name="destinationPath">The path of the destination directory in the specified <see cref="IFileSystemView"/>.</param>
+    /// <param name="destination">The destination <see cref="VfsLocation"/> to move the directory to.</param>
     /// <param name="overwrite"><inheritdoc/></param>
     /// <param name="options"><inheritdoc/></param>
     public static void MoveDirectory(
         this IFileSystemView sourceView, string sourcePath,
-        IFileSystemView destinationView, string destinationPath,
+        VfsLocation destination,
         bool overwrite = false,
         VfsMoveOptions options = VfsMoveOptions.None)
     {
         ArgumentNullException.ThrowIfNull(sourceView);
-        ArgumentNullException.ThrowIfNull(destinationView);
         VfsValidationKit.Arguments.ValidateMoveOptions(options);
 
         IOHelper.MoveDirectoryOptimized(
-            sourceView, sourcePath,
-            destinationView, destinationPath,
+            new(sourceView, sourcePath),
+            destination,
             overwrite,
             options);
     }

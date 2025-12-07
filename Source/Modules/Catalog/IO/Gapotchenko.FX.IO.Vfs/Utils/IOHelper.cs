@@ -15,33 +15,35 @@ static class IOHelper
     #region Move
 
     public static void MoveDirectoryOptimized(
-        IFileSystemView sourceView,
-        string sourcePath,
-        IFileSystemView destinationView,
-        string destinationPath,
+        VfsLocation source,
+        VfsLocation destination,
         bool overwrite,
         VfsMoveOptions options)
     {
-        if (sourceView == destinationView)
-            destinationView.MoveDirectory(sourcePath, destinationPath, overwrite, options);
+        if (source.View == destination.View)
+            destination.View.MoveDirectory(source.Path, destination.Path, overwrite, options);
         else
-            MoveDirectoryNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite, options);
+            MoveDirectoryNaive(source, destination, overwrite, options);
     }
 
     public static void MoveDirectoryNaive(
-        IFileSystemView sourceView,
-        string sourcePath,
-        IFileSystemView destinationView,
-        string destinationPath,
+        VfsLocation source,
+        VfsLocation destination,
         bool overwrite,
         VfsMoveOptions options)
     {
+        var sourceView = source.View;
+        string sourcePath = source.Path;
+
         if (!sourceView.DirectoryExists(sourcePath))
         {
             // Bailout early when the source directory cannot be read
             // to avoid making unwarranted modifications in the destination.
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindDirectory(sourcePath));
         }
+
+        var destinationView = destination.View;
+        string destinationPath = destination.Path;
 
         if (destinationView.DirectoryExists(destinationPath))
         {
@@ -98,29 +100,31 @@ static class IOHelper
     #region Copy
 
     public static void CopyDirectoryOptimized(
-        IReadOnlyFileSystemView sourceView,
-        string sourcePath,
-        IFileSystemView destinationView,
-        string destinationPath,
+        VfsReadOnlyLocation source,
+        VfsLocation destination,
         bool overwrite,
         VfsCopyOptions options)
     {
-        if (sourceView == destinationView)
-            destinationView.CopyDirectory(sourcePath, destinationPath, overwrite, options);
+        if (source.View == destination.View)
+            destination.View.CopyDirectory(source.Path, destination.Path, overwrite, options);
         else
-            CopyDirectoryNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite, options);
+            CopyDirectoryNaive(source, destination, overwrite, options);
     }
 
     public static void CopyDirectoryNaive(
-        IReadOnlyFileSystemView sourceView,
-        string sourcePath,
-        IFileSystemView destinationView,
-        string destinationPath,
+        VfsReadOnlyLocation source,
+        VfsLocation destination,
         bool overwrite,
         VfsCopyOptions options)
     {
+        var sourceView = source.View;
+        string sourcePath = source.Path;
+
         if (!sourceView.DirectoryExists(sourcePath))
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindDirectory(sourcePath));
+
+        var destinationView = destination.View;
+        string destinationPath = destination.Path;
 
         if (!overwrite && destinationView.DirectoryExists(destinationPath))
             throw new IOException(VfsResourceKit.DirectoryAlreadyExists(destinationPath));

@@ -113,7 +113,7 @@ partial class FileSystemViewVfsTestKit
 
             // C
             vfs.CreateDirectory(Root("C"));
-            Assert.ThrowsException<IOException>(() => vfs.CopyDirectory(Root("A"), Root("C")));
+            Assert.ThrowsExactly<IOException>(() => vfs.CopyDirectory(Root("A"), Root("C")));
 
             // D
             vfs.CreateDirectory(Root("D"));
@@ -121,7 +121,7 @@ partial class FileSystemViewVfsTestKit
 
             // E
             VfsTestContentKit.CreateHierarchy(vfs, Root("E"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            Assert.ThrowsException<IOException>(() => vfs.CopyDirectory(Root("A"), Root("E")));
+            Assert.ThrowsExactly<IOException>(() => vfs.CopyDirectory(Root("A"), Root("E")));
             Assert.That.VfsHierarchyIs(vfs, Root("E"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
             vfs.CopyDirectory(Root("A"), Root("E"), true);
 
@@ -170,21 +170,21 @@ partial class FileSystemViewVfsTestKit
             VfsTestContentKit.CreateHierarchy(sVfs, SR("A"), copiedHierarchy, VfsTestContentKit.GetDefaultFileContents);
 
             // B
-            sVfs.CopyDirectory(SR("A"), dVfs, DR("B"));
+            sVfs.CopyDirectory(SR("A"), new VfsLocation(dVfs, DR("B")));
 
             // C
             dVfs.CreateDirectory(DR("C"));
-            Assert.ThrowsException<IOException>(() => sVfs.CopyDirectory(SR("A"), dVfs, DR("C")));
+            Assert.ThrowsExactly<IOException>(() => sVfs.CopyDirectory(SR("A"), new VfsLocation(dVfs, DR("C"))));
 
             // D
             dVfs.CreateDirectory(DR("D"));
-            sVfs.CopyDirectory(SR("A"), dVfs, DR("D"), true);
+            sVfs.CopyDirectory(SR("A"), new VfsLocation(dVfs, DR("D")), true);
 
             // E
             VfsTestContentKit.CreateHierarchy(dVfs, DR("E"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            Assert.ThrowsException<IOException>(() => sVfs.CopyDirectory(SR("A"), dVfs, DR("E")));
+            Assert.ThrowsExactly<IOException>(() => sVfs.CopyDirectory(SR("A"), new VfsLocation(dVfs, DR("E"))));
             Assert.That.VfsHierarchyIs(dVfs, DR("E"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            sVfs.CopyDirectory(SR("A"), dVfs, DR("E"), true);
+            sVfs.CopyDirectory(SR("A"), new VfsLocation(dVfs, DR("E")), true);
         }
 
         void Verify(IReadOnlyFileSystemView sourceVfs, string sourceRootPath)
@@ -292,23 +292,23 @@ partial class FileSystemViewVfsTestKit
             VfsTestContentKit.CreateHierarchy(sVfs, SR("A"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
 
             // B
-            sVfs.MoveDirectory(SR("A"), dVfs, DR("B"));
+            sVfs.MoveDirectory(SR("A"), new VfsLocation(dVfs, DR("B")));
 
             // C
             VfsTestContentKit.CreateHierarchy(sVfs, SR("C"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
 
             // D
             VfsTestContentKit.CreateHierarchy(dVfs, DR("D"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            Assert.ThrowsException<IOException>(() => sVfs.MoveDirectory(SR("C"), dVfs, DR("D")));
+            Assert.ThrowsException<IOException>(() => sVfs.MoveDirectory(SR("C"), new VfsLocation(dVfs, DR("D"))));
 
             // E
             VfsTestContentKit.CreateHierarchy(sVfs, SR("E"), movedHierarchy, VfsTestContentKit.GetDefaultFileContents);
 
             // F
             VfsTestContentKit.CreateHierarchy(dVfs, DR("F"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            Assert.ThrowsException<IOException>(() => sVfs.MoveDirectory(SR("E"), dVfs, DR("F")));
+            Assert.ThrowsException<IOException>(() => sVfs.MoveDirectory(SR("E"), new VfsLocation(dVfs, DR("F"))));
             Assert.That.VfsHierarchyIs(dVfs, DR("F"), existingHierarchy, VfsTestContentKit.GetDefaultFileContents);
-            sVfs.MoveDirectory(SR("E"), dVfs, DR("F"), true);
+            sVfs.MoveDirectory(SR("E"), new VfsLocation(dVfs, DR("F")), true);
         }
 
         void Verify(IReadOnlyFileSystemView sourceVfs, string sourceRootPath)
