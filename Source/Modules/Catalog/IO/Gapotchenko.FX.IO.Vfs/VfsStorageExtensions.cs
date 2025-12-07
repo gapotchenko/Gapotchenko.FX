@@ -191,7 +191,7 @@ public static class VfsStorageExtensions
     {
         return new()
         {
-            StorageLocation = location
+            Location = location
         };
     }
 }

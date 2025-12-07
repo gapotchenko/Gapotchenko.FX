@@ -22,7 +22,7 @@ sealed class TempLocalVfs : FileSystemViewProxyKit, IVirtualFileSystem
 
         Directory.CreateDirectory(rootPath);
         RootPath = rootPath;
-        StorageLocation = new(rootPath);
+        Location = new(rootPath);
     }
 
     public void Dispose()
@@ -32,5 +32,5 @@ sealed class TempLocalVfs : FileSystemViewProxyKit, IVirtualFileSystem
 
     public string RootPath { get; }
 
-    public VfsReadOnlyLocation? StorageLocation { get; }
+    public VfsReadOnlyLocation? Location { get; }
 }

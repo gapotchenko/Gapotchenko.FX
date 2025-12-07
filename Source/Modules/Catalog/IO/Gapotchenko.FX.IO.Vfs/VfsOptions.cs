@@ -17,8 +17,8 @@ public abstract record VfsOptions
     /// a virtual file system's storage location in the parent file system.
     /// </summary>
     /// <remarks>
-    /// The value of this property affects the presence of <see cref="IReadOnlyVirtualFileSystem.StorageLocation"/> value
+    /// The value of this property affects the presence of <see cref="IReadOnlyVirtualFileSystem.Location"/> value
     /// in a mounted file system.
     /// </remarks>
-    public bool TrackStorageLocation { get; init; } = true;
+    public bool TrackLocation { get; init; } = true;
 }

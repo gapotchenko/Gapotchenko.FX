@@ -16,7 +16,6 @@ public sealed record ZipArchiveOptions : DataArchiveOptions
     /// <summary>
     /// Initializes a new instance of the <see cref="ZipArchiveOptions"/> record.
     /// </summary>
-    [Obsolete("ZIP archive options are not configurable", true)]
     public ZipArchiveOptions()
     {
     }

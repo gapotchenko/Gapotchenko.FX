@@ -16,8 +16,8 @@ public record VfsStorageContext
     /// Gets or initializes the virtual file system's storage location in the parent file system.
     /// </summary>
     /// <remarks>
-    /// The value of this property determines the value of <see cref="IReadOnlyVirtualFileSystem.StorageLocation"/> property
+    /// The value of this property determines the value of <see cref="IReadOnlyVirtualFileSystem.Location"/> property
     /// in a mounted file system.
     /// </remarks>
-    public VfsReadOnlyLocation? StorageLocation { get; init; }
+    public VfsReadOnlyLocation? Location { get; init; }
 }
