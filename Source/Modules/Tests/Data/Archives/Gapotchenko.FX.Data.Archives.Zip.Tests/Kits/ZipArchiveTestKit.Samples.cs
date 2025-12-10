@@ -13,9 +13,11 @@ namespace Gapotchenko.FX.Data.Archives.Zip.Tests.Kits;
 partial class ZipArchiveTestKit
 {
     [TestMethod]
-    public void Zip_Samples_DotnetDev_1_1_4()
+    [DataRow("DotnetDev.1.1.4.zip")]
+    [DataRow("DotnetSdk.2.0.0.zip")]
+    public void Zip_Samples_DotnetSdk(string fileName)
     {
-        using var archive = Mount(Assets.OpenStream("Samples/DotnetDev.1.1.4.zip", true));
+        using var archive = Mount(Assets.OpenStream($"Samples/{fileName}", true));
 
         string hostFxrPath = archive.JoinPaths("host", "fxr");
 

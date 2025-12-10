@@ -5,12 +5,14 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.IO;
 using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Memory;
 using Gapotchenko.FX.Text;
+using Gapotchenko.FX.Threading;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Runtime.CompilerServices;
@@ -22,21 +24,30 @@ namespace Gapotchenko.FX.Data.Archives.Zip;
 /// provided by .NET Base Class Library (BCL)
 /// as a backing store.
 /// </summary>
-/// <param name="archive">The <see cref="System.IO.Compression.ZipArchive"/> instance.</param>
-/// <param name="leaveOpen">
-/// <see langword="true"/> to leave the underlying <paramref name="archive"/> instance open
-/// after the created <see cref="ZipArchiveViewOfBcl"/> object is disposed;
-/// otherwise, <see langword="false"/>.
-/// </param>
-sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool leaveOpen) :
-    ZipArchiveBase,
-    IZipArchiveView<System.IO.Compression.ZipArchive>
+sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Compression.ZipArchive>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ZipArchiveViewOfBcl"/> class.
+    /// </summary>
+    /// <param name="archive">The <see cref="System.IO.Compression.ZipArchive"/> instance.</param>
+    /// <param name="leaveOpen">
+    /// <see langword="true"/> to leave the underlying <paramref name="archive"/> instance open
+    /// after the created <see cref="ZipArchiveViewOfBcl"/> object is disposed;
+    /// otherwise, <see langword="false"/>.
+    /// </param>
+    public ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool leaveOpen)
+    {
+        m_Archive = archive;
+        m_LeaveOpen = leaveOpen;
+
+        m_NormalizedArchiveEntries = new(CreateNormalizedArchiveEntries);
+    }
+
     #region Capabilities
 
-    public override bool CanRead => archive.Mode != ZipArchiveMode.Create;
+    public override bool CanRead => m_Archive.Mode != ZipArchiveMode.Create;
 
-    public override bool CanWrite => archive.Mode != ZipArchiveMode.Read;
+    public override bool CanWrite => m_Archive.Mode != ZipArchiveMode.Read;
 
     public override bool SupportsLastWriteTime => true;
 
@@ -112,7 +123,7 @@ sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool 
 
     void DeleteFileCore(in StructuredPath path)
     {
-        GetFileArchiveEntry(path).Delete();
+        DeleteArchiveEntry(GetFileArchiveEntry(path));
     }
 
     ZipArchiveEntry GetFileArchiveEntry(in StructuredPath path) =>
@@ -135,7 +146,7 @@ sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool 
         else
         {
             entryName = VfsPathKit.Join(filePathParts);
-            var entry = archive.GetEntry(entryName);
+            var entry = GetArchiveEntry(entryName);
             if (entry != null)
             {
                 // File exists.
@@ -163,7 +174,7 @@ sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool 
 
             directoryExists = filePathParts.Length == 1;
             if (!directoryExists)
-                directoryExists = archive.GetEntry(VfsPathKit.Join(filePathParts[..^1]) + VfsPathKit.DirectorySeparatorChar) != null;
+                directoryExists = GetArchiveEntry(VfsPathKit.Join(filePathParts[..^1]) + VfsPathKit.DirectorySeparatorChar) != null;
         }
 
         if (!directoryExists)
@@ -186,7 +197,7 @@ sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool 
                     throw new UnauthorizedAccessException(VfsResourceKit.AccessToPathIsDenied(path.ToString()));
 
                 // Create a new file.
-                return (archive.CreateEntry(entryName), true);
+                return (CreateArchiveEntry(entryName), true);
 
             default:
                 throw new SwitchExpressionException(mode);
@@ -240,7 +251,7 @@ sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool 
             if (FileExistsCore(subPath))
                 throw new IOException(VfsResourceKit.CannotCreateAlreadyExistingEntry(subPath.ToString()));
 
-            archive.CreateEntry(VfsPathKit.Join(subPath.Parts.Span) + VfsPathKit.DirectorySeparatorChar);
+            CreateArchiveEntry(VfsPathKit.Join(subPath.Parts.Span) + VfsPathKit.DirectorySeparatorChar);
             parentExists = true;
         }
     }
@@ -280,13 +291,14 @@ sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool 
 
         // Try to delete explicit directory entry from the archive if it exists.
         // It may not exist if the directory being deleted is implicit.
-        TryGetDirectoryArchiveEntry(path)?.Delete();
+        if (TryGetDirectoryArchiveEntry(path) is { } entry)
+            DeleteArchiveEntry(entry);
     }
 
     ZipArchiveEntry? TryGetDirectoryArchiveEntry(in StructuredPath path)
     {
         if (VfsPathKit.Join(path.Parts.Span) is not null and var entryPath)
-            return archive.GetEntry(entryPath + VfsPathKit.DirectorySeparatorChar);
+            return GetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar);
         else
             return null;
     }
@@ -432,7 +444,7 @@ sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool 
 
             foreach (var entry in GetArchiveEntriesSnapshot())
             {
-                string entryPath = entry.FullName;
+                string entryPath = GetArchiveEntryFullName(entry);
                 string[]? entryPathParts = VfsPathKit.Split(entryPath);
                 if (entryPathParts is null)
                     continue;
@@ -623,7 +635,7 @@ sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool 
         {
             // The path points to an implicit directory which has no archive entry.
             // Let's make that directory explicit by creating an archive entry for it.
-            return archive.CreateEntry(VfsPathKit.Join(path.Parts.Span) + VfsPathKit.DirectorySeparatorChar);
+            return CreateArchiveEntry(VfsPathKit.Join(path.Parts.Span) + VfsPathKit.DirectorySeparatorChar);
         }
         else
         {
@@ -658,13 +670,13 @@ sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool 
 
         if (considerDirectories)
         {
-            if (archive.GetEntry(entryPath + VfsPathKit.DirectorySeparatorChar) is not null and var directoryEntry)
+            if (GetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar) is not null and var directoryEntry)
                 return directoryEntry;
         }
 
         if (considerFiles)
         {
-            if (archive.GetEntry(entryPath) is not null and var fileEntry)
+            if (GetArchiveEntry(entryPath) is not null and var fileEntry)
                 return fileEntry;
         }
 
@@ -675,7 +687,7 @@ sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool 
 
     IEnumerable<ZipArchiveEntry> GetArchiveEntriesSnapshot()
     {
-        var entries = archive.Entries;
+        var entries = m_Archive.Entries;
         if (CanWrite)
             return entries.ToList();
         else
@@ -684,9 +696,89 @@ sealed class ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool 
 
     public override void Dispose()
     {
-        if (!leaveOpen)
-            archive.Dispose();
+        if (!m_LeaveOpen)
+            m_Archive.Dispose();
     }
 
-    public System.IO.Compression.ZipArchive BackingStore => archive;
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly bool m_LeaveOpen;
+
+    public System.IO.Compression.ZipArchive BackingStore => m_Archive;
+
+    #region Quirks Layer
+
+    // Quirks layer virtualizes archive operations by providing implementations
+    // that work around known ZIP quirks.
+
+    ZipArchiveEntry? GetArchiveEntry(string entryName)
+    {
+        if (m_NormalizedArchiveEntries.Value is { } entries)
+            return entries.GetValueOrDefault(entryName);
+        else
+            return m_Archive.GetEntry(entryName);
+    }
+
+    string GetArchiveEntryFullName(ZipArchiveEntry entry)
+    {
+        string fullName = entry.FullName;
+        if (m_NormalizedArchiveEntries.Value is not null)
+            return NormalizeArchiveEntryName(fullName);
+        else
+            return fullName;
+    }
+
+    string NormalizeArchiveEntryName(string name)
+    {
+        if (m_NormalizedArchiveEntries.Value is not null)
+            return NormalizeArchiveEntryNameCore(name);
+        else
+            return name;
+    }
+
+    ZipArchiveEntry CreateArchiveEntry(string entryName)
+    {
+        var entry = m_Archive.CreateEntry(entryName);
+        if (m_NormalizedArchiveEntries.Value is { } entries)
+            entries.Add(entryName, entry);
+        return entry;
+    }
+
+    void DeleteArchiveEntry(ZipArchiveEntry entry)
+    {
+        if (m_NormalizedArchiveEntries.Value is { } entries)
+            entries.Remove(NormalizeArchiveEntryNameCore(entry.FullName));
+        entry.Delete();
+    }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    EvaluateOnce<Dictionary<string, ZipArchiveEntry>?> m_NormalizedArchiveEntries;
+
+    Dictionary<string, ZipArchiveEntry>? CreateNormalizedArchiveEntries()
+    {
+        var entries = m_Archive.Entries;
+        if (!entries.Any(x => x.FullName.Contains(QuirkyDirectorySeparatorChar)))
+            return null;
+
+        var normalizedEntries = new Dictionary<string, ZipArchiveEntry>(entries.Count);
+        foreach (var entry in entries)
+            normalizedEntries.Add(NormalizeArchiveEntryNameCore(entry.FullName), entry);
+
+        return normalizedEntries;
+    }
+
+    static string NormalizeArchiveEntryNameCore(string name) =>
+        name.Replace(QuirkyDirectorySeparatorChar, VfsPathKit.DirectorySeparatorChar);
+
+    /// <summary>
+    /// Some ZIP archives use <c>\</c> character as a directory separator.
+    /// This is technically a violation of the original ZIP specification,
+    /// but many tools tolerate it for historical and compatibility reasons.
+    /// </summary>
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    const char QuirkyDirectorySeparatorChar = '\\';
+
+    #endregion
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly System.IO.Compression.ZipArchive m_Archive;
 }
