@@ -333,11 +333,11 @@ partial class FileSystemViewVfsTestKit
 
             if (sVfs.SupportsLastAccessTime)
                 sVfs.SetLastAccessTime(sourceFilePath, lastAccessTime);
-            sVfs.CopyFile(sourceFilePath, dVfs, DR(destinationFileNameA));
+            sVfs.CopyFile(sourceFilePath, new VfsLocation(dVfs, DR(destinationFileNameA)));
 
             if (sVfs.SupportsLastAccessTime)
                 sVfs.SetLastAccessTime(sourceFilePath, lastAccessTime);
-            sVfs.CopyFile(sourceFilePath, dVfs, DR(destinationFileNameB), options: VfsCopyOptions.Archive);
+            sVfs.CopyFile(sourceFilePath, new VfsLocation(dVfs, DR(destinationFileNameB)), options: VfsCopyOptions.Archive);
         }
 
         void Verify(IReadOnlyFileSystemView destinationVfs, string destinationRootPath)
@@ -494,7 +494,7 @@ partial class FileSystemViewVfsTestKit
             if (sVfs.SupportsLastAccessTime)
                 sVfs.SetLastAccessTime(sourceFilePath, lastAccessTime);
 
-            sVfs.MoveFile(SR(sourceFileName), dVfs, DR(destinationFileName));
+            sVfs.MoveFile(SR(sourceFileName), new VfsLocation(dVfs, DR(destinationFileName)));
         }
 
         void Verify(IReadOnlyFileSystemView destinationVfs, string destinationRootPath)

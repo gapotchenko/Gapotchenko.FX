@@ -70,6 +70,17 @@ public readonly struct VfsLocation
     /// <param name="location">The location.</param>
     public static implicit operator VfsReadOnlyLocation(VfsLocation location) => new(location.View, location.Path);
 
+    /// <summary>
+    /// Desconstructs the instance into the view and the path.
+    /// </summary>
+    /// <param name="view">The view.</param>
+    /// <param name="path">The path.</param>
+    public void Deconstruct(out IFileSystemView view, out string path)
+    {
+        view = View;
+        path = Path;
+    }
+
     /// <inheritdoc/>
     public override string ToString() => VfsLocationFormatter.GetString(View, Path);
 }
@@ -127,6 +138,17 @@ public readonly struct VfsReadOnlyLocation
     /// </summary>
     /// <param name="path">The path of a file-system entry.</param>
     public static implicit operator VfsReadOnlyLocation(string path) => new(path);
+
+    /// <summary>
+    /// Desconstructs the instance into the view and the path.
+    /// </summary>
+    /// <param name="view">The view.</param>
+    /// <param name="path">The path.</param>
+    public void Deconstruct(out IReadOnlyFileSystemView view, out string path)
+    {
+        view = View;
+        path = Path;
+    }
 
     /// <inheritdoc/>
     public override string ToString() => VfsLocationFormatter.GetString(View, Path);

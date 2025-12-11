@@ -15,8 +15,8 @@ static class IOHelper
     #region Move
 
     public static void MoveDirectoryOptimized(
-        VfsLocation source,
-        VfsLocation destination,
+        in VfsLocation source,
+        in VfsLocation destination,
         bool overwrite,
         VfsMoveOptions options)
     {
@@ -27,14 +27,12 @@ static class IOHelper
     }
 
     public static void MoveDirectoryNaive(
-        VfsLocation source,
-        VfsLocation destination,
+        in VfsLocation source,
+        in VfsLocation destination,
         bool overwrite,
         VfsMoveOptions options)
     {
-        var sourceView = source.View;
-        string sourcePath = source.Path;
-
+        var (sourceView, sourcePath) = source;
         if (!sourceView.DirectoryExists(sourcePath))
         {
             // Bailout early when the source directory cannot be read
@@ -42,9 +40,7 @@ static class IOHelper
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindDirectory(sourcePath));
         }
 
-        var destinationView = destination.View;
-        string destinationPath = destination.Path;
-
+        var (destinationView, destinationPath) = destination;
         if (destinationView.DirectoryExists(destinationPath))
         {
             if (overwrite)
@@ -72,7 +68,8 @@ static class IOHelper
 
         void MoveDirectoryCore(string sourcePath, string destinationPath)
         {
-            var metadata = EntryMetadata.GetFrom(sourceView, sourcePath, destinationView);
+            var sourceLocation = new VfsReadOnlyLocation(sourceView, sourcePath);
+            var metadata = EntryMetadata.GetFrom(sourceLocation, destinationView);
 
             destinationView.CreateDirectory(destinationPath);
 
@@ -80,16 +77,17 @@ static class IOHelper
             {
                 string destinationEntryPath = destinationView.CombinePaths(
                     destinationPath,
-                    Path.GetFileName(sourceEntryPath));
+                    sourceView.GetFileName(sourceEntryPath));
 
                 if (sourceView.FileExists(sourceEntryPath))
-                    sourceView.MoveFile(sourceEntryPath, destinationView, destinationEntryPath, overwrite, options);
+                    sourceView.MoveFile(sourceEntryPath, new VfsLocation(destinationView, destinationEntryPath), overwrite, options);
                 else
                     MoveDirectoryCore(sourceEntryPath, destinationEntryPath);
             }
 
-            CopyEntryAttributes(sourceView, sourcePath, destinationView, destinationPath);
-            metadata.SetTo(destinationView, destinationPath);
+            var destinationLocation = new VfsLocation(destinationView, destinationPath);
+            CopyEntryAttributes(sourceLocation, destinationLocation);
+            metadata.SetTo(destinationLocation);
 
             sourceView.DeleteDirectory(sourcePath);
         }
@@ -100,8 +98,8 @@ static class IOHelper
     #region Copy
 
     public static void CopyDirectoryOptimized(
-        VfsReadOnlyLocation source,
-        VfsLocation destination,
+        in VfsReadOnlyLocation source,
+        in VfsLocation destination,
         bool overwrite,
         VfsCopyOptions options)
     {
@@ -112,20 +110,16 @@ static class IOHelper
     }
 
     public static void CopyDirectoryNaive(
-        VfsReadOnlyLocation source,
-        VfsLocation destination,
+        in VfsReadOnlyLocation source,
+        in VfsLocation destination,
         bool overwrite,
         VfsCopyOptions options)
     {
-        var sourceView = source.View;
-        string sourcePath = source.Path;
-
+        var (sourceView, sourcePath) = source;
         if (!sourceView.DirectoryExists(sourcePath))
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindDirectory(sourcePath));
 
-        var destinationView = destination.View;
-        string destinationPath = destination.Path;
-
+        var (destinationView, destinationPath) = destination;
         if (!overwrite && destinationView.DirectoryExists(destinationPath))
             throw new IOException(VfsResourceKit.DirectoryAlreadyExists(destinationPath));
         else
@@ -135,8 +129,9 @@ static class IOHelper
 
         void CopyDirectoryCore(string sourcePath, string destinationPath)
         {
+            var sourceLocation = new VfsReadOnlyLocation(sourceView, sourcePath);
             EntryMetadata? metadata = (options & VfsCopyOptions.Archive) != 0
-                ? EntryMetadata.GetFrom(sourceView, sourcePath, destinationView)
+                ? EntryMetadata.GetFrom(sourceLocation, destinationView)
                 : null;
 
             destinationView.CreateDirectory(destinationPath);
@@ -145,16 +140,17 @@ static class IOHelper
             {
                 string destinationEntryPath = destinationView.CombinePaths(
                     destinationPath,
-                    Path.GetFileName(sourceEntryPath));
+                    sourceView.GetFileName(sourceEntryPath));
 
                 if (sourceView.FileExists(sourceEntryPath))
-                    sourceView.CopyFile(sourceEntryPath, destinationView, destinationEntryPath, overwrite, options);
+                    sourceView.CopyFile(sourceEntryPath, new(destinationView, destinationEntryPath), overwrite, options);
                 else
                     CopyDirectoryCore(sourceEntryPath, destinationEntryPath);
             }
 
-            CopyEntryAttributes(sourceView, sourcePath, destinationView, destinationPath);
-            metadata?.SetTo(destinationView, destinationPath);
+            var destinationLocation = new VfsLocation(destinationView, destinationPath);
+            CopyEntryAttributes(sourceLocation, destinationLocation);
+            metadata?.SetTo(destinationLocation);
         }
     }
 
@@ -167,25 +163,27 @@ static class IOHelper
     #region Move
 
     public static void MoveFileOptimized(
-        IFileSystemView sourceView, string sourcePath,
-        IFileSystemView destinationView, string destinationPath,
+        in VfsLocation source,
+        in VfsLocation destination,
         bool overwrite,
         VfsMoveOptions options)
     {
-        if (sourceView == destinationView)
-            destinationView.MoveFile(sourcePath, destinationPath, overwrite, options);
+        if (source.View == destination.View)
+            destination.View.MoveFile(source.Path, destination.Path, overwrite, options);
         else
-            MoveFileNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite, options);
+            MoveFileNaive(source, destination, overwrite, options);
     }
 
     public static void MoveFileNaive(
-        IFileSystemView sourceView, string sourcePath,
-        IFileSystemView destinationView, string destinationPath,
+        in VfsLocation source,
+        in VfsLocation destination,
         bool overwrite,
         VfsMoveOptions options)
     {
+        var (sourceView, sourcePath) = source;
+
         // Copy to the destination.
-        sourceView.CopyFile(sourcePath, destinationView, destinationPath, overwrite, VfsCopyOptions.Archive);
+        sourceView.CopyFile(sourcePath, destination, overwrite, VfsCopyOptions.Archive);
 
         // Delete from the source.
         try
@@ -195,7 +193,7 @@ static class IOHelper
         catch
         {
             // Rollback the copy if the move is not possible to complete.
-            destinationView.DeleteFile(destinationPath);
+            destination.View.DeleteFile(destination.Path);
             throw;
         }
     }
@@ -205,44 +203,40 @@ static class IOHelper
     #region Copy
 
     public static void CopyFileOptimized(
-        IReadOnlyFileSystemView sourceView,
-        string sourcePath,
-        IFileSystemView destinationView,
-        string destinationPath,
+        in VfsReadOnlyLocation source,
+        in VfsLocation destination,
         bool overwrite,
         VfsCopyOptions options)
     {
-        if (sourceView == destinationView)
-            destinationView.CopyFile(sourcePath, destinationPath, overwrite, options);
+        if (source.View == destination.View)
+            destination.View.CopyFile(source.Path, destination.Path, overwrite, options);
         else
-            CopyFileNaive(sourceView, sourcePath, destinationView, destinationPath, overwrite, options);
+            CopyFileNaive(source, destination, overwrite, options);
     }
 
     public static void CopyFileNaive(
-        IReadOnlyFileSystemView sourceView,
-        string sourcePath,
-        IFileSystemView destinationView,
-        string destinationPath,
+        in VfsReadOnlyLocation source,
+        in VfsLocation destination,
         bool overwrite,
         VfsCopyOptions options)
     {
         if ((options & VfsCopyOptions.Archive) != 0)
         {
-            var metadata = EntryMetadata.GetFrom(sourceView, sourcePath, destinationView);
+            var metadata = EntryMetadata.GetFrom(source, destination.View);
 
             CopyFileOptimized(
-                sourceView, sourcePath,
-                destinationView, destinationPath,
+                source,
+                destination,
                 overwrite,
                 options & ~VfsCopyOptions.Archive);
 
-            metadata.SetTo(destinationView, destinationPath);
+            metadata.SetTo(destination);
         }
         else
         {
-            using (var sourceStream = sourceView.ReadFile(sourcePath))
-            using (var destinationStream = destinationView.OpenFile(
-                destinationPath,
+            using (var sourceStream = source.View.ReadFile(source.Path))
+            using (var destinationStream = destination.View.OpenFile(
+                destination.Path,
                 overwrite ? FileMode.Create : FileMode.CreateNew,
                 FileAccess.Write,
                 FileShare.None))
@@ -250,7 +244,7 @@ static class IOHelper
                 sourceStream.CopyTo(destinationStream);
             }
 
-            CopyEntryAttributes(sourceView, sourcePath, destinationView, destinationPath);
+            CopyEntryAttributes(source, destination);
         }
     }
 
@@ -261,16 +255,14 @@ static class IOHelper
     #region Entry
 
     static void CopyEntryAttributes(
-        IReadOnlyFileSystemView sourceView,
-        string sourcePath,
-        IFileSystemView destinationView,
-        string destinationPath)
+        in VfsReadOnlyLocation source,
+        in VfsLocation destination)
     {
-        if (sourceView.SupportsLastWriteTime && destinationView.SupportsLastWriteTime)
+        if (source.View.SupportsLastWriteTime && destination.View.SupportsLastWriteTime)
         {
-            var lastWriteTime = sourceView.GetLastWriteTime(sourcePath);
-            EnsureEntryExist(sourcePath, lastWriteTime);
-            destinationView.SetLastWriteTime(destinationPath, lastWriteTime);
+            var lastWriteTime = source.View.GetLastWriteTime(source.Path);
+            EnsureEntryExist(source.Path, lastWriteTime);
+            destination.View.SetLastWriteTime(destination.Path, lastWriteTime);
         }
     }
 
@@ -280,10 +272,9 @@ static class IOHelper
     readonly struct EntryMetadata
     {
         public static EntryMetadata GetFrom(
-            IReadOnlyFileSystemView view,
-            string path,
+            in VfsReadOnlyLocation location,
             IReadOnlyFileSystemView? capabilitiesHint = null) =>
-            new(view, path, capabilitiesHint);
+            new(location.View, location.Path, capabilitiesHint);
 
         EntryMetadata(IReadOnlyFileSystemView view, string path, IReadOnlyFileSystemView? capabilitiesHint)
         {
@@ -302,8 +293,10 @@ static class IOHelper
             }
         }
 
-        public void SetTo(IFileSystemView view, string path)
+        public void SetTo(in VfsLocation location)
         {
+            var (view, path) = location;
+
             if (CreationTime.HasValue && view.SupportsCreationTime)
                 view.SetCreationTime(path, CreationTime.Value);
 
@@ -315,10 +308,13 @@ static class IOHelper
         public DateTime? LastAccessTime { get; }
     }
 
-    static void EnsureEntryExist(string path, DateTime time)
+    static void EnsureEntryExist(in VfsReadOnlyLocation location, DateTime time)
     {
         if (time == DateTime.MinValue)
+        {
+            string path = location.ToString();
             throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(path), path);
+        }
     }
 
     #endregion
