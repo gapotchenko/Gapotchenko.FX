@@ -34,25 +34,23 @@ partial class FileSystemViewExtensions
         string destinationPath) =>
         CopyDirectory(view, sourcePath, destinationPath, false);
 
-    /// <summary>
-    /// Copies an existing directory to a new directory.
-    /// Overwriting a directory of the same name is controlled by the <paramref name="overwrite"/> parameter.
-    /// </summary>
     /// <inheritdoc cref="IFileSystemView.CopyDirectory(string, string, bool, VfsCopyOptions)"/>
     /// <param name="view">The file system view to copy the directory for.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
     /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
     public static void CopyDirectory(
         this IFileSystemView view,
         string sourcePath,
         string destinationPath,
-        bool overwrite) =>
+        bool overwrite = false,
+        VfsCopyOptions options = VfsCopyOptions.None) =>
         (view ?? throw new ArgumentNullException(nameof(view)))
-        .CopyDirectory(sourcePath, destinationPath, overwrite, VfsCopyOptions.None);
+        .CopyDirectory(sourcePath, destinationPath, overwrite, options);
 
     /// <summary>
-    /// Copies an existing directory to a new directory in the specified destination <see cref="IFileSystemView"/> .
+    /// Copies an existing directory to a new directory in the specified destination location.
     /// Overwriting a directory of the same name is not allowed.
     /// </summary>
     /// <inheritdoc cref="CopyDirectory(IReadOnlyFileSystemView, string, VfsLocation, bool, VfsCopyOptions)"/>
@@ -62,7 +60,7 @@ partial class FileSystemViewExtensions
         CopyDirectory(sourceView, sourcePath, destination, false, VfsCopyOptions.None);
 
     /// <summary>
-    /// Copies an existing directory to a new directory in the specified destination <see cref="IFileSystemView"/>.
+    /// Copies an existing directory to a new directory in the specified destination location.
     /// Overwriting a directory of the same name is controlled by the <paramref name="overwrite"/> parameter.
     /// Additional operation options are controlled by the <paramref name="options"/> parameter.
     /// </summary>
@@ -109,23 +107,20 @@ partial class FileSystemViewExtensions
         string destinationPath) =>
         MoveDirectory(view, sourcePath, destinationPath, false);
 
-    /// <summary>
-    /// Moves a specified directory to a new location,
-    /// providing the options to specify a new directory name and
-    /// to overwrite the destination directory if it already exists.
-    /// </summary>
     /// <inheritdoc cref="IFileSystemView.MoveDirectory(string, string, bool, VfsMoveOptions)"/>
     /// <param name="view">The file system view to move the directory at.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
     /// <param name="destinationPath"><inheritdoc/></param>
     /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
     public static void MoveDirectory(
         this IFileSystemView view,
         string sourcePath,
         string destinationPath,
-        bool overwrite) =>
+        bool overwrite = false,
+        VfsMoveOptions options = VfsMoveOptions.None) =>
         (view ?? throw new ArgumentNullException(nameof(view)))
-        .MoveDirectory(sourcePath, destinationPath, overwrite, VfsMoveOptions.None);
+        .MoveDirectory(sourcePath, destinationPath, overwrite, options);
 
     /// <summary>
     /// Moves a specified directory to a new location,
