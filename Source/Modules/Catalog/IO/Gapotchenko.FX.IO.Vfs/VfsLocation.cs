@@ -17,7 +17,7 @@ public readonly struct VfsLocation
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="VfsLocation"/> structure using
-    /// the <see cref="FileSystemView.Local">local</see> <see cref="IFileSystemView"/> and
+    /// the <see cref="FileSystemView.Local"/> and
     /// the specified file-system entry path.
     /// </summary>
     /// <param name="path">The path of a file-system entry.</param>
@@ -91,8 +91,8 @@ public readonly struct VfsLocation
 public readonly struct VfsReadOnlyLocation
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="VfsLocation"/> structure using
-    /// the <see cref="FileSystemView.Local">local</see> <see cref="IReadOnlyFileSystemView"/> and
+    /// Initializes a new instance of the <see cref="VfsReadOnlyLocation"/> structure using
+    /// the <see cref="FileSystemView.Local"/> and
     /// the specified file-system entry path.
     /// </summary>
     /// <param name="path">The path of a file-system entry.</param>
