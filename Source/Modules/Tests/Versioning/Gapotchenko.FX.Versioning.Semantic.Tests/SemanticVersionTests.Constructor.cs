@@ -80,6 +80,8 @@ partial class SemanticVersionTests
         Assert.IsNull(version.Prerelease);
         Assert.IsNull(version.Build);
 
-        Assert.ThrowsExactly<ArgumentNullException>(() => new SemanticVersion(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new SemanticVersion((string)null!));
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => new SemanticVersion((Version)null!));
     }
 }

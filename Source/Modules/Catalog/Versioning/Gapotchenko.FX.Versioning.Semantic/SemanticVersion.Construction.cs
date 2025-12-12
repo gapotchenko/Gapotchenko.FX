@@ -86,6 +86,23 @@ partial record SemanticVersion
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="SemanticVersion"/> record using the specified <see cref="Version"/> object.
+    /// </summary>
+    /// <remarks>
+    /// The conversion is lossy because <see cref="Version"/> class has no properties equivalent to <see cref="Prerelease"/> and <see cref="Build"/>.
+    /// </remarks>
+    /// <param name="version">The version object.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="version"/> is <see langword="null"/>.</exception>
+    public SemanticVersion(Version version)
+    {
+        ArgumentNullException.ThrowIfNull(version);
+
+        m_Major = version.Major;
+        m_Minor = version.Minor;
+        m_Patch = Gapotchenko.FX.Empty.Nullify(version.Build, -1) ?? 0;
+    }
+
+    /// <summary>
     /// Copy constructor. Initializes a new record clone.
     /// </summary>
     /// <param name="semanticVersion">The record to clone.</param>
