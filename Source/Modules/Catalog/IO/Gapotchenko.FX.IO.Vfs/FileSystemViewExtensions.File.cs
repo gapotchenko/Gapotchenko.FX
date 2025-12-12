@@ -609,6 +609,14 @@ partial class FileSystemViewExtensions
         VfsLocation destination) =>
         CopyFile(sourceView, sourcePath, destination, false, VfsCopyOptions.None);
 
+    /// <inheritdoc cref="CopyFile(IReadOnlyFileSystemView, string, VfsLocation)"/>
+    [Obsolete("Use CopyFile(string, VfsLocation) method instead.", true)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void CopyFile(
+        this IReadOnlyFileSystemView sourceView, string sourcePath,
+        string destinationPath) =>
+        throw new InvalidOperationException();
+
     /// <summary>
     /// Copies an existing file to a new file in the specified destination location.
     /// Overwriting a file of the same name is controlled by the <paramref name="overwrite"/> parameter.
@@ -641,6 +649,16 @@ partial class FileSystemViewExtensions
             overwrite,
             options);
     }
+
+    /// <inheritdoc cref="CopyFile(IReadOnlyFileSystemView, string, VfsLocation, bool, VfsCopyOptions)"/>
+    [Obsolete("Use CopyFile(string, VfsLocation, bool, VfsCopyOptions) method instead.", true)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void CopyFile(
+        this IReadOnlyFileSystemView sourceView, string sourcePath,
+        string destinationPath,
+        bool overwrite = false,
+        VfsCopyOptions options = VfsCopyOptions.None) =>
+        throw new InvalidOperationException();
 
     #endregion
 

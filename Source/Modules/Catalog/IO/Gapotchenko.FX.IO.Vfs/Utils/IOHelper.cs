@@ -143,7 +143,7 @@ static class IOHelper
                     sourceView.GetFileName(sourceEntryPath));
 
                 if (sourceView.FileExists(sourceEntryPath))
-                    sourceView.CopyFile(sourceEntryPath, new(destinationView, destinationEntryPath), overwrite, options);
+                    sourceView.CopyFile(sourceEntryPath, new VfsLocation(destinationView, destinationEntryPath), overwrite, options);
                 else
                     CopyDirectoryCore(sourceEntryPath, destinationEntryPath);
             }
