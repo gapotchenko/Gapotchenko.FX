@@ -133,12 +133,12 @@ public interface IIntervalOperations<T>
     bool Contains(T value);
 
     /// <summary>
-    /// Returns an integer that indicates the zone of a specified value in relation to the interval range.
+    /// Returns an integer that indicates a zone of the specified value in relation to the interval range.
     /// </summary>
-    /// <param name="value">The value to get the zone for.</param>
+    /// <param name="value">The value to get a zone for.</param>
     /// <returns>
     /// <para>
-    /// A number that indicates the zone of <paramref name="value"/>, as shown in the following table.
+    /// An integer number that indicates a zone of the <paramref name="value"/>, as shown in the following table.
     /// </para>
     /// <para>
     /// <c>0</c> if the interval contains the <paramref name="value"/> or is empty.
