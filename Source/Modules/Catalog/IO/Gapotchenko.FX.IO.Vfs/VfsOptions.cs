@@ -14,7 +14,7 @@ public abstract record VfsOptions
 {
     /// <summary>
     /// Gets or initializes the value indicating whether to track
-    /// a virtual file system's storage location in the parent file system.
+    /// a virtual file system's location in the parent storage.
     /// </summary>
     /// <remarks>
     /// The value of this property affects the presence of <see cref="IReadOnlyVirtualFileSystem.Location"/> value

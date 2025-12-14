@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.IO.Vfs;
 public interface IReadOnlyVirtualFileSystem : IReadOnlyFileSystemView, IDisposable
 {
     /// <summary>
-    /// Gets the storage location in the parent file system,
+    /// Gets the file system location in the parent storage,
     /// or <see langword="null"/> if the location is unavailable.
     /// </summary>
     VfsReadOnlyLocation? Location { get; }
