@@ -29,7 +29,7 @@ public interface IIntervalOperations<T>
     /// <summary>
     /// Gets the <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
     /// </summary>
-    public IComparer<T> Comparer { get; }
+    IComparer<T> Comparer { get; }
 
     /// <summary>
     /// <para>
