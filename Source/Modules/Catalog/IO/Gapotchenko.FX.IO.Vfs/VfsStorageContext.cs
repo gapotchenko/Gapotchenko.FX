@@ -13,10 +13,10 @@ namespace Gapotchenko.FX.IO.Vfs;
 public record VfsStorageContext
 {
     /// <summary>
-    /// Gets or initializes the virtual file system's storage location in the parent file system.
+    /// Gets or initializes the virtual file system's location in the parent storage.
     /// </summary>
     /// <remarks>
-    /// The value of this property determines the value of <see cref="IReadOnlyVirtualFileSystem.Location"/> property
+    /// The value of this property determines the value of <see cref="IStorageMountableVfs.Location"/> property
     /// in a mounted file system.
     /// </remarks>
     public VfsReadOnlyLocation? Location { get; init; }

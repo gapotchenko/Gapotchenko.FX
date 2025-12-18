@@ -165,12 +165,12 @@ static class VfsLocationFormatter
 
     static void BuildString(StringBuilder sb, IReadOnlyFileSystemView view, string path)
     {
-        if (view is IReadOnlyVirtualFileSystem fs &&
-            fs.Location is { } storageLocation)
+        if (view is IStorageMountableVfs mountedFS &&
+            mountedFS.Location is { } mountLocation)
         {
             // Storage path
-            var storageView = storageLocation.View;
-            BuildString(sb, storageView, storageLocation.Path);
+            var storageView = mountLocation.View;
+            BuildString(sb, storageView, mountLocation.Path);
 
             // Directory separator
             sb.Append(storageView.DirectorySeparatorChar);
