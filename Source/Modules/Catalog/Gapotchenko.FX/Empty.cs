@@ -495,6 +495,22 @@ public static class Empty
     }
 
     /// <summary>
+    /// Nullifies a default comparer for type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of objects compared by a comparer.</typeparam>
+    /// <param name="comparer">The comparer.</param>
+    /// <returns>The value of <paramref name="comparer"/> or <see langword="null"/> if it represents a default comparer for type <typeparamref name="T"/>.</returns>
+    public static IComparer<T>? Nullify<T>(IComparer<T>? comparer)
+    {
+        if (comparer == null)
+            return null;
+        else if (comparer == Comparer<T>.Default)
+            return null;
+        else
+            return comparer;
+    }
+
+    /// <summary>
     /// Returns an empty <see cref="System.Threading.Tasks.Task"/> that has already completed successfully.
     /// </summary>
 #if TFF_COMPLETED_TASK

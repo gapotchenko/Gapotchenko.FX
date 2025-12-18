@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of interval values.</typeparam>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public interface IIntervalOperations<T>
+public interface IIntervalOperations<T> : IEmptiable
 {
     /// <summary>
     /// Gets the left boundary of the interval.
@@ -102,11 +102,6 @@ public interface IIntervalOperations<T>
     /// </para>
     /// </summary>
     IInterval<T> Enclosure { get; }
-
-    /// <summary>
-    /// Gets a value indicating whether the interval is empty.
-    /// </summary>
-    bool IsEmpty { get; }
 
     /// <summary>
     /// Gets a value indicating whether the interval is infinite.

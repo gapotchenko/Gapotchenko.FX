@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -48,6 +49,7 @@ public static class Interval
     /// or <see langword="null"/> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
     /// </param>
     /// <returns>The new <see cref="Interval{T}"/> instance.</returns>
+    /// <exception cref="ArgumentException">If one interval boundary is empty, another should be empty too.</exception>
     public static Interval<T> Create<T>(IntervalBoundary<T> from, IntervalBoundary<T> to, IComparer<T>? comparer = null) => new(from, to, comparer);
 
     /// <summary>
@@ -360,10 +362,7 @@ public static class Interval
     /// <code>∅</code>
     /// </summary>
     /// <returns>The instance of the empty <see cref="Interval{T}"/>.</returns>
-    public static Interval<T> Empty<T>() =>
-#pragma warning disable CS0618 // Type or member is obsolete
-        Interval<T>.Empty;
-#pragma warning restore CS0618 // Type or member is obsolete
+    public static Interval<T> Empty<T>() => Interval<T>.Empty;
 
     /// <summary>
     /// Returns an empty <see cref="Interval{T}"/>

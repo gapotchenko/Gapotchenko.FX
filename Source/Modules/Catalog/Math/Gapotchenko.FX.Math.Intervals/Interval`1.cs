@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of interval value.</typeparam>
 [DebuggerDisplay("{ToString(),nq}")]
-public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
+public sealed record Interval<T> : IConstructibleInterval<T, Interval<T>>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified inclusive left and exclusive right bounds:
@@ -66,18 +66,10 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
         Comparer = comparer;
     }
 
-#pragma warning disable CA1000 // Do not declare static members on generic types
-    /// <inheritdoc cref="Interval.Empty{T}()"/>
-    [Obsolete(
-        "Use Interval.Empty<T>() method instead because this method is a part of Gapotchenko.FX infrastructure and should not be used directly."
-#if NET5_0_OR_GREATER
-        , DiagnosticId = "GPFX0001"
-#endif
-        )]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static Interval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
-#pragma warning restore CA1000 // Do not declare static members on generic types
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    internal static Interval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     internal static Interval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
 
     /// <inheritdoc/>
@@ -116,7 +108,9 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
     /// <inheritdoc/>
     public bool IsHalfOpen => IntervalEngine.IsHalfOpen<Interval<T>, T>(this);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets a value indicating whether the interval is empty.
+    /// </summary>
     public bool IsEmpty => IntervalEngine.IsEmpty(this, m_Comparer);
 
     /// <inheritdoc/>
@@ -277,4 +271,19 @@ public sealed record Interval<T> : IInterval<T>, IEmptiable<Interval<T>>
 
     // Minify unused record method.
     bool PrintMembers(StringBuilder _) => false;
+
+    #region IConstructibleInterval
+
+#if TFF_STATIC_INTERFACE
+
+    static Interval<T> IEmptiable<Interval<T>>.Empty => Empty;
+
+    static Interval<T> IConstructibleInterval<T, Interval<T>>.Infinite => Infinite;
+
+    static Interval<T> IConstructibleInterval<T, Interval<T>>.Create(IntervalBoundary<T> from, IntervalBoundary<T> to, IComparer<T>? comparer) =>
+        new(from, to, comparer);
+
+#endif
+
+    #endregion
 }

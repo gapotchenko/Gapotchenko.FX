@@ -288,9 +288,7 @@ public static class ValueInterval
     /// <code>∅</code>
     /// </summary>
     public static ValueInterval<T> Empty<T>() where T : IEquatable<T>, IComparable<T> =>
-#pragma warning disable CS0618 // Type or member is obsolete
         ValueInterval<T>.Empty;
-#pragma warning restore CS0618 // Type or member is obsolete
 
     /// <summary>
     /// Returns an infinite <see cref="ValueInterval{T}"/>:
