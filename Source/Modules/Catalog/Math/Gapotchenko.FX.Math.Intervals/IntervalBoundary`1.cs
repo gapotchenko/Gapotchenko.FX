@@ -71,6 +71,9 @@ public readonly struct IntervalBoundary<T> : IEquatable<IntervalBoundary<T>>
     /// </summary>
     public IntervalBoundaryKind Kind { get; }
 
+    /// <inheritdoc/>
+    public override string ToString() => IntervalEngine.ToString(this, null, null);
+
     internal static IntervalBoundary<T> Empty { get; } = new(IntervalBoundaryKind.Empty, default!);
 
     internal static IntervalBoundary<T> NegativeInfinity { get; } = new(IntervalBoundaryKind.NegativeInfinity, default!);
@@ -103,6 +106,8 @@ public readonly struct IntervalBoundary<T> : IEquatable<IntervalBoundary<T>>
 
         return new(Kind, HasValue ? selector(m_Value) : default!);
     }
+
+    #region Equality
 
     /// <summary>
     /// Determines whether the specified interval boundaries are equal.
@@ -185,4 +190,6 @@ public readonly struct IntervalBoundary<T> : IEquatable<IntervalBoundary<T>>
             hc.Add(comparer != null ? comparer.GetHashCode(value) : value.GetHashCode());
         return hc.ToHashCode();
     }
+
+    #endregion
 }

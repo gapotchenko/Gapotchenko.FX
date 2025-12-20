@@ -307,33 +307,59 @@ static class IntervalEngine
             sb.Append(')');
 
         return sb.ToString();
+    }
 
-        static void AppendBoundary(
-            StringBuilder sb,
-            in IntervalBoundary<TBound> boundary,
-            string emptySymbol,
-            string infinitySymbol,
-            IFormatProvider? formatProvider)
+    public static string ToString<T>(in IntervalBoundary<T> boundary, string? format, IFormatProvider? formatProvider) =>
+        format switch
         {
-            switch (boundary.Kind)
-            {
-                case IntervalBoundaryKind.Empty:
-                    sb.Append(emptySymbol); // ∅
-                    break;
-                case IntervalBoundaryKind.NegativeInfinity:
-                    sb.Append('-').Append(infinitySymbol); // -∞
-                    break;
-                case IntervalBoundaryKind.PositiveInfinity:
-                    sb.Append(infinitySymbol); // ∞
-                    break;
-                default:
-                    var value = boundary.Value;
-                    if (formatProvider is not null && value is IFormattable formattableValue)
-                        sb.Append(formattableValue.ToString(null, formatProvider));
-                    else
-                        sb.Append(value?.ToString());
-                    break;
-            }
+            "G" or "" or null => ToStringCore(boundary, "{}", "inf", formatProvider),
+            "U" => ToStringCore(boundary, "∅", "∞", formatProvider),
+            _ => throw new FormatException()
+        };
+
+    static string ToStringCore<T>(in IntervalBoundary<T> boundary, string emptySymbol, string infinitySymbol, IFormatProvider? formatProvider)
+    {
+        var sb = new StringBuilder();
+        AppendBoundary(sb, boundary, emptySymbol, infinitySymbol, formatProvider);
+
+        string? description = boundary.Kind switch
+        {
+            IntervalBoundaryKind.Inclusive => "inclusive",
+            IntervalBoundaryKind.Exclusive => "exclusive",
+            _ => null
+        };
+
+        if (description != null)
+            sb.AppendFormat(" ({0})", description);
+
+        return sb.ToString();
+    }
+
+    static void AppendBoundary<T>(
+        StringBuilder sb,
+        in IntervalBoundary<T> boundary,
+        string emptySymbol,
+        string infinitySymbol,
+        IFormatProvider? formatProvider)
+    {
+        switch (boundary.Kind)
+        {
+            case IntervalBoundaryKind.Empty:
+                sb.Append(emptySymbol); // ∅
+                break;
+            case IntervalBoundaryKind.NegativeInfinity:
+                sb.Append('-').Append(infinitySymbol); // -∞
+                break;
+            case IntervalBoundaryKind.PositiveInfinity:
+                sb.Append(infinitySymbol); // ∞
+                break;
+            default:
+                var value = boundary.Value;
+                if (formatProvider is not null && value is IFormattable formattableValue)
+                    sb.Append(formattableValue.ToString(null, formatProvider));
+                else
+                    sb.Append(value?.ToString());
+                break;
         }
     }
 
