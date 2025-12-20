@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -119,21 +120,6 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     /// <param name="value">A <see cref="Optional{T}"/> value.</param>
     public static explicit operator T(Optional<T> value) => value.Value;
 
-    /// <summary>
-    /// <para>
-    /// Returns <see cref="Optional{T}"/> object initialized without a value.
-    /// </para>
-    /// <para>
-    /// Use <seealso cref="Optional.Some{T}(T)"/> method to create a new <see cref="Optional{T}"/> object initialized to a specified value.
-    /// </para>
-    /// </summary>
-    /// <returns>
-    /// A <see cref="Optional{T}"/> object whose <see cref="HasValue"/> property is <see langword="false"/>.
-    /// </returns>
-#pragma warning disable CA1000 // Do not declare static members on generic types
-    public static Optional<T> None => default;
-#pragma warning restore CA1000
-
     #region Equality
 
     /// <summary>
@@ -189,7 +175,7 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
         static Optional<T> EmptifyNull(in Optional<T> optional)
         {
             if (optional.HasValue && optional.Value is null)
-                return None;
+                return Optional.None<T>();
             else
                 return optional;
         }
@@ -325,6 +311,22 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     public static bool operator <=(Optional<T> left, Optional<T> right) => left.HasValue && right.HasValue && left.CompareTo(right) <= 0;
 
     readonly int CompareTo(Optional<T> other) => Optional.Compare(this, other, null);
+
+    #endregion
+
+    #region Compatibility
+
+#if BINARY_COMPATIBILITY || SOURCE_COMPATIBILITY
+
+    /// <inheritdoc cref="Optional.None{T}"/>
+    [Obsolete("Use Optional.None<T>() method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+#pragma warning disable CA1000 // Do not declare static members on generic types
+    public static Optional<T> None => default;
+#pragma warning restore CA1000
+
+#endif
 
     #endregion
 }

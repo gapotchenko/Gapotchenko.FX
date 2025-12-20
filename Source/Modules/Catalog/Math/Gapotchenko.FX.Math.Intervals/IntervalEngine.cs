@@ -350,7 +350,7 @@ static class IntervalEngine
             return default;
 
         var comparer = interval.Comparer;
-        var allowedMinimum = Optional<TValue>.None;
+        var allowedMinimum = Optional.None<TValue>();
 
         switch (interval.From.Kind)
         {

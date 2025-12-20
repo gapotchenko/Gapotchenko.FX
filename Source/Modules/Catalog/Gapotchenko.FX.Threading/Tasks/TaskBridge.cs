@@ -180,7 +180,7 @@ public static class TaskBridge
     {
         ExceptionHelper.ThrowIfArgumentIsNull(func);
 
-        var result = Optional<TResult>.None;
+        var result = Optional.None<TResult>();
 
         await
             ExecuteAsyncCore(
@@ -216,7 +216,7 @@ public static class TaskBridge
     {
         ExceptionHelper.ThrowIfArgumentIsNull(func);
 
-        var result = Optional<TResult>.None;
+        var result = Optional.None<TResult>();
 
         await
             ExecuteAsyncCore(
@@ -273,7 +273,7 @@ public static class TaskBridge
     {
         Debug.Assert(task is not null);
 
-        var result = Optional<TResult>.None;
+        var result = Optional.None<TResult>();
 
         ExecuteCore(
             async () =>
@@ -288,7 +288,7 @@ public static class TaskBridge
     {
         Debug.Assert(task is not null);
 
-        var result = Optional<TResult>.None;
+        var result = Optional.None<TResult>();
 
         ExecuteCore(
             async cancellationToken =>

@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -16,11 +17,25 @@ public static class Optional
 {
     /// <summary>
     /// <para>
+    /// Returns <see cref="Optional{T}"/> object initialized without a value.
+    /// </para>
+    /// <para>
+    /// Alternatively, it can be obtained by using the <see langword="default"/> programming language keyword.
+    /// Use <seealso cref="Some{T}(T)"/> method to create a new <see cref="Optional{T}"/> object initialized to a specified value.
+    /// </para>
+    /// </summary>
+    /// <returns>
+    /// A <see cref="Optional{T}"/> object whose <see cref="Optional{T}.HasValue"/> property is <see langword="false"/>.
+    /// </returns>
+    public static Optional<T> None<T>() => default;
+
+    /// <summary>
+    /// <para>
     /// Creates a new <see cref="Optional{T}"/> object initialized to a specified value.
     /// </para>
     /// <para>
-    /// Use <seealso cref="Optional{T}.None"/> property to get an <see cref="Optional{T}"/> object without a value.
-    /// Alternatively, it can be obtained by using the <c>default</c> (C#) or <c>Nothing</c> (VB.NET) programming language keyword.
+    /// Use <seealso cref="None{T}"/> method to get an <see cref="Optional{T}"/> object without a value.
+    /// Alternatively, it can be obtained by using the <see langword="default"/> programming language keyword.
     /// </para>
     /// </summary>
     /// <typeparam name="T">The underlying type of the <see cref="Optional{T}"/> generic type.</typeparam>

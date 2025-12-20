@@ -188,7 +188,7 @@ partial class EnumerableEx
         Enumerable.MinBy(source, keySelector, comparer);
 #else
     public static TSource? MinBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
-        _MinMaxCore(source, keySelector, comparer, false, Optional<TSource>.None);
+        _MinMaxCore(source, keySelector, comparer, false, Optional.None<TSource>());
 #endif
 
     /// <summary>
@@ -221,7 +221,7 @@ partial class EnumerableEx
         Enumerable.MaxBy(source, keySelector, comparer);
 #else
     public static TSource? MaxBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
-        _MinMaxCore(source, keySelector, comparer, true, Optional<TSource>.None);
+        _MinMaxCore(source, keySelector, comparer, true, Optional.None<TSource>());
 #endif
 
     /// <summary>

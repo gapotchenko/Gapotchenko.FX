@@ -27,7 +27,7 @@ partial class TaskHelper
         return DoExecuteWithTimeout(
             func,
             timeout,
-            Optional<TResult>.None,
+            Optional.None<TResult>(),
             cancellationToken);
     }
 

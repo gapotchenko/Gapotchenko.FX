@@ -47,7 +47,7 @@ public static class Poll
 
         int minDispersion = 0;
         int maxDispersion = 0;
-        var random = Optional<Random?>.None;
+        var random = Optional.None<Random?>();
 
         for (; ; )
         {
