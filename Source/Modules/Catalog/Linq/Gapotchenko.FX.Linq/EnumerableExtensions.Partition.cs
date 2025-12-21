@@ -27,6 +27,8 @@ partial class EnumerableExtensions
     /// An <see cref="IEnumerable{T}"/> sequence of <see cref="IGrouping{TKey, TElement}"/> objects where
     /// each object contains a collection of elements and a key.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
     public static IEnumerable<IGrouping<TKey, TSource>> PartitionBy<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector) =>
@@ -48,6 +50,8 @@ partial class EnumerableExtensions
     /// An <see cref="IEnumerable{T}"/> sequence of <see cref="IGrouping{TKey, TElement}"/> objects where
     /// each object contains a collection of elements and a key.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
     [OverloadResolutionPriority(1)]
     public static IEnumerable<IGrouping<TKey, TSource>> PartitionBy<TSource, TKey>(
         this IEnumerable<TSource> source,
@@ -71,6 +75,8 @@ partial class EnumerableExtensions
     /// An <see cref="IEnumerable{T}"/> sequence of <see cref="IGrouping{TKey, TElement}"/> objects where
     /// each object contains a collection of elements and a key.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
     public static IEnumerable<IGrouping<TKey, TSource>> PartitionBy<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
@@ -96,6 +102,9 @@ partial class EnumerableExtensions
     /// An <see cref="IEnumerable{T}"/> sequence of <see cref="IGrouping{TKey, TElement}"/> objects where
     /// each object contains a collection of elements and a key.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="elementSelector"/> is <see langword="null"/>.</exception>
     public static IEnumerable<IGrouping<TKey, TElement>> PartitionBy<TSource, TElement, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
@@ -121,6 +130,9 @@ partial class EnumerableExtensions
     /// An <see cref="IEnumerable{T}"/> sequence of <see cref="IGrouping{TKey, TElement}"/> objects where
     /// each object contains a collection of elements and a key.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="elementSelector"/> is <see langword="null"/>.</exception>
     [OverloadResolutionPriority(1)]
     public static IEnumerable<IGrouping<TKey, TElement>> PartitionBy<TSource, TElement, TKey>(
         this IEnumerable<TSource> source,
@@ -156,6 +168,9 @@ partial class EnumerableExtensions
     /// An <see cref="IEnumerable{T}"/> sequence of <see cref="IGrouping{TKey, TElement}"/> objects where
     /// each object contains a collection of elements and a key.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="elementSelector"/> is <see langword="null"/>.</exception>
     public static IEnumerable<IGrouping<TKey, TElement>> PartitionBy<TSource, TElement, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
@@ -183,15 +198,10 @@ partial class EnumerableExtensions
         {
             var key = keySelector(x);
 
-            if (partition != null)
+            if (partition != null && !keyEquals(key, partition.Key))
             {
-                key = keySelector(x);
-
-                if (!keyEquals(key, partition.Key))
-                {
-                    yield return partition;
-                    partition = null;
-                }
+                yield return partition;
+                partition = null;
             }
 
             (partition ??= new(key)).Add(elementSelector(x));
