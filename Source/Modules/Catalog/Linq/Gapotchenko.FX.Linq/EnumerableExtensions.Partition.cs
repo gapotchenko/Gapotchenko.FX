@@ -114,7 +114,7 @@ partial class EnumerableExtensions
     /// <summary>
     /// Partitions the elements of a sequence according to a key selector function.
     /// The keys are compared by using a comparer and
-    /// each group's elements are projected by using a specified function.
+    /// each partition's elements are projected by using a specified function.
     /// </summary>
     /// <remarks>
     /// The order of sequence elements is preserved.
@@ -152,7 +152,7 @@ partial class EnumerableExtensions
     /// <summary>
     /// Partitions the elements of a sequence according to a key selector function.
     /// The keys are compared by using a comparer and
-    /// each group's elements are projected by using a specified function.
+    /// each partition's elements are projected by using a specified function.
     /// </summary>
     /// <remarks>
     /// The order of sequence elements is preserved.
