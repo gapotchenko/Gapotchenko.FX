@@ -375,7 +375,7 @@ public static class Interval
     /// </param>
     /// <returns>An instance of the empty <see cref="Interval{T}"/>.</returns>
     public static Interval<T> Empty<T>(IComparer<T>? comparer) =>
-        IsDefaultComparer<T>(comparer) ?
+        FX.Empty.Nullify(comparer) is null ?
             Empty<T>() :
             new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty, comparer);
 
@@ -397,11 +397,7 @@ public static class Interval
     /// </param>
     /// <returns>An instance of the infinite <see cref="Interval{T}"/>.</returns>
     public static Interval<T> Infinite<T>(IComparer<T>? comparer) =>
-        IsDefaultComparer<T>(comparer) ?
+        FX.Empty.Nullify(comparer) is null ?
             Infinite<T>() :
             new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity, comparer);
-
-    static bool IsDefaultComparer<T>([NotNullWhen(false)] IComparer<T>? comparer) =>
-        comparer is null ||
-        comparer.Equals(Comparer<T>.Default);
 }

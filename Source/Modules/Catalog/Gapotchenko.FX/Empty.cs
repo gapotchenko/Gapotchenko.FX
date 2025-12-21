@@ -486,7 +486,7 @@ public static class Empty
     /// <returns>The value of <paramref name="comparer"/> or <see langword="null"/> if it represents a default equality comparer for type <typeparamref name="T"/>.</returns>
     public static IEqualityComparer<T>? Nullify<T>(IEqualityComparer<T>? comparer)
     {
-        if (comparer == null)
+        if (comparer is null)
             return null;
         else if (comparer == EqualityComparer<T>.Default)
             return null;
@@ -502,9 +502,9 @@ public static class Empty
     /// <returns>The value of <paramref name="comparer"/> or <see langword="null"/> if it represents a default comparer for type <typeparamref name="T"/>.</returns>
     public static IComparer<T>? Nullify<T>(IComparer<T>? comparer)
     {
-        if (comparer == null)
+        if (comparer is null)
             return null;
-        else if (comparer == Comparer<T>.Default)
+        else if (Comparer<T>.Default.Equals(comparer))
             return null;
         else
             return comparer;
