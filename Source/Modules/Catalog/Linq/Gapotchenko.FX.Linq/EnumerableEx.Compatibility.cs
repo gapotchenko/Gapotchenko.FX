@@ -28,6 +28,12 @@ partial class EnumerableEx
 #endif
         IEnumerable<TSource>? source) => source?.ReifyList();
 
+    /// <inheritdoc cref="EnumerableExtensions.PartitionBy{TElement, TKey}(IEnumerable{TElement}, Func{TElement, TKey})"/>
+    [Obsolete("Use extension method of IEnumerable<T> interface instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static IEnumerable<IGrouping<TKey, TElement>> PartitionBy<TElement, TKey>(IEnumerable<TElement> source, Func<TElement, TKey> keySelector) =>
+        EnumerableExtensions.PartitionBy(source, keySelector);
+
 #endif // SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
 
 #if BINARY_COMPATIBILITY
