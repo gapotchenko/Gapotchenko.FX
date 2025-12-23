@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -13,7 +14,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// <summary>
 /// Represents a continuous interval.
 /// </summary>
-/// <typeparam name="T">The type of interval value.</typeparam>
+/// <typeparam name="T">The type of interval values.</typeparam>
 [DebuggerDisplay("{ToString(),nq}")]
 public sealed record Interval<T> : IConstructibleInterval<T, Interval<T>>
 {

@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// <summary>
 /// Represents a continuous value interval.
 /// </summary>
-/// <typeparam name="T">The type of interval value.</typeparam>
+/// <typeparam name="T">The type of interval values.</typeparam>
 [DebuggerDisplay("{ToString(),nq}")]
 public readonly struct ValueInterval<T> : IConstructibleInterval<T, ValueInterval<T>>, IEquatable<ValueInterval<T>>
     where T : IEquatable<T>?, IComparable<T>?
