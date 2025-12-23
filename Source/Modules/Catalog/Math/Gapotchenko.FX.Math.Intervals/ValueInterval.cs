@@ -270,7 +270,7 @@ public static partial class ValueInterval
             IntervalBoundary.Inclusive(value));
 
     /// <summary>
-    /// Creates a new <see cref="ValueInterval{T}"/> instance with negative infinity as the left boundary and the specified right inclusive bound:
+    /// Creates a new <see cref="ValueInterval{T}"/> instance with negative infinity as the left boundary and the specified right exclusive bound:
     /// <c>(-∞,value)</c>.
     /// </summary>
     /// <param name="value">

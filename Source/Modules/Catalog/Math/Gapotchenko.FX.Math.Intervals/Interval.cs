@@ -338,7 +338,7 @@ public static class Interval
             comparer);
 
     /// <summary>
-    /// Creates a new <see cref="Interval{T}"/> instance with negative infinity as the left boundary and the specified right inclusive bound:
+    /// Creates a new <see cref="Interval{T}"/> instance with negative infinity as the left boundary and the specified right exclusive bound:
     /// <c>(-∞,value)</c>.
     /// </summary>
     /// <param name="value">
