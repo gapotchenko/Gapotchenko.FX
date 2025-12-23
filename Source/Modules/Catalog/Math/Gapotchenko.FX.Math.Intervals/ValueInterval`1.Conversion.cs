@@ -23,12 +23,4 @@ partial struct ValueInterval<T>
     /// </summary>
     /// <param name="interval">The <see cref="ValueInterval{T}"/> instance to convert.</param>
     public static implicit operator Interval<T>(ValueInterval<T> interval) => new(interval.From, interval.To);
-
-    /// <summary>
-    /// <inheritdoc cref="IntervalExtensions.ToValueInterval{T}(IInterval{T})" />
-    /// </summary>
-    /// <returns>The <see cref="ValueInterval{T}"/> instance.</returns>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("ValueInterval<T> type does not need a conversion to itself.", true)]
-    public ValueInterval<T> ToValueInterval() => this;
 }

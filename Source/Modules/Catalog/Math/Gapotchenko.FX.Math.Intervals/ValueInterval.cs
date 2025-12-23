@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// <summary>
 /// Provides static methods for creating value intervals.
 /// </summary>
-public static class ValueInterval
+public static partial class ValueInterval
 {
     /// <summary>
     /// Creates a new <see cref="ValueInterval{T}"/> instance with the specified inclusive left and exclusive right bounds:
