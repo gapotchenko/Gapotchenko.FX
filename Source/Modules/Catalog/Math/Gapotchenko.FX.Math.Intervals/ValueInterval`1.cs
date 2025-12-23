@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of interval values.</typeparam>
 [DebuggerDisplay("{ToString(),nq}")]
-public readonly struct ValueInterval<T> : IConstructibleInterval<T, ValueInterval<T>>, IEquatable<ValueInterval<T>>
+public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, ValueInterval<T>>, IEquatable<ValueInterval<T>>
     where T : IEquatable<T>?, IComparable<T>?
 {
     /// <summary>
@@ -252,21 +252,6 @@ public readonly struct ValueInterval<T> : IConstructibleInterval<T, ValueInterva
     /// <inheritdoc/>
     public string ToString(string? format, IFormatProvider? formatProvider) =>
         IntervalEngine.ToString<ValueInterval<T>, T>(this, format, formatProvider);
-
-    /// <summary>
-    /// Converts a specified <see cref="Interval{T}"/> instance to <see cref="ValueInterval{T}"/>.
-    /// </summary>
-    /// <param name="interval">The <see cref="Interval{T}"/> instance to convert.</param>
-    public static implicit operator ValueInterval<T>(Interval<T> interval) =>
-        interval is null ?
-            default :
-            new(interval.From, interval.To);
-
-    /// <summary>
-    /// Converts a specified <see cref="ValueInterval{T}"/> instance to <see cref="Interval{T}"/>.
-    /// </summary>
-    /// <param name="interval">The <see cref="ValueInterval{T}"/> instance to convert.</param>
-    public static implicit operator Interval<T>(ValueInterval<T> interval) => new(interval.From, interval.To);
 
     #region IConstructibleInterval
 
