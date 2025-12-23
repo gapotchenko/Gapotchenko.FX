@@ -22,6 +22,7 @@ public sealed class ValueIntervalTests : IntervalCoreTests
     public void ValueInterval_Default()
     {
         ValueInterval<string?> interval = default;
+
         Assert.IsTrue(interval.IsEmpty);
         Assert.IsFalse(interval.Contains(default));
     }
