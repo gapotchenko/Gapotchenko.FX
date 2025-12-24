@@ -19,20 +19,20 @@ partial class MathEx
     /// <paramref name="max"/> if <paramref name="value"/> &gt; <paramref name="max"/>.
     /// </returns>
     [return: NotNullIfNotNull(nameof(value))]
-    public static T? Clamp<T>(T? value, T? min, T? max) where T : IComparable<T>
+    public static T? Clamp<T>(T? value, T? min, T? max) where T : IComparable<T>?
     {
-        if (min == null && max == null)
+        if (min is null && max is null)
             return value;
 
-        if (min != null && max != null && min.CompareTo(max) > 0)
+        if (min is not null && max is not null && min.CompareTo(max) > 0)
             ThrowMinCannotBeGreaterThanMaxException(min, max);
 
-        if (value == null)
+        if (value is null)
             return value;
 
-        if (min != null && value.CompareTo(min) < 0)
+        if (min is not null && value.CompareTo(min) < 0)
             return min;
-        else if (max != null && value.CompareTo(max) > 0)
+        else if (max is not null && value.CompareTo(max) > 0)
             return max;
 
         return value;
@@ -59,20 +59,20 @@ partial class MathEx
     [return: NotNullIfNotNull(nameof(value))]
     public static T? Clamp<T>(T? value, T? min, T? max, IComparer<T>? comparer)
     {
-        if (min == null && max == null)
+        if (min is null && max is null)
             return value;
 
         comparer ??= Comparer<T>.Default;
 
-        if (min != null && max != null && comparer.Compare(min, max) > 0)
+        if (min is not null && max is not null && comparer.Compare(min, max) > 0)
             ThrowMinCannotBeGreaterThanMaxException(min, max);
 
-        if (value == null)
+        if (value is null)
             return value;
 
-        if (min != null && comparer.Compare(value, min) < 0)
+        if (min is not null && comparer.Compare(value, min) < 0)
             return min;
-        else if (max != null && comparer.Compare(value, max) > 0)
+        else if (max is not null && comparer.Compare(value, max) > 0)
             return max;
 
         return value;

@@ -13,11 +13,11 @@ partial class MathEx
     /// </returns>
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
-    public static T? Min<T>(T? val1, T? val2) where T : IComparable<T>
+    public static T? Min<T>(T? val1, T? val2) where T : IComparable<T>?
     {
-        if (val1 == null)
+        if (val1 is null)
             return val2;
-        if (val2 == null)
+        if (val2 is null)
             return val1;
 
         // Give a preference to the first value when both values are equal.
@@ -45,9 +45,9 @@ partial class MathEx
     [return: NotNullIfNotNull(nameof(val2))]
     public static T? Min<T>(T? val1, T? val2, IComparer<T>? comparer = null)
     {
-        if (val1 == null)
+        if (val1 is null)
             return val2;
-        if (val2 == null)
+        if (val2 is null)
             return val1;
 
         comparer ??= Comparer<T>.Default;
@@ -71,11 +71,11 @@ partial class MathEx
     /// </returns>
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
-    public static T? Max<T>(T? val1, T? val2) where T : IComparable<T>
+    public static T? Max<T>(T? val1, T? val2) where T : IComparable<T>?
     {
-        if (val1 == null)
+        if (val1 is null)
             return val2;
-        if (val2 == null)
+        if (val2 is null)
             return val1;
 
         // Give a preference to the first value when both values are equal.
@@ -103,9 +103,9 @@ partial class MathEx
     [return: NotNullIfNotNull(nameof(val2))]
     public static T? Max<T>(T? val1, T? val2, IComparer<T>? comparer = null)
     {
-        if (val1 == null)
+        if (val1 is null)
             return val2;
-        if (val2 == null)
+        if (val2 is null)
             return val1;
 
         comparer ??= Comparer<T>.Default;
@@ -131,7 +131,7 @@ partial class MathEx
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
     [return: NotNullIfNotNull(nameof(val3))]
-    public static T? Min<T>(T? val1, T? val2, T? val3) where T : IComparable<T> =>
+    public static T? Min<T>(T? val1, T? val2, T? val3) where T : IComparable<T>? =>
         Min(Min(val1, val2), val3);
 
     /// <summary>
@@ -167,7 +167,7 @@ partial class MathEx
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
     [return: NotNullIfNotNull(nameof(val3))]
-    public static T? Max<T>(T? val1, T? val2, T? val3) where T : IComparable<T> =>
+    public static T? Max<T>(T? val1, T? val2, T? val3) where T : IComparable<T>? =>
         Max(Max(val1, val2), val3);
 
     /// <summary>

@@ -90,9 +90,9 @@ partial class MathEx
     [return: NotNullIfNotNull(nameof(val2))]
     public static Version? Min(Version? val1, Version? val2)
     {
-        if (val1 == null)
+        if (val1 is null)
             return val2;
-        if (val2 == null)
+        if (val2 is null)
             return val1;
         return val1 <= val2 ? val1 : val2;
     }
@@ -110,9 +110,9 @@ partial class MathEx
     [return: NotNullIfNotNull(nameof(val2))]
     public static Version? Max(Version? val1, Version? val2)
     {
-        if (val1 == null)
+        if (val1 is null)
             return val2;
-        if (val2 == null)
+        if (val2 is null)
             return val1;
         return val1 >= val2 ? val1 : val2;
     }
