@@ -1,4 +1,4 @@
-# Gapotchenko.FX.Versioning
+﻿# Gapotchenko.FX.Versioning
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Versioning.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Versioning)
@@ -107,7 +107,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.AppModel.Information](../../AppModel/Gapotchenko.FX.AppModel.Information#readme)
 - [Gapotchenko.FX.Collections](../../Gapotchenko.FX.Collections#readme)
 - [Gapotchenko.FX.Console](../../Gapotchenko.FX.Console#readme)
-- [Gapotchenko.FX.Data](../../Data/Encoding/Gapotchenko.FX.Data.Encoding#readme)
+- [Gapotchenko.FX.Data](../../Data/Archives/Gapotchenko.FX.Data.Archives#readme)
 - [Gapotchenko.FX.Diagnostics](../../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
 - [Gapotchenko.FX.IO](../../IO/Gapotchenko.FX.IO#readme)
 - [Gapotchenko.FX.Linq](../../Linq/Gapotchenko.FX.Linq#readme)
@@ -118,7 +118,6 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Threading](../../Gapotchenko.FX.Threading#readme)
 - [Gapotchenko.FX.Tuples](../../Gapotchenko.FX.Tuples#readme)
 - &#x27B4; [Gapotchenko.FX.Versioning](.#readme)
-- [Gapotchenko.FX.Versioning.Semantic](../Gapotchenko.FX.Versioning.Semantic#readme)
+  - [Gapotchenko.FX.Versioning.Semantic](../Gapotchenko.FX.Versioning.Semantic#readme)
 
 Or look at the [full list of modules](../../..#readme).
-
