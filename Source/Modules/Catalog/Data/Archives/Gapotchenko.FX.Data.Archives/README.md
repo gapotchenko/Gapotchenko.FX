@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Data.Archives
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Archives.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Archives)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Data.Archives.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Archives)
 
@@ -40,7 +40,7 @@ dotnet package add Gapotchenko.FX.Data.Archives
 
 ## Related Modules
 
-- [Gapotchenko.FX.IO.Vfs](../../IO/Gapotchenko.FX.IO.Vfs#readme) - Provides the virtual file system abstraction layer
+- [Gapotchenko.FX.IO.Vfs](../../../IO/Gapotchenko.FX.IO.Vfs#readme) - Provides the virtual file system abstraction layer
 - [Gapotchenko.FX.Data.Archives.Zip](../Gapotchenko.FX.Data.Archives.Zip#readme) - Provides ZIP archive implementation
 
 ## Other Modules
