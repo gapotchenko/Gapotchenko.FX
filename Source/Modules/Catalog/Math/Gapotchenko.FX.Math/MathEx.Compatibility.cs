@@ -15,27 +15,129 @@ partial class MathEx
 {
 #if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
 
-    #region BitIncrement/BitDecrement
+    #region Min
 
-    /// <inheritdoc cref="MathPolyfills.BitIncrement(double)"/>
-    [Obsolete("Use Math.BitIncrement(double) method instead.")]
+    /// <inheritdoc cref="MathExtensions.Min{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Min(val1, val2, val3) method instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static double BitIncrement(double x) => Math.BitIncrement(x);
+    public static int Min(int val1, int val2, int val3) => Math.Min(val1, val2, val3);
 
-    /// <inheritdoc cref="MathPolyfills.BitDecrement(double)"/>
-    [Obsolete("Use Math.BitDecrement(double) method instead.")]
+    /// <inheritdoc cref="MathExtensions.Min{T}(T, T)"/>
+    [Obsolete("Use System.Math.Min(val1, val2) method instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static double BitDecrement(double x) => Math.BitDecrement(x);
+    public static DateTime Min(DateTime val1, DateTime val2) => Math.Min(val1, val2);
 
-    /// <inheritdoc cref="MathFPolyfills.BitIncrement(float)"/>
-    [Obsolete("Use MathF.BitIncrement(float) method instead.")]
+    /// <inheritdoc cref="MathExtensions.Min{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Min(val1, val2, val3) method instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static float BitIncrement(float x) => MathF.BitIncrement(x);
+    public static DateTime Min(DateTime val1, DateTime val2, DateTime val3) => Math.Min(val1, val2, val3);
 
-    /// <inheritdoc cref="MathFPolyfills.BitDecrement(float)"/>
-    [Obsolete("Use MathF.BitDecrement(float) method instead.")]
+    /// <inheritdoc cref="MathExtensions.Min{T}(T, T)"/>
+    [Obsolete("Use System.Math.Min(val1, val2) method instead (may change semantics for null arguments).")]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static float BitDecrement(float x) => MathF.BitDecrement(x);
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    public static T? Min<T>(T? val1, T? val2) where T : IComparable<T>
+    {
+        if (val1 is null)
+            return val2;
+        else if (val2 is null)
+            return val1;
+        else
+            return Math.Min(val1, val2);
+    }
+
+    /// <inheritdoc cref="MathExtensions.Min{T}(T, T, IComparer{T}?)"/>
+    [Obsolete("Use System.Math.Min(val1, val2, comparer) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    public static T? Min<T>(T? val1, T? val2, IComparer<T>? comparer = null)
+    {
+        if (val1 is null)
+            return val2;
+        else if (val2 is null)
+            return val1;
+        else
+            return Math.Min(val1, val2, comparer)!;
+    }
+
+    /// <inheritdoc cref="MathExtensions.Min{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Min(val1, val2, val3) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    [return: NotNullIfNotNull(nameof(val3))]
+    public static T? Min<T>(T? val1, T? val2, T? val3) where T : IComparable<T> =>
+        Min(Min(val1, val2), val3);
+
+    /// <inheritdoc cref="MathExtensions.Min{T}(T, T, T, IComparer{T}?)"/>
+    [Obsolete("Use System.Math.Min(val1, val2, val3, comparer) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    [return: NotNullIfNotNull(nameof(val3))]
+    public static T? Min<T>(T? val1, T? val2, T? val3, IComparer<T>? comparer = null) =>
+        Min(Min(val1, val2, comparer), val3, comparer);
+
+    #endregion
+
+    #region Max
+
+    /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Max(val1, val2, val3) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static int Max(int val1, int val2, int val3) => Math.Max(val1, val2, val3);
+
+    /// <inheritdoc cref="MathExtensions.Max{T}(T, T)"/>
+    [Obsolete("Use System.Math.Max(val1, val2) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static DateTime Max(DateTime val1, DateTime val2) => Math.Max(val1, val2);
+
+    /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Max(val1, val2, val3) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static DateTime Max(DateTime val1, DateTime val2, DateTime val3) => Math.Max(val1, val2, val3);
+
+    /// <inheritdoc cref="MathExtensions.Max{T}(T, T)"/>
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    public static T? Max<T>(T? val1, T? val2) where T : IComparable<T>
+    {
+        if (val1 is null)
+            return val2;
+        else if (val2 is null)
+            return val1;
+        else
+            return Math.Max(val1, val2);
+    }
+
+    /// <inheritdoc cref="MathExtensions.Max{T}(T, T, IComparer{T}?)"/>
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    public static T? Max<T>(T? val1, T? val2, IComparer<T>? comparer = null)
+    {
+        if (val1 is null)
+            return val2;
+        else if (val2 is null)
+            return val1;
+        else
+            return Math.Max(val1, val2, comparer)!;
+    }
+
+    /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T)"/>
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    [return: NotNullIfNotNull(nameof(val3))]
+    public static T? Max<T>(T? val1, T? val2, T? val3) where T : IComparable<T> =>
+        Max(Max(val1, val2), val3);
+
+    /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T, IComparer{T}?)"/>
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    [return: NotNullIfNotNull(nameof(val3))]
+    public static T? Max<T>(T? val1, T? val2, T? val3, IComparer<T>? comparer = null) =>
+        Max(Max(val1, val2, comparer), val3, comparer);
 
     #endregion
 
@@ -112,7 +214,7 @@ partial class MathEx
     public static double Clamp(double value, double min, double max) => Math.Clamp(value, min, max);
 
     /// <inheritdoc cref="MathExtensions.Clamp{T}(T, T, T)"/>
-    [Obsolete("Use System.Math.Clamp method instead (may change semantics).")]
+    [Obsolete("Use System.Math.Clamp(value, min, max) method instead (may change semantics for null arguments).")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(value))]
     public static T? Clamp<T>(T? value, T? min, T? max) where T : IComparable<T>?
@@ -135,7 +237,7 @@ partial class MathEx
     }
 
     /// <inheritdoc cref="MathExtensions.Clamp{T}(T, T, T, IComparer{T}?)"/>
-    [Obsolete("Use System.Math.Clamp method instead (may change semantics).")]
+    [Obsolete("Use System.Math.Clamp(value, min, max, comparer) method instead (may change semantics for null arguments).")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(value))]
     public static T? Clamp<T>(T? value, T? min, T? max, IComparer<T>? comparer)
@@ -158,6 +260,30 @@ partial class MathEx
 
         return value;
     }
+
+    #endregion
+
+    #region BitIncrement/BitDecrement
+
+    /// <inheritdoc cref="MathPolyfills.BitIncrement(double)"/>
+    [Obsolete("Use Math.BitIncrement(double) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static double BitIncrement(double x) => Math.BitIncrement(x);
+
+    /// <inheritdoc cref="MathPolyfills.BitDecrement(double)"/>
+    [Obsolete("Use Math.BitDecrement(double) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static double BitDecrement(double x) => Math.BitDecrement(x);
+
+    /// <inheritdoc cref="MathFPolyfills.BitIncrement(float)"/>
+    [Obsolete("Use MathF.BitIncrement(float) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static float BitIncrement(float x) => MathF.BitIncrement(x);
+
+    /// <inheritdoc cref="MathFPolyfills.BitDecrement(float)"/>
+    [Obsolete("Use MathF.BitDecrement(float) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static float BitDecrement(float x) => MathF.BitDecrement(x);
 
     #endregion
 
