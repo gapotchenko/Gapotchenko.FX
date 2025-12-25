@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Data.Archives.Zip
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Data.Archives.Zip.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Archives.Zip)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Data.Archives.Zip.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Data.Archives.Zip)
 
@@ -47,7 +47,7 @@ if (zip.FileExists("readme.txt"))
 
 ### Working with Files
 
-Since `ZipArchive` implements `IFileSystemView`, you can use all the standard file operations:
+Since `ZipArchive` implements `IFileSystemView`, you can use all the typical file operations:
 
 ``` C#
 using Gapotchenko.FX.Data.Archives.Zip;
@@ -102,7 +102,6 @@ using System.IO;
 using var zip = ZipArchive.Storage.CreateFile("archive.zip");
 
 // Create a directory structure
-zip.CreateDirectory("folder1");
 zip.CreateDirectory("folder1/subfolder");
 
 // Write files to directories
@@ -113,9 +112,7 @@ if (zip.DirectoryExists("folder1"))
 {
     // Enumerate files in directory
     foreach (string file in zip.EnumerateFiles("folder1"))
-    {
         Console.WriteLine(file);
-    }
 }
 ```
 
