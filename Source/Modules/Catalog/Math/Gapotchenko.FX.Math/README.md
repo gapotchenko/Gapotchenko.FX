@@ -10,7 +10,7 @@ The module provides extended math primitives.
 
 `System.Math` is a static class in the .NET Base Class Library (BCL) that provides commonly used mathematical operations. While comprehensive, its API leaves some practical gaps.
 
-The `Gapotchenko.FX.Math` module complements `System.Math` by extending its functionality to address those limitations.
+The `Gapotchenko.FX.Math` module complements `System.Math` class by extending its functionality to address those limitations.
 
 ### Min/Max for Three Values
 
@@ -43,16 +43,16 @@ var fxProgress = Math.Max(currentProgress, desiredProgress);
 Console.WriteLine(fxProgress);
 ```
 
-## `Gapotchenko.FX.Math.MathEx`
+## `MathEx`
 
-`MathEx` is a class provided by `Gapotchenko.FX.Math` module that offers extended mathematical functions.
+`MathEx` class provided by `Gapotchenko.FX.Math` module offers extended mathematical functions.
 It is designed as a natural addendum to the standard `System.Math` class.
 
-Some of the functionality provided by `MathEx` is outlined below.
+Some of the functionality provided by `MathEx` class is outlined below.
 
 ### Factorial
 
-To get a factorial of a number, you can utilize the `MathEx.Factorial` function:
+The `MathEx.Factorial` function computes the factorial of a given number:
 
 ``` C#
 using Gapotchenko.FX.Math;
