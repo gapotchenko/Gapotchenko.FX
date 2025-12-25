@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.IO.Vfs
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.IO.Vfs.svg)](https://www.nuget.org/packages/Gapotchenko.FX.IO.Vfs)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.IO.Vfs.svg)](https://www.nuget.org/packages/Gapotchenko.FX.IO.Vfs)
 
