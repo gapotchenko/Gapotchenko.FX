@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageTag Include="io" />
     <CommonlyUsedPart Include="Gapotchenko.FX.IO.FileSystem" />
     <CommonlyUsedPart Include="Gapotchenko.FX.IO.BitReader" />
     <CommonlyUsedPart Include="Gapotchenko.FX.IO.BitWriter" />

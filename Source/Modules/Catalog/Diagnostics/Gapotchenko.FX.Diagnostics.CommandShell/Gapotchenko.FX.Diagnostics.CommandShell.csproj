@@ -9,10 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageTag Include="command-shell" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
     <ProjectReference Include="..\..\IO\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
   </ItemGroup>

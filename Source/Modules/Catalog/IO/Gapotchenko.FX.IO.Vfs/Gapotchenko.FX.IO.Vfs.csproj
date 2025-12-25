@@ -1,4 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageTag Include="vfs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.IO.Vfs.IFileSystemView" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.IO.Vfs.IReadOnlyFileSystemView" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.IO.Vfs.FileSystemView" />
+  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageTag Include="topology;algorithms;graph;directed;graph-theory;vertex;edge" />
+    <PackageTag Include="math;graph" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Graphs.Graph&lt;T&gt;" />
   </ItemGroup>
 

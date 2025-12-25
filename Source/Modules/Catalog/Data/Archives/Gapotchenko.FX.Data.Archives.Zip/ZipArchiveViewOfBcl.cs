@@ -707,8 +707,8 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
     #region Quirks Layer
 
-    // Quirks layer virtualizes archive operations by providing implementations
-    // that work around known ZIP quirks.
+    // Quirks layer virtualizes archive operations by providing workarounds 
+    // for known ZIP quirks.
 
     ZipArchiveEntry? GetArchiveEntry(string entryName)
     {

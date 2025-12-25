@@ -1,9 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <PackageDescription>Provides a quasi-universal framework for data archival and compression.</PackageDescription>
-  </PropertyGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\IO\Gapotchenko.FX.IO.Vfs\Gapotchenko.FX.IO.Vfs.csproj" />
   </ItemGroup>

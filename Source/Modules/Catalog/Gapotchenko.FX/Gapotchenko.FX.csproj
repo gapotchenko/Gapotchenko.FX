@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageTag Include="framework;platform;rad" />
     <CommonlyUsedPart Include="Gapotchenko.FX.ArrayEqualityComparer" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Optional&lt;T&gt;" />
     <CommonlyUsedPart Include="Gapotchenko.FX.EvaluateOnce&lt;T&gt;" />

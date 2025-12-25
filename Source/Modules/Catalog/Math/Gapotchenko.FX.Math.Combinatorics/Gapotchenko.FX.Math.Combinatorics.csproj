@@ -1,12 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageTag Include="math;combinatorics;permutations;combinations;variations;cartesian-product" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Combinatorics.Permutations" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Combinatorics.CartesianProduct" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageTag Include="combinatorics;permutations;combinations;variations;cartesian-product" />
   </ItemGroup>
   
   <ItemGroup>
