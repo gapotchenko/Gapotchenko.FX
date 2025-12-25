@@ -6,7 +6,6 @@
 # Year of introduction: 2025
 
 set working-directory := "Source"
-set unstable
 
 # ---------------------------------------------------------------------------
 # Shells & Interpreters

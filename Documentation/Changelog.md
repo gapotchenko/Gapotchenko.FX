@@ -4,17 +4,17 @@
 
 ### Gapotchenko FX 2025.1
 
-Release date: not released yet
+Release date: December 25, 2025
 
 - Support for .NET 10.0 target framework
 - Introduced `Gapotchenko.FX.IO.Vfs` module that provides the concept of a virtual file system which allows to work with file systems in a unified way independently of their actual nature.
   Be it a local ZIP archive, a CD/DVD ISO image, a custom FAT12 implementation, or a remote network storage
-- Added `EnumerableEx.Lazy(Func<IEnumerable<T>>)` method that allows to lazily initialize an `IEnumerable<T>` instance by the specified factory
-- Added `Gapotchenko.FX.IO.PositionTrackingTextReader` class that can track the current position within a sequential series of characters
 - Improved compatibility with AOT publishing
 - Improved default buffer size selection algorithm for stream block copy operations in `Gapotchenko.FX.IO` module
 - `Gapotchenko.FX.Collections.Generic.Deque<T>` made compatible with collection initializers
 - `Gapotchenko.FX.Threading.EvaluateOnce<T>` primitive can now be created pre-initialized with a value
+- Added `EnumerableEx.Lazy(Func<IEnumerable<T>>)` method that allows to lazily initialize an `IEnumerable<T>` instance by the specified factory
+- Added `Gapotchenko.FX.IO.PositionTrackingTextReader` class that can track the current position within a sequential series of characters
 - Polyfills:
     - Added `Contains`, `ContainsAny`, `SequenceEqual`, `StartsWith` and `EndsWith` polyfill methods for `ReadOnlySpan<T>` type
     - Added `Path.EndsInDirectorySeparator(string?)` and `Path.EndsInDirectorySeparator(ReadOnlySpan<char>)` polyfill methods
