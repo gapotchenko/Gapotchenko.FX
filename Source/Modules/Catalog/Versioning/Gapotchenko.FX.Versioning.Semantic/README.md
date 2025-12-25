@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Versioning.Semantic
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Versioning.Semantic.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Versioning.Semantic)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Versioning.Semantic.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Versioning.Semantic)
 
@@ -126,8 +126,8 @@ You can create a `SemanticVersion` from a `System.Version`:
 using Gapotchenko.FX.Versioning;
 using System;
 
-var systemVersion = new Version(1, 2, 3);
-var semanticVersion = new SemanticVersion(systemVersion);
+var version = new Version(1, 2, 3);
+var semanticVersion = new SemanticVersion(version);
 
 Console.WriteLine(semanticVersion); // "1.2.3"
 ```
