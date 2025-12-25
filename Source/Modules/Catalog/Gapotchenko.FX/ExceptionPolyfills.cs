@@ -217,6 +217,21 @@ public static class ExceptionPolyfills
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        public static void ThrowIfNegative(long value, [CallerArgumentExpression(nameof(value))] string? paramName = null)
+        {
+#if NET8_0_OR_GREATER
+            ArgumentOutOfRangeException.ThrowIfNegative(value, paramName);
+#else
+            if (value < 0)
+                ThrowNegative(value, paramName);
+#endif
+        }
+
+        /// <inheritdoc cref="ThrowIfNegative(int, string?)"/>
+#if NET8_0_OR_GREATER
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public static void ThrowIfNegative(double value, [CallerArgumentExpression(nameof(value))] string? paramName = null)
         {
 #if NET8_0_OR_GREATER
