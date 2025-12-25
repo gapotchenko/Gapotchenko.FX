@@ -1,11 +1,9 @@
-#!/usr/bin/env dotnet-script
+#!/usr/bin/env dotnet
 
 // This utility is used as a sample alphabet generator for documentation of
 // text encodings.
 
-var args = Args;
-
-if (args.Count != 2)
+if (args.Length != 2)
 {
     Console.WriteLine(
         """
@@ -17,6 +15,8 @@ if (args.Count != 2)
         """);
     return 1;
 }
+
+// ----------------------------------------------------------------------------
 
 try
 {
@@ -31,7 +31,9 @@ catch (Exception e)
 
 return 0;
 
-static void Run(IList<string> args)
+// ----------------------------------------------------------------------------
+
+static void Run(IReadOnlyList<string> args)
 {
     var alphabet = args[0];
     var size = int.Parse(args[1]);
