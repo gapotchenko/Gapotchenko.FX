@@ -287,5 +287,23 @@ partial class MathEx
 
     #endregion
 
+    #region Swap
+
+    /// <summary>
+    /// Swaps two values.
+    /// </summary>
+    /// <typeparam name="T">The type of values to swap.</typeparam>
+    /// <param name="val1">The first of two values to swap.</param>
+    /// <param name="val2">The second of two values to swap.</param>
+    [Obsolete("Use tuple to swap values.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Swap<T>(ref T val1, ref T val2)
+    {
+        (val2, val1) = (val1, val2);
+    }
+
+    #endregion
+
 #endif
 }
