@@ -38,7 +38,7 @@ partial class EnumerableExTests
     {
         var sw = new StringWriter();
         var seq = _LazyGen(sw).Memoize();
-        foreach (var i in seq.Take(3))
+        foreach (int i in seq.Take(3))
             sw.Write(i.ToString(NumberFormatInfo.InvariantInfo));
         Assert.AreEqual("(A1B2C3", sw.ToString());
     }
@@ -48,9 +48,9 @@ partial class EnumerableExTests
     {
         var sw = new StringWriter();
         var seq = _LazyGen(sw).Memoize();
-        foreach (var i in seq.Take(3))
+        foreach (int i in seq.Take(3))
             sw.Write(i.ToString(NumberFormatInfo.InvariantInfo));
-        foreach (var i in seq.Take(4))
+        foreach (int i in seq.Take(4))
             sw.Write(i.ToString(NumberFormatInfo.InvariantInfo));
         Assert.AreEqual("(A1B2C3123D4", sw.ToString());
     }
@@ -60,14 +60,14 @@ partial class EnumerableExTests
     {
         var sw = new StringWriter();
         var seq = _LazyGen(sw).Memoize();
-        foreach (var i in seq)
+        foreach (int i in seq)
             sw.Write(i.ToString(NumberFormatInfo.InvariantInfo));
-        foreach (var i in seq)
+        foreach (int i in seq)
             sw.Write(i.ToString(NumberFormatInfo.InvariantInfo));
         Assert.AreEqual("(A1B2C3D4E5.)12345", sw.ToString());
     }
 
-    static volatile int _V;
+    static volatile int m_V;
 
     [TestMethod]
     public void Linq_Memoize_A4()
@@ -96,7 +96,7 @@ partial class EnumerableExTests
         bool exceptionThrown = false;
         try
         {
-            _V = e.Current;
+            m_V = e.Current;
         }
         catch (InvalidOperationException)
         {
@@ -130,7 +130,7 @@ partial class EnumerableExTests
         exceptionThrown = false;
         try
         {
-            _V = e.Current;
+            m_V = e.Current;
         }
         catch (InvalidOperationException)
         {
@@ -166,7 +166,7 @@ partial class EnumerableExTests
         bool exceptionThrown = false;
         try
         {
-            _V = e.Current;
+            m_V = e.Current;
         }
         catch (InvalidOperationException)
         {
@@ -183,7 +183,7 @@ partial class EnumerableExTests
         exceptionThrown = false;
         try
         {
-            _V = e.Current;
+            m_V = e.Current;
         }
         catch (InvalidOperationException)
         {
@@ -204,7 +204,7 @@ partial class EnumerableExTests
         bool exceptionThrown = false;
         try
         {
-            _V = e.Current;
+            m_V = e.Current;
         }
         catch (InvalidOperationException)
         {
@@ -232,7 +232,7 @@ partial class EnumerableExTests
         exceptionThrown = false;
         try
         {
-            _V = e.Current;
+            m_V = e.Current;
         }
         catch (InvalidOperationException)
         {

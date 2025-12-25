@@ -13,7 +13,7 @@ partial class WebBrowserLauncher
         if (j == -1)
             return false;
 
-        string scheme = url.Substring(0, j);
+        string scheme = url[..j];
 
         string? command = TryGetDefaultBrowserCommand_Windows(scheme);
         if (command == null)
@@ -29,8 +29,8 @@ partial class WebBrowserLauncher
         else
             ++j;
 
-        var args = command.AsSpan(j).Trim().ToString();
-        var filePath = command.AsSpan(0, j).Trim('"').ToString();
+        string args = command.AsSpan(j).Trim().ToString();
+        string filePath = command.AsSpan(0, j).Trim('"').ToString();
 
         string pattern = args;
 

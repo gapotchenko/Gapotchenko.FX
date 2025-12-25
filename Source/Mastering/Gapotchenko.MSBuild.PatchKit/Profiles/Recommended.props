@@ -1,0 +1,13 @@
+<Project>
+
+  <Import Project="../Core/Core.props" />
+
+  <Import Project="../Remedies/Workarounds/WA0001.props" />
+  <Import Project="../Remedies/Workarounds/WA0002.props" />
+  <Import Project="../Remedies/Workarounds/WA0004.props" />
+
+  <Import Project="../Remedies/Polyfills/PF0001.props" />
+  <Import Project="../Remedies/Polyfills/PF0002.props" />
+  <Import Project="../Remedies/Polyfills/PF0003.props" />
+
+</Project>

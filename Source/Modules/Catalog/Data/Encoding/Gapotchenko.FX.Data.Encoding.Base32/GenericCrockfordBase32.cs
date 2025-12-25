@@ -30,8 +30,7 @@ public abstract class GenericCrockfordBase32 : GenericBase32, ICrockfordBase32
     /// <inheritdoc/>
     protected override void ValidateAlphabet(TextDataEncodingAlphabet alphabet)
     {
-        if (alphabet is null)
-            throw new ArgumentNullException(nameof(alphabet));
+        ArgumentNullException.ThrowIfNull(alphabet);
 
         int size = alphabet.Size;
         if (size != MainAlphabetSize &&

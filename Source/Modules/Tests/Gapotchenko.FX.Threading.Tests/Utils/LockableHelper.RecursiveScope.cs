@@ -64,10 +64,8 @@ partial class LockableHelper
         [StackTraceHidden]
         static void ValidateRecursion(ILockable lockable, int recursionLevel)
         {
-#if NET8_0_OR_GREATER
             ArgumentNullException.ThrowIfNull(lockable);
             ArgumentOutOfRangeException.ThrowIfNegative(recursionLevel);
-#endif
 
             if (recursionLevel > 1 && !lockable.IsRecursive)
                 throw new ArgumentException("The synchronization primitive does not support recursion.", nameof(lockable));

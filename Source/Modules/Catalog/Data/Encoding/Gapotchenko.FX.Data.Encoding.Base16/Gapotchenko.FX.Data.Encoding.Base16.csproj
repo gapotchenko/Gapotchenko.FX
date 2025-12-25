@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
     <PackageDescription>Provides Base16 data encoding algorithms.</PackageDescription>
   </PropertyGroup>
 
@@ -9,10 +8,6 @@
     <PackageTag Include="base16;rfc4648" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Data.Encoding.Base16" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />

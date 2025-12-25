@@ -9,23 +9,11 @@ using Gapotchenko.FX.Collections.Properties;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-#if NET8_0_OR_GREATER
-using static System.ArgumentOutOfRangeException;
-#else
-using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
-#endif
-
 namespace Gapotchenko.FX.Collections.Utils;
 
 [StackTraceHidden]
 static class ExceptionHelper
 {
-    public static void ThrowIfThisIsNull([NotNull] object? @this)
-    {
-        if (@this is null)
-            throw new NullReferenceException();
-    }
-
     /// <summary>
     /// Ensures that <paramref name="index"/> is non-negative and less than <paramref name="size"/>. 
     /// </summary>
@@ -69,8 +57,8 @@ static class ExceptionHelper
         [CallerArgumentExpression(nameof(index))] string? indexParameterName = null,
         [CallerArgumentExpression(nameof(count))] string? countParameterName = null)
     {
-        ThrowIfNegative(index, indexParameterName);
-        ThrowIfNegative(count, countParameterName);
+        ArgumentOutOfRangeException.ThrowIfNegative(index, indexParameterName);
+        ArgumentOutOfRangeException.ThrowIfNegative(count, countParameterName);
 
         if (count > size - index) // overflow-safe equivalent of "index + count > size"
             throw new ArgumentException("Count is greater than the number of elements from index to the end of the collection.");

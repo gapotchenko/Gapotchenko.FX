@@ -1,4 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Threading.Tests;
 
@@ -175,6 +182,6 @@ public abstract class ILockableTests
     public void ILockable_Exit_NonLocked()
     {
         var lockable = CreateLockable();
-        Assert.ThrowsException<SynchronizationLockException>(lockable.Exit);
+        Assert.ThrowsExactly<SynchronizationLockException>(lockable.Exit);
     }
 }

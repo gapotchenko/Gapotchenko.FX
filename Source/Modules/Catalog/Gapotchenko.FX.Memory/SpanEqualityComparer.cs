@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Memory;
+﻿using System.Runtime.CompilerServices;
+
+namespace Gapotchenko.FX.Memory;
 
 #pragma warning disable CA2265
 
@@ -26,6 +28,7 @@ public static class SpanEqualityComparer
     /// <param name="x">The first read-only span to compare.</param>
     /// <param name="y">The second read-only span to compare.</param>
     /// <returns><see langword="true"/> if the specified spans are equal; otherwise, <see langword="false"/>.</returns>
+    [OverloadResolutionPriority(1)]
     public static bool Equals<T>(Span<T> x, Span<T> y) where T : IEquatable<T> =>
         x == y ||
         x != null && y != null &&

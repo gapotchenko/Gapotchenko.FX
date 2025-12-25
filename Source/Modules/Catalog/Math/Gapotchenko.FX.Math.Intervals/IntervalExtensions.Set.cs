@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -26,8 +27,7 @@ partial class IntervalExtensions
     public static void IntersectWith<TElement, TInterval>(this ISet<TElement> set, TInterval interval)
         where TInterval : IInterval<TElement>
     {
-        if (set == null)
-            throw new ArgumentNullException(nameof(set));
+        ArgumentNullException.ThrowIfNull(set);
         if (interval == null)
             throw new ArgumentNullException(nameof(interval));
 
@@ -57,8 +57,7 @@ partial class IntervalExtensions
     public static void ExceptWith<TElement, TInterval>(this ISet<TElement> set, TInterval interval)
         where TInterval : IInterval<TElement>
     {
-        if (set == null)
-            throw new ArgumentNullException(nameof(set));
+        ArgumentNullException.ThrowIfNull(set);
         if (interval == null)
             throw new ArgumentNullException(nameof(interval));
 

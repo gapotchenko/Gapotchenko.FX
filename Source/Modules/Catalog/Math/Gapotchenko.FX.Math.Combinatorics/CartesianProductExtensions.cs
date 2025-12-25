@@ -7,8 +7,9 @@
 namespace Gapotchenko.FX.Math.Combinatorics;
 
 /// <summary>
-/// Cartesian product LINQ extensions.
+/// Provides LINQ extension methods for Cartesian product.
 /// </summary>
+/// <seealso cref="CartesianProduct"/>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class CartesianProductExtensions
 {
@@ -18,10 +19,9 @@ public static class CartesianProductExtensions
     /// <typeparam name="T">Type of sequence elements.</typeparam>
     /// <param name="factors">The input sequences.</param>
     /// <returns>The Cartesian product of input sequences.</returns>
-    public static CartesianProduct.IResult<T> CrossJoin<T>(this IEnumerable<IEnumerable<T>> factors)
+    public static CartesianProduct.IResultCollection<T> CrossJoin<T>(this IEnumerable<IEnumerable<T>> factors)
     {
-        if (factors == null)
-            throw new ArgumentNullException(nameof(factors));
+        ArgumentNullException.ThrowIfNull(factors);
 
         return CartesianProduct.MultiplyAccelerated(
             factors.Select(x => x ?? throw new ArgumentException("A Cartesian product factor cannot be null.", nameof(factors))));
@@ -34,16 +34,14 @@ public static class CartesianProductExtensions
     /// <param name="first">The first input sequence of elements.</param>
     /// <param name="second">The second input sequence of elements.</param>
     /// <returns>The Cartesian product of two input sequences.</returns>
-    public static CartesianProduct.IResult<TSource> CrossJoin<TSource>(
+    public static CartesianProduct.IResultCollection<TSource> CrossJoin<TSource>(
         this IEnumerable<TSource> first,
         IEnumerable<TSource> second)
     {
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
 
-        return CartesianProduct.MultiplyAccelerated(new[] { first, second });
+        return CartesianProduct.MultiplyAccelerated([first, second]);
     }
 
     /// <summary>
@@ -54,19 +52,16 @@ public static class CartesianProductExtensions
     /// <param name="second">The second input sequence of elements.</param>
     /// <param name="third">The third input sequence of elements.</param>
     /// <returns>The Cartesian product of three input sequences.</returns>
-    public static CartesianProduct.IResult<TSource> CrossJoin<TSource>(
+    public static CartesianProduct.IResultCollection<TSource> CrossJoin<TSource>(
         this IEnumerable<TSource> first,
         IEnumerable<TSource> second,
         IEnumerable<TSource> third)
     {
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
-        if (third == null)
-            throw new ArgumentNullException(nameof(third));
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        ArgumentNullException.ThrowIfNull(third);
 
-        return CartesianProduct.MultiplyAccelerated(new[] { first, second, third });
+        return CartesianProduct.MultiplyAccelerated([first, second, third]);
     }
 
     /// <summary>
@@ -78,22 +73,18 @@ public static class CartesianProductExtensions
     /// <param name="third">The third input sequence of elements.</param>
     /// <param name="fourth">The fourth input sequence of elements.</param>
     /// <returns>The Cartesian product of four input sequences.</returns>
-    public static CartesianProduct.IResult<TSource> CrossJoin<TSource>(
+    public static CartesianProduct.IResultCollection<TSource> CrossJoin<TSource>(
         this IEnumerable<TSource> first,
         IEnumerable<TSource> second,
         IEnumerable<TSource> third,
         IEnumerable<TSource> fourth)
     {
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
-        if (third == null)
-            throw new ArgumentNullException(nameof(third));
-        if (fourth == null)
-            throw new ArgumentNullException(nameof(fourth));
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        ArgumentNullException.ThrowIfNull(third);
+        ArgumentNullException.ThrowIfNull(fourth);
 
-        return CartesianProduct.MultiplyAccelerated(new[] { first, second, third, fourth });
+        return CartesianProduct.MultiplyAccelerated([first, second, third, fourth]);
     }
 
     /// <summary>
@@ -106,23 +97,18 @@ public static class CartesianProductExtensions
     /// <param name="fourth">The fourth input sequence of elements.</param>
     /// <param name="rest">The rest of input sequences of elements.</param>
     /// <returns>The Cartesian product of input sequences.</returns>
-    public static CartesianProduct.IResult<TSource> CrossJoin<TSource>(
+    public static CartesianProduct.IResultCollection<TSource> CrossJoin<TSource>(
         this IEnumerable<TSource> first,
         IEnumerable<TSource> second,
         IEnumerable<TSource> third,
         IEnumerable<TSource> fourth,
         params IEnumerable<TSource>[] rest)
     {
-        if (first == null)
-            throw new ArgumentNullException(nameof(first));
-        if (second == null)
-            throw new ArgumentNullException(nameof(second));
-        if (third == null)
-            throw new ArgumentNullException(nameof(third));
-        if (fourth == null)
-            throw new ArgumentNullException(nameof(fourth));
-        if (rest == null)
-            throw new ArgumentNullException(nameof(rest));
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        ArgumentNullException.ThrowIfNull(third);
+        ArgumentNullException.ThrowIfNull(fourth);
+        ArgumentNullException.ThrowIfNull(rest);
 
         return CartesianProduct.MultiplyAccelerated(new[] { first, second, third, fourth }.Concat(rest));
     }

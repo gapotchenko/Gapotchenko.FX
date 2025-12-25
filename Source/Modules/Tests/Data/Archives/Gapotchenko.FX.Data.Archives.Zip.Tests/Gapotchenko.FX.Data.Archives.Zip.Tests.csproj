@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '4.7.2')) " Include="System.IO.Compression" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Catalog\Data\Archives\Gapotchenko.FX.Data.Archives.Zip\Gapotchenko.FX.Data.Archives.Zip.csproj" />
+    <ProjectReference Include="..\..\..\IO\Gapotchenko.FX.IO.Vfs.Tests\Gapotchenko.FX.IO.Vfs.Tests.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.9.3" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.9.3" />
+  </ItemGroup>
+
+</Project>

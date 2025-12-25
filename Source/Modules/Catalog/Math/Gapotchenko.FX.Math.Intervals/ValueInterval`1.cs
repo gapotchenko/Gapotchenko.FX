@@ -1,19 +1,21 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Math.Intervals;
 
 /// <summary>
 /// Represents a continuous value interval.
 /// </summary>
-/// <typeparam name="T">The type of interval value.</typeparam>
+/// <typeparam name="T">The type of interval values.</typeparam>
 [DebuggerDisplay("{ToString(),nq}")]
-public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval<T>>, IEmptiable<ValueInterval<T>>
+public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, ValueInterval<T>>, IEquatable<ValueInterval<T>>
     where T : IEquatable<T>?, IComparable<T>?
 {
     /// <summary>
@@ -55,18 +57,10 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
         To = to;
     }
 
-#pragma warning disable CA1000 // Do not declare static members on generic types
-    /// <inheritdoc cref="ValueInterval.Empty{T}"/>
-    [Obsolete(
-        "Use ValueInterval.Empty<T>() method instead because this method is a part of Gapotchenko.FX infrastructure and should not be used directly."
-#if NET5_0_OR_GREATER
-        , DiagnosticId = "GPFX0001"
-#endif
-        )]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static ValueInterval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
-#pragma warning restore CA1000 // Do not declare static members on generic types
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    internal static ValueInterval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     internal static ValueInterval<T> Infinite { get; } = new(IntervalBoundary<T>.NegativeInfinity, IntervalBoundary<T>.PositiveInfinity);
 
     /// <inheritdoc/>
@@ -92,7 +86,7 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     /// <inheritdoc/>
     public bool IsHalfOpen => IntervalEngine.IsHalfOpen<ValueInterval<T>, T>(this);
 
-    /// <inheritdoc/>
+    /// <inheritdoc cref="Interval{T}.IsEmpty"/>
     public bool IsEmpty => IntervalEngine.IsEmpty(this, Comparer<T>.Default);
 
     /// <inheritdoc/>
@@ -259,18 +253,36 @@ public readonly struct ValueInterval<T> : IInterval<T>, IEquatable<ValueInterval
     public string ToString(string? format, IFormatProvider? formatProvider) =>
         IntervalEngine.ToString<ValueInterval<T>, T>(this, format, formatProvider);
 
-    /// <summary>
-    /// Converts a specified <see cref="Interval{T}"/> instance to <see cref="ValueInterval{T}"/>.
-    /// </summary>
-    /// <param name="interval">The <see cref="Interval{T}"/> instance to convert.</param>
-    public static implicit operator ValueInterval<T>(Interval<T> interval) =>
-        interval is null ?
-            default :
-            new(interval.From, interval.To);
+    #region IConstructibleInterval
 
-    /// <summary>
-    /// Converts a specified <see cref="ValueInterval{T}"/> instance to <see cref="Interval{T}"/>.
-    /// </summary>
-    /// <param name="interval">The <see cref="ValueInterval{T}"/> instance to convert.</param>
-    public static implicit operator Interval<T>(ValueInterval<T> interval) => new(interval.From, interval.To);
+#if TFF_STATIC_INTERFACE
+
+    static ValueInterval<T> IEmptiable<ValueInterval<T>>.Empty => Empty;
+
+    static ValueInterval<T> IConstructibleInterval<T, ValueInterval<T>>.Infinite => Infinite;
+
+    static ValueInterval<T> IConstructibleInterval<T, ValueInterval<T>>.Create(IntervalBoundary<T> from, IntervalBoundary<T> to, IComparer<T>? comparer)
+    {
+        ValidateComparer(comparer);
+
+        return new(from, to);
+    }
+
+    static void ValidateComparer(
+        IComparer<T>? comparer,
+        [CallerArgumentExpression(nameof(comparer))] string? paramName = null)
+    {
+        if (FX.Empty.Nullify(comparer) is not null)
+        {
+            throw new ArgumentException(
+                string.Format(
+                    "The specified comparer is not compatible with the comparer used by {0}.",
+                    typeof(ValueInterval<T>)),
+                paramName);
+        }
+    }
+
+#endif
+
+    #endregion
 }

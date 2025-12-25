@@ -18,8 +18,10 @@ sealed class DefaultArrayEqualityComparer<T>(IEqualityComparer<T>? elementCompar
             return false;
 
         for (int i = 0; i < x.Length; i++)
+        {
             if (!m_ElementComparer.Equals(x[i], y[i]))
                 return false;
+        }
 
         return true;
     }
@@ -31,8 +33,7 @@ sealed class DefaultArrayEqualityComparer<T>(IEqualityComparer<T>? elementCompar
     /// <returns>A hash code for the specified array.</returns>
     public override int GetHashCode(T[] obj)
     {
-        if (obj is null)
-            throw new ArgumentNullException(nameof(obj));
+        ArgumentNullException.ThrowIfNull(obj);
 
         var elementComparer = m_ElementComparer;
 

@@ -190,7 +190,7 @@ Gapotchenko.FX project welcomes contributions, or it can be a standalone NuGet p
 `Gapotchenko.FX.Data.Encoding` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Data.Encoding):
 
 ```
-PM> Install-Package Gapotchenko.FX.Data.Encoding
+dotnet package add Gapotchenko.FX.Data.Encoding
 ```
 
 ## Other Modules
@@ -201,7 +201,8 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.AppModel.Information](../../../AppModel/Gapotchenko.FX.AppModel.Information#readme)
 - [Gapotchenko.FX.Collections](../../../Gapotchenko.FX.Collections#readme)
 - [Gapotchenko.FX.Console](../../../Gapotchenko.FX.Console#readme)
-- [Gapotchenko.FX.Data](#)
+- [Gapotchenko.FX.Data](../../Archives/Gapotchenko.FX.Data.Archives#readme)
+  - [Gapotchenko.FX.Data.Archives](../../Archives/Gapotchenko.FX.Data.Archives#readme)
   - &#x27B4; [Gapotchenko.FX.Data.Encoding](.#readme)
     - [Gapotchenko.FX.Data.Encoding.Base16](../Gapotchenko.FX.Data.Encoding.Base16#readme)
     - [Gapotchenko.FX.Data.Encoding.Base24](../Gapotchenko.FX.Data.Encoding.Base24#readme)
@@ -209,7 +210,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
     - [Gapotchenko.FX.Data.Encoding.Base64](../Gapotchenko.FX.Data.Encoding.Base64#readme)
   - [Gapotchenko.FX.Data.Integrity.Checksum](../../Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum#readme)
 - [Gapotchenko.FX.Diagnostics](../../../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
-- [Gapotchenko.FX.IO](../../../Gapotchenko.FX.IO#readme)
+- [Gapotchenko.FX.IO](../../../IO/Gapotchenko.FX.IO#readme)
 - [Gapotchenko.FX.Linq](../../../Linq/Gapotchenko.FX.Linq#readme)
 - [Gapotchenko.FX.Math](../../../Math/Gapotchenko.FX.Math#readme)
 - [Gapotchenko.FX.Memory](../../../Gapotchenko.FX.Memory#readme)
@@ -217,5 +218,6 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Text](../../../Gapotchenko.FX.Text#readme)
 - [Gapotchenko.FX.Threading](../../../Gapotchenko.FX.Threading#readme)
 - [Gapotchenko.FX.Tuples](../../../Gapotchenko.FX.Tuples#readme)
+- [Gapotchenko.FX.Versioning](../../../Versioning/Gapotchenko.FX.Versioning#readme)
 
 Or look at the [full list of modules](../../../..#readme).

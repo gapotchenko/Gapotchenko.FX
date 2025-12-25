@@ -11,18 +11,12 @@
 
 #if !TFF_ORDEREDDICTIONARY
 
+using Gapotchenko.FX;
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Collections.Utils;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-
-#if NET8_0_OR_GREATER
-using static System.ArgumentNullException;
-using static System.ArgumentOutOfRangeException;
-#else
-using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
-#endif
 
 #pragma warning disable IDE1006 // Naming Styles
 #pragma warning disable IDE0130 // Namespace does not match folder structure
@@ -116,7 +110,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <exception cref="ArgumentOutOfRangeException">capacity is less than 0.</exception>
     public OrderedDictionary(int capacity, IEqualityComparer<TKey>? comparer)
     {
-        ThrowIfNegative(capacity);
+        ArgumentOutOfRangeException.ThrowIfNegative(capacity);
 
         if (capacity > 0)
         {
@@ -174,7 +168,7 @@ public class OrderedDictionary<TKey, TValue> :
     public OrderedDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer) :
         this(dictionary?.Count ?? 0, comparer)
     {
-        ThrowIfNull(dictionary);
+        ArgumentNullException.ThrowIfNull(dictionary);
 
         AddRange(dictionary);
     }
@@ -208,7 +202,7 @@ public class OrderedDictionary<TKey, TValue> :
     public OrderedDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer) :
         this((collection as ICollection<KeyValuePair<TKey, TValue>>)?.Count ?? 0, comparer)
     {
-        ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(collection);
 
         AddRange(collection);
     }
@@ -301,7 +295,7 @@ public class OrderedDictionary<TKey, TValue> :
         get => GetAt(index);
         set
         {
-            ThrowIfNull(value);
+            ArgumentNullException.ThrowIfNull(value);
 
             if (value is not KeyValuePair<TKey, TValue> tpair)
             {
@@ -317,7 +311,7 @@ public class OrderedDictionary<TKey, TValue> :
     {
         get
         {
-            ThrowIfNull(key);
+            ArgumentNullException.ThrowIfNull(key);
 
             if (key is TKey tkey && TryGetValue(tkey, out TValue? value))
             {
@@ -328,10 +322,10 @@ public class OrderedDictionary<TKey, TValue> :
         }
         set
         {
-            ThrowIfNull(key);
+            ArgumentNullException.ThrowIfNull(key);
             if (default(TValue) is not null)
             {
-                ThrowIfNull(value);
+                ArgumentNullException.ThrowIfNull(value);
             }
 
             if (key is not TKey tkey)
@@ -383,7 +377,7 @@ public class OrderedDictionary<TKey, TValue> :
         }
         set
         {
-            ThrowIfNull(key);
+            ArgumentNullException.ThrowIfNull(key);
 
             bool modified = TryInsert(index: -1, key, value, InsertionBehavior.OverwriteExisting);
             Debug.Assert(modified);
@@ -485,7 +479,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <exception cref="ArgumentException">An element with the same key already exists in the <see cref="OrderedDictionary{TKey, TValue}"/>.</exception>
     public void Add(TKey key, TValue value)
     {
-        ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(key);
 
         TryInsert(index: -1, key, value, InsertionBehavior.ThrowOnExisting);
     }
@@ -497,7 +491,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <returns>true if the key didn't exist and the key and value were added to the dictionary; otherwise, false.</returns>
     public bool TryAdd(TKey key, TValue value)
     {
-        ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(key);
 
         return TryInsert(index: -1, key, value, InsertionBehavior.IgnoreInsertion);
     }
@@ -530,7 +524,7 @@ public class OrderedDictionary<TKey, TValue> :
         {
             Debug.Assert(_entries is not null);
 
-            Array.Clear(_buckets, 0, _buckets.Length);
+            Array.Clear(_buckets);
             Array.Clear(_entries, 0, _count);
             _count = 0;
             _version++;
@@ -603,7 +597,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <exception cref="ArgumentNullException"><paramref name="key"/> is null.</exception>
     public int IndexOf(TKey key)
     {
-        ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(key);
 
         uint _ = 0;
         return IndexOf(key, ref _, ref _);
@@ -719,7 +713,7 @@ public class OrderedDictionary<TKey, TValue> :
             ThrowHelper.ThrowIndexArgumentOutOfRange(nameof(index));
         }
 
-        ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(key);
 
         TryInsert(index, key, value, InsertionBehavior.ThrowOnExisting);
     }
@@ -735,7 +729,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <returns>true if the element is successfully found and removed; otherwise, false.</returns>
     public bool Remove(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
-        ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(key);
 
         // Find the key.
         int index = IndexOf(key);
@@ -807,7 +801,7 @@ public class OrderedDictionary<TKey, TValue> :
             ThrowHelper.ThrowIndexArgumentOutOfRange(nameof(index));
         }
 
-        ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(key);
 
         Debug.Assert(_entries is not null);
         ref Entry e = ref _entries[index];
@@ -859,7 +853,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is negative.</exception>
     public int EnsureCapacity(int capacity)
     {
-        ThrowIfNegative(capacity);
+        ArgumentOutOfRangeException.ThrowIfNegative(capacity);
 
         if (Capacity < capacity)
         {
@@ -886,7 +880,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than <see cref="Count"/>.</exception>
     public void TrimExcess(int capacity)
     {
-        ThrowIfLessThan(capacity, Count);
+        ArgumentOutOfRangeException.ThrowIfLessThan(capacity, Count);
 
         int currentCapacity = _entries?.Length ?? 0;
         capacity = HashHelpers.GetPrime(capacity);
@@ -909,7 +903,7 @@ public class OrderedDictionary<TKey, TValue> :
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
 #pragma warning restore CS8767 // Nullability of reference types in type of parameter of doesn't match implicitly implemented member (possibly because of nullability attributes)
     {
-        ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(key);
 
         // Find the key.
         int index = IndexOf(key);
@@ -1152,7 +1146,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <inheritdoc/>
     int IList<KeyValuePair<TKey, TValue>>.IndexOf(KeyValuePair<TKey, TValue> item)
     {
-        ThrowIfNull(item.Key, nameof(item));
+        ArgumentNullException.ThrowIfNull(item.Key, nameof(item));
 
         int index = IndexOf(item.Key);
         if (index >= 0)
@@ -1176,7 +1170,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <inheritdoc/>
     bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
     {
-        ThrowIfNull(item.Key, nameof(item));
+        ArgumentNullException.ThrowIfNull(item.Key, nameof(item));
 
         return
             TryGetValue(item.Key, out TValue? value) &&
@@ -1186,8 +1180,8 @@ public class OrderedDictionary<TKey, TValue> :
     /// <inheritdoc/>
     void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
     {
-        ThrowIfNull(array);
-        ThrowIfNegative(arrayIndex);
+        ArgumentNullException.ThrowIfNull(array);
+        ArgumentOutOfRangeException.ThrowIfNegative(arrayIndex);
         if (array.Length - arrayIndex < _count)
         {
             ThrowHelper.ThrowArrayPlusOffTooSmall();
@@ -1209,10 +1203,10 @@ public class OrderedDictionary<TKey, TValue> :
     /// <inheritdoc/>
     void IDictionary.Add(object key, object? value)
     {
-        ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(key);
         if (default(TValue) is not null)
         {
-            ThrowIfNull(value);
+            ArgumentNullException.ThrowIfNull(value);
         }
 
         if (key is not TKey tkey)
@@ -1222,7 +1216,7 @@ public class OrderedDictionary<TKey, TValue> :
 
         if (default(TValue) is not null)
         {
-            ThrowIfNull(value);
+            ArgumentNullException.ThrowIfNull(value);
         }
 
         TValue tvalue = default!;
@@ -1242,7 +1236,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <inheritdoc/>
     bool IDictionary.Contains(object key)
     {
-        ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(key);
 
         return key is TKey tkey && ContainsKey(tkey);
     }
@@ -1250,7 +1244,7 @@ public class OrderedDictionary<TKey, TValue> :
     /// <inheritdoc/>
     void IDictionary.Remove(object key)
     {
-        ThrowIfNull(key);
+        ArgumentNullException.ThrowIfNull(key);
 
         if (key is TKey tkey)
         {
@@ -1261,11 +1255,11 @@ public class OrderedDictionary<TKey, TValue> :
     /// <inheritdoc/>
     void ICollection.CopyTo(Array array, int index)
     {
-        ThrowIfNull(array);
+        ArgumentNullException.ThrowIfNull(array);
         ThrowHelper.ThrowIfArrayIsMultiDimensional(array);
         ThrowHelper.ThrowIfArrayLowerBoundIsNotZero(array);
 
-        ThrowIfNegative(index);
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
 
         if (array.Length - index < _count)
         {
@@ -1474,8 +1468,8 @@ public class OrderedDictionary<TKey, TValue> :
         /// <inheritdoc/>
         public void CopyTo(TKey[] array, int arrayIndex)
         {
-            ThrowIfNull(array);
-            ThrowIfNegative(arrayIndex);
+            ArgumentNullException.ThrowIfNull(array);
+            ArgumentOutOfRangeException.ThrowIfNegative(arrayIndex);
 
             OrderedDictionary<TKey, TValue> dictionary = _dictionary;
             int count = dictionary._count;
@@ -1496,12 +1490,10 @@ public class OrderedDictionary<TKey, TValue> :
         /// <inheritdoc/>
         void ICollection.CopyTo(Array array, int index)
         {
-            ThrowIfNull(array);
-
+            ArgumentNullException.ThrowIfNull(array);
             ThrowHelper.ThrowIfArrayIsMultiDimensional(array);
             ThrowHelper.ThrowIfArrayLowerBoundIsNotZero(array);
-
-            ThrowIfNegative(index);
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
 
             if (array.Length - index < _dictionary.Count)
             {
@@ -1656,8 +1648,8 @@ public class OrderedDictionary<TKey, TValue> :
         /// <inheritdoc/>
         public void CopyTo(TValue[] array, int arrayIndex)
         {
-            ThrowIfNull(array);
-            ThrowIfNegative(arrayIndex);
+            ArgumentNullException.ThrowIfNull(array);
+            ArgumentOutOfRangeException.ThrowIfNegative(arrayIndex);
 
             OrderedDictionary<TKey, TValue> dictionary = _dictionary;
             int count = dictionary._count;
@@ -1798,12 +1790,12 @@ public class OrderedDictionary<TKey, TValue> :
         /// <inheritdoc/>
         void ICollection.CopyTo(Array array, int index)
         {
-            ThrowIfNull(array);
+            ArgumentNullException.ThrowIfNull(array);
 
             ThrowHelper.ThrowIfArrayIsMultiDimensional(array);
             ThrowHelper.ThrowIfArrayLowerBoundIsNotZero(array);
 
-            ThrowIfNegative(index);
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
 
             if (array.Length - index < _dictionary.Count)
             {

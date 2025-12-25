@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Linux;
 
-#if NET && !LINUX
+#if NET
 [SupportedOSPlatform("linux")]
 #endif
 sealed class PalAdapter : IPalAdapter
-{ 
+{
     PalAdapter()
     {
     }
@@ -32,19 +32,21 @@ sealed class PalAdapter : IPalAdapter
 
         for (; ; )
         {
-            var line = tr.ReadLine();
+            string? line = tr.ReadLine();
             if (line == null)
                 break;
 
             const string key = "PPid:";
             if (line.StartsWith(key, StringComparison.Ordinal))
             {
-#if TFF_MEMORY
                 var s = line.AsSpan(key.Length).Trim();
-#else
-                var s = line.Substring(key.Length).Trim();
+                return int.Parse(
+                    s
+#if !(NETCOREAPP || NETSTANDARD2_1_OR_GREATER)
+                    .ToString()
 #endif
-                return int.Parse(s, provider: NumberFormatInfo.InvariantInfo);
+                    ,
+                    provider: NumberFormatInfo.InvariantInfo);
             }
         }
 
@@ -93,7 +95,7 @@ sealed class PalAdapter : IPalAdapter
                 break;
             }
 
-            var s = br.ReadCString();
+            string s = br.ReadCString();
 
             int j = s.IndexOf('=');
             if (j <= 0)

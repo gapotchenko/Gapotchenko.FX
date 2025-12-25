@@ -18,20 +18,13 @@ using System.Collections;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-#if NET8_0_OR_GREATER
-using static System.ArgumentNullException;
-using static System.ArgumentOutOfRangeException;
-#else
-using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
-#endif
-
 namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
 /// Represents a linear collection that supports element insertion and removal at both ends with O(1) algorithmic complexity.
 /// </summary>
 /// <remarks>
-/// The name "deque" is acronym for "<u>d</u>ouble <u>e</u>nded <u>que</u>ue" and is usually pronounced "deck".
+/// The name "deque" is acronym for "<b>d</b>ouble <b>e</b>nded <b>que</b>ue" and is usually pronounced "deck".
 /// </remarks>
 [DebuggerDisplay("Count = {Count}")]
 [DebuggerTypeProxy(typeof(CollectionDebugView<>))]
@@ -58,7 +51,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
     public Deque(int capacity)
     {
-        ThrowIfNegative(capacity);
+        ArgumentOutOfRangeException.ThrowIfNegative(capacity);
 
         m_Array = capacity == 0 ? [] : new T[capacity];
     }
@@ -71,7 +64,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <param name="collection">The collection to copy elements from.</param>
     public Deque(IEnumerable<T> collection)
     {
-        ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(collection);
 
         var array = EnumerableHelper.ToArray(collection);
         m_Array = array;
@@ -91,6 +84,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 #endif
     int m_Offset;
 
+#pragma warning disable IDE0032 // Use auto property
     /// <summary>
     /// The number of elements contained in the <see cref="Deque{T}"/>.
     /// </summary>
@@ -98,6 +92,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
 #endif
     int m_Size;
+#pragma warning restore IDE0032 // Use auto property
 
 #if !DEBUG
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -191,7 +186,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void CopyTo(T[] array)
     {
-        ThrowIfNull(array);
+        ArgumentNullException.ThrowIfNull(array);
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(
             0, m_Size, array.Length,
             indexParameterName: null, countParameterName: null);
@@ -216,7 +211,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void CopyTo(T[] array, int arrayIndex)
     {
-        ThrowIfNull(array);
+        ArgumentNullException.ThrowIfNull(array);
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(
             arrayIndex, m_Size, array.Length,
             countParameterName: null);
@@ -242,7 +237,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// </exception>
     public void CopyTo(T[] array, int arrayIndex, int count)
     {
-        ThrowIfNull(array);
+        ArgumentNullException.ThrowIfNull(array);
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(arrayIndex, count, array.Length);
 
         CopyToCore(0, array, arrayIndex, count);
@@ -273,7 +268,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     public void CopyTo(int index, T[] array, int arrayIndex, int count)
     {
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
-        ThrowIfNull(array);
+        ArgumentNullException.ThrowIfNull(array);
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(arrayIndex, count, array.Length);
 
         CopyToCore(index, array, arrayIndex, count);
@@ -341,7 +336,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
     public void PushFrontRange(IEnumerable<T> collection)
     {
-        ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(collection);
 
         InsertRangeCore(0, collection);
     }
@@ -353,7 +348,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentNullException"><paramref name="collection"/> is <see langword="null"/>.</exception>
     public void PushBackRange(IEnumerable<T> collection)
     {
-        ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(collection);
 
         InsertRangeCore(m_Size, collection);
     }
@@ -555,7 +550,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     public void InsertRange(int index, IEnumerable<T> collection)
     {
         ExceptionHelper.ValidateIndexArgumentBounds(index, m_Size);
-        ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(collection);
 
         InsertRangeCore(index, collection);
     }
@@ -646,23 +641,27 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentNullException"><paramref name="match"/> is <see langword="null"/>.</exception>
     public int RemoveWhere(Predicate<T> match)
     {
-        ThrowIfNull(match);
+        ArgumentNullException.ThrowIfNull(match);
 
-        var size = m_Size;
+        int size = m_Size;
 
         int i;
         for (i = 0; i < size; ++i)
+        {
             if (match(GetElement(i)))
                 break;
+        }
 
         if (i == size)
             return 0;
 
-        for (var j = i + 1; ; ++i, ++j)
+        for (int j = i + 1; ; ++i, ++j)
         {
             for (; j < size; ++j)
+            {
                 if (!match(GetElement(j)))
                     break;
+            }
 
             if (j == size)
                 break;
@@ -749,7 +748,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentNullException"><paramref name="comparison"/> is <see langword="null"/>.</exception>
     public void Sort(Comparison<T> comparison)
     {
-        ThrowIfNull(comparison);
+        ArgumentNullException.ThrowIfNull(comparison);
 
         SortCore(0, m_Size, comparison);
     }
@@ -771,7 +770,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     public void Sort(int index, int count, Comparison<T> comparison)
     {
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(index, count, m_Size);
-        ThrowIfNull(comparison);
+        ArgumentNullException.ThrowIfNull(comparison);
 
         SortCore(index, count, comparison);
     }
@@ -785,7 +784,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0.</exception>
     public int EnsureCapacity(int capacity)
     {
-        ThrowIfNegative(capacity);
+        ArgumentOutOfRangeException.ThrowIfNegative(capacity);
 
         // Always update the version to catch concurrent enumeration errors better.
         UpdateVersion();
@@ -906,7 +905,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         }
         else
         {
-            var n = Capacity - m_Offset - index;
+            int n = Capacity - m_Offset - index;
             Array.Copy(m_Array, m_Offset + index, array, arrayIndex, n);
             Array.Copy(m_Array, 0, array, arrayIndex + n, count - n);
         }
@@ -1184,8 +1183,8 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             // Fast Algorithm
 
             var array = m_Array;
-            var capacity = array.Length;
-            var arrayIndex = GetArrayIndex(index);
+            int capacity = array.Length;
+            int arrayIndex = GetArrayIndex(index);
 
             if (arrayIndex <= capacity - count)
             {
@@ -1233,15 +1232,15 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         // Fast Algorithm (by Masashi Mizuno)
 
         var array = m_Array;
-        var capacity = array.Length;
-        var srcIndex = GetArrayIndex(sourceIndex);
-        var dstIndex = GetArrayIndex(destinationIndex);
+        int capacity = array.Length;
+        int srcIndex = GetArrayIndex(sourceIndex);
+        int dstIndex = GetArrayIndex(destinationIndex);
 
         if (srcIndex <= dstIndex)
         {
-            var a = Math.Min(capacity - dstIndex, count);
-            var c = Math.Max(srcIndex + count - capacity, 0);
-            var b = count - (a + c);
+            int a = Math.Min(capacity - dstIndex, count);
+            int c = Math.Max(srcIndex + count - capacity, 0);
+            int b = count - (a + c);
 
             if (srcIndex + count <= dstIndex)
             {
@@ -1309,9 +1308,9 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         }
         else
         {
-            var a = Math.Min(capacity - srcIndex, count);
-            var c = Math.Max(dstIndex + count - capacity, 0);
-            var b = count - (a + c);
+            int a = Math.Min(capacity - srcIndex, count);
+            int c = Math.Max(dstIndex + count - capacity, 0);
+            int b = count - (a + c);
 
             if (dstIndex + count <= srcIndex)
             {
@@ -1474,26 +1473,6 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             m_Version = deque.m_Version;
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly Deque<T> m_Deque;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly int m_Version;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        int m_Index;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        T? m_Current;
-
-        /// <summary>
-        /// Gets the element at the current position of the enumerator.
-        /// </summary>
-        /// <value>
-        /// The element in the <see cref="Deque{T}"/> at the current position of the enumerator.
-        /// </value>
-        public readonly T Current => m_Current!;
-
         /// <summary>
         /// Advances the enumerator to the next element of the <see cref="Deque{T}"/>.
         /// </summary>
@@ -1505,7 +1484,6 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
         public bool MoveNext()
         {
             var deque = m_Deque;
-
             if (m_Version == deque.m_Version && (uint)m_Index < deque.m_Size)
             {
                 m_Current = deque.GetElement(m_Index++);
@@ -1517,24 +1495,6 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             }
         }
 
-        /// <inheritdoc/>
-        public void Reset()
-        {
-            ValidateVersion();
-
-            m_Index = 0;
-            m_Current = default;
-        }
-
-        /// <summary>
-        /// Releases all resources used by the <see cref="Enumerator"/>.
-        /// </summary>
-        public void Dispose()
-        {
-        }
-
-        // ------------------------------------------------------------------
-
         bool MoveNextRare()
         {
             ValidateVersion();
@@ -1544,13 +1504,14 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             return false;
         }
 
-        readonly void ValidateVersion()
+        /// <inheritdoc/>
+        public void Reset()
         {
-            if (m_Version != m_Deque.m_Version)
-                ThrowHelper.ThrowVersionCheckFailed();
-        }
+            ValidateVersion();
 
-        #region Compatibility
+            m_Index = 0;
+            m_Current = default;
+        }
 
         readonly object? IEnumerator.Current
         {
@@ -1563,14 +1524,49 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Gets the element at the current position of the enumerator.
+        /// </summary>
+        /// <value>
+        /// The element in the <see cref="Deque{T}"/> at the current position of the enumerator.
+        /// </value>
+        public readonly T Current => m_Current!;
+
+#pragma warning disable IDE0032 // Use auto property
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        T? m_Current;
+#pragma warning restore IDE0032 // Use auto property
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        int m_Index;
+
+        readonly void ValidateVersion()
+        {
+            if (m_Version != m_Deque.m_Version)
+                ThrowHelper.ThrowVersionCheckFailed();
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly Deque<T> m_Deque;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly int m_Version;
+
+        /// <summary>
+        /// Releases all resources used by the <see cref="Enumerator"/>.
+        /// </summary>
+        public void Dispose()
+        {
+        }
     }
 
     #region Compatibility
 
     #region ICollection<T>
 
-    void ICollection<T>.Add(T item) => PushBack(item);
+    /// <inheritdoc/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public void Add(T item) => PushBack(item);
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool ICollection<T>.IsReadOnly => false;
@@ -1624,7 +1620,7 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     void ICollection.CopyTo(Array array, int index)
     {
-        ThrowIfNull(array);
+        ArgumentNullException.ThrowIfNull(array);
         ThrowHelper.ThrowIfArrayIsMultiDimensional(array);
 
         ExceptionHelper.ValidateIndexAndCountArgumentsRange(

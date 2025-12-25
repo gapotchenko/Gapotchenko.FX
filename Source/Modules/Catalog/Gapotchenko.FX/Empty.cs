@@ -32,11 +32,32 @@ public static class Empty
     public static T? Nullify<T>(T? value, int reserved = default) where T : class, IEmptiable
     {
         // The reserved parameter is needed to avoid the method signature conflict with
-        // an existing method that should be kept to provide backward binary compatibility
+        // existing methods that should be kept to provide backward binary compatibility
         // between the module versions.
         _ = reserved;
 
         if (value is null || value.IsEmpty)
+            return null;
+        else
+            return value;
+    }
+
+    /// <summary>
+    /// Nullifies an empty value.
+    /// </summary>
+    /// <typeparam name="T">The type of value.</typeparam>
+    /// <param name="value">The value.</param>
+    /// <param name="reserved">The reserved parameter used for method signature resolution.</param>
+    /// <returns>The value or a <see langword="null"/> if the value is zero.</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static T? Nullify<T>(T value, short reserved = default) where T : struct, IEmptiable
+    {
+        // The reserved parameter is needed to avoid the method signature conflict with
+        // existing methods that should be kept to provide backward binary compatibility
+        // between the module versions.
+        _ = reserved;
+
+        if (value.IsEmpty)
             return null;
         else
             return value;
@@ -88,7 +109,7 @@ public static class Empty
     /// </summary>
     /// <param name="value">The value to nullify.</param>
     /// <param name="empty">The value to treat as empty.</param>
-    /// <returns>The string value or a <see langword="null"/> if the string is empty or <see langword="null"/>.</returns>
+    /// <returns>The string value or a <see langword="null"/> if the string equals to <paramref name="empty"/> or is <see langword="null"/>.</returns>
     public static string? Nullify(string? value, string? empty)
     {
         if (value == null || value == empty)
@@ -103,7 +124,10 @@ public static class Empty
     /// <param name="value">The value to nullify.</param>
     /// <param name="empty">The value to treat as empty.</param>
     /// <param name="comparison">The comparison.</param>
-    /// <returns>The string value or a <see langword="null"/> if the string is empty or <see langword="null"/>.</returns>
+    /// <returns>
+    /// The string value,
+    /// or a <see langword="null"/> if the string equals to <paramref name="empty"/> using <paramref name="comparison"/> or the string is <see langword="null"/>.
+    /// </returns>
     public static string? Nullify(string? value, string? empty, StringComparison comparison)
     {
         if (value == null || value.Equals(empty, comparison))
@@ -381,6 +405,41 @@ public static class Empty
     }
 
     /// <summary>
+    /// Nullifies an empty <typeparamref name="T"/> value.
+    /// </summary>
+    /// <param name="value">The value to nullify.</param>
+    /// <param name="empty">The value to treat as empty.</param>
+    /// <returns>The value or a <see langword="null"/> if the value is empty.</returns>
+    public static T? Nullify<T>(T value, T empty) where T : struct, IEquatable<T>
+    {
+        if (value.Equals(empty))
+            return null;
+        else
+            return value;
+    }
+
+    /// <summary>
+    /// Nullifies an empty <typeparamref name="T"/> value.
+    /// </summary>
+    /// <param name="value">The value to nullify.</param>
+    /// <param name="empty">The value to treat as empty.</param>
+    /// <param name="reserved">The reserved parameter used for method signature resolution.</param>
+    /// <returns>The value or a <see langword="null"/> if the value is empty.</returns>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static T? Nullify<T>(T value, T empty, int reserved = 0) where T : struct, Enum
+    {
+        // The reserved parameter is needed to avoid the method signature conflict with
+        // an existing method that should be kept to provide backward binary compatibility
+        // between the module versions.
+        _ = reserved;
+
+        if (EqualityComparer<T>.Default.Equals(value, empty))
+            return null;
+        else
+            return value;
+    }
+
+    /// <summary>
     /// Nullifies an empty function in terms of lambda calculus provided by <see cref="Fn"/> class.
     /// </summary>
     /// <param name="action">The action.</param>
@@ -427,9 +486,25 @@ public static class Empty
     /// <returns>The value of <paramref name="comparer"/> or <see langword="null"/> if it represents a default equality comparer for type <typeparamref name="T"/>.</returns>
     public static IEqualityComparer<T>? Nullify<T>(IEqualityComparer<T>? comparer)
     {
-        if (comparer == null)
+        if (comparer is null)
             return null;
         else if (comparer == EqualityComparer<T>.Default)
+            return null;
+        else
+            return comparer;
+    }
+
+    /// <summary>
+    /// Nullifies a default comparer for type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of objects compared by a comparer.</typeparam>
+    /// <param name="comparer">The comparer.</param>
+    /// <returns>The value of <paramref name="comparer"/> or <see langword="null"/> if it represents a default comparer for type <typeparamref name="T"/>.</returns>
+    public static IComparer<T>? Nullify<T>(IComparer<T>? comparer)
+    {
+        if (comparer is null)
+            return null;
+        else if (Comparer<T>.Default.Equals(comparer))
             return null;
         else
             return comparer;

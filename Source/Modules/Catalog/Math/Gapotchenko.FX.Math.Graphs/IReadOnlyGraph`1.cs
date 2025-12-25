@@ -229,9 +229,13 @@ public partial interface IReadOnlyGraph<TVertex>
     /// Gets a transitive reduction of the current graph.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// Transitive reduction removes transitive relations with shorter alternative paths.
+    /// </para>
+    /// <para>
     /// The worst estimated algorithmic complexity of the operation is <c>O(n^2.3729)</c> where <c>n</c> is a graph order (number of vertices).
     /// The actual complexity depends on a structure of the graph.
+    /// </para>
     /// </remarks>
     /// <returns>A transitively reduced graph.</returns>
     IReadOnlyGraph<TVertex> GetTransitiveReduction();

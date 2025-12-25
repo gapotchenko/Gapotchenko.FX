@@ -5,7 +5,7 @@ using System.Runtime.Versioning;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Linux;
 
-#if NET && !LINUX
+#if NET
 [SupportedOSPlatform("linux")]
 #endif
 static class NativeMethods

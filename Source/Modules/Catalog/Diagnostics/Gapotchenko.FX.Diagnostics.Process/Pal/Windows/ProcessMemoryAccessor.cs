@@ -7,21 +7,13 @@ namespace Gapotchenko.FX.Diagnostics.Pal.Windows;
 #if NET
 [SupportedOSPlatform("windows")]
 #endif
-sealed class ProcessMemoryAccessor : IProcessMemoryAccessor
+sealed class ProcessMemoryAccessor(IntPtr hProcess) : IProcessMemoryAccessor
 {
-    public ProcessMemoryAccessor(IntPtr hProcess)
-    {
-        m_hProcess = hProcess;
-    }
-
-    readonly IntPtr m_hProcess;
-
     public int PageSize => SystemInfo.PageSize;
 
     public unsafe int ReadMemory(UniPtr address, byte[] buffer, int offset, int count, bool throwOnError)
     {
-        if (buffer == null)
-            throw new ArgumentNullException(nameof(buffer));
+        ArgumentNullException.ThrowIfNull(buffer);
         if (offset + count > buffer.Length)
             throw new ArgumentException();
 
@@ -31,7 +23,7 @@ sealed class ProcessMemoryAccessor : IProcessMemoryAccessor
         fixed (byte* p = buffer)
         {
             status = NativeMethods.ReadProcessMemory(
-                m_hProcess,
+                hProcess,
                 address,
                 p + offset,
                 count,

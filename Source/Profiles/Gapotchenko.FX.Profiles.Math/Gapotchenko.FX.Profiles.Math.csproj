@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <NoWarn>NU5128</NoWarn>
+    <NoWarn>$(NoWarn),NU1510,NU5128</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageDescription>Represents the Math profile of Gapotchenko.FX.</PackageDescription>
+    <PackageDescription>Represents the Math profile of Gapotchenko.FX toolkit.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>

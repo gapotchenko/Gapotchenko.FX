@@ -62,10 +62,8 @@ public abstract class StringMetricAlgorithm<TMeasure> :
         IEnumerable<TElement> b,
         in ValueInterval<TMeasure> range)
     {
-        if (a == null)
-            throw new ArgumentNullException(nameof(a));
-        if (b == null)
-            throw new ArgumentNullException(nameof(b));
+        ArgumentNullException.ThrowIfNull(a);
+        ArgumentNullException.ThrowIfNull(b);
         if (range.IsEmpty)
             throw new ArgumentOutOfRangeException(nameof(range), "The range of measures cannot be empty.");
     }

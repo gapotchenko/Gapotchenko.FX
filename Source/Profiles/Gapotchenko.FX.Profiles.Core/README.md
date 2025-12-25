@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Profiles.Core.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Profiles.Core)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Profiles.Core.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Profiles.Core)
 
-`Gapotchenko.FX.Profiles.Core` package represents the Core profile of Gapotchenko.FX.
+`Gapotchenko.FX.Profiles.Core` package represents the Core profile of Gapotchenko.FX toolkit.
 
 (Disambiguation: a _Core_ word in the profile is not related to .NET Core)
 
@@ -32,7 +32,7 @@ Instead of referencing each of them individually, you can opt-in into just using
 The Core profile is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Profiles.Core):
 
 ```
-PM> Install-Package Gapotchenko.FX.Profiles.Core
+dotnet package add Gapotchenko.FX.Profiles.Core
 ```
 
 ## See Also

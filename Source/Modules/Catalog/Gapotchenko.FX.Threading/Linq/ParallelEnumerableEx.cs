@@ -31,8 +31,7 @@ public static class ParallelEnumerableEx
     /// <returns><see cref="ParallelQuery{TSource}"/> representing the same query as <paramref name="source"/>, with the upper limit on the degrees of parallelism set.</returns>
     public static ParallelQuery<TSource> WithMaxDegreeOfParallelism<TSource>(this ParallelQuery<TSource> source, int maxDegreeOfParallelism)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
         if (maxDegreeOfParallelism == 0 || maxDegreeOfParallelism < -1)
             throw new ArgumentOutOfRangeException(nameof(maxDegreeOfParallelism));
 

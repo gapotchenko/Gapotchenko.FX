@@ -5,7 +5,6 @@
 // Year of introduction: 2019
 
 using Gapotchenko.FX.Properties;
-using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -34,7 +33,7 @@ namespace Gapotchenko.FX.Threading;
 public struct EvaluateOnce<T>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> struct.
+    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> structure.
     /// </summary>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
     public EvaluateOnce(Func<T> valueFactory) :
@@ -43,7 +42,7 @@ public struct EvaluateOnce<T>
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> struct.
+    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> structure.
     /// </summary>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
     /// <param name="syncLock">
@@ -58,7 +57,7 @@ public struct EvaluateOnce<T>
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> struct.
+    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> structure.
     /// </summary>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
     /// <param name="syncLock">
@@ -68,8 +67,21 @@ public struct EvaluateOnce<T>
     public EvaluateOnce(Func<T> valueFactory, Lock? syncLock) :
 #pragma warning disable CS9216 // A value of type 'System.Threading.Lock' converted to a different type will use likely unintended monitor-based locking in 'lock' statement.
         this(valueFactory, (object?)syncLock)
-#pragma warning restore CS9216 // A value of type 'System.Threading.Lock' converted to a different type will use likely unintended monitor-based locking in 'lock' statement.
+#pragma warning restore CS9216
     {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> structure with the specified value of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <remarks>
+    /// After using this constructor, <see cref="IsValueCreated"/> property is set to <see langword="true"/>.
+    /// </remarks>
+    /// <param name="value">The preinitialized value to be used.</param>
+    public EvaluateOnce(T value)
+    {
+        m_Value = value;
+        m_SyncLock = DBNull.Value;
     }
 
     /// <summary>
@@ -82,8 +94,7 @@ public struct EvaluateOnce<T>
             LazyInitializerEx.EnsureInitialized(ref m_Value, ref m_SyncLock, ref m_ValueFactory);
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    [AllowNull]
-    T m_Value;
+    T? m_Value;
 
     /// <summary>
     /// Gets a value that indicates whether a value has been created for this <see cref="EvaluateOnce{T}"/> instance.
@@ -125,14 +136,12 @@ public struct EvaluateOnce<T>
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    [MaybeNull]
-    T ValueForDebugDisplay => IsValueCreated ? Value : default;
+    T? ValueForDebugDisplay => IsValueCreated ? Value : default;
 
     internal sealed class DebugView(EvaluateOnce<T> instance)
     {
         public bool IsValueCreated => instance.IsValueCreated;
 
-        [MaybeNull]
-        public T Value => instance.ValueForDebugDisplay;
+        public T? Value => instance.ValueForDebugDisplay;
     }
 }

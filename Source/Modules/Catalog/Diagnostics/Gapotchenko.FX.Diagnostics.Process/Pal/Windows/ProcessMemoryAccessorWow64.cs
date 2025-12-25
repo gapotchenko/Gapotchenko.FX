@@ -11,8 +11,7 @@ sealed class ProcessMemoryAccessorWow64(IntPtr hProcess) : IProcessMemoryAccesso
 
     public unsafe int ReadMemory(UniPtr address, byte[] buffer, int offset, int count, bool throwOnError)
     {
-        if (buffer == null)
-            throw new ArgumentNullException(nameof(buffer));
+        ArgumentNullException.ThrowIfNull(buffer);
         if (offset + count > buffer.Length)
             throw new ArgumentException();
 

@@ -4,14 +4,6 @@
     <OrigPackageDescription>$(PackageDescription)</OrigPackageDescription>
   </PropertyGroup>
 
-  <Target Name="NuGetClean" AfterTargets="Clean">
-    <ItemGroup>
-        <FilesToDelete Include="$(PackageOutputPath)/*.nupkg" />
-        <FilesToDelete Include="$(PackageOutputPath)/*.snupkg" />
-    </ItemGroup>   
-    <Delete Files="@(FilesToDelete)" />
-  </Target>
-
   <Target Name="PrepareNuspec" BeforeTargets="_GetPackageFiles">
     <NLP_GeneratePackageRepositoryUrl
         ProjectDirectory="$(MSBuildProjectDirectory)"
@@ -134,16 +126,14 @@ var targetFrameworks = new HashSet<string>(TargetFrameworks.Split(';'), StringCo
 
 bool supportsNETStandard20 = targetFrameworks.Contains("netstandard2.0");
 bool supportsNETCore20 = targetFrameworks.Contains("netcoreapp2.0") || supportsNETStandard20;
-bool supportsNET50 = targetFrameworks.Contains("net5.0") || supportsNETCore20;
+bool supportsNET60 = targetFrameworks.Contains("net6.0") || supportsNETCore20;
 
-if (supportsNET50)
-    supportedPlatforms.Add(".NET 5.0+");
+if (supportsNET60)
+    supportedPlatforms.Add(".NET 6.0+");
 if (supportsNETStandard20)
     supportedPlatforms.Add(".NET Standard 2.0+");
-if (supportsNETCore20)
-    supportedPlatforms.Add(".NET Core 2.0+");
-if (targetFrameworks.Contains("net461"))
-    supportedPlatforms.Add(".NET Framework 4.6.1+");
+if (targetFrameworks.Contains("net472"))
+    supportedPlatforms.Add(".NET Framework 4.7.2+");
 
 if (supportedPlatforms.Count != 0)
 {

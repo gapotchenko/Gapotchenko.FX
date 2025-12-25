@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CommonlyUsedPart Include="Gapotchenko.FX.Diagnostics.CommandShell" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\..\IO\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
+  </ItemGroup>
+
+</Project>

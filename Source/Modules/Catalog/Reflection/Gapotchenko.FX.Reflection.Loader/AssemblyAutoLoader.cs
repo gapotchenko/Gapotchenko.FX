@@ -334,7 +334,7 @@ public class AssemblyAutoLoader :
     void EnsureNotDisposed()
     {
         if (m_Disposed)
-            throw new ObjectDisposedException(null);
+            throw new ObjectDisposedException(GetType().FullName);
     }
 
     /// <summary>

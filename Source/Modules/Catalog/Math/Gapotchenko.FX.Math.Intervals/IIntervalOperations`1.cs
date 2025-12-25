@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of interval values.</typeparam>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public interface IIntervalOperations<T>
+public interface IIntervalOperations<T> : IEmptiable
 {
     /// <summary>
     /// Gets the left boundary of the interval.
@@ -29,7 +29,7 @@ public interface IIntervalOperations<T>
     /// <summary>
     /// Gets the <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
     /// </summary>
-    public IComparer<T> Comparer { get; }
+    IComparer<T> Comparer { get; }
 
     /// <summary>
     /// <para>
@@ -104,11 +104,6 @@ public interface IIntervalOperations<T>
     IInterval<T> Enclosure { get; }
 
     /// <summary>
-    /// Gets a value indicating whether the interval is empty.
-    /// </summary>
-    bool IsEmpty { get; }
-
-    /// <summary>
     /// Gets a value indicating whether the interval is infinite.
     /// </summary>
     bool IsInfinite { get; }
@@ -133,12 +128,12 @@ public interface IIntervalOperations<T>
     bool Contains(T value);
 
     /// <summary>
-    /// Returns an integer that indicates the zone of a specified value in relation to the interval range.
+    /// Returns an integer that indicates a zone of the specified value in relation to the interval range.
     /// </summary>
-    /// <param name="value">The value to get the zone for.</param>
+    /// <param name="value">The value to get a zone for.</param>
     /// <returns>
     /// <para>
-    /// A number that indicates the zone of <paramref name="value"/>, as shown in the following table.
+    /// An integer number that indicates a zone of the <paramref name="value"/>, as shown in the following table.
     /// </para>
     /// <para>
     /// <c>0</c> if the interval contains the <paramref name="value"/> or is empty.

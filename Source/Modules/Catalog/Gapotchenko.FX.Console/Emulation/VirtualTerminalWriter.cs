@@ -6,8 +6,7 @@ sealed class VirtualTerminalWriter : TextWriter
 {
     public VirtualTerminalWriter(IVirtualTerminalOutputBackend backend)
     {
-        if (backend == null)
-            throw new ArgumentNullException(nameof(backend));
+        ArgumentNullException.ThrowIfNull(backend);
 
         m_Backend = backend;
         m_BackendTextWriter = backend.Out;
@@ -35,14 +34,12 @@ sealed class VirtualTerminalWriter : TextWriter
 
     const char EscapeCharacter = '\x1b';
 
-    StringBuilder? m_CommandBuilder;
-
     void _AppendCommandChar(char c)
     {
-        if (m_CommandBuilder == null)
-            m_CommandBuilder = new StringBuilder();
-        m_CommandBuilder.Append(c);
+        (m_CommandBuilder ??= new StringBuilder()).Append(c);
     }
+
+    StringBuilder? m_CommandBuilder;
 
     public override void Write(string? value)
     {
@@ -100,9 +97,6 @@ sealed class VirtualTerminalWriter : TextWriter
             _LeaveBufferCore();
     }
 
-    [ThreadStatic]
-    static StringBuilder? m_Buffer;
-
     void _EnterBufferCore()
     {
         m_Buffer = new StringBuilder();
@@ -126,15 +120,15 @@ sealed class VirtualTerminalWriter : TextWriter
     void _FlushBuffer()
     {
         var buffer = m_Buffer;
-        if (buffer == null)
-            return;
-
-        if (buffer.Length != 0)
+        if (buffer?.Length > 0)
         {
             m_BackendTextWriter.Write(buffer.ToString());
             buffer.Clear();
         }
     }
+
+    [ThreadStatic]
+    static StringBuilder? m_Buffer;
 
     public override void Write(char c)
     {
@@ -192,7 +186,7 @@ sealed class VirtualTerminalWriter : TextWriter
                 }
                 else
                 {
-                    throw new Exception("Invalid character in CSI sequence.");
+                    throw new InvalidDataException("Invalid character in CSI sequence.");
                 }
                 break;
 
@@ -228,8 +222,8 @@ sealed class VirtualTerminalWriter : TextWriter
     {
         _FlushBuffer();
 
-        var parts = s.Split(';');
-        foreach (var part in parts)
+        string[] parts = s.Split(';');
+        foreach (string part in parts)
         {
             switch (part)
             {

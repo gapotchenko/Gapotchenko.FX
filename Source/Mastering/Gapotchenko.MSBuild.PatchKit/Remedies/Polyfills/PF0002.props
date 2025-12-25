@@ -1,0 +1,11 @@
+<Project>
+
+  <!-- Polyfill GP-MSB-RMD-PF0002
+       Implements missing 'Trademark' MSBuild property support -->
+  <ItemGroup Condition=" '$(Trademark)' != '' AND ('$(NETCoreSdkVersion)' == '' OR $([MSBuild]::VersionLessThan($(NETCoreSdkVersion), '8.0.100'))) ">
+    <AssemblyAttribute Include="System.Reflection.AssemblyTrademarkAttribute">
+      <_Parameter1>$(Trademark)</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+</Project>

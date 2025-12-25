@@ -11,8 +11,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public void Subgraph(IEnumerable<TVertex> vertices)
     {
-        if (vertices == null)
-            throw new ArgumentNullException(nameof(vertices));
+        ArgumentNullException.ThrowIfNull(vertices);
 
         Vertices.IntersectWith(vertices);
     }
@@ -20,8 +19,7 @@ partial class Graph<TVertex>
     /// <inheritdoc cref="IGraph{TVertex}.GetSubgraph(IEnumerable{TVertex})"/>
     public Graph<TVertex> GetSubgraph(IEnumerable<TVertex> vertices)
     {
-        if (vertices == null)
-            throw new ArgumentNullException(nameof(vertices));
+        ArgumentNullException.ThrowIfNull(vertices);
 
         var subgraph = NewGraph();
 
@@ -56,8 +54,7 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public void Subgraph(IEnumerable<GraphEdge<TVertex>> edges)
     {
-        if (edges == null)
-            throw new ArgumentNullException(nameof(edges));
+        ArgumentNullException.ThrowIfNull(edges);
 
         Edges.IntersectWith(edges);
         Vertices.IntersectWith(Edges.SelectMany(x => x.IncidentVertices));
@@ -66,8 +63,7 @@ partial class Graph<TVertex>
     /// <inheritdoc cref="IGraph{TVertex}.GetSubgraph(IEnumerable{GraphEdge{TVertex}})"/>
     public Graph<TVertex> GetSubgraph(IEnumerable<GraphEdge<TVertex>> edges)
     {
-        if (edges == null)
-            throw new ArgumentNullException(nameof(edges));
+        ArgumentNullException.ThrowIfNull(edges);
 
         var subgraph = NewGraph();
 

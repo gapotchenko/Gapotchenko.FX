@@ -1,0 +1,11 @@
+<Project>
+
+  <!-- Polyfill GP-MSB-RMD-PF0001
+       Implements missing 'CLSCompliant' MSBuild property support -->
+  <ItemGroup Condition=" '$(CLSCompliant)' == 'true' ">
+    <AssemblyAttribute Include="System.CLSCompliantAttribute">
+      <_Parameter1>true</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+</Project>

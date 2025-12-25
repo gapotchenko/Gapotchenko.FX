@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -12,6 +13,6 @@ namespace Gapotchenko.FX.Threading.Tests.Tasks.TaskPolyfills;
 [TestCategory("task")]
 public sealed partial class TaskPolyfillTests
 {
-    // This class is partial.
-    // For more code, please take a look at the neighboring source files.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 }

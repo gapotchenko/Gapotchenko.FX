@@ -74,10 +74,8 @@ public static partial class EnumerableEx
     /// <exception cref="ArgumentNullException">Source or predicate is null.</exception>
     public static bool AnyAndAll<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (predicate == null)
-            throw new ArgumentNullException(nameof(predicate));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(predicate);
 
         using var enumerator = source.GetEnumerator();
 
@@ -111,10 +109,8 @@ public static partial class EnumerableEx
     /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is null.</exception>
     public static bool Contains<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource>? comparer)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (value == null)
-            throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(value);
 
         if (ReferenceEquals(source, value))
             return true;
@@ -179,17 +175,18 @@ public static partial class EnumerableEx
     /// <typeparam name="TSource">The type of the elements of the input sequences.</typeparam>
     /// <param name="source">The source sequence.</param>
     /// <param name="value">An <see cref="IEnumerable{T}"/> value to match.</param>
-    /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to use to compare elements.</param>
+    /// <param name="comparer">
+    /// An <see cref="IEqualityComparer{T}"/> to use to compare elements,
+    /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> for the type of an element.
+    /// </param>
     /// <returns>
     /// <see langword="true"/> if <paramref name="value"/> sequence matches the beginning of the <paramref name="source"/> sequence; otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is <see langword="null"/>.</exception>
     public static bool StartsWith<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value, IEqualityComparer<TSource>? comparer)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (value == null)
-            throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(value);
 
         if (ReferenceEquals(source, value))
             return true;
@@ -261,12 +258,9 @@ public static partial class EnumerableEx
         Func<TSource, bool> predicate1,
         Func<TSource, bool> predicate2)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (predicate1 == null)
-            throw new ArgumentNullException(nameof(predicate1));
-        if (predicate2 == null)
-            throw new ArgumentNullException(nameof(predicate2));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(predicate1);
+        ArgumentNullException.ThrowIfNull(predicate2);
 
         bool result1 = false;
         bool result2 = false;
@@ -306,14 +300,10 @@ public static partial class EnumerableEx
         Func<TSource, bool> predicate2,
         Func<TSource, bool> predicate3)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (predicate1 == null)
-            throw new ArgumentNullException(nameof(predicate1));
-        if (predicate2 == null)
-            throw new ArgumentNullException(nameof(predicate2));
-        if (predicate3 == null)
-            throw new ArgumentNullException(nameof(predicate3));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(predicate1);
+        ArgumentNullException.ThrowIfNull(predicate2);
+        ArgumentNullException.ThrowIfNull(predicate3);
 
         bool result1 = false;
         bool result2 = false;

@@ -6,5 +6,6 @@
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static partial class EnumerablePolyfills
 {
-    // This class is partial. Please take a look at the neighboring source files.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 }

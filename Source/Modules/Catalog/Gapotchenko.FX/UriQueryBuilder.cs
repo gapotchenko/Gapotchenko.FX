@@ -63,8 +63,7 @@ public sealed class UriQueryBuilder
     /// <returns>The <see cref="UriQueryBuilder"/> instance.</returns>
     public UriQueryBuilder AppendParameter(string name, string? value)
     {
-        if (name == null)
-            throw new ArgumentNullException(nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
         if (name.Length == 0)
             throw new ArgumentException("A query parameter name cannot be empty.", nameof(name));
 
@@ -131,8 +130,7 @@ public sealed class UriQueryBuilder
     /// <returns>The <see cref="Uri"/> with an appended query parameter.</returns>
     public static Uri AppendParameter(Uri uri, string name, string? value)
     {
-        if (uri == null)
-            throw new ArgumentNullException(nameof(uri));
+        ArgumentNullException.ThrowIfNull(uri);
 
         return new UriQueryBuilder().AppendParameter(name, value).CombineWithUri(uri);
     }
@@ -148,8 +146,7 @@ public sealed class UriQueryBuilder
     /// <returns>The URI with an appended query parameter.</returns>
     public static Uri AppendParameter(Uri uri, string name1, string? value1, string name2, string? value2)
     {
-        if (uri == null)
-            throw new ArgumentNullException(nameof(uri));
+        ArgumentNullException.ThrowIfNull(uri);
 
         return new UriQueryBuilder()
             .AppendParameter(name1, value1)
@@ -170,8 +167,7 @@ public sealed class UriQueryBuilder
     /// <returns>The URI with an appended query parameter.</returns>
     public static Uri AppendParameter(Uri uri, string name1, string? value1, string name2, string? value2, string name3, string? value3)
     {
-        if (uri == null)
-            throw new ArgumentNullException(nameof(uri));
+        ArgumentNullException.ThrowIfNull(uri);
 
         return new UriQueryBuilder()
             .AppendParameter(name1, value1)
@@ -187,8 +183,7 @@ public sealed class UriQueryBuilder
     /// <returns><see langword="true"/> if a query has a parameter with the given name; otherwise, <see langword="false"/>.</returns>
     public bool HasParameter(string name)
     {
-        if (name == null)
-            throw new ArgumentNullException(nameof(name));
+        ArgumentNullException.ThrowIfNull(name);
 
         string token = name + '=';
         string query = ToString();
@@ -289,8 +284,7 @@ public sealed class UriQueryBuilder
     /// <returns>The combined URI.</returns>
     public static Uri CombineWithUri(Uri uri, string? query)
     {
-        if (uri == null)
-            throw new ArgumentNullException(nameof(uri));
+        ArgumentNullException.ThrowIfNull(uri);
 
         if (string.IsNullOrEmpty(query))
             return uri;

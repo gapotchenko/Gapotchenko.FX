@@ -1,16 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
-  </PropertyGroup>
-
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Numerics.BitOperations" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Runtime\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj" />

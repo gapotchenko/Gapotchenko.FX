@@ -1,18 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
     <PackageDescription>Provides data structures and primitives for working with intervals.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageTag Include="interval" />
+    <PackageTag Include="math;interval" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Intervals.Interval&lt;T&gt;" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Intervals.ValueInterval&lt;T&gt;" />
   </ItemGroup>
 
   <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
     <NoWarn>$(NoWarn),GPFX0001</NoWarn>
   </PropertyGroup>
 

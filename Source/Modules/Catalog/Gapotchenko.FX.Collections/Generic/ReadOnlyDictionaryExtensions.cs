@@ -27,7 +27,7 @@ public static class ReadOnlyDictionaryExtensions
 #endif
         IReadOnlyDictionary<TKey, TValue> dictionary,
         TKey key)
-#if !TFF_DICTIONARY_NULL_KEY
+#if !TFF_IDICTIONARY_NULL_KEY
         where TKey : notnull
 #endif
 #if TFF_DICTIONARY_GETVALUEORDEFAULT
@@ -75,7 +75,7 @@ public static class ReadOnlyDictionaryExtensions
         [AllowNull]
 #endif
         TValue defaultValue)
-#if !TFF_DICTIONARY_NULL_KEY
+#if !TFF_IDICTIONARY_NULL_KEY
         where TKey : notnull
 #endif
 #if TFF_DICTIONARY_GETVALUEORDEFAULT

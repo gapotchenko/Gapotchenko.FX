@@ -1,7 +1,9 @@
-﻿namespace Gapotchenko.FX.Memory;
+﻿#pragma warning disable IDE0031 // Use null propagation
+
+namespace Gapotchenko.FX.Memory;
 
 /// <summary>
-/// Extensions for <see cref="ReadOnlySpan{T}"/>.
+/// Provides extensions methods for <see cref="ReadOnlySpan{T}"/>.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class ReadOnlySpanExtensions
@@ -39,4 +41,26 @@ public static class ReadOnlySpanExtensions
             length != 0 &&
             span[length - 1] == value;
     }
+
+    /// <summary>
+    /// Gets a nullable <see cref="string"/> representation of the specified character span.
+    /// </summary>
+    /// <param name="span">The character span.</param>
+    /// <returns>
+    /// A string represented by <paramref name="span"/>,
+    /// or <see langword="null"/> if <paramref name="span"/> represents a <see langword="null"/> value.
+    /// </returns>
+    public static string? ToNullableString(this ReadOnlySpan<char> span) =>
+        span == null ? null : span.ToString();
+
+    /// <summary>
+    /// Gets a nullable array with a copy of the specified span contents.
+    /// </summary>
+    /// <param name="span">The span.</param>
+    /// <returns>
+    /// An array containing the data in <paramref name="span"/>,
+    /// or <see langword="null"/> if <paramref name="span"/> represents a <see langword="null"/> value.
+    /// </returns>
+    public static T[]? ToNullableArray<T>(this ReadOnlySpan<T> span) =>
+        span == null ? null : span.ToArray();
 }

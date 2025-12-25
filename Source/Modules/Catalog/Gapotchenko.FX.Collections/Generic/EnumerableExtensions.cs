@@ -1,11 +1,13 @@
 ﻿namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
-/// <see cref="List{T}"/> extensions.
+/// Provides extension methods for <see cref="IEnumerable{T}"/> interface.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class EnumerableExtensions
 {
+    #region ToAssociativeArray
+
     /// <summary>
     /// Creates an <see cref="AssociativeArray{TKey, TValue}"/> from an <see cref="IEnumerable{T}"/>
     /// according to a specified key selector function and key comparer.
@@ -62,12 +64,9 @@ public static class EnumerableExtensions
         Func<TSource, TElement> elementSelector,
         IEqualityComparer<TKey>? comparer = null)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (keySelector == null)
-            throw new ArgumentNullException(nameof(keySelector));
-        if (elementSelector == null)
-            throw new ArgumentNullException(nameof(elementSelector));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(keySelector);
+        ArgumentNullException.ThrowIfNull(elementSelector);
 
         var associativeArray = new AssociativeArray<TKey, TElement>(comparer);
         foreach (var item in source)
@@ -75,4 +74,6 @@ public static class EnumerableExtensions
 
         return associativeArray;
     }
+
+    #endregion
 }

@@ -10,11 +10,11 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Runtime.InteropServices.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Runtime.InteropServices)
 
 `Gapotchenko.FX.Runtime.InteropServices` is a complementary module to `System.Runtime.InteropServices` which is provided as a part of .NET.
-The module provides polyfills for functionality defined in `System.Runtime.InteropServices`.
+The module provides polyfills for functionality defined in `System.Runtime.InteropServices` BCL module.
 
-## `SafeBuffer` Polyfills
+## Polyfills for `SafeBuffer`
 
-For example, `SafeBuffer` class provided by `System.Runtime.InteropServices` module got a new `ReadSpan(ulong byteOffset, Span<byte> buffer)` method since .NET 6.0.
+`SafeBuffer` class provided by `System.Runtime.InteropServices` module got a new `ReadSpan(ulong byteOffset, Span<byte> buffer)` method since .NET 6.0.
 `Gapotchenko.FX.Runtime.InteropServices` module makes this method available for all other supported target frameworks.
 
 ## Usage
@@ -22,7 +22,7 @@ For example, `SafeBuffer` class provided by `System.Runtime.InteropServices` mod
 `Gapotchenko.FX.Runtime.InteropServices` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Runtime.InteropServices):
 
 ```
-PM> Install-Package Gapotchenko.FX.Runtime.InteropServices
+dotnet package add Gapotchenko.FX.Runtime.InteropServices
 ```
 
 ## Other Modules
@@ -33,9 +33,9 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.AppModel.Information](../../AppModel/Gapotchenko.FX.AppModel.Information#readme)
 - [Gapotchenko.FX.Collections](../../Gapotchenko.FX.Collections#readme)
 - [Gapotchenko.FX.Console](../../Gapotchenko.FX.Console#readme)
-- [Gapotchenko.FX.Data](../../Data/Encoding/Gapotchenko.FX.Data.Encoding#readme)
+- [Gapotchenko.FX.Data](../../Data/Archives/Gapotchenko.FX.Data.Archives#readme)
 - [Gapotchenko.FX.Diagnostics](../../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
-- [Gapotchenko.FX.IO](../../Gapotchenko.FX.IO#readme)
+- [Gapotchenko.FX.IO](../../IO/Gapotchenko.FX.IO#readme)
 - [Gapotchenko.FX.Linq](../../Linq/Gapotchenko.FX.Linq#readme)
 - [Gapotchenko.FX.Math](../../Math/Gapotchenko.FX.Math#readme)
 - [Gapotchenko.FX.Memory](../../Gapotchenko.FX.Memory#readme)
@@ -46,6 +46,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Text](../../Gapotchenko.FX.Text#readme)
 - [Gapotchenko.FX.Threading](../../Gapotchenko.FX.Threading#readme)
 - [Gapotchenko.FX.Tuples](../../Gapotchenko.FX.Tuples#readme)
+- [Gapotchenko.FX.Versioning](../../Versioning/Gapotchenko.FX.Versioning#readme)
 
 Symbol ✱ denotes an advanced module.
 

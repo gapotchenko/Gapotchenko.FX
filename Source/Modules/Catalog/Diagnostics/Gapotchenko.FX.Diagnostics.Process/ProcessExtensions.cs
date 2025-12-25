@@ -17,8 +17,7 @@ public static partial class ProcessExtensions
     /// <returns>The environment variables.</returns>
     public static StringDictionary ReadEnvironmentVariables(this Process process)
     {
-        if (process == null)
-            throw new ArgumentNullException(nameof(process));
+        ArgumentNullException.ThrowIfNull(process);
 
         // This is a hacky way to create a StringDictionary with the correct characteristics.
         // Needs a future review.
@@ -40,10 +39,9 @@ public static partial class ProcessExtensions
     /// <returns>The set of command-line arguments of the process.</returns>
     public static string ReadArguments(this Process process)
     {
-        if (process == null)
-            throw new ArgumentNullException(nameof(process));
+        ArgumentNullException.ThrowIfNull(process);
 
-        PalServices.Adapter.ReadProcessCommandLineArguments(process, out var commandLine, out var arguments);
+        PalServices.Adapter.ReadProcessCommandLineArguments(process, out string? commandLine, out var arguments);
 
         if (commandLine != null)
             return commandLine;
@@ -60,10 +58,9 @@ public static partial class ProcessExtensions
     /// <returns>The sequence of command-line arguments of the process.</returns>
     public static IEnumerable<string> ReadArgumentList(this Process process)
     {
-        if (process == null)
-            throw new ArgumentNullException(nameof(process));
+        ArgumentNullException.ThrowIfNull(process);
 
-        PalServices.Adapter.ReadProcessCommandLineArguments(process, out var commandLine, out var arguments);
+        PalServices.Adapter.ReadProcessCommandLineArguments(process, out string? commandLine, out var arguments);
 
         if (arguments != null)
             return arguments;
@@ -80,8 +77,7 @@ public static partial class ProcessExtensions
     /// <returns>The parent process or <see langword="null"/> if it is no longer running or there is no parent.</returns>
     public static Process? GetParent(this Process process)
     {
-        if (process == null)
-            throw new ArgumentNullException(nameof(process));
+        ArgumentNullException.ThrowIfNull(process);
 
         try
         {
@@ -115,8 +111,7 @@ public static partial class ProcessExtensions
     /// <returns>The sequence of observable parent processes.</returns>
     public static IEnumerable<Process> EnumerateParents(this Process process)
     {
-        if (process == null)
-            throw new ArgumentNullException(nameof(process));
+        ArgumentNullException.ThrowIfNull(process);
 
         for (; ; )
         {
@@ -142,8 +137,7 @@ public static partial class ProcessExtensions
     /// <returns>The file name of a process image or <see langword="null"/> if there is no associated file.</returns>
     public static string? GetImageFileName(this Process process)
     {
-        if (process == null)
-            throw new ArgumentNullException(nameof(process));
+        ArgumentNullException.ThrowIfNull(process);
 
         ProcessModule? mainModule = null;
         try

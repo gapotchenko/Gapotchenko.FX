@@ -153,7 +153,7 @@ interval = Interval.ToInclusive(10);
 interval = Interval.ToExclusive(10);
 ```
 
-Or you can explicitly construct an interval by using an `Interval<T>` constructor and the notion of boundaries:
+Or you can explicitly construct an interval by using an `Interval<T>` constructor using the notion of boundaries:
 
 ``` C#
 // [10,20)
@@ -196,7 +196,7 @@ This may save some CPU time and memory in cases where `T` type is sufficiently l
 `Gapotchenko.FX.Math.Intervals` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math.Intervals):
 
 ```
-PM> Install-Package Gapotchenko.FX.Math.Intervals
+dotnet package add Gapotchenko.FX.Math.Intervals
 ```
 
 ## Other Modules
@@ -207,9 +207,9 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.AppModel.Information](../../AppModel/Gapotchenko.FX.AppModel.Information#readme)
 - [Gapotchenko.FX.Collections](../../Gapotchenko.FX.Collections#readme)
 - [Gapotchenko.FX.Console](../../Gapotchenko.FX.Console#readme)
-- [Gapotchenko.FX.Data](../../Data/Encoding/Gapotchenko.FX.Data.Encoding#readme)
+- [Gapotchenko.FX.Data](../../Data/Archives/Gapotchenko.FX.Data.Archives#readme)
 - [Gapotchenko.FX.Diagnostics](../../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
-- [Gapotchenko.FX.IO](../../Gapotchenko.FX.IO#readme)
+- [Gapotchenko.FX.IO](../../IO/Gapotchenko.FX.IO#readme)
 - [Gapotchenko.FX.Linq](../../Linq/Gapotchenko.FX.Linq#readme)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math#readme)
   - [Gapotchenko.FX.Math.Combinatorics](../Gapotchenko.FX.Math.Combinatorics#readme)
@@ -221,5 +221,6 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Text](../../Gapotchenko.FX.Text#readme)
 - [Gapotchenko.FX.Threading](../../Gapotchenko.FX.Threading#readme)
 - [Gapotchenko.FX.Tuples](../../Gapotchenko.FX.Tuples#readme)
+- [Gapotchenko.FX.Versioning](../../Versioning/Gapotchenko.FX.Versioning#readme)
 
 Or look at the [full list of modules](../../..#readme).

@@ -21,7 +21,9 @@ public abstract partial class Crc32(uint initialValue) : ChecksumAlgorithm<uint>
     /// <summary>
     /// The initial value of the register when the algorithm starts.
     /// </summary>
+#pragma warning disable CA1051 // Do not declare visible instance fields
     protected readonly uint InitialValue = initialValue;
+#pragma warning restore CA1051
 
     /// <summary>
     /// The size, in bits, of the computed checksum value.

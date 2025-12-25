@@ -1,5 +1,37 @@
 # What's New in Gapotchenko.FX
 
+## 2025
+
+### Gapotchenko FX 2025.1
+
+Release date: not released yet
+
+- Support for .NET 10.0 target framework
+- Introduced `Gapotchenko.FX.IO.Vfs` module that provides the concept of a virtual file system which allows to work with file systems in a unified way independently of their actual nature.
+  Be it a local ZIP archive, a CD/DVD ISO image, a custom FAT12 implementation, or a remote network storage
+- Added `EnumerableEx.Lazy(Func<IEnumerable<T>>)` method that allows to lazily initialize an `IEnumerable<T>` instance by the specified factory
+- Added `Gapotchenko.FX.IO.PositionTrackingTextReader` class that can track the current position within a sequential series of characters
+- Improved compatibility with AOT publishing
+- Improved default buffer size selection algorithm for stream block copy operations in `Gapotchenko.FX.IO` module
+- `Gapotchenko.FX.Collections.Generic.Deque<T>` made compatible with collection initializers
+- `Gapotchenko.FX.Threading.EvaluateOnce<T>` primitive can now be created pre-initialized with a value
+- Polyfills:
+    - Added `Contains`, `ContainsAny`, `SequenceEqual`, `StartsWith` and `EndsWith` polyfill methods for `ReadOnlySpan<T>` type
+    - Added `Path.EndsInDirectorySeparator(string?)` and `Path.EndsInDirectorySeparator(ReadOnlySpan<char>)` polyfill methods
+    - `Stream.ReadExactly` and `Stream.ReadAtLeast` polyfill methods provided by the `Gapotchenko.FX.IO` module are now available for all supported target frameworks
+    - Implemented polyfill `ThrowIf...` methods for `ArgumentException`, `ArgumentNullException`, `ArgumentOutOfRangeException` and `ObjectDisposedException` classes
+    - Added `StringBuilder.Append(ReadOnlySpan<char>)` polyfill method
+    - Added `Clear(Array)`, `Fill<T>(T[], T)` and `Fill<T>(T[], T, int, int)` polyfill methods for `Array` type
+    - Added `Random.Shared` and `Random.Shuffle<T>(Span<T>)` polyfill members
+    - Added `Shuffle` polyfill method for `IEnumerable<T>` type
+    - Added `Enum.GetValues<TEnum>()` polyfill method
+- Fixed issues:
+    - Fixed issue that led to an empty string value returned by `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
+    - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly having its own entry point
+    - Fixed issue that led to an empty string value returned by `AppInformation.Trademark` property instead of a `null` value
+    - Fixed P/Invoke issues that could be potentially targeted by [WorstFit Attack](https://worst.fit/) vulnerability (applies to Windows OS only)
+- Retired support for target frameworks older then .NET 6.0 and .NET Framework 4.7.2
+
 ## 2024
 
 ### Gapotchenko FX 2024.2
@@ -36,8 +68,8 @@ Release date: November 10, 2024
 - Added ability to retrieve connected components of a graph by using `Graph<T>.ConnectedComponents` property
 - Added ability to supply an additional cancellation token to `Gapotchenko.FX.Threading.Tasks.TaskBridge.Execute` method
 - Added a functional facility that implements a [pipe operator](https://github.com/dotnet/csharplang/discussions/96) concept.
-  The facility is provided in the form of `PipeOperator` extension method that resides in `Gapotchenko.FX.Linq.Operators` namespace provided by `Gapotchenko.FX.Linq` module.
-  It allows you to have a pipe operator functionality in .NET languages that do not natively provide pipe operators
+  The facility is provided in the form of `PipeTo` extension method that resides in `Gapotchenko.FX.Linq.Operators` namespace provided by `Gapotchenko.FX.Linq` module.
+  It allows you to have a pipe operator functionality in .NET languages that do not natively provide pipe operators yet
 - Use hardware-accelerated CRC-32C checksum algorithm implementation when it is available
 - Deprecated `Gapotchenko.FX.Math.Topology` module in favor of a formalized `Gapotchenko.FX.Math.Graphs` module
 - Polyfills:

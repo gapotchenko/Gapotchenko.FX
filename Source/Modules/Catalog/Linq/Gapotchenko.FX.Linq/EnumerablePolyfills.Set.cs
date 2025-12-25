@@ -1,4 +1,25 @@
-﻿namespace Gapotchenko.FX.Linq;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+#if NETCOREAPP2_0_OR_GREATER || NET472_OR_GREATER || NETSTANDARD2_1_OR_GREATER 
+#define TFF_ENUMERABLE_TOHASHSET
+#endif
+
+#if NET6_0_OR_GREATER
+#define TFF_ENUMERABLE_DISTINCTBY
+#define TFF_ENUMERABLE_EXCEPTBY
+#define TFF_ENUMERABLE_INTERSECTBY
+#define TFF_ENUMERABLE_UNIONBY
+#endif
+
+using System.Runtime.CompilerServices;
+
+namespace Gapotchenko.FX.Linq;
 
 partial class EnumerablePolyfills
 {
@@ -34,14 +55,24 @@ partial class EnumerablePolyfills
     /// <returns>A <see cref="HashSet{T}"/> that contains values of type <typeparamref name="TSource"/> retrieved from the <paramref name="source"/>.</returns>
 #if TFF_ENUMERABLE_TOHASHSET
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static HashSet<TSource> ToHashSet<TSource>(IEnumerable<TSource> source, IEqualityComparer<TSource>? comparer) =>
-        Enumerable.ToHashSet(source, comparer);
-#else
-    public static HashSet<TSource> ToHashSet<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource>? comparer) =>
-        new(
-            source ?? throw new ArgumentNullException(nameof(source)),
-            comparer);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+    public static HashSet<TSource> ToHashSet<TSource>(
+#if !TFF_ENUMERABLE_TOHASHSET
+        this
+#endif
+        IEnumerable<TSource> source,
+        IEqualityComparer<TSource>? comparer)
+    {
+#if TFF_ENUMERABLE_TOHASHSET
+        // Redirect to BCL implementation.
+        return Enumerable.ToHashSet(source, comparer);
+#else
+        // FX implementation.
+        ArgumentNullException.ThrowIfNull(source);
+        return new(source, comparer);
+#endif
+    }
 
     /// <summary>
     /// Returns distinct elements from a sequence by using the default equality comparer on the keys extracted by a specified selector function.
@@ -76,10 +107,8 @@ partial class EnumerablePolyfills
 #else
     public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (keySelector == null)
-            throw new ArgumentNullException(nameof(keySelector));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(keySelector);
 
         return source.Distinct(new KeyedEqualityComparer<TSource, TKey>(keySelector, comparer));
     }
@@ -142,12 +171,9 @@ partial class EnumerablePolyfills
 #else
         // FX implementation.
 
-        if (first is null)
-            throw new ArgumentNullException(nameof(first));
-        if (second is null)
-            throw new ArgumentNullException(nameof(second));
-        if (keySelector is null)
-            throw new ArgumentNullException(nameof(keySelector));
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        ArgumentNullException.ThrowIfNull(keySelector);
 
         var set = new HashSet<TKey>(second, comparer);
 
@@ -168,7 +194,7 @@ partial class EnumerablePolyfills
     /// <remarks>
     /// <para>This method is implemented by using deferred execution. The immediate return value is an object that stores all the information that is required to perform the action. The query represented by this method is not executed until the object is enumerated either by calling its `GetEnumerator` method directly or by using `foreach` in Visual C# or `For Each` in Visual Basic.</para>
     /// <para>The default equality comparer, <see cref="EqualityComparer{T}.Default" />, is used to compare values.</para>
-    /// <para>When the object returned by this method is enumerated, <see cref="O:Enumerable.UnionBy" /> enumerates <paramref name="first" /> and <paramref name="second" /> in that order and yields each element that has not already been yielded.</para>
+    /// <para>When the object returned by this method is enumerated, `UnionBy` enumerates <paramref name="first" /> and <paramref name="second" /> in that order and yields each element that has not already been yielded.</para>
     /// </remarks>
 #if TFF_ENUMERABLE_UNIONBY
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -200,7 +226,7 @@ partial class EnumerablePolyfills
     /// <remarks>
     /// <para>This method is implemented by using deferred execution. The immediate return value is an object that stores all the information that is required to perform the action. The query represented by this method is not executed until the object is enumerated either by calling its `GetEnumerator` method directly or by using `foreach` in Visual C# or `For Each` in Visual Basic.</para>
     /// <para>If <paramref name="comparer" /> is <see langword="null" />, the default equality comparer, <see cref="EqualityComparer{T}.Default" />, is used to compare values.</para>
-    /// <para>When the object returned by this method is enumerated, <see cref="O:Enumerable.UnionBy" /> enumerates <paramref name="first" /> and <paramref name="second" /> in that order and yields each element that has not already been yielded.</para>
+    /// <para>When the object returned by this method is enumerated, `UnionBy` enumerates <paramref name="first" /> and <paramref name="second" /> in that order and yields each element that has not already been yielded.</para>
     /// </remarks>
 #if TFF_ENUMERABLE_UNIONBY
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -220,12 +246,9 @@ partial class EnumerablePolyfills
 #else
         // FX implementation.
 
-        if (first is null)
-            throw new ArgumentNullException(nameof(first));
-        if (second is null)
-            throw new ArgumentNullException(nameof(second));
-        if (keySelector is null)
-            throw new ArgumentNullException(nameof(keySelector));
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        ArgumentNullException.ThrowIfNull(keySelector);
 
         var set = new HashSet<TKey>(comparer);
 
@@ -304,14 +327,9 @@ partial class EnumerablePolyfills
 #else
         // FX implementation.
 
-        if (first is null)
-            throw new ArgumentNullException(nameof(first));
-
-        if (second is null)
-            throw new ArgumentNullException(nameof(second));
-
-        if (keySelector is null)
-            throw new ArgumentNullException(nameof(keySelector));
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        ArgumentNullException.ThrowIfNull(keySelector);
 
         var set = new HashSet<TKey>(second, comparer);
 
@@ -321,3 +339,25 @@ partial class EnumerablePolyfills
 #endif
     }
 }
+
+#if !TFF_ENUMERABLE_DISTINCTBY
+
+sealed class KeyedEqualityComparer<TSource, TKey>(
+    Func<TSource, TKey> selector,
+    IEqualityComparer<TKey>? comparer) :
+    IEqualityComparer<TSource>
+{
+    public bool Equals(TSource? x, TSource? y) =>
+        x is null && y is null ||
+        x is not null && y is not null &&
+        m_Comparer.Equals(selector(x), selector(y));
+
+    public int GetHashCode(TSource obj) =>
+        selector(obj) is not null and var key ?
+            m_Comparer.GetHashCode(key) :
+            0;
+
+    readonly IEqualityComparer<TKey> m_Comparer = comparer ?? EqualityComparer<TKey>.Default;
+}
+
+#endif

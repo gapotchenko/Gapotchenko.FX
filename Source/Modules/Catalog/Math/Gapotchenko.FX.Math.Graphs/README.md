@@ -8,9 +8,9 @@ The module provides data structures and primitives for working with abstract gra
 ## Graph&lt;T&gt;
 
 `Graph<T>` class provided by `Gapotchenko.FX.Math.Graphs` represents a strongly-typed graph of objects.
-The objects correspond to mathematical abstractions called graph vertices and each of the related pairs of vertices is called an edge.
-A graph can be viewed as a structure that contains two sets: set of vertices and set of edges.
-Vertices define "what" graph contains and edges define "how" those vertices are connected.
+The objects stored in a graph are called vertices and each of the related pairs of vertices is called an edge.
+A graph can be viewed as a structure containing two sets: the set of vertices and the set of edges.
+Vertices define "what" graph contains and edges define "how" those vertices are interconnected.
 
 Let's take a look at the simplest directional graph that contains just two vertices:
 
@@ -242,7 +242,7 @@ seq.OrderTopologicallyBy(…).ThenBy(…)
 `Gapotchenko.FX.Math.Graphs` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math.Graphs):
 
 ```
-PM> Install-Package Gapotchenko.FX.Math.Graphs
+dotnet package add Gapotchenko.FX.Math.Graphs
 ```
 
 ## Other Modules
@@ -253,9 +253,9 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.AppModel.Information](../../AppModel/Gapotchenko.FX.AppModel.Information#readme)
 - [Gapotchenko.FX.Collections](../../Gapotchenko.FX.Collections#readme)
 - [Gapotchenko.FX.Console](../../Gapotchenko.FX.Console#readme)
-- [Gapotchenko.FX.Data](../../Data/Encoding/Gapotchenko.FX.Data.Encoding#readme)
+- [Gapotchenko.FX.Data](../../Data/Archives/Gapotchenko.FX.Data.Archives#readme)
 - [Gapotchenko.FX.Diagnostics](../../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
-- [Gapotchenko.FX.IO](../../Gapotchenko.FX.IO#readme)
+- [Gapotchenko.FX.IO](../../IO/Gapotchenko.FX.IO#readme)
 - [Gapotchenko.FX.Linq](../../Linq/Gapotchenko.FX.Linq#readme)
 - [Gapotchenko.FX.Math](../Gapotchenko.FX.Math#readme)
   - [Gapotchenko.FX.Math.Combinatorics](../Gapotchenko.FX.Math.Combinatorics#readme)
@@ -267,5 +267,6 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Text](../../Gapotchenko.FX.Text#readme)
 - [Gapotchenko.FX.Threading](../../Gapotchenko.FX.Threading#readme)
 - [Gapotchenko.FX.Tuples](../../Gapotchenko.FX.Tuples#readme)
+- [Gapotchenko.FX.Versioning](../../Versioning/Gapotchenko.FX.Versioning#readme)
 
 Or look at the [full list of modules](../../..#readme).

@@ -1,4 +1,5 @@
 ﻿#region Usings
+using Gapotchenko.FX;
 using Gapotchenko.FX.AppModel;
 using Gapotchenko.FX.Data.Integrity.Checksum;
 using Gapotchenko.FX.Data.Encoding;
@@ -19,6 +20,9 @@ using Gapotchenko.FX.Threading;
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Math.Metrics;
+using Gapotchenko.FX.Versioning;
+using Gapotchenko.FX.Data.Archives.Zip;
+using Gapotchenko.FX.IO.Vfs;
 #endregion
 
 #nullable enable
@@ -35,6 +39,8 @@ class Program
         {
             var mutex = new AsyncLock();
             var cv = new AsyncConditionVariable(mutex);
+
+            int[] arr = [1, 2, 3];
 
             ThreadPool.QueueUserWorkItem(
                 (_) =>
@@ -62,7 +68,6 @@ class Program
             ExecuteOnce a = new(() => Console.WriteLine("Once!"));
             a.EnsureExecuted();
             a.EnsureExecuted();
-
 
             if (!Console.IsOutputRedirected)
                 Console.OutputEncoding = Encoding.UTF8;
@@ -144,6 +149,8 @@ class Program
 
         var interval = Interval.Empty<int>();
         Console.WriteLine(interval.IsEmpty);
+
+        //var archive = ZipArchive.Storage.ReadFile(@"123");
     }
 
     static void _RunTopologicalSort()

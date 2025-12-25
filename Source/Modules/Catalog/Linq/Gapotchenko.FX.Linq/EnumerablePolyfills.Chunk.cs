@@ -1,4 +1,10 @@
-﻿// Portions (c) .NET Foundation
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
 
 #if NET6_0_OR_GREATER
 #define TFF_ENUMERABLE_CHUNK
@@ -48,10 +54,8 @@ partial class EnumerablePolyfills
 #if TFF_ENUMERABLE_CHUNK
         return Enumerable.Chunk(source, size);
 #else
-        if (source is null)
-            throw new ArgumentNullException(nameof(source));
-        if (size <= 0)
-            throw new ArgumentOutOfRangeException(nameof(size), "The value should be greater than 0.");
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(size, 0);
 
         using var e = source.GetEnumerator();
 

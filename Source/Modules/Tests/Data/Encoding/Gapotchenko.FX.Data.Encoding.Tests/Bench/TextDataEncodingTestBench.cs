@@ -21,12 +21,9 @@ public static class TextDataEncodingTestBench
         // Parameters contract validation
         // -----------------------------------------------------------------
 
-        if (dataEncoding == null)
-            throw new ArgumentNullException(nameof(dataEncoding));
-        if (raw == null)
-            throw new ArgumentNullException(nameof(raw));
-        if (encoded == null)
-            throw new ArgumentNullException(nameof(encoded));
+        ArgumentNullException.ThrowIfNull(dataEncoding);
+        ArgumentNullException.ThrowIfNull(raw);
+        ArgumentNullException.ThrowIfNull(encoded);
 
         // -----------------------------------------------------------------
         // Parameters normalization
@@ -56,10 +53,8 @@ public static class TextDataEncodingTestBench
         // Parameters contract validation
         // -----------------------------------------------------------------
 
-        if (dataEncoding == null)
-            throw new ArgumentNullException(nameof(dataEncoding));
-        if (encoded == null)
-            throw new ArgumentNullException(nameof(encoded));
+        ArgumentNullException.ThrowIfNull(dataEncoding);
+        ArgumentNullException.ThrowIfNull(encoded);
 
         // -----------------------------------------------------------------
         // Parameters normalization
@@ -286,10 +281,8 @@ public static class TextDataEncodingTestBench
         string encoded,
         DataEncodingOptions options = DataEncodingOptions.None)
     {
-        if (encoding == null)
-            throw new ArgumentNullException(nameof(encoding));
-        if (encoded == null)
-            throw new ArgumentNullException(nameof(encoded));
+        ArgumentNullException.ThrowIfNull(encoding);
+        ArgumentNullException.ThrowIfNull(encoded);
 
         // -----------------------------------------------------------------
         // Check text-based numerics encoding API
@@ -349,10 +342,8 @@ public static class TextDataEncodingTestBench
         string encoded,
         DataEncodingOptions options = DataEncodingOptions.None)
     {
-        if (encoding == null)
-            throw new ArgumentNullException(nameof(encoding));
-        if (encoded == null)
-            throw new ArgumentNullException(nameof(encoded));
+        ArgumentNullException.ThrowIfNull(encoding);
+        ArgumentNullException.ThrowIfNull(encoded);
 
         // -----------------------------------------------------------------
         // Check text-based numerics encoding API
@@ -412,10 +403,8 @@ public static class TextDataEncodingTestBench
         string encoded,
         DataEncodingOptions options = DataEncodingOptions.None)
     {
-        if (encoding == null)
-            throw new ArgumentNullException(nameof(encoding));
-        if (encoded == null)
-            throw new ArgumentNullException(nameof(encoded));
+        ArgumentNullException.ThrowIfNull(encoding);
+        ArgumentNullException.ThrowIfNull(encoded);
 
         // -----------------------------------------------------------------
         // Check text-based numerics encoding API
@@ -455,7 +444,7 @@ public static class TextDataEncodingTestBench
         for (int i = 0; i < iterations;)
         {
             double k = GetDouble(rng);
-            var value = (long)(from * (1.0 - k) + to * k);
+            long value = (long)(from * (1.0 - k) + to * k);
 
             if (value < from || value > to)
                 continue;
@@ -475,10 +464,8 @@ public static class TextDataEncodingTestBench
         string encoded,
         DataEncodingOptions options = DataEncodingOptions.None)
     {
-        if (encoding == null)
-            throw new ArgumentNullException(nameof(encoding));
-        if (encoded == null)
-            throw new ArgumentNullException(nameof(encoded));
+        ArgumentNullException.ThrowIfNull(encoding);
+        ArgumentNullException.ThrowIfNull(encoded);
 
         // -----------------------------------------------------------------
         // Check text-based numerics encoding API
@@ -538,10 +525,8 @@ public static class TextDataEncodingTestBench
         string encoded,
         DataEncodingOptions options = DataEncodingOptions.None)
     {
-        if (encoding == null)
-            throw new ArgumentNullException(nameof(encoding));
-        if (encoded == null)
-            throw new ArgumentNullException(nameof(encoded));
+        ArgumentNullException.ThrowIfNull(encoding);
+        ArgumentNullException.ThrowIfNull(encoded);
 
         // -----------------------------------------------------------------
         // Check text-based numerics encoding API

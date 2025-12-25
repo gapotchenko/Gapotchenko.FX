@@ -14,25 +14,12 @@ public sealed class Arc4Managed : Arc4
     {
     }
 
-    /// <summary>
-    /// Creates a symmetric encryptor object with the specified key and initialization vector.
-    /// </summary>
-    /// <param name="rgbKey">The key.</param>
-    /// <param name="rgbIV">The initialization vector.</param>
-    /// <returns>A symmetric encryptor object.</returns>
     /// <inheritdoc/>
     public override ICryptoTransform CreateEncryptor(byte[] rgbKey, byte[]? rgbIV) => new Arc4ManagedTransform(rgbKey);
 
-    /// <summary>
-    /// Creates a symmetric decryptor object with the specified key and initialization vector.
-    /// </summary>
-    /// <param name="rgbKey">The key.</param>
-    /// <param name="rgbIV">The initialization vector.</param>
-    /// <returns>A symmetric decryptor object.</returns>
+    /// <inheritdoc/>
     public override ICryptoTransform CreateDecryptor(byte[] rgbKey, byte[]? rgbIV) => new Arc4ManagedTransform(rgbKey);
 
-    /// <summary>
-    /// Generates a random key to use for the algorithm.
-    /// </summary>
+    /// <inheritdoc/>
     public override void GenerateKey() => KeyValue = Utils.GenerateRandomBytes(KeySizeValue / 8);
 }

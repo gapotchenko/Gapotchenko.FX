@@ -1,18 +1,7 @@
-<!--
-  Gapotchenko.FX
-  Copyright © Gapotchenko and Contributors
-  
-  How to configure assembly signing for the project:
-
-    1. Put "Assembly.snk" file to the "Keys" directory adjacent to this file
-       to sign produced assemblies with it
--->
-
 <Project>
 
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile Condition=" '$(AssemblyOriginatorKeyFile)' == '' AND Exists('$(MSBuildThisFileDirectory)Keys\Assembly.snk') ">$(MSBuildThisFileDirectory)Keys\Assembly.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly Condition=" '$(MasteringProjectKind)' == 'module' AND Exists('$(AssemblyOriginatorKeyFile)') ">true</SignAssembly>
+    <SignAssembly Condition=" '$(MasteringProjectKind)' == 'module' ">true</SignAssembly>
   </PropertyGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 // Portions © Stephen Cleary
 //
@@ -76,7 +77,7 @@ public abstract class IAsyncResetEventTests : IResetEventTests
     public async Task IAsyncResetEvent_WaitAsync_CanceledAutoReset()
     {
         var e = CreateAsyncResetEvent(true);
-        await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => e.WaitAsync(0, new CancellationToken(true)));
+        await Assert.ThrowsExactlyAsync<TaskCanceledException>(() => e.WaitAsync(0, new CancellationToken(true)));
         Assert.IsTrue(e.IsSet);
     }
 

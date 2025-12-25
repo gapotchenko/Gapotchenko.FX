@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <NoWarn>NU5128</NoWarn>
+    <NoWarn>$(NoWarn),NU1510,NU5128</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageDescription>Represents the Core profile of Gapotchenko.FX.</PackageDescription>
+    <PackageDescription>Represents the Core profile of Gapotchenko.FX toolkit.</PackageDescription>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,7 +24,7 @@
     <ProjectReference Include="..\..\Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.WebBrowser\Gapotchenko.FX.Diagnostics.WebBrowser.csproj" />
-    <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\IO\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Math\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
     <ProjectReference Include="..\..\Modules\Catalog\Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj" />

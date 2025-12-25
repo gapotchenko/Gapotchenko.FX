@@ -10,8 +10,8 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics)
 
-The module allows to define and compile intrinsic functions.
-They can be used in hardware-accelerated implementations of various performance-sensitive algorithms.
+The module allows to define and compile intrinsic functions using machine code.
+They can be used in hardware-accelerated implementations of performance-sensitive algorithms.
 
 ## Example
 
@@ -141,7 +141,7 @@ When intrinsic is not applied, the original method implementation is used, thus 
 `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics):
 
 ```
-PM> Install-Package Gapotchenko.FX.Runtime.CompilerServices.Intrinsics
+dotnet package add Gapotchenko.FX.Runtime.CompilerServices.Intrinsics
 ```
 
 ## Other Modules
@@ -152,9 +152,9 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.AppModel.Information](../../AppModel/Gapotchenko.FX.AppModel.Information#readme)
 - [Gapotchenko.FX.Collections](../../Gapotchenko.FX.Collections#readme)
 - [Gapotchenko.FX.Console](../../Gapotchenko.FX.Console#readme)
-- [Gapotchenko.FX.Data](../../Data/Encoding/Gapotchenko.FX.Data.Encoding#readme)
+- [Gapotchenko.FX.Data](../../Data/Archives/Gapotchenko.FX.Data.Archives#readme)
 - [Gapotchenko.FX.Diagnostics](../../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
-- [Gapotchenko.FX.IO](../../Gapotchenko.FX.IO#readme)
+- [Gapotchenko.FX.IO](../../IO/Gapotchenko.FX.IO#readme)
 - [Gapotchenko.FX.Linq](../../Linq/Gapotchenko.FX.Linq#readme)
 - [Gapotchenko.FX.Math](../../Math/Gapotchenko.FX.Math#readme)
 - [Gapotchenko.FX.Memory](../../Gapotchenko.FX.Memory#readme)
@@ -166,6 +166,7 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Text](../../Gapotchenko.FX.Text#readme)
 - [Gapotchenko.FX.Threading](../../Gapotchenko.FX.Threading#readme)
 - [Gapotchenko.FX.Tuples](../../Gapotchenko.FX.Tuples#readme)
+- [Gapotchenko.FX.Versioning](../../Versioning/Gapotchenko.FX.Versioning#readme)
 
 Symbol ✱ denotes an advanced module.  
 Symbol ✱✱ denotes an expert module.

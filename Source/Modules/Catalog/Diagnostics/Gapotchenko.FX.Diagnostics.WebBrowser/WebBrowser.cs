@@ -11,8 +11,7 @@ public static class WebBrowser
     /// <param name="url">The URL.</param>
     public static void Launch(string url)
     {
-        if (url == null)
-            throw new ArgumentNullException(nameof(url));
+        ArgumentNullException.ThrowIfNull(url);
         if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
             throw new ArgumentException("Malformed URL.", nameof(url));
 

@@ -82,8 +82,7 @@ public class MoreTextWriter : TextWriter
         get => m_BaseTextWriter ?? throw new InvalidOperationException("Base text writer is not set.");
         set
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
             if (m_BaseTextWriter == this)
                 throw new ArgumentException("Cannot set the base text writer to itself.", nameof(value));
 

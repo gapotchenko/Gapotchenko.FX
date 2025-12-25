@@ -15,13 +15,13 @@ public static partial class Fn
     public static T Identity<T>(T x) => x;
 
     /// <summary>
-    /// A pure function that returns the <see langword="default"/> value of <typeparamref name="T"/> type:
+    /// A pure function that returns the <see langword="default"/> value of type <typeparamref name="T"/>:
     /// <code>
     /// f() = default(T)
     /// </code>
     /// </summary>
     /// <typeparam name="T">The type of the <see langword="default"/> value to return.</typeparam>
-    /// <returns>The <see langword="default"/> value of <typeparamref name="T"/> type.</returns>
+    /// <returns>The <see langword="default"/> value of type <typeparamref name="T"/>.</returns>
     public static T? Default<T>() => default;
 
     /// <summary>

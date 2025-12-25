@@ -1,17 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageTag Include="string;similarity;distance;levenshtein;damerau;jaro;hamming;lcs;osa" />
+    <PackageTag Include="math;metrics;similarity;distance;levenshtein;damerau;jaro;hamming;lcs;osa" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Metrics.StringMetrics" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />

@@ -15,16 +15,14 @@ static class BitConverterServices
 
     public static ReadOnlySpan<byte> ValidateToArguments(byte[] value, int startIndex, int size)
     {
-        if (value == null)
-            throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
         ValidateArguments(value, startIndex, size);
         return value.AsSpan(startIndex);
     }
 
     public static void ValidateFillArguments(byte[] buffer, int startIndex, int size)
     {
-        if (buffer == null)
-            throw new ArgumentNullException(nameof(buffer));
+        ArgumentNullException.ThrowIfNull(buffer);
         ValidateArguments(buffer, startIndex, size);
     }
 

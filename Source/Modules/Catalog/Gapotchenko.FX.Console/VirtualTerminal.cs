@@ -122,7 +122,7 @@ public static class VirtualTerminal
             if (hOut == NativeMethods.INVALID_HANDLE_VALUE)
                 return false;
 
-            if (!NativeMethods.GetConsoleMode(hOut, out var mode))
+            if (!NativeMethods.GetConsoleMode(hOut, out uint mode))
                 return false;
 
             bool curState = (mode & (uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0;
@@ -152,7 +152,7 @@ public static class VirtualTerminal
             if (hOut == NativeMethods.INVALID_HANDLE_VALUE)
                 return false;
 
-            if (!NativeMethods.GetConsoleMode(hOut, out var mode))
+            if (!NativeMethods.GetConsoleMode(hOut, out uint mode))
                 return false;
 
             return (mode & (uint)NativeMethods.ConsoleOutputMode.ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0;

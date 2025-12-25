@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -18,10 +19,26 @@ public sealed class ValueIntervalTests : IntervalCoreTests
     public override IInterval<T> EmptyInterval<T>() => ValueInterval.Empty<T>();
 
     [TestMethod]
-    public void ValueInterval_Default_1()
+    public void ValueInterval_Default()
     {
         ValueInterval<string?> interval = default;
+
         Assert.IsTrue(interval.IsEmpty);
         Assert.IsFalse(interval.Contains(default));
+    }
+
+    [TestMethod]
+    public void ValueInterval_Equality()
+    {
+        var interval = ValueInterval.Inclusive(10, 20);
+
+        Assert.AreEqual(interval, ValueInterval.Inclusive(10, 20));
+
+        Assert.AreNotEqual(interval, ValueInterval.Exclusive(10, 20));
+        Assert.AreNotEqual(interval, ValueInterval.InclusiveExclusive(10, 20));
+        Assert.AreNotEqual(interval, ValueInterval.ExclusiveInclusive(10, 20));
+
+        Assert.AreNotEqual(interval, ValueInterval.Inclusive(11, 20));
+        Assert.AreNotEqual(interval, ValueInterval.Inclusive(10, 21));
     }
 }

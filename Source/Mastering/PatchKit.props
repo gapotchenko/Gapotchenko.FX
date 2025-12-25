@@ -1,0 +1,5 @@
+<Project>
+
+  <Import Project="Gapotchenko.MSBuild.PatchKit/Profiles/GP2025.props" />
+
+</Project>

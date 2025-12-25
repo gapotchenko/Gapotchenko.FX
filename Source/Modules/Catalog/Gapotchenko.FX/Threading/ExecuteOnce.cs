@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Threading;
 public struct ExecuteOnce
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ExecuteOnce"/> struct.
+    /// Initializes a new instance of the <see cref="ExecuteOnce"/> structure.
     /// </summary>
     /// <param name="action">The action.</param>
     public ExecuteOnce(Action action) :
@@ -29,7 +29,7 @@ public struct ExecuteOnce
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ExecuteOnce"/> struct.
+    /// Initializes a new instance of the <see cref="ExecuteOnce"/> structure.
     /// </summary>
     /// <param name="action">The action.</param>
     /// <param name="syncLock">
@@ -38,15 +38,14 @@ public struct ExecuteOnce
     /// </param>
     public ExecuteOnce(Action action, object? syncLock)
     {
-        if (action is null)
-            throw new ArgumentNullException(nameof(action));
+        ArgumentNullException.ThrowIfNull(action);
 
         m_Action = action;
         m_SyncLock = syncLock;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ExecuteOnce"/> struct.
+    /// Initializes a new instance of the <see cref="ExecuteOnce"/> structure.
     /// </summary>
     /// <param name="action">The action.</param>
     /// <param name="syncLock">

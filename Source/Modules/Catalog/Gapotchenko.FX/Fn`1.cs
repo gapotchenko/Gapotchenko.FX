@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX;
+﻿#pragma warning disable CA1000 // Do not declare static members on generic types
+
+namespace Gapotchenko.FX;
 
 /// <summary>
 /// Provides lambda calculus and functional composition primitives for type <typeparamref name="T"/>.

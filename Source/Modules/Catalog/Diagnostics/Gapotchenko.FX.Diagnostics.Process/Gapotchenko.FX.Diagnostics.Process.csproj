@@ -2,9 +2,13 @@
 
   <PropertyGroup>
     <RootNamespace>Gapotchenko.FX.Diagnostics</RootNamespace>
-    <CLSCompliant>true</CLSCompliant>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TargetPlatforms>any;windows</TargetPlatforms>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- TODO: change to 'recommended'. -->
+    <AnalysisMode>none</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>

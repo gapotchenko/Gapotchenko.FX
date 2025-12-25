@@ -1,16 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
+    <AnalysisMode>all</AnalysisMode>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.Text.StringEditor" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

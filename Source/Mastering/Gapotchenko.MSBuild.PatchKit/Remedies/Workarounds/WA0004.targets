@@ -1,0 +1,15 @@
+<Project>
+
+  <!-- Workaround GP-MSB-RMD-WA0004
+       https://github.com/Microsoft/msbuild/issues/1310 -->
+  <Target Name="ForceGenerationOfBindingRedirects"
+          AfterTargets="ResolveAssemblyReferences"
+          BeforeTargets="GenerateBindingRedirects"
+          Condition=" '$(AutoGenerateBindingRedirects)' == 'true' ">
+    <PropertyGroup>
+      <!-- Needs to be set in a target because it has to be set after the initial evaluation in the common targets. -->
+      <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    </PropertyGroup>
+  </Target>
+
+</Project>

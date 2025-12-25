@@ -61,6 +61,24 @@ namespace Gapotchenko.FX.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The value cannot be an empty string or composed entirely of whitespace..
+        /// </summary>
+        internal static string Argument_EmptyOrWhiteSpaceString {
+            get {
+                return ResourceManager.GetString("Argument_EmptyOrWhiteSpaceString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value cannot be an empty string..
+        /// </summary>
+        internal static string Argument_EmptyString {
+            get {
+                return ResourceManager.GetString("Argument_EmptyString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value cannot be empty..
         /// </summary>
         internal static string Argument_EmptyValue {
@@ -93,6 +111,87 @@ namespace Gapotchenko.FX.Properties {
         internal static string Argument_SpanTooSmall {
             get {
                 return ResourceManager.GetString("Argument_SpanTooSmall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be equal to &apos;{2}&apos;..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeEqual {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be greater than &apos;{2}&apos;..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeGreater {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeGreater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be greater than or equal to &apos;{2}&apos;..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeGreaterOrEqual {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeGreaterOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be less than &apos;{2}&apos;..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeLess {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeLess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be less than or equal to &apos;{2}&apos;..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeLessOrEqual {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeLessOrEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be a non-negative value..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeNonNegative {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeNonNegative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be a non-negative and non-zero value..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeNonNegativeNonZero {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeNonNegativeNonZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must be a non-zero value..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeNonZero {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeNonZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (&apos;{1}&apos;) must not be equal to &apos;{2}&apos;..
+        /// </summary>
+        internal static string ArgumentOutOfRange_Generic_MustBeNotEqual {
+            get {
+                return ResourceManager.GetString("ArgumentOutOfRange_Generic_MustBeNotEqual", resourceCulture);
             }
         }
         

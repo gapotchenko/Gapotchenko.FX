@@ -1,13 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+  </ItemGroup>
 
   <Import Project="$(MasteringDir)\OOB\System.Buffers.props" />
   <Import Project="$(MasteringDir)\OOB\System.Memory.props" />

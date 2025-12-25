@@ -20,8 +20,7 @@ public static class StringBuilderExtensions
 #endif
     public static StringBuilder AppendJoin(this StringBuilder sb, string? separator, params object?[] values)
     {
-        if (sb == null)
-            throw new ArgumentNullException(nameof(sb));
+        ArgumentNullException.ThrowIfNull(sb);
 
 #if TFF_STRING_BUILDER_APPEND_JOIN
         return sb.AppendJoin(separator, values);
@@ -55,8 +54,7 @@ public static class StringBuilderExtensions
 #endif
     public static StringBuilder AppendJoin<T>(this StringBuilder sb, string? separator, IEnumerable<T> values)
     {
-        if (sb == null)
-            throw new ArgumentNullException(nameof(sb));
+        ArgumentNullException.ThrowIfNull(sb);
 
 #if TFF_STRING_BUILDER_APPEND_JOIN
         return sb.AppendJoin(separator, values);
@@ -93,8 +91,7 @@ public static class StringBuilderExtensions
 #endif
     public static StringBuilder AppendJoin(this StringBuilder sb, string? separator, params string?[] values)
     {
-        if (sb == null)
-            throw new ArgumentNullException(nameof(sb));
+        ArgumentNullException.ThrowIfNull(sb);
 
 #if TFF_STRING_BUILDER_APPEND_JOIN
         return sb.AppendJoin(separator, values);
@@ -128,8 +125,7 @@ public static class StringBuilderExtensions
 #endif
     public static StringBuilder AppendJoin(this StringBuilder sb, char separator, params object?[] values)
     {
-        if (sb == null)
-            throw new ArgumentNullException(nameof(sb));
+        ArgumentNullException.ThrowIfNull(sb);
 
 #if TFF_STRING_BUILDER_APPEND_JOIN
         return sb.AppendJoin(separator, values);
@@ -163,8 +159,7 @@ public static class StringBuilderExtensions
 #endif
     public static StringBuilder AppendJoin<T>(this StringBuilder sb, char separator, IEnumerable<T> values)
     {
-        if (sb == null)
-            throw new ArgumentNullException(nameof(sb));
+        ArgumentNullException.ThrowIfNull(sb);
 
 #if TFF_STRING_BUILDER_APPEND_JOIN
         return sb.AppendJoin(separator, values);
@@ -201,8 +196,7 @@ public static class StringBuilderExtensions
 #endif
     public static StringBuilder AppendJoin(this StringBuilder sb, char separator, params string?[] values)
     {
-        if (sb == null)
-            throw new ArgumentNullException(nameof(sb));
+        ArgumentNullException.ThrowIfNull(sb);
 
 #if TFF_STRING_BUILDER_APPEND_JOIN
         return sb.AppendJoin(separator, values);
@@ -231,8 +225,7 @@ public static class StringBuilderExtensions
     /// <returns>A reference to string builder after the reverse operation has completed.</returns>
     public static StringBuilder Reverse(this StringBuilder sb)
     {
-        if (sb == null)
-            throw new ArgumentNullException(nameof(sb));
+        ArgumentNullException.ThrowIfNull(sb);
 
         ReverseCore(sb, 0, sb.Length);
 
@@ -248,8 +241,7 @@ public static class StringBuilderExtensions
     /// <returns>A reference to string builder after the reverse operation has completed.</returns>
     public static StringBuilder Reverse(this StringBuilder sb, int index, int length)
     {
-        if (sb == null)
-            throw new ArgumentNullException(nameof(sb));
+        ArgumentNullException.ThrowIfNull(sb);
         if (index < 0)
             throw new ArgumentOutOfRangeException(nameof(index), "Non-negative number required.");
         if (length < 0)

@@ -96,7 +96,7 @@ static class TestVectorReader
                         var offsetToken = parts[0];
                         var dataToken = parts[1];
 
-                        parts = offsetToken.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        parts = offsetToken.Split([' '], StringSplitOptions.RemoveEmptyEntries);
                         if (parts.Length != 4)
                             throw new InvalidDataException("Cannot parse data offset expression.");
                         if (!parts[0].Equals("DEC", StringComparison.OrdinalIgnoreCase))
@@ -114,7 +114,7 @@ static class TestVectorReader
                             Offset = decOffset
                         };
 
-                        parts = dataToken.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        parts = dataToken.Split([' '], StringSplitOptions.RemoveEmptyEntries);
 
                         chunk.Data = parts.Select(x => byte.Parse(x, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo)).ToArray();
 

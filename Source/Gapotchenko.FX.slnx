@@ -1,0 +1,191 @@
+<Solution>
+  <Folder Name="/01. Modules/">
+    <File Path="Modules/README.md" />
+    <Project Path="Modules/Catalog/Gapotchenko.FX/Gapotchenko.FX.csproj" />
+    <Project Path="Modules/Tests/Gapotchenko.FX.Tests/Gapotchenko.FX.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/AppModel/" />
+  <Folder Name="/01. Modules/AppModel/Information/">
+    <Project Path="Modules/Catalog/AppModel/Gapotchenko.FX.AppModel.Information/Gapotchenko.FX.AppModel.Information.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Collections/">
+    <Project Path="Modules/Catalog/Gapotchenko.FX.Collections/Gapotchenko.FX.Collections.csproj" />
+    <Project Path="Modules/Tests/Gapotchenko.FX.Collections.Tests/Gapotchenko.FX.Collections.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Console/">
+    <Project Path="Modules/Catalog/Gapotchenko.FX.Console/Gapotchenko.FX.Console.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/">
+    <File Path="Modules/Catalog/Data/README.md" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/Archives/">
+    <Project Path="Modules/Catalog/Data/Archives/Gapotchenko.FX.Data.Archives/Gapotchenko.FX.Data.Archives.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/Archives/Zip/">
+    <Project Path="Modules/Catalog/Data/Archives/Gapotchenko.FX.Data.Archives.Zip/Gapotchenko.FX.Data.Archives.Zip.csproj" />
+    <Project Path="Modules/Tests/Data/Archives/Gapotchenko.FX.Data.Archives.Zip.Tests/Gapotchenko.FX.Data.Archives.Zip.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/Encoding/">
+    <File Path="Modules/Catalog/Data/Encoding/README.md" />
+    <Project Path="Modules/Catalog/Data/Encoding/Gapotchenko.FX.Data.Encoding/Gapotchenko.FX.Data.Encoding.csproj" />
+    <Project Path="Modules/Tests/Data/Encoding/Gapotchenko.FX.Data.Encoding.Tests/Gapotchenko.FX.Data.Encoding.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/Encoding/Base16/">
+    <Project Path="Modules/Catalog/Data/Encoding/Gapotchenko.FX.Data.Encoding.Base16/Gapotchenko.FX.Data.Encoding.Base16.csproj" />
+    <Project Path="Modules/Tests/Data/Encoding/Gapotchenko.FX.Data.Encoding.Base16.Tests/Gapotchenko.FX.Data.Encoding.Base16.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/Encoding/Base24/">
+    <Project Path="Modules/Catalog/Data/Encoding/Gapotchenko.FX.Data.Encoding.Base24/Gapotchenko.FX.Data.Encoding.Base24.csproj" />
+    <Project Path="Modules/Tests/Data/Encoding/Gapotchenko.FX.Data.Encoding.Base24.Tests/Gapotchenko.FX.Data.Encoding.Base24.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/Encoding/Base32/">
+    <Project Path="Modules/Catalog/Data/Encoding/Gapotchenko.FX.Data.Encoding.Base32/Gapotchenko.FX.Data.Encoding.Base32.csproj" />
+    <Project Path="Modules/Tests/Data/Encoding/Gapotchenko.FX.Data.Encoding.Base32.Tests/Gapotchenko.FX.Data.Encoding.Base32.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/Encoding/Base64/">
+    <Project Path="Modules/Catalog/Data/Encoding/Gapotchenko.FX.Data.Encoding.Base64/Gapotchenko.FX.Data.Encoding.Base64.csproj" />
+    <Project Path="Modules/Tests/Data/Encoding/Gapotchenko.FX.Data.Encoding.Base64.Tests/Gapotchenko.FX.Data.Encoding.Base64.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/Integrity/" />
+  <Folder Name="/01. Modules/Data/Integrity/Checksum/">
+    <Project Path="Modules/Catalog/Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum/Gapotchenko.FX.Data.Integrity.Checksum.csproj" />
+    <Project Path="Modules/Tests/Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum.Tests/Gapotchenko.FX.Data.Integrity.Checksum.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/Integrity/Checksum/CRC/" />
+  <Folder Name="/01. Modules/Data/Integrity/Checksum/CRC/CRC-16/">
+    <Project Path="Modules/Catalog/Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum.Crc16/Gapotchenko.FX.Data.Integrity.Checksum.Crc16.csproj" />
+    <Project Path="Modules/Tests/Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum.Crc16.Tests/Gapotchenko.FX.Data.Integrity.Checksum.Crc16.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/Integrity/Checksum/CRC/CRC-32/">
+    <Project Path="Modules/Catalog/Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum.Crc32/Gapotchenko.FX.Data.Integrity.Checksum.Crc32.csproj" />
+    <Project Path="Modules/Tests/Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum.Crc32.Tests/Gapotchenko.FX.Data.Integrity.Checksum.Crc32.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/Integrity/Checksum/CRC/CRC-8/">
+    <Project Path="Modules/Catalog/Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum.Crc8/Gapotchenko.FX.Data.Integrity.Checksum.Crc8.csproj" />
+    <Project Path="Modules/Tests/Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum.Crc8.Tests/Gapotchenko.FX.Data.Integrity.Checksum.Crc8.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Data/Linq/">
+    <Project Path="Modules/Catalog/Data/Linq/Gapotchenko.FX.Data.Linq/Gapotchenko.FX.Data.Linq.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Diagnostics/" />
+  <Folder Name="/01. Modules/Diagnostics/CommandLine/">
+    <Project Path="Modules/Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine/Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
+    <Project Path="Modules/Tests/Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine.Tests/Gapotchenko.FX.Diagnostics.CommandLine.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Diagnostics/CommandShell/">
+    <Project Path="Modules/Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.CommandShell/Gapotchenko.FX.Diagnostics.CommandShell.csproj" Id="e9e1c67d-9089-4375-91ff-05d50e879a2c" />
+  </Folder>
+  <Folder Name="/01. Modules/Diagnostics/Process/">
+    <Project Path="Modules/Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.Process/Gapotchenko.FX.Diagnostics.Process.csproj" />
+    <Project Path="Modules/Tests/Diagnostics/Gapotchenko.FX.Diagnostics.Process.Tests/Gapotchenko.FX.Diagnostics.Process.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Diagnostics/WebBrowser/">
+    <Project Path="Modules/Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.WebBrowser/Gapotchenko.FX.Diagnostics.WebBrowser.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/IO/">
+    <Project Path="Modules/Catalog/IO/Gapotchenko.FX.IO/Gapotchenko.FX.IO.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/IO/Vfs/">
+    <Project Path="Modules/Catalog/IO/Gapotchenko.FX.IO.Vfs/Gapotchenko.FX.IO.Vfs.csproj" />
+    <Project Path="Modules/Tests/IO/Gapotchenko.FX.IO.Vfs.Tests/Gapotchenko.FX.IO.Vfs.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Linq/">
+    <Project Path="Modules/Catalog/Linq/Gapotchenko.FX.Linq/Gapotchenko.FX.Linq.csproj" />
+    <Project Path="Modules/Tests/Linq/Gapotchenko.FX.Linq.Tests/Gapotchenko.FX.Linq.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Linq/Expressions/">
+    <Project Path="Modules/Catalog/Linq/Gapotchenko.FX.Linq.Expressions/Gapotchenko.FX.Linq.Expressions.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Math/">
+    <Project Path="Modules/Catalog/Math/Gapotchenko.FX.Math/Gapotchenko.FX.Math.csproj" />
+    <Project Path="Modules/Tests/Math/Gapotchenko.FX.Math.Tests/Gapotchenko.FX.Math.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Math/Combinatorics/">
+    <Project Path="Modules/Catalog/Math/Gapotchenko.FX.Math.Combinatorics/Gapotchenko.FX.Math.Combinatorics.csproj" />
+    <Project Path="Modules/Tests/Math/Gapotchenko.FX.Math.Combinatorics.Tests/Gapotchenko.FX.Math.Combinatorics.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Math/Graphs/">
+    <Project Path="Modules/Catalog/Math/Gapotchenko.FX.Math.Graphs/Gapotchenko.FX.Math.Graphs.csproj" />
+    <Project Path="Modules/Tests/Math/Gapotchenko.FX.Math.Graphs.Tests/Gapotchenko.FX.Math.Graphs.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Math/Intervals/">
+    <Project Path="Modules/Catalog/Math/Gapotchenko.FX.Math.Intervals/Gapotchenko.FX.Math.Intervals.csproj" />
+    <Project Path="Modules/Tests/Math/Gapotchenko.FX.Math.Intervals.Tests/Gapotchenko.FX.Math.Intervals.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Math/Metrics/">
+    <Project Path="Modules/Catalog/Math/Gapotchenko.FX.Math.Metrics/Gapotchenko.FX.Math.Metrics.csproj" />
+    <Project Path="Modules/Tests/Math/Gapotchenko.FX.Math.Metrics.Tests/Gapotchenko.FX.Math.Metrics.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Memory/">
+    <Project Path="Modules/Catalog/Gapotchenko.FX.Memory/Gapotchenko.FX.Memory.csproj" />
+    <Project Path="Modules/Tests/Gapotchenko.FX.Memory.Tests/Gapotchenko.FX.Memory.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Numerics/">
+    <Project Path="Modules/Catalog/Gapotchenko.FX.Numerics/Gapotchenko.FX.Numerics.csproj" />
+    <Project Path="Modules/Tests/Gapotchenko.FX.Numerics.Tests/Gapotchenko.FX.Numerics.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Reflection/" />
+  <Folder Name="/01. Modules/Reflection/Loader/">
+    <Project Path="Modules/Catalog/Reflection/Gapotchenko.FX.Reflection.Loader/Gapotchenko.FX.Reflection.Loader.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Runtime/" />
+  <Folder Name="/01. Modules/Runtime/CompilerServices/" />
+  <Folder Name="/01. Modules/Runtime/CompilerServices/Intrinsics/">
+    <Project Path="Modules/Catalog/Runtime/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Runtime/InteropServices/">
+    <Project Path="Modules/Catalog/Runtime/Gapotchenko.FX.Runtime.InteropServices/Gapotchenko.FX.Runtime.InteropServices.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Security/" />
+  <Folder Name="/01. Modules/Security/Cryptography/">
+    <Project Path="Modules/Catalog/Security/Gapotchenko.FX.Security.Cryptography/Gapotchenko.FX.Security.Cryptography.csproj" />
+    <Project Path="Modules/Tests/Security/Gapotchenko.FX.Security.Cryptography.Tests/Gapotchenko.FX.Security.Cryptography.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Text/">
+    <Project Path="Modules/Catalog/Gapotchenko.FX.Text/Gapotchenko.FX.Text.csproj" />
+    <Project Path="Modules/Tests/Gapotchenko.FX.Text.Tests/Gapotchenko.FX.Text.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Threading/">
+    <Project Path="Modules/Catalog/Gapotchenko.FX.Threading/Gapotchenko.FX.Threading.csproj" />
+    <Project Path="Modules/Tests/Gapotchenko.FX.Threading.Tests/Gapotchenko.FX.Threading.Tests.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Tuples/">
+    <Project Path="Modules/Catalog/Gapotchenko.FX.Tuples/Gapotchenko.FX.Tuples.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Versioning/">
+    <Project Path="Modules/Catalog/Versioning/Gapotchenko.FX.Versioning/Gapotchenko.FX.Versioning.csproj" />
+  </Folder>
+  <Folder Name="/01. Modules/Versioning/Semantic/">
+    <Project Path="Modules/Catalog/Versioning/Gapotchenko.FX.Versioning.Semantic/Gapotchenko.FX.Versioning.Semantic.csproj" />
+    <Project Path="Modules/Tests/Versioning/Gapotchenko.FX.Versioning.Semantic.Tests/Gapotchenko.FX.Versioning.Semantic.Tests.csproj" />
+  </Folder>
+  <Folder Name="/02. Profiles/">
+    <File Path="Profiles/README.md" />
+    <Project Path="Profiles/Gapotchenko.FX.Profiles.Core/Gapotchenko.FX.Profiles.Core.csproj" />
+    <Project Path="Profiles/Gapotchenko.FX.Profiles.Math/Gapotchenko.FX.Profiles.Math.csproj" />
+  </Folder>
+  <Folder Name="/03. Misc/">
+    <File Path="../README.md" />
+  </Folder>
+  <Folder Name="/03. Misc/Documentation/">
+    <File Path="../CONTRIBUTORS.md" />
+    <File Path="../Documentation/Changelog.md" />
+    <File Path="../Documentation/README.md" />
+    <File Path="../LICENSE" />
+  </Folder>
+  <Folder Name="/03. Misc/Harness/">
+    <Project Path="Harness/Gapotchenko.FX.Harness.Console/Gapotchenko.FX.Harness.Console.csproj" />
+  </Folder>
+  <Folder Name="/03. Misc/Legacy/" />
+  <Folder Name="/03. Misc/Legacy/Modules/" />
+  <Folder Name="/03. Misc/Mastering/">
+    <File Path="Mastering/Analysis.props" />
+    <File Path="Mastering/Language.props" />
+    <File Path="Mastering/NuGet.targets" />
+    <File Path="Mastering/TargetFrameworkFeatures.props" />
+  </Folder>
+  <Folder Name="/03. Misc/Mastering/Configuration/">
+    <File Path="Mastering/Targeting.props" />
+    <File Path="Mastering/Version.props" />
+  </Folder>
+</Solution>

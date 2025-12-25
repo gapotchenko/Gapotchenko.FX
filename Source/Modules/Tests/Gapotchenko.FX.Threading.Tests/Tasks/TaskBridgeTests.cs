@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -70,7 +71,7 @@ public sealed class TaskBridgeTests
         ev.Wait();
         cts.Cancel();
 
-        Assert.ThrowsException<OperationCanceledException>(() => TaskBridge.Execute(task));
+        Assert.ThrowsExactly<OperationCanceledException>(() => TaskBridge.Execute(task));
     }
 
     [TestMethod]
@@ -101,7 +102,7 @@ public sealed class TaskBridgeTests
         ev.Wait();
         cts.Cancel();
 
-        Assert.ThrowsException<AggregateException>(() => TaskBridge.Execute(task));
+        Assert.ThrowsExactly<AggregateException>(() => TaskBridge.Execute(task));
     }
 
     [TestMethod]
@@ -152,7 +153,7 @@ public sealed class TaskBridgeTests
             throw new Exception("Expected exception.");
         }
 
-        var exception = Assert.ThrowsException<Exception>(() => TaskBridge.Execute(F));
+        var exception = Assert.ThrowsExactly<Exception>(() => TaskBridge.Execute(F));
         Assert.AreEqual("Expected exception.", exception.Message);
     }
 
@@ -206,7 +207,7 @@ public sealed class TaskBridgeTests
 
             cts.CancelAfter(TestData_CancellationDelay);
 
-            var cancellationException = await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => task.WaitAsync(TestData_PositiveTimeout));
+            var cancellationException = await Assert.ThrowsExactlyAsync<TaskCanceledException>(() => task.WaitAsync(TestData_PositiveTimeout));
             Assert.AreEqual(task, cancellationException.Task);
         }
         finally
@@ -264,7 +265,7 @@ public sealed class TaskBridgeTests
             }
         }
 
-        var exception = Assert.ThrowsException<Exception>(() => TaskBridge.Execute(RunAsync));
+        var exception = Assert.ThrowsExactly<Exception>(() => TaskBridge.Execute(RunAsync));
         Assert.AreEqual(exceptionMessage, exception.Message);
 
         Assert.AreEqual(2122, trace);
@@ -320,7 +321,7 @@ public sealed class TaskBridgeTests
         }
 
         var controlTask = ControlTask();
-        await Assert.ThrowsExceptionAsync<TaskCanceledException>(
+        await Assert.ThrowsExactlyAsync<TaskCanceledException>(
             () => TaskBridge.ExecuteAsync(
                 () => TaskBridge.Execute(RunAsync),
                 cts.Token));
@@ -368,7 +369,7 @@ public sealed class TaskBridgeTests
         Task? pendingTask = null;
 
         var controlTask = ControlTask();
-        await Assert.ThrowsExceptionAsync<TaskCanceledException>(
+        await Assert.ThrowsExactlyAsync<TaskCanceledException>(
             () => TaskBridge.ExecuteAsync(
                 () => TaskBridge.Execute(() => pendingTask = RunAsync()),
                 cts.Token));

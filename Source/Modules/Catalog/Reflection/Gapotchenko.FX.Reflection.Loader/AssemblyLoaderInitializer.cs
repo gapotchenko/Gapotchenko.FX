@@ -17,22 +17,25 @@ namespace Gapotchenko.FX.Reflection.Loader;
 /// </summary>
 /// <remarks>
 /// <para>
-/// For example, there is a subtle bug in initialization of System.Net.ServicePointManager
-/// class that presumably occurs when .NET configuration manager is accessed
-/// from a module initializer (as of .NET Framework 4.8.1). One way to hit the
-/// bug is to call System.Xml.XDocument.Load(string) method from a module
-/// initializer.
+/// For example, there exists a subtle bug (as of .NET Framework 4.8.1) in
+/// the initialization of <c>System.Net.ServicePointManager</c> class that
+/// presumably occurs when .NET configuration manager is accessed from a
+/// module initializer. One way to hit the bug is to call
+/// <c>System.Xml.XDocument.Load(string)</c> method from the main module
+/// initializer of a user assembly.
 /// </para>
 /// <para>
-/// For some mysterious reason, the SecurityProtocol property of
-/// System.Net.ServicePointManager class is then set to a bad value in that
-/// case, leading a catastrophic Internet communication failure inside the
-/// affected .NET app domain.
+/// For some mysterious reason, the <c>SecurityProtocol</c> property of
+/// <c>System.Net.ServicePointManager</c> class is then set to a bad value
+/// causing a catastrophic Internet communication failure inside the
+/// affected .NET app domain due to the consequential inability of employing
+/// contemporary TLS algorithms.
 /// </para>
 /// <para>
-/// There is a reasonable assumption to believe that the situations like that
-/// may be way more widespread in the wild because module initialization
-/// is a relatively niche feature.
+/// There is a reasonable assumption to believe that the situations like this
+/// one may be way more widespread in the wild because module initialization
+/// is a relatively niche feature that does not get enough attention in terms
+/// of edge-case issue fixing.
 /// </para>
 /// </remarks>
 sealed class AssemblyLoaderInitializer : IDisposable

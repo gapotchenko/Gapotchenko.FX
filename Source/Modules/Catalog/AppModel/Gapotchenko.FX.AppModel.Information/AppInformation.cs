@@ -1,4 +1,13 @@
-﻿using Gapotchenko.FX.Threading;
+﻿// Gapotchenko.FX
+// Copyright © Gapotchenko and Contributors
+//
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using Gapotchenko.FX.Linq.Operators;
+using Gapotchenko.FX.Threading;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -22,8 +31,7 @@ public class AppInformation : IAppInformation
     /// <returns>The app information.</returns>
     public static IAppInformation For(Type type)
     {
-        if (type == null)
-            throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         return new AppInformation
         {
@@ -39,8 +47,7 @@ public class AppInformation : IAppInformation
     /// <returns>The app information.</returns>
     public static IAppInformation For(Assembly assembly)
     {
-        if (assembly == null)
-            throw new ArgumentNullException(nameof(assembly));
+        ArgumentNullException.ThrowIfNull(assembly);
 
         var entryType = assembly.EntryPoint?.ReflectedType;
 
@@ -170,24 +177,19 @@ public class AppInformation : IAppInformation
     /// <returns>The app entry assembly.</returns>
     protected virtual Assembly? RetrieveEntryAssembly() => EntryType?.Assembly ?? Assembly.GetEntryAssembly();
 
-    FileVersionInfo EntryFileVersionInfo =>
-        LazyInitializerEx.EnsureInitialized(
-            ref m_CachedEntryFileVersionInfo,
-            this,
-            RetrieveEntryFileVersionInfo);
+    FileVersionInfo EntryFileVersionInfo => LazyInitializerEx.EnsureInitialized(ref field, this, RetrieveEntryFileVersionInfo);
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    FileVersionInfo? m_CachedEntryFileVersionInfo;
-
+#if TFF_ILC
+    [UnconditionalSuppressMessage("SingleFile", "IL3002", Justification = "Returns '<Unknown>' for modules with no file path.")]
+#endif
     FileVersionInfo RetrieveEntryFileVersionInfo()
     {
-        string filePath;
-
-        var type = EntryType;
-        if (type != null)
-            filePath = type.Module.FullyQualifiedName;
-        else
-            filePath = ExecutablePath;
+        string? filePath =
+            EntryType?.Module.FullyQualifiedName
+#if TFF_ILC
+            .PipeTo(x => Empty.Nullify(x, "<Unknown>"))
+#endif
+            ?? ExecutablePath;
 
         return FileVersionInfo.GetVersionInfo(filePath);
     }
@@ -229,7 +231,7 @@ public class AppInformation : IAppInformation
         var entryType = EntryType;
         if (entryType != null)
         {
-            var ns = entryType.Namespace;
+            string? ns = entryType.Namespace;
             if (!string.IsNullOrEmpty(ns))
             {
                 int j = ns.LastIndexOf('.');
@@ -334,40 +336,28 @@ public class AppInformation : IAppInformation
     /// <returns>The company name.</returns>
     protected virtual string? RetrieveCompanyName()
     {
-        string? companyName;
+        return
+            Empty.Nullify(EntryAssembly
+                ?.GetCustomAttribute<AssemblyCompanyAttribute>()
+                ?.Company) ??
+            Empty.NullifyWhiteSpace(EntryFileVersionInfo.CompanyName)?.Trim() ??
+            TryGetCompanyName(EntryType);
 
-        var entryAssembly = EntryAssembly;
-        if (entryAssembly != null)
+        static string? TryGetCompanyName(Type? type)
         {
-            var attribute = entryAssembly.GetCustomAttribute<AssemblyCompanyAttribute>();
-            if (attribute != null)
-            {
-                companyName = attribute.Company;
-                if (!string.IsNullOrEmpty(companyName))
-                    return companyName;
-            }
+            if (type == null)
+                return null;
+
+            string? ns = type.Namespace;
+            if (string.IsNullOrEmpty(ns))
+                return null;
+
+            int j = ns.IndexOf('.');
+            if (j != -1)
+                return ns[..j];
+            else
+                return ns;
         }
-
-        companyName = EntryFileVersionInfo.CompanyName;
-        if (!string.IsNullOrWhiteSpace(companyName))
-            return companyName.Trim();
-
-        var entryType = EntryType;
-        if (entryType != null)
-        {
-            var ns = entryType.Namespace;
-            if (!string.IsNullOrEmpty(ns))
-            {
-                int j = ns.IndexOf('.');
-                if (j != -1)
-                    companyName = ns[..j];
-                else
-                    companyName = ns;
-                return companyName;
-            }
-        }
-
-        return ProductName;
     }
 
     /// <inheritdoc/>
@@ -404,7 +394,7 @@ public class AppInformation : IAppInformation
         if (!string.IsNullOrWhiteSpace(copyright))
             return copyright.Trim();
 
-        var companyName = CompanyName;
+        string? companyName = CompanyName;
         if (companyName != null)
             return "Copyright © " + companyName;
 
@@ -412,7 +402,11 @@ public class AppInformation : IAppInformation
     }
 
     /// <inheritdoc/>
-    public string? Trademark => m_Trademark ??= RetrieveTrademark() ?? string.Empty;
+    public string? Trademark
+    {
+        get => Empty.Nullify(m_Trademark ??= RetrieveTrademark() ?? string.Empty);
+        protected set => m_Trademark = value;
+    }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     volatile string? m_Trademark;
@@ -421,28 +415,11 @@ public class AppInformation : IAppInformation
     /// Retrieves app trademark information.
     /// </summary>
     /// <returns>App trademark information.</returns>
-    protected virtual string? RetrieveTrademark()
-    {
-        string? trademark;
-
-        var entryAssembly = EntryAssembly;
-        if (entryAssembly != null)
-        {
-            var attribute = entryAssembly.GetCustomAttribute<AssemblyTrademarkAttribute>();
-            if (attribute != null)
-            {
-                trademark = attribute.Trademark;
-                if (!string.IsNullOrEmpty(trademark))
-                    return trademark;
-            }
-        }
-
-        trademark = EntryFileVersionInfo.LegalTrademarks;
-        if (!string.IsNullOrWhiteSpace(trademark))
-            return trademark.Trim();
-
-        return null;
-    }
+    protected virtual string? RetrieveTrademark() =>
+        Empty.Nullify(EntryAssembly
+            ?.GetCustomAttribute<AssemblyTrademarkAttribute>()
+            ?.Trademark) ??
+        Empty.NullifyWhiteSpace(EntryFileVersionInfo.LegalTrademarks)?.Trim();
 
     /// <inheritdoc/>
     public string ExecutablePath
@@ -458,20 +435,33 @@ public class AppInformation : IAppInformation
     /// Retrieves app executable path.
     /// </summary>
     /// <returns>The app executable path.</returns>
+#if TFF_ILC
+    [UnconditionalSuppressMessage("SingleFile", "IL3000", Justification = "Returns an empty string for assemblies embedded in a single-file app.")]
+#endif
     protected virtual string RetrieveExecutablePath()
     {
-        var entryAssembly = Assembly.GetEntryAssembly();
+        var entryAssembly = EntryAssembly;
+        if (entryAssembly != null)
+        {
+            if (entryAssembly.EntryPoint == null)
+                entryAssembly = null;
+        }
+
+        bool useProcess = false;
         if (entryAssembly == null)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                return Path.GetFullPath(NativeMethods.GetModuleFileName(default));
+            entryAssembly = Assembly.GetEntryAssembly();
+            useProcess = true;
         }
-        else
+
+        if (entryAssembly != null)
         {
 #if NET5_0_OR_GREATER
-            return GetLocalExecutablePath(entryAssembly.Location);
+            string location = entryAssembly.Location;
+            if (location.Length != 0)
+                return GetLocalExecutablePath(location);
 #else
-            var codeBase = entryAssembly.CodeBase;
+            string? codeBase = entryAssembly.CodeBase;
             if (codeBase != null)
             {
                 var uri = new Uri(codeBase);
@@ -483,7 +473,13 @@ public class AppInformation : IAppInformation
 #endif
         }
 
-        throw new Exception("Unable to determine app executable file path.");
+        if (useProcess || entryAssembly == Assembly.GetEntryAssembly())
+        {
+            if (GetProcessPath() is not null and var processPath)
+                return processPath;
+        }
+
+        throw new AppModelException("Unable to determine executable file path of the app.");
     }
 
     static string GetLocalExecutablePath(string localPath)
@@ -497,13 +493,9 @@ public class AppInformation : IAppInformation
                 frameworkDescription.StartsWith(".NET ", StringComparison.OrdinalIgnoreCase) && Environment.Version.Major >= 5)
 #endif
             {
-                string? exeExtension;
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    exeExtension = ".exe";
-                else
-                    exeExtension = null;
-
+                string? exeExtension = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : null;
                 string exePath = Path.ChangeExtension(localPath, exeExtension);
+
                 if (File.Exists(exePath))
                     localPath = exePath;
             }
@@ -511,5 +503,17 @@ public class AppInformation : IAppInformation
 #endif
 
         return localPath;
+    }
+
+    static string? GetProcessPath()
+    {
+#if NET6_0_OR_GREATER
+        return Environment.ProcessPath;
+#else
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return Path.GetFullPath(NativeMethods.GetModuleFileName(default));
+        else
+            return Process.GetCurrentProcess().MainModule?.FileName;
+#endif
     }
 }

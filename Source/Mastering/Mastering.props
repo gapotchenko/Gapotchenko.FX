@@ -1,28 +1,35 @@
 ﻿<Project>
 
   <PropertyGroup>
+    <MasteringDir>$(MSBuildThisFileDirectory)</MasteringDir>
     <MasteringProjectModulePrefix>Gapotchenko.FX</MasteringProjectModulePrefix>
   </PropertyGroup>
 
+  <Import Project="PatchKit.props" />
   <Import Project="Traits.props" />
-  <Import Project="Workarounds.props" />
   <Import Project="Version.props" />
   <Import Project="Product.props" />
 
   <!-- =================================================================== -->
 
   <PropertyGroup>
-    <MasteringDir>$(MSBuildThisFileDirectory)</MasteringDir>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <Deterministic>true</Deterministic>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <GenerateDocumentationFile Condition=" '$(MasteringProjectKind)' == 'module' ">true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(MasteringProjectKind)' == 'module' ">
+    <CLSCompliant>true</CLSCompliant>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DefineConstants>$(DefineConstants),PREVIEW</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' != 'Debug' ">
+    <!-- Ensure that all files can be cleaned in release configurations.
+         Otherwise, this can cause an artifact pollution. -->
+    <WarningsAsErrors>$(WarningsAsErrors),MSB3061</WarningsAsErrors>
   </PropertyGroup>
 
   <!-- =================================================================== -->
@@ -30,13 +37,12 @@
   <Import Project="Debug.props" />
   <Import Project="Language.props" />
   <Import Project="Analysis.props" />
-  <Import Project="NuGet.props" />
   <Import Project="Targeting.props" />
+  <Import Project="NuGet.props" />
   <Import Project="Compatibility.props" />
   <Import Project="ContinuousIntegration.props" />
   <Import Project="Optimization.props" Condition=" Exists('Optimization.props') " />
   <Import Project="AssemblySignature.props" />
   <Import Project="AuthenticodeSignature.props" />
-  <Import Project="Polyfills.props" />
 
 </Project>

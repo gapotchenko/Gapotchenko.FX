@@ -22,8 +22,7 @@ sealed class TupleEqualityComparer<T1, T2>(
 
     public int GetHashCode(Tuple<T1, T2> obj)
     {
-        if (obj is null)
-            throw new ArgumentNullException(nameof(obj));
+        ArgumentNullException.ThrowIfNull(obj);
 
         return HashCode.Combine(
             m_Comparer1.GetNullableHashCode(obj.Item1),

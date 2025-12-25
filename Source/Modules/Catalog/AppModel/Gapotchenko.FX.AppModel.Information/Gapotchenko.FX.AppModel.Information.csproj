@@ -2,15 +2,15 @@
 
   <PropertyGroup>
     <RootNamespace>Gapotchenko.FX.AppModel</RootNamespace>
-    <CLSCompliant>true</CLSCompliant>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <CommonlyUsedPart Include="Gapotchenko.FX.AppModel.AppInformation" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\..\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
   </ItemGroup>
 
 </Project>

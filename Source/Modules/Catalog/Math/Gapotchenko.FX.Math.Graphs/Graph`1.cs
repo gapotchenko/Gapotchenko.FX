@@ -14,7 +14,8 @@ namespace Gapotchenko.FX.Math.Graphs;
 /// <inheritdoc cref="IGraph{TVertex}"/>
 public partial class Graph<TVertex> : IGraph<TVertex>
 {
-    // This class is partial. Please take a look at the neighboring source files.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 
     /// <inheritdoc/>
     public void Clear()
@@ -57,7 +58,7 @@ public partial class Graph<TVertex> : IGraph<TVertex>
                             queue.Enqueue(adjacent);
                 }
 
-                seen.AddRange(connectedVertices);
+                seen.UnionWith(connectedVertices);
 
                 var connectedSubgraph = GetSubgraph(connectedVertices);
                 yield return connectedSubgraph;

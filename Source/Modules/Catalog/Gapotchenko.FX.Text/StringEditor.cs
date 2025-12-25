@@ -15,8 +15,7 @@ public sealed class StringEditor
     /// <param name="value">The string to edit.</param>
     public StringEditor(string value)
     {
-        if (value == null)
-            throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
 
         m_Value = value;
     }
@@ -93,8 +92,7 @@ public sealed class StringEditor
     /// <param name="value">The string to insert.</param>
     public void Insert(int startIndex, string value)
     {
-        if (value == null)
-            throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
 
         if (startIndex < 0 || startIndex > m_Value.Length)
             throw new ArgumentOutOfRangeException(nameof(startIndex));
@@ -109,8 +107,7 @@ public sealed class StringEditor
     /// <param name="newValue">The string to use as a replacement.</param>
     public void Replace(StringSpan span, string newValue)
     {
-        if (newValue == null)
-            throw new ArgumentNullException(nameof(newValue));
+        ArgumentNullException.ThrowIfNull(newValue);
 
         ValidateSpan(span, m_Value.Length);
 
@@ -143,8 +140,7 @@ public sealed class StringEditor
     /// <param name="newValue">The string to use as a replacement.</param>
     public void Replace(int startIndex, int length, string newValue)
     {
-        if (newValue == null)
-            throw new ArgumentNullException(nameof(newValue));
+        ArgumentNullException.ThrowIfNull(newValue);
 
         ValidateSpan(startIndex, length, m_Value.Length);
 
@@ -159,10 +155,8 @@ public sealed class StringEditor
     [EditorBrowsable(EditorBrowsableState.Never)]
     public void Replace(Capture capture, string newValue)
     {
-        if (capture == null)
-            throw new ArgumentNullException(nameof(capture));
-        if (newValue == null)
-            throw new ArgumentNullException(nameof(newValue));
+        ArgumentNullException.ThrowIfNull(capture);
+        ArgumentNullException.ThrowIfNull(newValue);
 
         ValidateCapture(capture, m_Value.Length);
 
@@ -191,10 +185,8 @@ public sealed class StringEditor
     /// <param name="newValue">The string to use as a replacement.</param>
     public static string Replace(string s, StringSpan span, string newValue)
     {
-        if (s == null)
-            throw new ArgumentNullException(nameof(s));
-        if (newValue == null)
-            throw new ArgumentNullException(nameof(newValue));
+        ArgumentNullException.ThrowIfNull(s);
+        ArgumentNullException.ThrowIfNull(newValue);
 
         ValidateSpan(span, s.Length);
 
@@ -210,10 +202,8 @@ public sealed class StringEditor
     /// <param name="newValue">The string to use as a replacement.</param>
     public static string Replace(string s, int startIndex, int length, string newValue)
     {
-        if (s == null)
-            throw new ArgumentNullException(nameof(s));
-        if (newValue == null)
-            throw new ArgumentNullException(nameof(newValue));
+        ArgumentNullException.ThrowIfNull(s);
+        ArgumentNullException.ThrowIfNull(newValue);
 
         ValidateSpan(startIndex, length, s.Length);
 
@@ -243,12 +233,9 @@ public sealed class StringEditor
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static string Replace(string s, Capture capture, string newValue)
     {
-        if (s == null)
-            throw new ArgumentNullException(nameof(s));
-        if (capture == null)
-            throw new ArgumentNullException(nameof(capture));
-        if (newValue == null)
-            throw new ArgumentNullException(nameof(newValue));
+        ArgumentNullException.ThrowIfNull(s);
+        ArgumentNullException.ThrowIfNull(capture);
+        ArgumentNullException.ThrowIfNull(newValue);
 
         ValidateCapture(capture, s.Length);
 
@@ -266,8 +253,7 @@ public sealed class StringEditor
     /// <returns>A new string that is equivalent to <paramref name="s"/> except for the removed characters.</returns>
     public static string Remove(string s, StringSpan span)
     {
-        if (s == null)
-            throw new ArgumentNullException(nameof(s));
+        ArgumentNullException.ThrowIfNull(s);
 
         ValidateSpan(span, s.Length);
 
@@ -284,8 +270,7 @@ public sealed class StringEditor
     /// <returns>The edited string value.</returns>
     string ApplyOperations(string s)
     {
-        if (s == null)
-            throw new ArgumentNullException(nameof(s));
+        ArgumentNullException.ThrowIfNull(s);
 
         if (m_Operations.Count == 0)
             return s;
@@ -313,8 +298,7 @@ public sealed class StringEditor
     /// <param name="value">The string to edit.</param>
     public void Reset(string value)
     {
-        if (value == null)
-            throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
 
         m_Operations.Clear();
         m_Value = value;

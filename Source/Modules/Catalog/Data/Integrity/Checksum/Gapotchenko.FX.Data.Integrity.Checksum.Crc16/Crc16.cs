@@ -21,7 +21,9 @@ public abstract partial class Crc16(ushort initialValue) : ChecksumAlgorithm<ush
     /// <summary>
     /// The initial value of the register when the algorithm starts.
     /// </summary>
+#pragma warning disable CA1051 // Do not declare visible instance fields
     protected readonly ushort InitialValue = initialValue;
+#pragma warning restore CA1051
 
     /// <summary>
     /// The size, in bits, of the computed checksum value.

@@ -9,12 +9,7 @@ using Gapotchenko.FX.Linq;
 using System.Collections;
 using System.Diagnostics;
 
-#if NET8_0_OR_GREATER
-using static System.ArgumentNullException;
-using static System.ArgumentOutOfRangeException;
-#else
-using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
-#endif
+#pragma warning disable CA1710 // Identifiers should have correct suffix
 
 namespace Gapotchenko.FX.Collections.Generic.Kits;
 
@@ -56,7 +51,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <inheritdoc/>
     public virtual bool IsProperSubsetOf(IEnumerable<T> other)
     {
-        ThrowIfNull(other);
+        ArgumentNullException.ThrowIfNull(other);
 
         if (other == this)
             return false;
@@ -65,7 +60,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
 
         if (count == 0)
         {
-            if (other.TryGetNonEnumeratedCount(out var otherCount))
+            if (other.TryGetNonEnumeratedCount(out int otherCount))
                 return otherCount > 0;
             else
                 return other.Any();
@@ -102,7 +97,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <inheritdoc/>
     public virtual bool IsProperSupersetOf(IEnumerable<T> other)
     {
-        ThrowIfNull(other);
+        ArgumentNullException.ThrowIfNull(other);
 
         if (other == this)
             return false;
@@ -111,7 +106,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
         if (count == 0)
             return false;
 
-        if (other.TryGetNonEnumeratedCount(out var otherCount) && otherCount == 0)
+        if (other.TryGetNonEnumeratedCount(out int otherCount) && otherCount == 0)
             return true;
 
         switch (other)
@@ -119,12 +114,12 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
             case ReadOnlySetKit<T> readOnlySetKit when readOnlySetKit.Comparer.Equals(Comparer):
                 if (readOnlySetKit.Count >= count)
                     return false;
-                return ContainsAllElements(readOnlySetKit);
+                return ContainsAllElementsOf(readOnlySetKit);
 
             case HashSet<T> hashSet when hashSet.Comparer.Equals(Comparer):
                 if (hashSet.Count >= count)
                     return false;
-                return ContainsAllElements(hashSet);
+                return ContainsAllElementsOf(hashSet);
 
             default:
                 var (presenceCount, absence) = CalculateInclusivityOf(other, true);
@@ -135,7 +130,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <inheritdoc/>
     public virtual bool IsSubsetOf(IEnumerable<T> other)
     {
-        ThrowIfNull(other);
+        ArgumentNullException.ThrowIfNull(other);
 
         if (other == this)
             return true;
@@ -174,12 +169,12 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <inheritdoc/>
     public virtual bool IsSupersetOf(IEnumerable<T> other)
     {
-        ThrowIfNull(other);
+        ArgumentNullException.ThrowIfNull(other);
 
         if (other == this)
             return true;
 
-        if (other.TryGetNonEnumeratedCount(out var otherCount) && otherCount == 0)
+        if (other.TryGetNonEnumeratedCount(out int otherCount) && otherCount == 0)
             return true;
 
         switch (other)
@@ -195,17 +190,17 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
                 break;
         }
 
-        return ContainsAllElements(other);
+        return ContainsAllElementsOf(other);
     }
 
     /// <inheritdoc/>
     public virtual bool Overlaps(IEnumerable<T> other)
     {
-        ThrowIfNull(other);
+        ArgumentNullException.ThrowIfNull(other);
 
         if (Count == 0)
             return false;
-        if (other.TryGetNonEnumeratedCount(out var otherCount) && otherCount == 0)
+        if (other.TryGetNonEnumeratedCount(out int otherCount) && otherCount == 0)
             return false;
 
         foreach (var i in other)
@@ -220,16 +215,16 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <inheritdoc/>
     public virtual bool SetEquals(IEnumerable<T> other)
     {
-        ThrowIfNull(other);
+        ArgumentNullException.ThrowIfNull(other);
 
         if (other == this)
             return true;
 
         int expectedCount = Count;
 
-        if (other.TryGetNonEnumeratedCount(out var count))
+        if (other.TryGetNonEnumeratedCount(out int count))
         {
-            return count == expectedCount && ContainsAllElements(other);
+            return count == expectedCount && ContainsAllElementsOf(other);
         }
         else
         {
@@ -276,7 +271,7 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
         return (presence.Count, absence);
     }
 
-    bool ContainsAllElements(IEnumerable<T> other)
+    bool ContainsAllElementsOf(IEnumerable<T> other)
     {
         foreach (var i in other)
         {
@@ -316,9 +311,9 @@ public abstract class ReadOnlySetKit<T> : IReadOnlySet<T>
     /// <param name="count">The number of elements to copy to array.</param>
     public virtual void CopyTo(T[] array, int arrayIndex, int count)
     {
-        ThrowIfNull(array);
-        ThrowIfNegative(arrayIndex);
-        ThrowIfNegative(count);
+        ArgumentNullException.ThrowIfNull(array);
+        ArgumentOutOfRangeException.ThrowIfNegative(arrayIndex);
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
         if (count > array.Length - arrayIndex)
             ExceptionHelper.ThrowArgumentException_ArrayPlusOffTooSmall();
 

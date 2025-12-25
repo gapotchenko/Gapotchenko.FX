@@ -16,8 +16,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
 {
     private protected GenericKuonBase24(TextDataEncodingAlphabet alphabet, char paddingChar)
     {
-        if (alphabet == null)
-            throw new ArgumentNullException(nameof(alphabet));
+        ArgumentNullException.ThrowIfNull(alphabet);
 
         ValidateAlphabet(alphabet);
 
@@ -36,8 +35,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
     /// <param name="alphabet">The alphabet.</param>
     protected virtual void ValidateAlphabet(TextDataEncodingAlphabet alphabet)
     {
-        if (alphabet is null)
-            throw new ArgumentNullException(nameof(alphabet));
+        ArgumentNullException.ThrowIfNull(alphabet);
 
         if (alphabet.Size != Base)
         {

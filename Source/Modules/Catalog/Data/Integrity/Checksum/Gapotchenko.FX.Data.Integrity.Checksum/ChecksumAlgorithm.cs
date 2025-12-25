@@ -33,13 +33,12 @@ public abstract partial class ChecksumAlgorithm<T> : IChecksumAlgorithm<T>
     /// <inheritdoc/>
     public virtual T ComputeChecksum(Stream stream)
     {
-        if (stream == null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         var iterator = CreateIterator();
 
         var pool = ArrayPool<byte>.Shared;
-        var buffer = pool.Rent(BufferSize);
+        byte[] buffer = pool.Rent(BufferSize);
         try
         {
             for (; ; )
@@ -63,19 +62,22 @@ public abstract partial class ChecksumAlgorithm<T> : IChecksumAlgorithm<T>
     /// <inheritdoc/>
     public virtual async Task<T> ComputeChecksumAsync(Stream stream, CancellationToken cancellationToken = default)
     {
-        if (stream == null)
-            throw new ArgumentNullException(nameof(stream));
+        ArgumentNullException.ThrowIfNull(stream);
 
         var iterator = CreateIterator();
 
         var pool = ArrayPool<byte>.Shared;
-        var buffer = pool.Rent(BufferSize);
+        byte[] buffer = pool.Rent(BufferSize);
         try
         {
             for (; ; )
             {
                 int bytesRead = await
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+                    stream.ReadAsync(buffer.AsMemory(0, BufferSize), cancellationToken)
+#else
                     stream.ReadAsync(buffer, 0, BufferSize, cancellationToken)
+#endif
                     .ConfigureAwait(false);
                 if (bytesRead <= 0)
                     break;

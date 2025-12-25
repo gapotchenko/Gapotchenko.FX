@@ -1,0 +1,9 @@
+<Project>
+
+  <!-- Workaround GP-MSB-RMD-WA0003
+       https://github.com/dotnet/roslyn/issues/22485 -->
+  <PropertyGroup Condition=" '$(MSBuildProjectExtension)' == '.csproj' AND ('$(MsbPatchKitFrameworkIdentifier)' == '.NETFramework' OR ('$(MsbPatchKitFrameworkIdentifier)' == '.NETStandard' AND $([MSBuild]::VersionLessThanOrEquals($(MsbPatchKitFrameworkVersion), '2.0')))) ">
+    <Features>$(Features);peverify-compat</Features>
+  </PropertyGroup>
+
+</Project>

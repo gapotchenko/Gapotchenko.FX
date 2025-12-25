@@ -136,7 +136,7 @@ public abstract class Disposable : DisposableBase
             var loadedValue = optional.Value;
 
             // Clear as soon as possible to minimize the chance of a race condition.
-            optional = Optional<T>.None;
+            optional = Optional.None<T>();
 
             if (loadedValue != null)
             {

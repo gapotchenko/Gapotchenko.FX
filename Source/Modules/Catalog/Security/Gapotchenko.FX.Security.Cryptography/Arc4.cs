@@ -8,12 +8,6 @@ namespace Gapotchenko.FX.Security.Cryptography;
 /// </summary>
 public abstract class Arc4 : SymmetricAlgorithm
 {
-    const int BLOCK_SIZE_BITS = 8;
-
-    static readonly KeySizes[] m_LegalBlockSizes = [new(BLOCK_SIZE_BITS, BLOCK_SIZE_BITS, 0)];
-
-    static readonly KeySizes[] m_LegalKeySizes = [new(40, 2048, 8)];
-
     /// <summary>
     /// Initializes a new instance of the <see cref="Arc4"/> class.
     /// </summary>
@@ -30,6 +24,10 @@ public abstract class Arc4 : SymmetricAlgorithm
 
         IVValue = [];
     }
+
+    const int BLOCK_SIZE_BITS = 8;
+    static readonly KeySizes[] m_LegalBlockSizes = [new(BLOCK_SIZE_BITS, BLOCK_SIZE_BITS, 0)];
+    static readonly KeySizes[] m_LegalKeySizes = [new(40, 2048, 8)];
 
     /// <inheritdoc/>
     public override CipherMode Mode
@@ -63,9 +61,7 @@ public abstract class Arc4 : SymmetricAlgorithm
         }
     }
 
-    /// <summary>
-    /// Gets or sets the initialization vector.
-    /// </summary>
+    /// <inheritdoc/>
     public override byte[] IV
     {
         get => base.IV;
@@ -80,9 +76,7 @@ public abstract class Arc4 : SymmetricAlgorithm
     [DoesNotReturn, StackTraceHidden]
     static void ThrowDoesNotSupportIV() => throw new CryptographicException("ARC4 algorithm does not support initialization vector.");
 
-    /// <summary>
-    /// Generates a random initialization vector to use for the algorithm.
-    /// </summary>
+    /// <inheritdoc/>
     public override void GenerateIV() => ThrowDoesNotSupportIV();
 
     /// <summary>

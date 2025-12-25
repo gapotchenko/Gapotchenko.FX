@@ -5,7 +5,7 @@ using System.Runtime.Versioning;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.MacOS;
 
-#if NET && !MACOS
+#if NET
 [SupportedOSPlatform("macos")]
 #endif
 static class NativeMethods

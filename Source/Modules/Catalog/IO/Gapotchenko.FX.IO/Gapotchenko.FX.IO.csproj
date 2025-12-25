@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetPlatforms>any;windows</TargetPlatforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageTag Include="io" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.IO.FileSystem" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.IO.BitReader" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.IO.BitWriter" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\..\Gapotchenko.FX.Text\Gapotchenko.FX.Text.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
+    <Reference Include="System.Transactions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

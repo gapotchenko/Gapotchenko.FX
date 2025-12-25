@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -21,7 +22,7 @@ public abstract class AsyncConditionVariableTests : IAsyncConditionVariableTests
     [TestMethod]
     public void AsyncConditionVariable_Constructor_ThrowsOnNull()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => new AsyncConditionVariable(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new AsyncConditionVariable(null!));
     }
 }
 

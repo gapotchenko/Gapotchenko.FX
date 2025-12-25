@@ -18,7 +18,9 @@ public abstract partial class Crc8(byte initialValue) : ChecksumAlgorithm<byte>,
     /// <summary>
     /// The initial value of the register when the algorithm starts.
     /// </summary>
+#pragma warning disable CA1051 // Do not declare visible instance fields
     protected readonly byte InitialValue = initialValue;
+#pragma warning restore CA1051
 
     /// <summary>
     /// The size, in bits, of the computed checksum value.

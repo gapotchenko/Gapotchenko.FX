@@ -8,7 +8,7 @@ namespace System.Collections.Generic;
 
 /// <summary>
 /// <para>
-/// Creates instances of the <see cref="KeyValuePair{TKey, TValue}"/> struct.
+/// Creates instances of the <see cref="KeyValuePair{TKey, TValue}"/> structure.
 /// </para>
 /// <para>
 /// This is a polyfill provided by Gapotchenko.FX.

@@ -12,6 +12,6 @@ namespace Gapotchenko.FX.Threading.Tasks;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static partial class TaskPolyfills
 {
-    // This class is partial.
-    // For more code, please take a look at the neighboring source files.
+    // This type is partial.
+    // For the rest of the implementation, please take a look at the neighboring source files.
 }

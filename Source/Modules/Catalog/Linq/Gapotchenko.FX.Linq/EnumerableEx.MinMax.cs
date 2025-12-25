@@ -1,4 +1,11 @@
-﻿using Gapotchenko.FX.Linq.Properties;
+﻿#if NET6_0_OR_GREATER
+#define TFF_ENUMERABLE_MIN_COMPARER
+#define TFF_ENUMERABLE_MAX_COMPARER
+#define TFF_ENUMERABLE_MINBY
+#define TFF_ENUMERABLE_MAXBY
+#endif
+
+using Gapotchenko.FX.Linq.Properties;
 
 namespace Gapotchenko.FX.Linq;
 
@@ -117,10 +124,8 @@ partial class EnumerableEx
         bool isMax,
         Optional<TSource> defaultValue)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-        if (keySelector == null)
-            throw new ArgumentNullException(nameof(keySelector));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(keySelector);
 
         using var e = source.GetEnumerator();
 
@@ -183,7 +188,7 @@ partial class EnumerableEx
         Enumerable.MinBy(source, keySelector, comparer);
 #else
     public static TSource? MinBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
-        _MinMaxCore(source, keySelector, comparer, false, Optional<TSource>.None);
+        _MinMaxCore(source, keySelector, comparer, false, Optional.None<TSource>());
 #endif
 
     /// <summary>
@@ -216,7 +221,7 @@ partial class EnumerableEx
         Enumerable.MaxBy(source, keySelector, comparer);
 #else
     public static TSource? MaxBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
-        _MinMaxCore(source, keySelector, comparer, true, Optional<TSource>.None);
+        _MinMaxCore(source, keySelector, comparer, true, Optional.None<TSource>());
 #endif
 
     /// <summary>

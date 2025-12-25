@@ -6,7 +6,7 @@ static class Utils
 {
     public static byte[] GenerateRandomBytes(int count)
     {
-        var bytes = new byte[count];
+        byte[] bytes = new byte[count];
 
 #if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
         RandomNumberGenerator.Fill(bytes);

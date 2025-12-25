@@ -28,23 +28,22 @@ public static class DictionaryExtensions
         IDictionary<TKey, TValue> dictionary,
         TKey key,
         TValue value)
-#if !TFF_DICTIONARY_NULL_KEY
+#if !TFF_IDICTIONARY_NULL_KEY
         where TKey : notnull
 #endif
-#if TFF_DICTIONARY_TRYADD
-        => dictionary.TryAdd(key, value);
-#else
     {
-        if (dictionary == null)
-            throw new ArgumentNullException(nameof(dictionary));
+        ArgumentNullException.ThrowIfNull(dictionary);
 
+#if TFF_DICTIONARY_TRYADD
+        return dictionary.TryAdd(key, value);
+#else
         if (dictionary.ContainsKey(key))
             return false;
 
         dictionary.Add(key, value);
         return true;
-    }
 #endif
+    }
 
     /// <summary>
     /// Tries to remove the value with the specified key from the dictionary.
@@ -72,20 +71,19 @@ public static class DictionaryExtensions
         IDictionary<TKey, TValue> dictionary,
         TKey key,
         [MaybeNullWhen(false)] out TValue value)
-#if !TFF_DICTIONARY_NULL_KEY
+#if !TFF_IDICTIONARY_NULL_KEY
         where TKey : notnull
 #endif
-#if TFF_DICTIONARY_REMOVEANDGETVALUE
-        => dictionary.Remove(key, out value);
-#else
     {
-        if (dictionary == null)
-            throw new ArgumentNullException(nameof(dictionary));
+        ArgumentNullException.ThrowIfNull(dictionary);
 
+#if TFF_DICTIONARY_REMOVEANDGETVALUE
+        return dictionary.Remove(key, out value);
+#else
         if (!dictionary.TryGetValue(key, out value))
             return false;
         dictionary.Remove(key);
         return true;
-    }
 #endif
+    }
 }

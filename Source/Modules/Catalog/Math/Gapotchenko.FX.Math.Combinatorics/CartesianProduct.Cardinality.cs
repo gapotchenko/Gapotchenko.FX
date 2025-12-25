@@ -18,15 +18,14 @@ partial class CartesianProduct
     /// <returns>A Cartesian product cardinality.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="lengths"/> is <see langword="null"/>.</exception>
     /// <exception cref="OverflowException">The result is too big to fit into <see cref="int"/>.</exception>
-    public static int Cardinality(IEnumerable<int> lengths)
+    public static int Cardinality(params IEnumerable<int> lengths)
     {
-        if (lengths == null)
-            throw new ArgumentNullException(nameof(lengths));
+        ArgumentNullException.ThrowIfNull(lengths);
 
         int cardinality = 1;
         bool hasFactor = false;
 
-        foreach (var length in lengths)
+        foreach (int length in lengths)
         {
             if (length == 0)
                 return 0;
@@ -53,13 +52,12 @@ partial class CartesianProduct
     /// <exception cref="OverflowException">The result is too big to fit into <see cref="long"/>.</exception>
     public static long Cardinality(IEnumerable<long> lengths)
     {
-        if (lengths == null)
-            throw new ArgumentNullException(nameof(lengths));
+        ArgumentNullException.ThrowIfNull(lengths);
 
         long cardinality = 1;
         bool hasFactor = false;
 
-        foreach (var length in lengths)
+        foreach (long length in lengths)
         {
             if (length == 0)
                 return 0;

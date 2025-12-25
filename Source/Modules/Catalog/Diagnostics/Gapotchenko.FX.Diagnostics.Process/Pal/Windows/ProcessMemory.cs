@@ -13,7 +13,7 @@ static class ProcessMemory
     {
         if (Environment.Is64BitOperatingSystem)
         {
-            if (!NativeMethods.IsWow64Process(hProcess, out var wow64))
+            if (!NativeMethods.IsWow64Process(hProcess, out bool wow64))
                 return 32;
             if (wow64)
                 return 32;
@@ -35,7 +35,7 @@ static class ProcessMemory
         else if (from.Size == 8 && IntPtr.Size == 4)
         {
             long numberOfBytesRead = 0;
-            var status = NativeMethods.NtWow64ReadVirtualMemory64(hProcess, from.ToInt64(), to, length, ref numberOfBytesRead);
+            int status = NativeMethods.NtWow64ReadVirtualMemory64(hProcess, from.ToInt64(), to, length, ref numberOfBytesRead);
             actualLength = (nint)numberOfBytesRead;
             return status == NativeMethods.STATUS_SUCCESS;
         }
@@ -52,7 +52,7 @@ static class ProcessMemory
             long data;
             const int length = sizeof(long);
 
-            bool status = ReadProcessMemory(hProcess, address, &data, length, out var actualLength);
+            bool status = ReadProcessMemory(hProcess, address, &data, length, out nint actualLength);
 
             value = new UniPtr(data);
             return status && actualLength == length;
@@ -62,7 +62,7 @@ static class ProcessMemory
             int data;
             const int length = sizeof(int);
 
-            bool status = ReadProcessMemory(hProcess, address, &data, length, out var actualLength);
+            bool status = ReadProcessMemory(hProcess, address, &data, length, out nint actualLength);
 
             value = new UniPtr(data);
             return status && actualLength == length;
@@ -78,7 +78,7 @@ static class ProcessMemory
         ushort data;
         const int length = sizeof(ushort);
 
-        bool status = ReadProcessMemory(hProcess, address, &data, length, out var actualLength);
+        bool status = ReadProcessMemory(hProcess, address, &data, length, out nint actualLength);
 
         value = data;
         return status && actualLength == length;

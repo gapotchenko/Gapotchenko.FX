@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -35,7 +36,7 @@ public abstract class IAsyncMonitorTests : IAsyncConditionVariableTests
     [TestMethod]
     public void IAsyncMonitor_For_ThrowsOnNull()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => GetAsyncMonitorFor(null!));
+        Assert.ThrowsExactly<ArgumentNullException>(() => GetAsyncMonitorFor(null!));
     }
 
     [TestMethod]

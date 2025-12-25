@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <PackageDescription>Provides CRC-8 checksum algorithms.</PackageDescription>
   </PropertyGroup>
 

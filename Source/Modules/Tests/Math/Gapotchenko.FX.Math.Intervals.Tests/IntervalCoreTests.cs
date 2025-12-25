@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -1315,6 +1316,26 @@ public abstract class IntervalCoreTests
         Assert.AreEqual(0, interval.Zone(19.5));
         Assert.AreEqual(1, interval.Zone(20));
         Assert.AreEqual(1, interval.Zone(21));
+    }
+
+    #endregion
+
+    #region Equality
+
+    [TestMethod]
+    public void Interval_Core_Equality()
+    {
+        var interval = NewInterval(ValueInterval.Inclusive(10, 20));
+        var comparer = IntervalEqualityComparer.Default<int>();
+
+        Assert.AreEqual(interval, ValueInterval.Inclusive(10, 20), comparer);
+
+        Assert.AreNotEqual(interval, ValueInterval.Exclusive(10, 20), comparer);
+        Assert.AreNotEqual(interval, ValueInterval.InclusiveExclusive(10, 20), comparer);
+        Assert.AreNotEqual(interval, ValueInterval.ExclusiveInclusive(10, 20), comparer);
+
+        Assert.AreNotEqual(interval, ValueInterval.Inclusive(11, 20), comparer);
+        Assert.AreNotEqual(interval, ValueInterval.Inclusive(10, 21), comparer);
     }
 
     #endregion

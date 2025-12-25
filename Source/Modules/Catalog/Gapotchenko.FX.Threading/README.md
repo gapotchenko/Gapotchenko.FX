@@ -94,20 +94,19 @@ as it elegantly solves a world-class problem of bridging sync and async models t
 
 ## `Sequential`, an Antogonist to `Parallel`
 
-.NET platform provides `System.Threading.Tasks.Parallel` class that contains a bunch of static methods allowing one to execute the tasks in parallel.
+.NET platform provides `System.Threading.Tasks.Parallel` class that contains a bunch of static methods allowing to execute the tasks in parallel.
 But what if you want to temporarily switch them to a sequential execution mode?
 
-Of course, you can do that manually, for example, by changing `Parallel.ForEach` method to `foreach` C# language keyword.
+Of course, you can do it manually, for example, by changing `Parallel.ForEach` method to `foreach` C# language keyword.
 But this constitutes a lot of manual labour prone to errors.
-That's why `Gapotchenko.FX.Threading` module provides `Sequential` class, a drop-in anotogonist to `Parallel`.
+That's why `Gapotchenko.FX.Threading` module provides `Sequential` class, a drop-in "antogonist" to `Parallel`.
 It allows you to make the switch by just changing the class name from `Parallel` to `Sequential` in a corresponding function call.
 So `Parallel.ForEach` becomes `Sequential.ForEach`, and voila, the tasks are now executed sequentially allowing you to isolate that pesky multithreading bug you were hunting for.
 
-### Automatic Selection Between Parallel and Sequential
+### Automatic Selection Between Parallel and Sequential Modes
 
 `System.Threading.Tasks.Parallel` class allows you to execute tasks in parallel,
-while `Gapotchenko.FX.Threading.Tasks.Sequential` allows you to do the same,
-but sequentially.
+while `Gapotchenko.FX.Threading.Tasks.Sequential` allows you to execute them sequentially.
 But what if you want to get the best of two worlds?
 Meet `DebuggableParallel` class provided by `Gapotchenko.FX.Threading` module that does an automatic contextful choice for you.
 
@@ -115,7 +114,7 @@ Meet `DebuggableParallel` class provided by `Gapotchenko.FX.Threading` module th
 <summary>More details</summary>
 
 When a project has an attached debugger, `DebuggableParallel` primitive executes the specified tasks sequentially.
-When there is no debugger attached, `DebuggableParallel` will execute the tasks in parallel.
+When there is no debugger attached, `DebuggableParallel` executes the tasks in parallel.
 And of course, it's a drop-in replacement for the ubiquitous `System.Threading.Tasks.Parallel` class.
 
 The automatic selection of the task execution mode enables multi-threaded code to be effortlessly debugged,
@@ -140,18 +139,18 @@ without changing any other code.
 ## Asynchronous Concurrency
 
 `Gapotchenko.FX.Threading` module provides plenty of synchronization primitives supporting not only synchronous, but also asynchronous execution models.
-This closes the gap in the mainstream .NET BCL which had a decade-old lack of them.
+This closes the gap in the mainstream .NET BCL which had a decades-old lack of them.
 
 <details>
 <summary>Historical context</summary>
 
 One of the main barriers for implementing asynchronous synchronization in .NET was the impossibility to achieve reentrancy.
-That impossibility was caused by certain limitations of `System.AsyncLocal<T>` class that only supported downward propagation of information associated with an asynchronous control flow.
+That impossibility was caused by certain limitations of `System.AsyncLocal<T>` class that only supports downward propagation of information associated with an asynchronous control flow.
 
-However, using the tradition of rigorous and meticulous mathematical problem solving, `Gapotchenko.FX.Threading` module became the world's first (clean) implementation of reentrant synchronization primitives for .NET's asynchronous execution model.
+However, using the tradition of rigorous and meticulous mathematical problem solving, `Gapotchenko.FX.Threading` module became the world's first clean implementation of reentrant asynchronous synchronization primitives for .NET.
 The word "clean" means that it does not use such unreliable techniques as `System.Diagnostics.StackTrace`.
-Previously, clean implementations were considered impossible due to aforementioned limitations of the `System.AsyncLocal<T>` class.
-If you are interested in gory implementation details, take a look at the corresponding [source file](Utils/ExecutionContextHelper.AsyncLocal.cs).
+Previously, clean implementations were considered unachievable due to aforementioned limitations of the `System.AsyncLocal<T>` class.
+If you are interested in gory implementation details, you are welcome to take a look at the corresponding [source file](Utils/ExecutionContextHelper.AsyncLocal.cs).
 
 </details>
 
@@ -209,6 +208,7 @@ using (await lockObj.EnterScopeAsync())
 ```
 
 `Gapotchenko.FX.Threading.AsyncLock` is an asynchronous equivalent of [`System.Threading.Lock`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.lock) class.
+The `AsyncLock` class supports both synchronous and asynchronous operations, so it can be used simultaneously by synchronous and asynchronous parts of the code.
 
 ### AsyncCriticalSection
 
@@ -237,6 +237,7 @@ So if you know that your algorithm does not require recursive locking, using `As
 `AsyncManualResetEvent` must be reset manually.
 
 This is an asynchronous equivalent of [`System.Threading.ManualResetEvent`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.manualresetevent) class.
+The `AsyncManualResetEvent` class supports both synchronous and asynchronous operations.
 
 ### AsyncAutoResetEvent
 
@@ -244,6 +245,7 @@ This is an asynchronous equivalent of [`System.Threading.ManualResetEvent`](http
 `AsyncAutoResetEvent` resets automatically after releasing a single waiting task.
 
 This is an asynchronous equivalent of [`System.Threading.AutoResetEvent`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.autoresetevent) class.
+The `AsyncAutoResetEvent` class supports both synchronous and asynchronous operations.
 
 ### AsyncMonitor
 
@@ -292,11 +294,13 @@ Result for Consumer #2: 42
 ```
 
 `Gapotchenko.FX.Threading.AsyncMonitor` is an asynchronous equivalent of [`System.Threading.Monitor`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.monitor) class.
+The `AsyncMonitor` class supports both synchronous and asynchronous operations.
 
 <details>
 <summary>More details on AsyncMonitor</summary>
 
-`Gapotchenko.FX.Threading.AsyncMonitor` class can be used as a drop-in replacement for `System.Threading.Monitor`.
+`Gapotchenko.FX.Threading.AsyncMonitor` class can be used as a drop-in replacement for `System.Threading.Monitor`;
+it was designed with that scenario in mind.
 
 Let's take a look at example.
 The synchronous code below uses `System.Threading.Monitor`:
@@ -386,7 +390,7 @@ class NewCode
 ```
 
 Note the use of `AsyncMonitor.For(object)` method in the code above.
-It allows to imitate the semantics associated with `lock (object)` C# keyword that attaches a monitor to the specified object.
+It allows to imitate the semantics of `lock (object)` C# keyword which attaches a monitor to the specified object.
 `AsyncMonitor.For(object)` method is provided for semantical and ideological compatibility with `System.Threading.Monitor` class in order to ease the translation of existing codebases.
 As a more efficient approach, however, it is recommended to use an instance of `AsyncMonitor` explicitly without "attaching" it to a particular object:
 
@@ -394,14 +398,14 @@ As a more efficient approach, however, it is recommended to use an instance of `
 class NewCode
 {
     Queue<int> m_WorkItems = new();
-    AsyncMonitor m_Monitor = new();
+    AsyncMonitor m_WorkItemsMonitor = new();
 
     public async Task AddWorkItemAsync(int item)
     {
-        using (await m_Monitor.EnterScopeAsync())
+        using (await m_WorkItemsMonitor.EnterScopeAsync())
         {
             m_WorkItems.Enqueue(item);
-            m_Monitor.Notify();
+            m_WorkItemsMonitor.Notify();
         }
     }
 
@@ -416,7 +420,7 @@ class NewCode
 `Gapotchenko.FX.Threading` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Threading):
 
 ```
-PM> Install-Package Gapotchenko.FX.Threading
+dotnet package add Gapotchenko.FX.Threading
 ```
 
 ## Other Modules
@@ -427,9 +431,9 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.AppModel.Information](../AppModel/Gapotchenko.FX.AppModel.Information#readme)
 - [Gapotchenko.FX.Collections](../Gapotchenko.FX.Collections#readme)
 - [Gapotchenko.FX.Console](../Gapotchenko.FX.Console#readme)
-- [Gapotchenko.FX.Data](../Data/Encoding/Gapotchenko.FX.Data.Encoding#readme)
+- [Gapotchenko.FX.Data](../Data/Archives/Gapotchenko.FX.Data.Archives#readme)
 - [Gapotchenko.FX.Diagnostics](../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
-- [Gapotchenko.FX.IO](../Gapotchenko.FX.IO#readme)
+- [Gapotchenko.FX.IO](../IO/Gapotchenko.FX.IO#readme)
 - [Gapotchenko.FX.Linq](../Linq/Gapotchenko.FX.Linq#readme)
 - [Gapotchenko.FX.Math](../Math/Gapotchenko.FX.Math#readme)
 - [Gapotchenko.FX.Memory](../Gapotchenko.FX.Memory#readme)
@@ -437,5 +441,6 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Text](../Gapotchenko.FX.Text#readme)
 - &#x27B4; [Gapotchenko.FX.Threading](.#readme)
 - [Gapotchenko.FX.Tuples](../Gapotchenko.FX.Tuples#readme)
+- [Gapotchenko.FX.Versioning](../Versioning/Gapotchenko.FX.Versioning#readme)
 
 Or look at the [full list of modules](../..#readme).

@@ -7,8 +7,7 @@ static class StreamHelpers
 {
     public static void ValidateBuffer(byte[] buffer, int offset, int count)
     {
-        if (buffer == null)
-            throw new ArgumentNullException(nameof(buffer));
+        ArgumentNullException.ThrowIfNull(buffer);
         if (offset < 0)
             throw new ArgumentOutOfRangeException(nameof(offset), Resources.ArgumentOutOfRangeException_NonNegativeNumberRequired);
         if (count < 0)

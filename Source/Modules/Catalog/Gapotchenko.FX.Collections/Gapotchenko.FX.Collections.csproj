@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <PackageDescription><![CDATA[Provides additional data collections, primitives and polyfills for .NET: ConcurrentHashSet<T>, AssociativeArray<T>, PriorityQueue<T>, Deque<T>.]]></PackageDescription>
   </PropertyGroup>
 

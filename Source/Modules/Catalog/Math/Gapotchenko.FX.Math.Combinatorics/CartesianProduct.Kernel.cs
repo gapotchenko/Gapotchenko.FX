@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -10,7 +11,7 @@ namespace Gapotchenko.FX.Math.Combinatorics;
 
 partial class CartesianProduct
 {
-    static IEnumerable<IRow<T>> Multiply<T>(IEnumerable<IEnumerable<T>> factors)
+    static IEnumerable<IResultRow<T>> Multiply<T>(IEnumerable<IEnumerable<T>> factors)
     {
         var items = MemoizeMultipliers(factors).ReifyList();
         int rank = items.Count;
@@ -38,7 +39,7 @@ partial class CartesianProduct
             for (int i = 0; i != rank; i++)
                 row[i] = enumerators[i].Current;
 
-            yield return new Row<T>(row);
+            yield return new ResultRow<T>(row);
 
             for (int i = 0; i != rank; i++)
             {
@@ -60,8 +61,9 @@ partial class CartesianProduct
 
     static IEnumerable<IEnumerable<T>> MemoizeMultipliers<T>(IEnumerable<IEnumerable<T>> factors)
     {
-        var gtc = new GroupTransformCorrelator<IEnumerable<T>>(EnumerableEx.Memoize);
         factors = factors.Memoize();
+
+        var gtc = new GroupTransformCorrelator<IEnumerable<T>>(x => x.Memoize());
         foreach (var factor in factors.SkipLast(1))
             gtc.Transform(factor);
         return factors.Select(gtc.Correlate);
@@ -69,8 +71,9 @@ partial class CartesianProduct
 
     static IEnumerable<IEnumerable<T>> DistinctMultipliers<T>(IEnumerable<IEnumerable<T>> factors, IEqualityComparer<T>? equalityComparer)
     {
-        var gtc = new GroupTransformCorrelator<IEnumerable<T>>(x => x.Distinct(equalityComparer));
         factors = factors.Memoize();
+
+        var gtc = new GroupTransformCorrelator<IEnumerable<T>>(x => x.Distinct(equalityComparer));
         foreach (var factor in factors)
             gtc.Transform(factor);
         return factors.Select(gtc.Correlate);
@@ -89,6 +92,8 @@ partial class CartesianProduct
 
         readonly Dictionary<T, T> m_Map = new(ReferenceEqualityComparer.Instance);
     }
+
+#pragma warning disable IDE0011 // Add braces
 
     internal static IEnumerable<TResult> Multiply<T1, T2, TResult>(
         IEnumerable<T1> factor1,
@@ -236,4 +241,6 @@ partial class CartesianProduct
                                     foreach (var i1 in factor1)
                                         yield return selector(i1, i2, i3, i4, i5, i6, i7, i8);
     }
+
+#pragma warning restore IDE0011 // Add braces
 }

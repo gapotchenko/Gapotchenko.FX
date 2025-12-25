@@ -1,16 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <CLSCompliant>true</CLSCompliant>
-  </PropertyGroup>
-
   <ItemGroup>
+    <PackageTag Include="math" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.MathEx" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <AnalysisMode>recommended</AnalysisMode>
-  </PropertyGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

@@ -4,7 +4,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2019
 
-using Gapotchenko.FX.Reflection.Loader.Util;
+using Gapotchenko.FX.Reflection.Loader.Utils;
 using System.Reflection;
 using System.Xml.Linq;
 

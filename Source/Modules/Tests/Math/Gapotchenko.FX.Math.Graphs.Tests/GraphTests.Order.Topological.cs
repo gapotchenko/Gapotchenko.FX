@@ -88,7 +88,7 @@ partial class GraphTests
         order = g.OrderTopologically().ThenBy(Fn.Identity, customComparer);
         Assert.AreEqual("a b", string.Join(" ", order));
 
-        customComparer = Comparer<char>.Create((x, y) => -x.CompareTo(y));
+        customComparer = Comparer<char>.Create((x, y) => y.CompareTo(x));
         order = g.OrderTopologically().ThenBy(Fn.Identity, customComparer);
         Assert.AreEqual("b a", string.Join(" ", order));
 
@@ -350,7 +350,7 @@ partial class GraphTests
         order = g.OrderTopologically().Reverse().ThenBy(Fn.Identity, customComparer);
         Assert.AreEqual("a b", string.Join(" ", order));
 
-        customComparer = Comparer<char>.Create((x, y) => -x.CompareTo(y));
+        customComparer = Comparer<char>.Create((x, y) => y.CompareTo(x));
         order = g.OrderTopologically().Reverse().ThenBy(Fn.Identity, customComparer);
         Assert.AreEqual("b a", string.Join(" ", order));
 

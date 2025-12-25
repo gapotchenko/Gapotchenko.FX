@@ -1,0 +1,13 @@
+<Project>
+
+  <Import Project="../Core/Core.targets" />
+
+  <Import Project="../Remedies/Workarounds/WA0001.targets" />
+  <Import Project="../Remedies/Workarounds/WA0002.targets" />
+  <Import Project="../Remedies/Workarounds/WA0004.targets" />
+
+  <Import Project="../Remedies/Polyfills/PF0001.targets" />
+  <Import Project="../Remedies/Polyfills/PF0002.targets" />
+  <Import Project="../Remedies/Polyfills/PF0003.targets" />
+
+</Project>

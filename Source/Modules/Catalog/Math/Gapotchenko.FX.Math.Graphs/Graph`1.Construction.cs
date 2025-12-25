@@ -52,8 +52,7 @@ partial class Graph<TVertex>
     public Graph(IReadOnlyGraph<TVertex> graph, IEqualityComparer<TVertex>? vertexComparer) :
         this(vertexComparer)
     {
-        if (graph == null)
-            throw new ArgumentNullException(nameof(graph));
+        ArgumentNullException.ThrowIfNull(graph);
 
         UnionWithCore(graph);
 
@@ -105,10 +104,8 @@ partial class Graph<TVertex>
     public Graph(IEnumerable<TVertex> vertices, GraphIncidenceFunction<TVertex> incidenceFunction, IEqualityComparer<TVertex>? vertexComparer, GraphIncidenceOptions options) :
         this(vertexComparer)
     {
-        if (vertices == null)
-            throw new ArgumentNullException(nameof(vertices));
-        if (incidenceFunction == null)
-            throw new ArgumentNullException(nameof(incidenceFunction));
+        ArgumentNullException.ThrowIfNull(vertices);
+        ArgumentNullException.ThrowIfNull(incidenceFunction);
 
         var list = vertices.ReifyList();
         int count = list.Count;

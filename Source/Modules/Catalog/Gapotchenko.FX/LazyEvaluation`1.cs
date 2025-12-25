@@ -20,7 +20,7 @@ namespace Gapotchenko.FX;
 /// </para>
 /// <para>
 /// <see cref="LazyEvaluation{T}"/> is not thread-safe.
-/// For thread-safe lazy evaluation, please use <see cref="Threading.EvaluateOnce{T}"/> struct.
+/// For thread-safe lazy evaluation, please use <see cref="Threading.EvaluateOnce{T}"/> structure.
 /// </para>
 /// </remarks>
 [Serializable]
@@ -29,13 +29,12 @@ namespace Gapotchenko.FX;
 public struct LazyEvaluation<T>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="LazyEvaluation{T}"/> struct.
+    /// Initializes a new instance of the <see cref="LazyEvaluation{T}"/> structure.
     /// </summary>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
     public LazyEvaluation(Func<T> valueFactory)
     {
-        if (valueFactory == null)
-            throw new ArgumentNullException(nameof(valueFactory));
+        ArgumentNullException.ThrowIfNull(valueFactory);
 
         m_ValueFactory = Empty.Nullify(valueFactory);
         m_Value = default;

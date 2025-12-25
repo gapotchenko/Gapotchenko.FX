@@ -68,7 +68,7 @@ sealed class ProcessMemoryStream : Stream
 
     UniPtr GetPageLowerBound(UniPtr address)
     {
-        var pageSize = m_PageSize;
+        uint pageSize = m_PageSize;
         return new UniPtr(address.ToUInt64() / pageSize * pageSize);
     }
 
@@ -87,11 +87,11 @@ sealed class ProcessMemoryStream : Stream
 
             int currentCount = count;
 
-            var remainingPageSize = pageEnd.ToUInt64() - addr.ToUInt64();
+            ulong remainingPageSize = pageEnd.ToUInt64() - addr.ToUInt64();
             if ((ulong)currentCount > remainingPageSize)
                 currentCount = (int)remainingPageSize;
 
-            var regionLength = m_RegionLength;
+            long regionLength = m_RegionLength;
             if (regionLength != -1)
             {
                 long remainingRegionLength = regionLength - m_Position;
@@ -101,10 +101,13 @@ sealed class ProcessMemoryStream : Stream
 
             if (currentCount == 0)
             {
-                // EOF
+                // End of file (EOF).
                 break;
             }
 
+            // Accessing the first memory page should always work,
+            // but if it doesn't then it denotes an exceptional situation.
+            // Errors in accessing consequential pages are treated as an EOF condition.
             bool throwOnError = pageStart == m_FirstPageAddress;
 
             int r = m_Accessor.ReadMemory(addr, buffer, offset, currentCount, throwOnError);
@@ -112,7 +115,8 @@ sealed class ProcessMemoryStream : Stream
             {
                 if (throwOnError)
                 {
-                    // In case if process memory adapter disregards a throw on error flag.
+                    // Just in case if a process memory adapter
+                    // disregards the throw on error flag.
                     throw new IOException();
                 }
 

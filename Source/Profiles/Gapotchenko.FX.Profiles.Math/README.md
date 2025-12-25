@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Profiles.Math.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Profiles.Math)
 
-`Gapotchenko.FX.Profiles.Math` package represents the Math profile of Gapotchenko.FX.
+`Gapotchenko.FX.Profiles.Math` package represents the Math profile of Gapotchenko.FX toolkit.
 
 ## Modules
 
@@ -23,7 +23,7 @@ Instead of referencing each module individually, you can opt-in into just using 
 The Math profile is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Profiles.Math):
 
 ```
-PM> Install-Package Gapotchenko.FX.Profiles.Math
+dotnet package add Gapotchenko.FX.Profiles.Math
 ```
 
 ## See Also

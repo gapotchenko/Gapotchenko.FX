@@ -3,11 +3,7 @@
 //
 // File introduced by: Kirill Rode
 // Year of introduction: 2021
-//
-// Contributors:
-//   - Oleksiy Gapotchenko (development)
-//   - Kirill Rode (development)
-//
+
 // AssociativeArray<TKey, TValue> is a collection of key/value pairs that
 // supports null keys.
 
@@ -17,12 +13,7 @@ using Gapotchenko.FX.Linq;
 using System.Collections;
 using System.Diagnostics;
 
-#if NET8_0_OR_GREATER
-using static System.ArgumentNullException;
-using static System.ArgumentOutOfRangeException;
-#else
-using static Gapotchenko.FX.Collections.Utils.ThrowPolyfills;
-#endif
+#pragma warning disable CA1710 // Identifiers should have correct suffix
 
 namespace Gapotchenko.FX.Collections.Generic;
 
@@ -129,7 +120,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// <exception cref="ArgumentException"><paramref name="dictionary"/> contains one or more duplicated keys.</exception>
     public AssociativeArray(IReadOnlyDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
     {
-        ThrowIfNull(dictionary);
+        ArgumentNullException.ThrowIfNull(dictionary);
 
         AddRange(dictionary, comparer);
     }
@@ -165,7 +156,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
     /// <exception cref="ArgumentException"><paramref name="collection"/> contains one or more duplicated keys.</exception>
     public AssociativeArray(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
     {
-        ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(collection);
 
         AddRange(collection, comparer);
     }
@@ -320,7 +311,7 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         if (key is null)
         {
-            if (value is not null && value is not TValue)
+            if (value is not null and not TValue)
                 throw ExceptionHelper.CreateWrongType(value, typeof(TValue), nameof(value));
 
             if (!m_NullSlot.HasValue)
@@ -408,7 +399,8 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
     {
-        ThrowIfNull(array);
+        ArgumentNullException.ThrowIfNull(array);
+
         if ((uint)arrayIndex > (uint)array.Length)
             LocalThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
         if (array.Length - arrayIndex < Count)
@@ -551,7 +543,8 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
     void ICollection.CopyTo(Array array, int arrayIndex)
     {
-        ThrowIfNull(array);
+        ArgumentNullException.ThrowIfNull(array);
+
         if ((uint)arrayIndex > (uint)array.Length)
             LocalThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
         if (array.Length - arrayIndex < Count)
@@ -704,7 +697,8 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            ThrowIfNull(array);
+            ArgumentNullException.ThrowIfNull(array);
+
             if ((uint)arrayIndex > (uint)array.Length)
                 LocalThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
             if (array.Length - arrayIndex < Count)
@@ -720,7 +714,8 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
 
         public void CopyTo(Array array, int arrayIndex)
         {
-            ThrowIfNull(array);
+            ArgumentNullException.ThrowIfNull(array);
+
             if ((uint)arrayIndex > (uint)array.Length)
                 LocalThrowHelper.ThrowIndexArgumentOutOfRange_NeedNonNegNumException(nameof(arrayIndex));
             if (array.Length - arrayIndex < Count)
@@ -816,8 +811,10 @@ public partial class AssociativeArray<TKey, TValue> : IDictionary<TKey, TValue>,
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         State m_State;
 
+#pragma warning disable IDE0032 // Use auto property
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         T? m_Current;
+#pragma warning restore IDE0032 // Use auto property
 
         public T Current => m_Current!;
 

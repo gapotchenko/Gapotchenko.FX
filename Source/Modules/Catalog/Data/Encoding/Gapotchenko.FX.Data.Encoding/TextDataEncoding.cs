@@ -226,8 +226,7 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
     /// <inheritdoc/>
     public Stream CreateEncoder(TextWriter textWriter, DataEncodingOptions options = DataEncodingOptions.None)
     {
-        if (textWriter == null)
-            throw new ArgumentNullException(nameof(textWriter));
+        ArgumentNullException.ThrowIfNull(textWriter);
 
         options = GetEffectiveStreamingOptions(options);
 
@@ -244,8 +243,7 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
     /// <inheritdoc/>
     public Stream CreateDecoder(TextReader textReader, DataEncodingOptions options = DataEncodingOptions.None)
     {
-        if (textReader == null)
-            throw new ArgumentNullException(nameof(textReader));
+        ArgumentNullException.ThrowIfNull(textReader);
 
         options = GetEffectiveStreamingOptions(options);
 
@@ -699,8 +697,7 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override Stream CreateEncoder(Stream outputStream, DataEncodingOptions options = DataEncodingOptions.None)
     {
-        if (outputStream == null)
-            throw new ArgumentNullException(nameof(outputStream));
+        ArgumentNullException.ThrowIfNull(outputStream);
 
         return CreateEncoder(new StreamWriter(outputStream), options);
     }
@@ -709,8 +706,7 @@ public abstract partial class TextDataEncoding : DataEncoding, ITextDataEncoding
     [EditorBrowsable(EditorBrowsableState.Never)]
     public override Stream CreateDecoder(Stream inputStream, DataEncodingOptions options = DataEncodingOptions.None)
     {
-        if (inputStream == null)
-            throw new ArgumentNullException(nameof(inputStream));
+        ArgumentNullException.ThrowIfNull(inputStream);
 
         return CreateDecoder(new StreamReader(inputStream), options);
     }
