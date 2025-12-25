@@ -1,5 +1,4 @@
-﻿using Gapotchenko.FX.Math;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 #if !TFF_MATHF
 
@@ -450,6 +449,6 @@ public static class MathF
 
 #else
 
-    [assembly: TypeForwardedTo(typeof(MathF))]
+[assembly: TypeForwardedTo(typeof(MathF))]
 
 #endif
