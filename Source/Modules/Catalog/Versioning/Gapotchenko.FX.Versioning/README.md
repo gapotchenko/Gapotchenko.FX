@@ -1,6 +1,6 @@
 ﻿# Gapotchenko.FX.Versioning
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Versioning.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Versioning)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Versioning.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Versioning)
 
@@ -34,6 +34,7 @@ VersionConverter.Register();
 ```
 
 After registration, the converter will be automatically used by frameworks that rely on `TypeDescriptor` for type conversion, such as Windows Forms, WPF, and ASP.NET Core.
+`Register` method can be safely called multiple times; the actual registration occurs only once.
 
 ## Version Deconstruction
 

@@ -55,8 +55,20 @@ public sealed class VersionConverter : TypeConverter
     /// </summary>
     public static void Register()
     {
-        var type = typeof(Version);
-        if (TypeDescriptor.GetConverter(type).GetType() == typeof(TypeConverter)) // if no other converter is installed for the type,
-            TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(typeof(VersionConverter))); // install this converter.
+        Registration.Activate();
+    }
+
+    static class Registration
+    {
+        static Registration()
+        {
+            var type = typeof(Version);
+            if (TypeDescriptor.GetConverter(type).GetType() == typeof(TypeConverter)) // if no other converter is installed for the type,
+                TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(typeof(VersionConverter))); // install this converter.
+        }
+
+        public static void Activate()
+        {
+        }
     }
 }
