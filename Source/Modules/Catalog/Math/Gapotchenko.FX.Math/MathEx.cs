@@ -3,7 +3,7 @@
 namespace Gapotchenko.FX.Math;
 
 /// <summary>
-/// Provides extended static methods for mathematical functions.
+/// Provides extended mathematical functions.
 /// </summary>
 public static partial class MathEx
 {

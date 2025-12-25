@@ -7,6 +7,8 @@
 
 namespace Gapotchenko.FX.Math.Intervals;
 
+using Math = System.Math;
+
 partial class IntervalExtensions
 {
     // We provide several overloads for widely used types to compensate for the lack of
@@ -71,7 +73,7 @@ partial class IntervalExtensions
     [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method which is hidden to not drain cognitive energy of a user
     public static Optional<float> Clamp<TInterval>(this TInterval interval, float value)
         where TInterval : IInterval<float> =>
-        IntervalEngine.Clamp(interval, value, MathEx.BitIncrement, MathEx.BitDecrement);
+        IntervalEngine.Clamp(interval, value, MathF.BitIncrement, MathF.BitDecrement);
 
     #endregion
 
@@ -89,7 +91,7 @@ partial class IntervalExtensions
     [EditorBrowsable(EditorBrowsableState.Never)] // this is an optimization method which is hidden to not drain cognitive energy of a user
     public static Optional<double> Clamp<TInterval>(this TInterval interval, double value)
         where TInterval : IInterval<double> =>
-        IntervalEngine.Clamp(interval, value, MathEx.BitIncrement, MathEx.BitDecrement);
+        IntervalEngine.Clamp(interval, value, Math.BitIncrement, Math.BitDecrement);
 
     #endregion
 }
