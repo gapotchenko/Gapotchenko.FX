@@ -29,9 +29,7 @@ if (vfs.FileExists("data.txt"))
 
 // Enumerate files
 foreach (string file in vfs.EnumerateFiles("C:\\MyFolder", "*.txt"))
-{
     Console.WriteLine(file);
-}
 ```
 
 This is very similar to working with local files using `System.IO` namespace.
@@ -191,6 +189,7 @@ dotnet package add Gapotchenko.FX.IO.Vfs
 
 ## Related Modules
 
+- [Gapotchenko.FX.Data.Archives](../../Data/Archives/Gapotchenko.FX.Data.Archives#readme) - Provides base functionality for data archives
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO#readme) - Provides extended I/O functionality for the local file system
 
 ## Other Modules
