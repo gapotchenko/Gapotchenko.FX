@@ -35,7 +35,7 @@ public sealed class LittleEndianBitConverter : IBitConverter
 
     static long ToInt64Core(in ReadOnlySpan<byte> value) => (long)ToUInt64Core(value);
 
-    static float ToSingleCore(ReadOnlySpan<byte> value) => BitConverterEx.Int32BitsToSingle(BinaryPrimitives.ReadInt32LittleEndian(value));
+    static float ToSingleCore(ReadOnlySpan<byte> value) => BitConverter.Int32BitsToSingle(BinaryPrimitives.ReadInt32LittleEndian(value));
 
     static double ToDoubleCore(ReadOnlySpan<byte> value) => BitConverter.Int64BitsToDouble(BinaryPrimitives.ReadInt64LittleEndian(value));
 
@@ -265,7 +265,7 @@ public sealed class LittleEndianBitConverter : IBitConverter
     {
         BitConverterServices.ValidateFillArguments(buffer, startIndex, 4);
 
-        FillBytes(BitConverterEx.SingleToInt32Bits(value), buffer, startIndex);
+        FillBytes(BitConverter.SingleToInt32Bits(value), buffer, startIndex);
     }
 
     /// <summary>

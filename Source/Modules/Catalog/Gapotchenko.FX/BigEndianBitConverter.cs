@@ -42,7 +42,7 @@ public sealed class BigEndianBitConverter : IBitConverter
 
     static long ToInt64Core(in ReadOnlySpan<byte> value) => (long)ToUInt64Core(value);
 
-    static float ToSingleCore(ReadOnlySpan<byte> value) => BitConverterEx.Int32BitsToSingle(ToInt32Core(value));
+    static float ToSingleCore(ReadOnlySpan<byte> value) => BitConverter.Int32BitsToSingle(ToInt32Core(value));
 
     static double ToDoubleCore(ReadOnlySpan<byte> value) => BitConverter.Int64BitsToDouble(ToInt64Core(value));
 
@@ -272,7 +272,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     {
         BitConverterServices.ValidateFillArguments(buffer, startIndex, 4);
 
-        FillBytes(BitConverterEx.SingleToInt32Bits(value), buffer, startIndex);
+        FillBytes(BitConverter.SingleToInt32Bits(value), buffer, startIndex);
     }
 
     /// <summary>
