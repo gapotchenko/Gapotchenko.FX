@@ -191,7 +191,7 @@ dotnet package add Gapotchenko.FX.Data.Archives.Zip
 
 ## Related Modules
 
-- [Gapotchenko.FX.IO.Vfs](../../IO/Gapotchenko.FX.IO.Vfs#readme) - Provides the virtual file system abstraction layer
+- [Gapotchenko.FX.IO.Vfs](../../../IO/Gapotchenko.FX.IO.Vfs#readme) - Provides the virtual file system abstraction layer
 - [Gapotchenko.FX.Data.Archives](../Gapotchenko.FX.Data.Archives#readme) - Provides base functionality for data archives
 
 ## Other Modules
