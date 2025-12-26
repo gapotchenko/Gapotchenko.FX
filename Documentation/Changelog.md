@@ -1,5 +1,13 @@
 # What's New in Gapotchenko.FX
 
+## 2026
+
+### Gapotchenko FX 2026.1
+
+Release date: not released yet
+
+- Improved `SemanticVersion` type converter
+
 ## 2025
 
 ### Gapotchenko FX 2025.1
@@ -27,7 +35,7 @@ Release date: December 25, 2025
     - Added `Enum.GetValues<TEnum>()` polyfill method
 - Fixed issues:
     - Fixed issue that led to an empty string value returned by `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
-    - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly having its own entry point
+    - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly with its own entry point
     - Fixed issue that led to an empty string value returned by `AppInformation.Trademark` property instead of a `null` value
     - Fixed P/Invoke issues that could be potentially targeted by [WorstFit Attack](https://worst.fit/) vulnerability (applies to Windows OS only)
 - Retired support for target frameworks older then .NET 6.0 and .NET Framework 4.7.2
