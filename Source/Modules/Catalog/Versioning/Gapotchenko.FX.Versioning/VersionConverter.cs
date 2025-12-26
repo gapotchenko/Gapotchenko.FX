@@ -32,7 +32,9 @@ public class VersionConverter :
     /// </summary>
     public static void Register()
     {
-#if !TFF_VERSIONCONVERTER
+#if TFF_VERSIONCONVERTER
+        // System.ComponentModel.VersionConverter is registered by default.
+#else
         Registration.Activate();
 #endif
     }
@@ -87,7 +89,10 @@ public class VersionConverter :
                     [typeof(int), typeof(int), typeof(int), typeof(int)],
                     null);
                 Debug.Assert(ctor != null);
-                return new InstanceDescriptor(ctor, new object[] { version.Major, version.Minor, version.Build, version.Revision });
+
+                return new InstanceDescriptor(
+                    ctor,
+                    new object[] { version.Major, version.Minor, version.Build, version.Revision });
             }
         }
 
