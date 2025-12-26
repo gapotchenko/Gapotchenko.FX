@@ -390,7 +390,7 @@ class NewCode
 ```
 
 Note the use of `AsyncMonitor.For(object)` method in the code above.
-It allows to imitate the semantics of `lock (object)` C# keyword which attaches a monitor to the specified object.
+It allows to imitate the semantics of `lock (object)` C# keyword which implicitly attaches a monitor to the specified object.
 `AsyncMonitor.For(object)` method is provided for semantical and ideological compatibility with `System.Threading.Monitor` class in order to ease the translation of existing codebases.
 As a more efficient approach, however, it is recommended to use an instance of `AsyncMonitor` explicitly without "attaching" it to a particular object:
 
