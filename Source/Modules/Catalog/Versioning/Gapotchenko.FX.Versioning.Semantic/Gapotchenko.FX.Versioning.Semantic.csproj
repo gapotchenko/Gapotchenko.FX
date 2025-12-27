@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <PackageDescription>Provides semantic versioning functionality that follows the "Semantic Versioning 2.0.0" specification.</PackageDescription>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageTag Include="semver" />
   </ItemGroup>
