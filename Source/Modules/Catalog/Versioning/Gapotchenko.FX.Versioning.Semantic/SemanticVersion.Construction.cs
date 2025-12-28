@@ -99,7 +99,7 @@ partial record SemanticVersion
 
         m_Major = version.Major;
         m_Minor = version.Minor;
-        m_Patch = Gapotchenko.FX.Empty.Nullify(version.Build, -1) ?? 0;
+        m_Patch = FX.Empty.Nullify(version.Build, -1) ?? 0;
     }
 
     /// <summary>

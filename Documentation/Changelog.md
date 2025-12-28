@@ -7,6 +7,7 @@
 Release date: not released yet
 
 - Improved `SemanticVersion` type converter
+- Added `SemanticVersion.Parse` and `SemanticVersion.TryParse` method overloads accepting `ReadOnlySpan<char>` parameters
 
 ## 2025
 
@@ -51,7 +52,7 @@ Release date: December 31, 2024
 - Added `System.Threading.Lock` support to `Gapotchenko.FX.Threading.EvaluateOnce<T>` primitive
 - Added `System.Threading.Lock` support to `Gapotchenko.FX.Threading.ExecuteOnce` primitive
 - `Gapotchenko.FX.Reflection.Loader` module made as lazy as possible to avoid chicken and egg pitfalls
-- Added `Gapotchenko.FX.IOptional` interface for `Gapotchenko.FX.Optional<T>` type to allow an untyped optional value introspection
+- Added `Gapotchenko.FX.IOptional` interface for `Gapotchenko.FX.Optional<T>` type to allow an untyped introspection
 - Implemented memory span-based operations in `Gapotchenko.FX.IO.FragmentedMemoryStream` type
 - Polyfills:
     - Added polyfill for `System.Runtime.CompilerServices.OverloadResolutionPriorityAttribute` type

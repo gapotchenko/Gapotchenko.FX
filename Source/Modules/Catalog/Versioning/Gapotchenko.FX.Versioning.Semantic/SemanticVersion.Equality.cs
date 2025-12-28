@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Versioning;
 partial record SemanticVersion
 {
     /// <inheritdoc/>
-    public bool Equals(SemanticVersion? obj) =>
+    public bool Equals([NotNullWhen(true)] SemanticVersion? obj) =>
         ReferenceEquals(obj, this) ||
         obj is not null &&
         m_Major == obj.Major &&
