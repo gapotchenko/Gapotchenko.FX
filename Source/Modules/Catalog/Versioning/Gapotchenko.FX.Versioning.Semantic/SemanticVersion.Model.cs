@@ -32,7 +32,7 @@ partial record SemanticVersion
     }
 
     /// <summary>
-    /// The object model of a semantic version.
+    /// The internal object model of a semantic version.
     /// </summary>
     readonly struct Model
     {
