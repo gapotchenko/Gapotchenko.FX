@@ -7,7 +7,7 @@
 
 namespace Gapotchenko.FX.Math.Intervals.Tests;
 
-public abstract class IntervalCoreTests
+public abstract partial class IntervalCoreTests
 {
     protected abstract IInterval<T> NewInterval<T>(T from, T to) where T : IComparable<T>, IEquatable<T>;
 
@@ -17,7 +17,8 @@ public abstract class IntervalCoreTests
     protected IInterval<T> NewInterval<T>(IInterval<T> interval) where T : IComparable<T>, IEquatable<T> =>
         NewInterval(interval.From, interval.To);
 
-    protected abstract IInterval<T> NewInterval<T>(IntervalBoundary<T> from, IntervalBoundary<T> to) where T : IComparable<T>, IEquatable<T>;
+    protected abstract IInterval<T> NewInterval<T>(IntervalBoundary<T> from, IntervalBoundary<T> to)
+        where T : IComparable<T>, IEquatable<T>;
 
     protected abstract IInterval<T> InfiniteInterval<T>() where T : IComparable<T>, IEquatable<T>;
 

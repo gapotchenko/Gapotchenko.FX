@@ -64,7 +64,7 @@ static class IntervalParser
         }
 
         throw new ArgumentException(
-            "The specified format provider cannot be converted to culture information.",
+            "The specified format provider does not provide culture information.",
             nameof(provider));
     }
 

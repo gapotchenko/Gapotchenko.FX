@@ -156,12 +156,12 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
         IntervalEngine.IsProperSuperintervalOf(this, other, Comparer<T>.Default);
 
     /// <inheritdoc/>
-    public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IIntervalOperations<T>>(other);
+    public bool IntervalEquals(IInterval<T>? other) => IntervalEquals<IIntervalModel<T>>(other);
 
     /// <inheritdoc cref="IntervalEquals(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool IntervalEquals<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
+    public bool IntervalEquals<TOther>(in TOther? other) where TOther : IIntervalModel<T> =>
         IntervalEngine.IntervalsEqual(this, other, Comparer<T>.Default);
 
     /// <summary>

@@ -49,7 +49,7 @@ partial struct ValueInterval<T>
     }
 
     [return: NotNullIfNotNull(nameof(model))]
-    static ValueInterval<T>? Create(in IntervalModel<T>? model) => model is null ? null : new(model.Value);
+    internal static ValueInterval<T>? Create(in IntervalModel<T>? model) => model is null ? null : new(model.Value);
 
     internal ValueInterval(in IntervalModel<T> model)
     {

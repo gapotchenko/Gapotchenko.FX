@@ -6,8 +6,9 @@
 
 Release date: not released yet
 
-- Improved `SemanticVersion` type converter
+- Added string parsing functionality for `Interval<T>` and `ValueInterval<T>` types
 - Added `SemanticVersion.Parse` and `SemanticVersion.TryParse` method overloads accepting `ReadOnlySpan<char>` parameters
+- Improved `SemanticVersion` type converter
 
 ## 2025
 

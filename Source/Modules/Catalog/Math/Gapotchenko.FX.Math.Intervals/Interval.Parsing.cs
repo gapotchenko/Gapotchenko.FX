@@ -33,7 +33,7 @@ partial class Interval
     /// or <see langword="null"/> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
     /// </param>
     /// <returns>An object that is equivalent to the interval specified in the <paramref name="input"/> parameter.</returns>
-    /// <exception cref="ArgumentException"><paramref name="provider"/> cannot be converted to culture information.</exception>
+    /// <exception cref="ArgumentException"><paramref name="provider"/> does not provide culture information.</exception>
     /// <exception cref="FormatException"><paramref name="input"/> has an invalid format.</exception>
     /// <exception cref="NotSupportedException"><typeparamref name="T"/> type does not support conversion from string.</exception>
     public static Interval<T> Parse<T>(ReadOnlySpan<char> input, IFormatProvider? provider = null, IComparer<T>? comparer = null) =>
@@ -79,7 +79,7 @@ partial class Interval
     /// An object that is equivalent to the interval specified in the <paramref name="input"/> parameter if conversion was successful;
     /// otherwise, <see langword="null"/>.
     /// </returns>
-    /// <exception cref="ArgumentException"><paramref name="provider"/> cannot be converted to culture information.</exception>
+    /// <exception cref="ArgumentException"><paramref name="provider"/> does not provide culture information.</exception>
     /// <exception cref="NotSupportedException"><typeparamref name="T"/> type does not support conversion from string.</exception>
     public static Interval<T>? TryParse<T>(ReadOnlySpan<char> input, IFormatProvider? provider = null, IComparer<T>? comparer = null) =>
         Interval<T>.Create(

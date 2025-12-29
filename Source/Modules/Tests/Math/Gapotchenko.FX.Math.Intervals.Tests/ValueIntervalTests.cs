@@ -18,6 +18,12 @@ public sealed class ValueIntervalTests : IntervalCoreTests
 
     protected override IInterval<T> EmptyInterval<T>() => ValueInterval.Empty<T>();
 
+    protected override IInterval<T> Parse<T>(ReadOnlySpan<char> input, IFormatProvider? provider = null) =>
+        ValueInterval.Parse<T>(input, provider);
+
+    protected override IInterval<T>? TryParse<T>(ReadOnlySpan<char> input, IFormatProvider? provider = null) =>
+        ValueInterval.TryParse<T>(input, provider);
+
     [TestMethod]
     public void ValueInterval_Default()
     {

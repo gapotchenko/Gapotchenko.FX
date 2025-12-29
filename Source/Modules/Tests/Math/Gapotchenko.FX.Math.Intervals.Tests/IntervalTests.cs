@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
+
 namespace Gapotchenko.FX.Math.Intervals.Tests;
 
 [TestClass]
@@ -17,6 +18,12 @@ public sealed class IntervalTests : IntervalCoreTests
     protected override IInterval<T> InfiniteInterval<T>() => Interval.Infinite<T>();
 
     protected override IInterval<T> EmptyInterval<T>() => Interval.Empty<T>();
+
+    protected override IInterval<T> Parse<T>(ReadOnlySpan<char> input, IFormatProvider? provider = null) =>
+        Interval.Parse<T>(input, provider);
+
+    protected override IInterval<T>? TryParse<T>(ReadOnlySpan<char> input, IFormatProvider? provider = null) =>
+        Interval.TryParse<T>(input, provider);
 
     [TestMethod]
     public void Interval_Equality()

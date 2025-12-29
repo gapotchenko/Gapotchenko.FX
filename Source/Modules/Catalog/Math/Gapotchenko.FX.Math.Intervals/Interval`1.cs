@@ -125,7 +125,7 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
 
     Interval<T> Construct(in IntervalBoundary<T> from, in IntervalBoundary<T> to) => new(from, to, m_Comparer);
 
-    bool IsThis<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
+    bool IsThis<TOther>(in TOther? other) =>
         !TypeTraits<TOther>.IsValueType &&
         ReferenceEquals(other, this);
 
@@ -180,13 +180,13 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
         IntervalEngine.IsProperSuperintervalOf(this, other, m_Comparer);
 
     /// <inheritdoc/>
-    public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IIntervalOperations<T>>(other);
+    public bool IntervalEquals(IInterval<T>? other) => IntervalEquals<IIntervalModel<T>>(other);
 
     /// <inheritdoc cref="IntervalEquals(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool IntervalEquals<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
+    public bool IntervalEquals<TOther>(in TOther? other) where TOther : IIntervalModel<T> =>
+        IsThis(other) ||
         IntervalEngine.IntervalsEqual(this, other, m_Comparer);
 
     /// <summary>

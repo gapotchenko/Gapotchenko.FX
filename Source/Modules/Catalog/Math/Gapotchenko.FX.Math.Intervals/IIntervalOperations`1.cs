@@ -194,6 +194,5 @@ public interface IIntervalOperations<T> : IIntervalModel<T>, IEmptiable
     /// </summary>
     /// <param name="other">The interval to check for equality.</param>
     /// <returns><see langword="true"/> if this and <paramref name="other"/> intervals are equal; otherwise, <see langword="false"/>.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
-    bool IntervalEquals(IInterval<T> other);
+    bool IntervalEquals(IInterval<T>? other);
 }
