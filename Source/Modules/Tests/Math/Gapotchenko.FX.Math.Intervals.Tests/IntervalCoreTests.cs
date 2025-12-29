@@ -9,19 +9,19 @@ namespace Gapotchenko.FX.Math.Intervals.Tests;
 
 public abstract class IntervalCoreTests
 {
-    public abstract IInterval<T> NewInterval<T>(T from, T to) where T : IComparable<T>, IEquatable<T>;
+    protected abstract IInterval<T> NewInterval<T>(T from, T to) where T : IComparable<T>, IEquatable<T>;
 
     /// <summary>
     /// Creates a new interval of the tested type from the specified template.
     /// </summary>
-    public IInterval<T> NewInterval<T>(IInterval<T> interval) where T : IComparable<T>, IEquatable<T> =>
+    protected IInterval<T> NewInterval<T>(IInterval<T> interval) where T : IComparable<T>, IEquatable<T> =>
         NewInterval(interval.From, interval.To);
 
-    public abstract IInterval<T> NewInterval<T>(IntervalBoundary<T> from, IntervalBoundary<T> to) where T : IComparable<T>, IEquatable<T>;
+    protected abstract IInterval<T> NewInterval<T>(IntervalBoundary<T> from, IntervalBoundary<T> to) where T : IComparable<T>, IEquatable<T>;
 
-    public abstract IInterval<T> InfiniteInterval<T>() where T : IComparable<T>, IEquatable<T>;
+    protected abstract IInterval<T> InfiniteInterval<T>() where T : IComparable<T>, IEquatable<T>;
 
-    public abstract IInterval<T> EmptyInterval<T>() where T : IComparable<T>, IEquatable<T>;
+    protected abstract IInterval<T> EmptyInterval<T>() where T : IComparable<T>, IEquatable<T>;
 
     #region Characteristics
 
