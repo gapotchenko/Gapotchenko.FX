@@ -16,57 +16,8 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of interval values.</typeparam>
 [DebuggerDisplay("{ToString(),nq}")]
-public sealed record Interval<T> : IConstructibleInterval<T, Interval<T>>
+public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified inclusive left and exclusive right bounds:
-    /// <c>[from,to)</c>.
-    /// </summary>
-    /// <param name="from">
-    /// The left bound of the interval.
-    /// Represents a value the interval starts with.
-    /// The corresponding limit point is included in the interval.
-    /// </param>
-    /// <param name="to">
-    /// The right bound of the interval.
-    /// Represents a value the interval ends with.
-    /// The corresponding limit point is not included in the interval.
-    /// </param>
-    /// <param name="comparer">
-    /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
-    /// or <see langword="null"/> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
-    /// </param>
-    public Interval(T from, T to, IComparer<T>? comparer = null) :
-        this(IntervalBoundary.Inclusive(from), IntervalBoundary.Exclusive(to), comparer)
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified boundaries.
-    /// </summary>
-    /// <param name="from">
-    /// The left boundary of the interval.
-    /// Represents a boundary the interval starts with.
-    /// </param>
-    /// <param name="to">
-    /// The right boundary of the interval.
-    /// Represents a boundary the interval ends with.
-    /// </param>
-    /// <param name="comparer">
-    /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
-    /// or <see langword="null"/> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
-    /// </param>
-    /// <exception cref="ArgumentException">If one interval boundary is empty, another should be empty too.</exception>
-    public Interval(IntervalBoundary<T> from, IntervalBoundary<T> to, IComparer<T>? comparer = null)
-    {
-        IntervalEngine.ValidateBoundaries(from, to);
-
-        From = from;
-        To = to;
-
-        Comparer = comparer;
-    }
-
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     internal static Interval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
 

@@ -12,20 +12,8 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of interval values.</typeparam>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public interface IIntervalOperations<T> : IEmptiable
+public interface IIntervalOperations<T> : IIntervalModel<T>, IEmptiable
 {
-    /// <summary>
-    /// Gets the left boundary of the interval.
-    /// Represents a boundary the interval starts with.
-    /// </summary>
-    IntervalBoundary<T> From { get; }
-
-    /// <summary>
-    /// Gets the right boundary of the interval.
-    /// Represents a boundary the interval ends with.
-    /// </summary>
-    IntervalBoundary<T> To { get; }
-
     /// <summary>
     /// Gets the <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
     /// </summary>
