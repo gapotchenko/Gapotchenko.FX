@@ -78,6 +78,10 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IInterval<T> IIntervalOperations<T>.Enclosure => Enclosure;
 
+    IIntervalBoundary IIntervalModel.From => From;
+
+    IIntervalBoundary IIntervalModel.To => To;
+
     /// <inheritdoc cref="IIntervalOperations{T}.Intersect(IInterval{T})"/>
     public ValueInterval<T> Intersect(IInterval<T> other) => Intersect<IIntervalOperations<T>>(other);
 
@@ -156,12 +160,17 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
         IntervalEngine.IsProperSuperintervalOf(this, other, Comparer<T>.Default);
 
     /// <inheritdoc/>
-    public bool IntervalEquals(IInterval<T>? other) => IntervalEquals<IIntervalModel<T>>(other);
+    public bool IntervalEquals([NotNullWhen(true)] IInterval? other) =>
+        other is IInterval<T> typed &&
+        IntervalEquals(typed);
+
+    /// <inheritdoc/>
+    public bool IntervalEquals([NotNullWhen(true)] IInterval<T>? other) => IntervalEquals<IIntervalModel<T>>(other);
 
     /// <inheritdoc cref="IntervalEquals(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool IntervalEquals<TOther>(in TOther? other) where TOther : IIntervalModel<T> =>
+    public bool IntervalEquals<TOther>([NotNullWhen(true)] in TOther? other) where TOther : IIntervalModel<T> =>
         IntervalEngine.IntervalsEqual(this, other, Comparer<T>.Default);
 
     /// <summary>

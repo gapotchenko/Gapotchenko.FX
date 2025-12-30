@@ -21,11 +21,12 @@ partial class IntervalCoreTests
     [TestMethod]
     [DynamicData(nameof(Interval_Core_Parse_ValidInputs))]
     [DynamicData(nameof(Interval_Core_Parse_ValidAltInputs))]
-    public void Interval_Core_Parse_ValidInput(string input, object expectedInterval, IFormatProvider? provider)
+    public void Interval_Core_Parse_ValidInput(string input, IInterval expectedInterval, IFormatProvider? provider)
     {
         var type = expectedInterval.GetType().GetGenericArguments()[0];
+
         var actualInterval = CallTestTryParse(type, input, provider);
-        if (!CallIntervalEquals(expectedInterval, actualInterval))
+        if (!expectedInterval.IntervalEquals(actualInterval))
             Assert.Fail($"Expected interval is {expectedInterval}, but the actual is {actualInterval}.");
     }
 
@@ -37,13 +38,13 @@ partial class IntervalCoreTests
         Assert.IsNull(actualInterval, $"'{input}' string should not represent a valid interval.");
     }
 
-    object? CallTestTryParse(Type type, string input, IFormatProvider? provider)
+    IInterval? CallTestTryParse(Type type, string input, IFormatProvider? provider)
     {
         var methodInfo = typeof(IntervalCoreTests).GetMethod(nameof(TestTryParse), BindingFlags.NonPublic | BindingFlags.Instance);
         Assert.IsNotNull(methodInfo);
 
         var specializedMethodInfo = methodInfo.MakeGenericMethod(type);
-        return specializedMethodInfo.Invoke(this, [input, provider]);
+        return (IInterval?)specializedMethodInfo.Invoke(this, [input, provider]);
     }
 
     IInterval<T>? TestTryParse<T>(string input, IFormatProvider? provider)
@@ -64,22 +65,7 @@ partial class IntervalCoreTests
         return interval;
     }
 
-    static bool CallIntervalEquals(object? interval, object? other)
-    {
-        if (ReferenceEquals(interval, other))
-            return true;
-        if (interval is null || other is null)
-            return false;
-
-        return (bool)interval.GetType().InvokeMember(
-            "IntervalEquals",
-            BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance,
-            null,
-            interval,
-            [other])!;
-    }
-
-    static IEnumerable<(string, object, IFormatProvider?)> Interval_Core_Parse_ValidInputs
+    static IEnumerable<(string, IInterval, IFormatProvider?)> Interval_Core_Parse_ValidInputs
     {
         get
         {
@@ -103,7 +89,7 @@ partial class IntervalCoreTests
         }
     }
 
-    static IEnumerable<(string, object, IFormatProvider?)> Interval_Core_Parse_ValidAltInputs
+    static IEnumerable<(string, IInterval, IFormatProvider?)> Interval_Core_Parse_ValidAltInputs
     {
         get
         {

@@ -16,4 +16,8 @@ readonly struct IntervalModel<T>(in IntervalBoundary<T> from, in IntervalBoundar
     public IntervalBoundary<T> From { get; init; } = from;
 
     public IntervalBoundary<T> To { get; init; } = to;
+
+    IIntervalBoundary IIntervalModel.From => From;
+
+    IIntervalBoundary IIntervalModel.To => To;
 }

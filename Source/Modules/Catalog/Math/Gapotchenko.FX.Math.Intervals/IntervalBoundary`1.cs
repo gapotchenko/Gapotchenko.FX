@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of a value of the bound limit point.</typeparam>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly struct IntervalBoundary<T> : IEquatable<IntervalBoundary<T>>
+public readonly struct IntervalBoundary<T> : IIntervalBoundary, IEquatable<IntervalBoundary<T>>
 {
     internal IntervalBoundary(IntervalBoundaryKind kind, T value)
     {
@@ -23,10 +23,9 @@ public readonly struct IntervalBoundary<T> : IEquatable<IntervalBoundary<T>>
         m_Value = value;
     }
 
-    /// <summary>
-    /// Gets the value of a bound limit point.
-    /// </summary>
-    /// <exception cref="InvalidOperationException">Interval boundary has no bound limit point.</exception>
+    object? IIntervalBoundary.Value => Value;
+
+    /// <inheritdoc cref="IIntervalBoundary.Value"/>
     public T Value
     {
         get
@@ -57,19 +56,13 @@ public readonly struct IntervalBoundary<T> : IEquatable<IntervalBoundary<T>>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly T m_Value;
 
-    /// <summary>
-    /// Gets a value indicating whether the current interval boundary has a bound limit point, e.g. is bounded.
-    /// </summary>
+    /// <inheritdoc/>
     public bool HasValue => !(IsInfinity || Kind is IntervalBoundaryKind.Empty);
 
-    /// <summary>
-    /// Gets a value indicating whether the boundary represents either a negative or a positive infinity.
-    /// </summary>
+    /// <inheritdoc/>
     public bool IsInfinity => Kind is IntervalBoundaryKind.NegativeInfinity or IntervalBoundaryKind.PositiveInfinity;
 
-    /// <summary>
-    /// Gets interval boundary kind.
-    /// </summary>
+    /// <inheritdoc/>
     public IntervalBoundaryKind Kind { get; }
 
     /// <inheritdoc/>
