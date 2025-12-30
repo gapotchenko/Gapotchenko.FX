@@ -30,6 +30,10 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <inheritdoc/>
     public IntervalBoundary<T> To { get; init; }
 
+    IIntervalBoundary IIntervalModel.From => From;
+
+    IIntervalBoundary IIntervalModel.To => To;
+
     IComparer<T> IIntervalOperations<T>.Comparer => Comparer<T>.Default;
 
     /// <inheritdoc/>
@@ -81,10 +85,6 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <inheritdoc/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IInterval<T> IIntervalOperations<T>.Enclosure => Enclosure;
-
-    IIntervalBoundary IIntervalModel.From => From;
-
-    IIntervalBoundary IIntervalModel.To => To;
 
     /// <inheritdoc cref="IIntervalOperations{T}.Intersect(IInterval{T})"/>
     public ValueInterval<T> Intersect(IInterval<T> other) => Intersect<IIntervalOperations<T>>(other);
@@ -183,7 +183,7 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <param name="x">The first interval.</param>
     /// <param name="y">The second interval.</param>
     /// <returns><see langword="true"/> if the specified intervals are equal; otherwise, <see langword="false"/>.</returns>
-    public static bool operator ==(in ValueInterval<T> x, IInterval<T>? y) => EqualityOperator(x, y);
+    public static bool operator ==(in ValueInterval<T> x, IInterval<T>? y) => x.IntervalEquals(y);
 
     /// <summary>
     /// Determines whether the specified intervals are not equal.
@@ -191,20 +191,15 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <param name="x">The first interval.</param>
     /// <param name="y">The second interval.</param>
     /// <returns><see langword="true"/> if the specified intervals are not equal; otherwise, <see langword="false"/>.</returns>
-    public static bool operator !=(in ValueInterval<T> x, IInterval<T>? y) => !EqualityOperator(x, y);
+    public static bool operator !=(in ValueInterval<T> x, IInterval<T>? y) => !x.IntervalEquals(y);
 
     /// <inheritdoc cref="operator ==(in ValueInterval{T}, IInterval{T}?)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static bool operator ==(in ValueInterval<T> x, Interval<T>? y) => EqualityOperator(x, y);
+    public static bool operator ==(in ValueInterval<T> x, Interval<T>? y) => x.IntervalEquals(y);
 
     /// <inheritdoc cref="operator !=(in ValueInterval{T}, IInterval{T}?)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static bool operator !=(in ValueInterval<T> x, Interval<T>? y) => !EqualityOperator(x, y);
-
-    static bool EqualityOperator<TOther>(in ValueInterval<T> x, TOther? y)
-        where TOther : IIntervalOperations<T> =>
-        y is not null &&
-        x.IntervalEquals(y);
+    public static bool operator !=(in ValueInterval<T> x, Interval<T>? y) => !x.IntervalEquals(y);
 
     /// <inheritdoc/>
     public override bool Equals([NotNullWhen(true)] object? obj) =>

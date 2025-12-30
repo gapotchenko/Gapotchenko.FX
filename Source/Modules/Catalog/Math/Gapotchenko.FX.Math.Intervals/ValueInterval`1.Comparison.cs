@@ -22,7 +22,7 @@ partial struct ValueInterval<T>
     /// <see langword="true"/> if <paramref name="left"/> interval precedes <paramref name="right"/> value in the sort order;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator <(ValueInterval<T> left, T? right) => left.CompareTo(right) < 0;
+    public static bool operator <(in ValueInterval<T> left, T? right) => left.CompareTo(right) < 0;
 
     /// <summary>
     /// Determines whether the left specified <typeparamref name="T"/> value precedes
@@ -34,7 +34,7 @@ partial struct ValueInterval<T>
     /// <see langword="true"/> if <paramref name="left"/> value precedes <paramref name="right"/> interval in the sort order;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator <(T? left, ValueInterval<T> right) => right.CompareTo(left) > 0;
+    public static bool operator <(T? left, in ValueInterval<T> right) => right.CompareTo(left) > 0;
 
     /// <summary>
     /// Determines whether the left specified <see cref="ValueInterval{T}"/> follows
@@ -46,7 +46,7 @@ partial struct ValueInterval<T>
     /// <see langword="true"/> if <paramref name="left"/> interval follows <paramref name="right"/> value in the sort order;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator >(ValueInterval<T> left, T? right) => left.CompareTo(right) > 0;
+    public static bool operator >(in ValueInterval<T> left, T? right) => left.CompareTo(right) > 0;
 
     /// <summary>
     /// Determines whether the left specified <typeparamref name="T"/> value follows
@@ -58,7 +58,7 @@ partial struct ValueInterval<T>
     /// <see langword="true"/> if <paramref name="left"/> value follows <paramref name="right"/> interval in the sort order;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator >(T? left, ValueInterval<T> right) => right.CompareTo(left) < 0;
+    public static bool operator >(T? left, in ValueInterval<T> right) => right.CompareTo(left) < 0;
 
     /// <summary>
     /// Determines whether the left specified <see cref="ValueInterval{T}"/> precedes
@@ -71,7 +71,7 @@ partial struct ValueInterval<T>
     /// <see langword="true"/> if <paramref name="left"/> interval precedes or occurs in the same position in the sort order as <paramref name="right"/> value;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator <=(ValueInterval<T> left, T? right) => left.CompareTo(right) <= 0;
+    public static bool operator <=(in ValueInterval<T> left, T? right) => left.CompareTo(right) <= 0;
 
     /// <summary>
     /// Determines whether the left specified <typeparamref name="T"/> value precedes
@@ -84,7 +84,7 @@ partial struct ValueInterval<T>
     /// <see langword="true"/> if <paramref name="left"/> value precedes or occurs in the same position in the sort order as <paramref name="right"/> interval;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator <=(T? left, ValueInterval<T> right) => right.CompareTo(left) >= 0;
+    public static bool operator <=(T? left, in ValueInterval<T> right) => right.CompareTo(left) >= 0;
 
     /// <summary>
     /// Determines whether the left specified <see cref="ValueInterval{T}"/> follows
@@ -97,7 +97,7 @@ partial struct ValueInterval<T>
     /// <see langword="true"/> if <paramref name="left"/> interval follows or occurs in the same position in the sort order as <paramref name="right"/> value;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator >=(ValueInterval<T> left, T? right) => left.CompareTo(right) >= 0;
+    public static bool operator >=(in ValueInterval<T> left, T? right) => left.CompareTo(right) >= 0;
 
     /// <summary>
     /// Determines whether the left specified <typeparamref name="T"/> value follows
@@ -110,5 +110,5 @@ partial struct ValueInterval<T>
     /// <see langword="true"/> if <paramref name="left"/> value follows or occurs in the same position in the sort order as <paramref name="right"/> interval;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator >=(T? left, ValueInterval<T> right) => right.CompareTo(left) <= 0;
+    public static bool operator >=(T? left, in ValueInterval<T> right) => right.CompareTo(left) <= 0;
 }

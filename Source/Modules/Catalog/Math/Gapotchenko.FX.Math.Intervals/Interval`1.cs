@@ -30,6 +30,10 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
     /// <inheritdoc/>
     public IntervalBoundary<T> To { get; init; }
 
+    IIntervalBoundary IIntervalModel.From => From;
+
+    IIntervalBoundary IIntervalModel.To => To;
+
     /// <summary>
     /// Gets or initializes the <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
     /// </summary>
@@ -96,10 +100,6 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
     /// <inheritdoc/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IInterval<T> IIntervalOperations<T>.Enclosure => Enclosure;
-
-    IIntervalBoundary IIntervalModel.From => From;
-
-    IIntervalBoundary IIntervalModel.To => To;
 
     /// <inheritdoc cref="IIntervalOperations{T}.Intersect(IInterval{T})"/>
     public Interval<T> Intersect(IInterval<T> other) => Intersect<IIntervalOperations<T>>(other);
@@ -220,9 +220,7 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
 
     static bool EqualityOperator(Interval<T>? x, IInterval<T>? y) =>
         ReferenceEquals(x, y) ||
-        x is not null &&
-        y is not null &&
-        x.IntervalEquals(y);
+        x is not null && x.IntervalEquals(y);
 
     /// <inheritdoc/>
     public override string ToString() => IntervalEngine.ToString<Interval<T>, T>(this);
