@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of interval values.</typeparam>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>
+public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>, IComparable<T>
 {
     /// <summary>
     /// Gets the <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
@@ -50,13 +50,15 @@ public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>
     /// otherwise, <see langword="false"/>.</returns>
     bool Contains(T value);
 
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY // 2025
     /// <summary>
-    /// Returns an integer that indicates a zone of the specified value in relation to the interval range.
+    /// Returns an integer that indicates a relative position of the specified value in the interval range.
     /// </summary>
-    /// <param name="value">The value to get a zone for.</param>
+    /// <param name="value">The value to get a relative position in the interval range for.</param>
     /// <returns>
     /// <para>
-    /// An integer number that indicates a zone of the <paramref name="value"/>, as shown in the following table.
+    /// An integer number that indicates a relative position of the <paramref name="value"/>,
+    /// as shown in the following table.
     /// </para>
     /// <para>
     /// <c>0</c> if the interval contains the <paramref name="value"/> or is empty.
@@ -66,7 +68,10 @@ public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>
     /// <c>-1</c> if the <paramref name="value"/> is less than the left boundary of the interval.
     /// </para>
     /// </returns>
+    [Obsolete("Use a negated value returned by CompareTo(value) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     int Zone(T value);
+#endif
 
     /// <summary>
     /// Produces the intersection of the current and specified intervals.

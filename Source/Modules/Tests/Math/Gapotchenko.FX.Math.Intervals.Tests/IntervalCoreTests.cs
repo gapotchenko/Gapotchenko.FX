@@ -1244,79 +1244,79 @@ public abstract partial class IntervalCoreTests
 
     #endregion
 
-    #region Zone
+    #region CompareTo
 
     [TestMethod]
-    public void Interval_Core_Zone_1()
+    public void Interval_Core_CompareTo_1()
     {
         var interval = NewInterval(ValueInterval.Inclusive(10, 20));
 
-        Assert.AreEqual(-1, interval.Zone(9));
-        Assert.AreEqual(0, interval.Zone(10));
+        Assert.AreEqual(1, interval.CompareTo(9));
+        Assert.AreEqual(0, interval.CompareTo(10));
 
-        Assert.AreEqual(0, interval.Zone(15));
+        Assert.AreEqual(0, interval.CompareTo(15));
 
-        Assert.AreEqual(0, interval.Zone(20));
-        Assert.AreEqual(1, interval.Zone(21));
+        Assert.AreEqual(0, interval.CompareTo(20));
+        Assert.AreEqual(-1, interval.CompareTo(21));
     }
 
     [TestMethod]
-    public void Interval_Core_Zone_2()
+    public void Interval_Core_CompareTo_2()
     {
         var interval = NewInterval(ValueInterval.Exclusive(10, 20));
 
-        Assert.AreEqual(-1, interval.Zone(9));
-        Assert.AreEqual(-1, interval.Zone(10));
-        Assert.AreEqual(0, interval.Zone(11));
+        Assert.AreEqual(1, interval.CompareTo(9));
+        Assert.AreEqual(1, interval.CompareTo(10));
+        Assert.AreEqual(0, interval.CompareTo(11));
 
-        Assert.AreEqual(0, interval.Zone(15));
+        Assert.AreEqual(0, interval.CompareTo(15));
 
-        Assert.AreEqual(0, interval.Zone(19));
-        Assert.AreEqual(1, interval.Zone(20));
-        Assert.AreEqual(1, interval.Zone(21));
+        Assert.AreEqual(0, interval.CompareTo(19));
+        Assert.AreEqual(-1, interval.CompareTo(20));
+        Assert.AreEqual(-1, interval.CompareTo(21));
     }
 
     [TestMethod]
-    public void Interval_Core_Zone_3()
+    public void Interval_Core_CompareTo_3()
     {
         var interval = InfiniteInterval<int>();
 
-        Assert.AreEqual(0, interval.Zone(int.MinValue));
-        Assert.AreEqual(0, interval.Zone(0));
-        Assert.AreEqual(0, interval.Zone(int.MaxValue));
+        Assert.AreEqual(0, interval.CompareTo(int.MinValue));
+        Assert.AreEqual(0, interval.CompareTo(0));
+        Assert.AreEqual(0, interval.CompareTo(int.MaxValue));
     }
 
     [TestMethod]
-    public void Interval_Core_Zone_4()
+    public void Interval_Core_CompareTo_4()
     {
         var interval = EmptyInterval<int>();
 
-        Assert.AreEqual(0, interval.Zone(int.MinValue));
-        Assert.AreEqual(0, interval.Zone(0));
-        Assert.AreEqual(0, interval.Zone(int.MaxValue));
+        Assert.AreEqual(0, interval.CompareTo(int.MinValue));
+        Assert.AreEqual(0, interval.CompareTo(0));
+        Assert.AreEqual(0, interval.CompareTo(int.MaxValue));
     }
 
     [TestMethod]
-    public void Interval_Core_Zone_5()
+    public void Interval_Core_CompareTo_5()
     {
         var interval = NewInterval(ValueInterval.Exclusive(19, 20));
 
-        Assert.AreEqual(-1, interval.Zone(18));
-        Assert.AreEqual(-1, interval.Zone(19));
-        Assert.AreEqual(1, interval.Zone(20));
-        Assert.AreEqual(1, interval.Zone(21));
+        Assert.AreEqual(1, interval.CompareTo(18));
+        Assert.AreEqual(1, interval.CompareTo(19));
+        Assert.AreEqual(-1, interval.CompareTo(20));
+        Assert.AreEqual(-1, interval.CompareTo(21));
     }
 
     [TestMethod]
-    public void Interval_Core_Zone_6()
+    public void Interval_Core_CompareTo_6()
     {
         var interval = NewInterval(ValueInterval.Exclusive(19.0, 20.0));
 
-        Assert.AreEqual(-1, interval.Zone(18));
-        Assert.AreEqual(-1, interval.Zone(19));
-        Assert.AreEqual(0, interval.Zone(19.5));
-        Assert.AreEqual(1, interval.Zone(20));
-        Assert.AreEqual(1, interval.Zone(21));
+        Assert.AreEqual(1, interval.CompareTo(18));
+        Assert.AreEqual(1, interval.CompareTo(19));
+        Assert.AreEqual(0, interval.CompareTo(19.5));
+        Assert.AreEqual(-1, interval.CompareTo(20));
+        Assert.AreEqual(-1, interval.CompareTo(21));
     }
 
     #endregion

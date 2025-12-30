@@ -75,7 +75,14 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
     public bool Contains(T value) => IntervalEngine.Contains(this, value, m_Comparer);
 
     /// <inheritdoc/>
-    public int Zone(T value) => IntervalEngine.Zone(this, value, m_Comparer);
+    public int CompareTo(T? value) => IntervalEngine.CompareTo(this, value, m_Comparer);
+
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY // 2025
+    /// <inheritdoc/>
+    [Obsolete("Use a negated value returned by CompareTo(value) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public int Zone(T value) => -CompareTo(value);
+#endif
 
     /// <inheritdoc cref="IIntervalOperations{T}.Interior"/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

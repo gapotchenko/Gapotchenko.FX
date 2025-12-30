@@ -117,7 +117,7 @@ sealed class DamerauLevenshteinAlgorithm : StringDistanceAlgorithm
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (range.Zone(best) > 0)
+                if (range.CompareTo(best) < 0)
                     return best;
 
                 da[aList[aIdx - 1]] = aIdx;

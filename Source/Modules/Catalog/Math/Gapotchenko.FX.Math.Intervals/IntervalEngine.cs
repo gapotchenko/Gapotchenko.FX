@@ -124,22 +124,22 @@ static class IntervalEngine
         CompareBoundaries(BoundaryDirection.To, interval.To, value, comparer) >= 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int Zone<TInterval, TValue>(in TInterval interval, TValue value, IComparer<TValue> comparer)
+    public static int CompareTo<TInterval, TValue>(in TInterval interval, TValue? value, IComparer<TValue> comparer)
         where TInterval : IIntervalModel<TValue>
     {
         if (IsEmpty(interval, comparer))
             return 0; // convention, zone is undefined
         else if (CompareBoundaries(BoundaryDirection.From, interval.From, value, comparer) > 0)
-            return -1; // before the left interval boundary
+            return 1; // before the left interval boundary
         else if (CompareBoundaries(BoundaryDirection.To, interval.To, value, comparer) < 0)
-            return 1; // past the right interval boundary
+            return -1; // past the right interval boundary
         else
             return 0; // contained in the interval
     }
 
     static int CompareBoundaries<TValue>(
         BoundaryDirection direction,
-        in IntervalBoundary<TValue> x, TValue y,
+        in IntervalBoundary<TValue> x, TValue? y,
         IComparer<TValue> comparer) =>
         (direction, x.Kind) switch
         {

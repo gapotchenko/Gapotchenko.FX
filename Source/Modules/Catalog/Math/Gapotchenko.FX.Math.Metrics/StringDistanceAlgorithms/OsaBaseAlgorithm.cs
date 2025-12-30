@@ -102,7 +102,7 @@ abstract class OsaBaseAlgorithm : StringDistanceAlgorithm
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (range.Zone(bestAtRow) > 0)
+                if (range.CompareTo(bestAtRow) < 0)
                     return bestAtRow;
 
                 // Swap the vectors.

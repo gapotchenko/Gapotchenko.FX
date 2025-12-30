@@ -60,7 +60,14 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     public bool Contains(T value) => IntervalEngine.Contains(this, value, Comparer<T>.Default);
 
     /// <inheritdoc/>
-    public int Zone(T value) => IntervalEngine.Zone(this, value, Comparer<T>.Default);
+    public int CompareTo(T? value) => IntervalEngine.CompareTo(this, value, Comparer<T>.Default);
+
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY // 2025
+    /// <inheritdoc/>
+    [Obsolete("Use a negated value returned by CompareTo(value) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public int Zone(T value) => -CompareTo(value);
+#endif
 
     /// <inheritdoc cref="IIntervalOperations{T}.Interior"/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
