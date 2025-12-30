@@ -68,7 +68,7 @@ public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>
     /// <c>-1</c> if the <paramref name="value"/> is less than the left boundary of the interval.
     /// </para>
     /// </returns>
-    [Obsolete("Use a negated value returned by CompareTo(value) method instead.")]
+    [Obsolete("Use a negated value returned by CompareTo(value) method, or one of the relation operators: >, >=, <, <=.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     int Zone(T value);
 #endif

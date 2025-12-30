@@ -61,7 +61,7 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
 
 #if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY // 2025
     /// <inheritdoc/>
-    [Obsolete("Use a negated value returned by CompareTo(value) method instead.")]
+    [Obsolete("Use a negated value returned by CompareTo(value) method, or one of the relation operators: >, >=, <, <=.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public int Zone(T value) => -CompareTo(value);
 #endif
