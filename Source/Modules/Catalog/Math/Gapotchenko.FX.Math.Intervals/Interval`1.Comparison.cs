@@ -22,7 +22,7 @@ partial record Interval<T>
     /// <see langword="true"/> if <paramref name="left"/> interval precedes <paramref name="right"/> value in the sort order;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator <(Interval<T>? left, T? right) => (left ?? Empty).CompareTo(right) < 0;
+    public static bool operator <(Interval<T>? left, T? right) => ComparisonExists(left) && left.CompareTo(right) < 0;
 
     /// <summary>
     /// Determines whether the left specified <typeparamref name="T"/> value precedes
@@ -34,7 +34,7 @@ partial record Interval<T>
     /// <see langword="true"/> if <paramref name="left"/> value precedes <paramref name="right"/> interval in the sort order;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator <(T? left, Interval<T>? right) => (right ?? Empty).CompareTo(left) > 0;
+    public static bool operator <(T? left, Interval<T>? right) => ComparisonExists(right) && right.CompareTo(left) > 0;
 
     /// <summary>
     /// Determines whether the left specified <see cref="Interval{T}"/> follows
@@ -46,7 +46,7 @@ partial record Interval<T>
     /// <see langword="true"/> if <paramref name="left"/> interval follows <paramref name="right"/> value in the sort order;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator >(Interval<T>? left, T? right) => (left ?? Empty).CompareTo(right) > 0;
+    public static bool operator >(Interval<T>? left, T? right) => ComparisonExists(left) && left.CompareTo(right) > 0;
 
     /// <summary>
     /// Determines whether the left specified <typeparamref name="T"/> value follows
@@ -58,7 +58,7 @@ partial record Interval<T>
     /// <see langword="true"/> if <paramref name="left"/> value follows <paramref name="right"/> interval in the sort order;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator >(T? left, Interval<T>? right) => (right ?? Empty).CompareTo(left) < 0;
+    public static bool operator >(T? left, Interval<T>? right) => ComparisonExists(right) && right.CompareTo(left) < 0;
 
     /// <summary>
     /// Determines whether the left specified <see cref="Interval{T}"/> precedes
@@ -71,7 +71,7 @@ partial record Interval<T>
     /// <see langword="true"/> if <paramref name="left"/> interval precedes or occurs in the same position in the sort order as <paramref name="right"/> value;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator <=(Interval<T>? left, T? right) => (left ?? Empty).CompareTo(right) <= 0;
+    public static bool operator <=(Interval<T>? left, T? right) => ComparisonExists(left) && left.CompareTo(right) <= 0;
 
     /// <summary>
     /// Determines whether the left specified <typeparamref name="T"/> value precedes
@@ -84,7 +84,7 @@ partial record Interval<T>
     /// <see langword="true"/> if <paramref name="left"/> value precedes or occurs in the same position in the sort order as <paramref name="right"/> interval;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator <=(T? left, Interval<T>? right) => (right ?? Empty).CompareTo(left) >= 0;
+    public static bool operator <=(T? left, Interval<T>? right) => ComparisonExists(right) && right.CompareTo(left) >= 0;
 
     /// <summary>
     /// Determines whether the left specified <see cref="Interval{T}"/> follows
@@ -97,7 +97,7 @@ partial record Interval<T>
     /// <see langword="true"/> if <paramref name="left"/> interval follows or occurs in the same position in the sort order as <paramref name="right"/> value;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator >=(Interval<T>? left, T? right) => (left ?? Empty).CompareTo(right) >= 0;
+    public static bool operator >=(Interval<T>? left, T? right) => ComparisonExists(left) && left.CompareTo(right) >= 0;
 
     /// <summary>
     /// Determines whether the left specified <typeparamref name="T"/> value follows
@@ -110,5 +110,7 @@ partial record Interval<T>
     /// <see langword="true"/> if <paramref name="left"/> value follows or occurs in the same position in the sort order as <paramref name="right"/> interval;
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator >=(T? left, Interval<T>? right) => (right ?? Empty).CompareTo(left) <= 0;
+    public static bool operator >=(T? left, Interval<T>? right) => ComparisonExists(right) && right.CompareTo(left) <= 0;
+
+    static bool ComparisonExists([NotNullWhen(true)] Interval<T>? interval) => interval?.IsEmpty == false;
 }
