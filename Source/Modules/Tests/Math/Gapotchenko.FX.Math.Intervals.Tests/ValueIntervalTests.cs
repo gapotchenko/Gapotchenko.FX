@@ -18,11 +18,38 @@ public sealed class ValueIntervalTests : IntervalCoreTests
 
     protected override IInterval<T> EmptyInterval<T>() => ValueInterval.Empty<T>();
 
+    #region Parsing
+
     protected override IInterval<T> Parse<T>(ReadOnlySpan<char> input, IFormatProvider? provider = null) =>
         ValueInterval.Parse<T>(input, provider);
 
     protected override IInterval<T>? TryParse<T>(ReadOnlySpan<char> input, IFormatProvider? provider = null) =>
         ValueInterval.TryParse<T>(input, provider);
+
+    #endregion
+
+    #region Comparison
+
+    protected override bool LessOperator<T>(IInterval<T>? left, T right) => ToInterval(left) < right;
+
+    protected override bool LessOperator<T>(T left, IInterval<T>? right) => left < ToInterval(right);
+
+    protected override bool GreaterOperator<T>(IInterval<T>? left, T right) => ToInterval(left) > right;
+
+    protected override bool GreaterOperator<T>(T left, IInterval<T>? right) => left > ToInterval(right);
+
+    protected override bool LessOrEqualOperator<T>(IInterval<T>? left, T right) => ToInterval(left) <= right;
+
+    protected override bool LessOrEqualOperator<T>(T left, IInterval<T>? right) => left <= ToInterval(right);
+
+    protected override bool GreaterOrEqualOperator<T>(IInterval<T>? left, T right) => ToInterval(left) >= right;
+
+    protected override bool GreaterOrEqualOperator<T>(T left, IInterval<T>? right) => left >= ToInterval(right);
+
+    #endregion
+
+    static ValueInterval<T> ToInterval<T>(IInterval<T>? interval) where T : IComparable<T>, IEquatable<T> =>
+        (ValueInterval<T>?)interval ?? default;
 
     [TestMethod]
     public void ValueInterval_Default()
