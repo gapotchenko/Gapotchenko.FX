@@ -80,10 +80,10 @@ static class IntervalParser
                 }
 
             // A set form of the interval
-            case ['{', .. var x, '}']:
+            case ['{', .. var token, '}']:
                 {
-                    x = x.Trim();
-                    if (x.IsEmpty)
+                    token = token.Trim();
+                    if (token.IsEmpty)
                     {
                         // Empty set => empty interval.
                         var boundary = IntervalBoundary.Empty<T>();
@@ -92,7 +92,7 @@ static class IntervalParser
                     else
                     {
                         // A set of one => degenerate interval.
-                        var value = ParseValue<T>(x, typeConverter, culture, throwOnError);
+                        var value = ParseValue<T>(token, typeConverter, culture, throwOnError);
                         if (!value.HasValue)
                             return null;
                         var boundary = IntervalBoundary.Inclusive(value.Value);
@@ -101,37 +101,40 @@ static class IntervalParser
                 }
 
             // Generic interval form
-            case [('[' or '(') and var lt, .. var mt, (']' or ')') and var rt]:
+            case [('[' or '(') and var lbt, .. var token, (']' or ')') and var rbt]:
                 {
+                    // Trim the token to reduce the number of characters to work on.
+                    token = token.Trim();
+
                     // Separator
-                    int j = mt.IndexOf(';');
+                    int j = token.IndexOf(';');
                     if (j == -1)
                     {
-                        j = mt.IndexOf(',');
+                        j = token.IndexOf(',');
                         if (j == -1)
                         {
                             if (throwOnError)
-                                throw new FormatException("Interval boundary separator not found.");
+                                throw new FormatException("Interval separator not found.");
                             else
                                 return null;
                         }
                     }
 
                     // Left boundary
-                    var ft = mt[..j].Trim();
-                    var fk = ParseBoundaryKind(lt);
-                    var from = ParseBoundary<T>(ft, fk, typeConverter, culture, throwOnError);
-                    if (!from.HasValue)
+                    var leftToken = token[..j].TrimEnd();
+                    var leftKind = ParseBoundaryKind(lbt);
+                    var left = ParseBoundary<T>(leftToken, leftKind, typeConverter, culture, throwOnError);
+                    if (!left.HasValue)
                         return null;
 
                     // Right boundary
-                    var tt = mt[(j + 1)..].Trim();
-                    var tk = ParseBoundaryKind(rt);
-                    var to = ParseBoundary<T>(tt, tk, typeConverter, culture, throwOnError);
-                    if (!to.HasValue)
+                    var rightToken = token[(j + 1)..].TrimStart();
+                    var rightKind = ParseBoundaryKind(rbt);
+                    var right = ParseBoundary<T>(rightToken, rightKind, typeConverter, culture, throwOnError);
+                    if (!right.HasValue)
                         return null;
 
-                    return new(from.Value, to.Value);
+                    return new(left.Value, right.Value);
                 }
 
             default:
