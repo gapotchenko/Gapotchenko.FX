@@ -135,6 +135,13 @@ partial class IntervalCoreTests
             yield return ("(42)", typeof(int), null);
             yield return ("{42,43}", typeof(int), null);
 
+            // Multiple separators
+            yield return ("[42,,43]", typeof(int), null);
+            yield return ("[42,;43]", typeof(int), null);
+            yield return ("[42;;43]", typeof(int), null);
+            yield return ("[42,43,44]", typeof(int), null);
+            yield return ("[42;43;44]", typeof(int), null);
+
             // Missing values
             yield return ("[42,]", typeof(int), null);
             yield return ("[,42]", typeof(int), null);
@@ -151,6 +158,31 @@ partial class IntervalCoreTests
             yield return ("(infinity,infinity)", typeof(int), null);
             yield return ("(-∞∞,∞∞)", typeof(int), null);
             yield return ("[infinity]", typeof(int), null);
+
+            // Invalid infinity boundary positions
+            yield return ("(∞,10]", typeof(int), null); // Invalid: positive infinity as left boundary
+            yield return ("[-10,-∞)", typeof(int), null); // Invalid: negative infinity as right boundary
+
+            // Invalid set notation
+            yield return ("{42,43}", typeof(int), null); // Multiple values in set
+            yield return ("{42,43,44}", typeof(int), null);
+            yield return ("{", typeof(int), null);
+            yield return ("}", typeof(int), null);
+            yield return ("{42", typeof(int), null);
+            yield return ("42}", typeof(int), null);
+
+            // Invalid whitespace in critical positions
+            yield return ("[ 42, 43", typeof(int), null); // Missing closing bracket
+            yield return ("42, 43 ]", typeof(int), null); // Missing opening bracket
+            yield return ("[42 , 43", typeof(int), null); // Missing closing bracket
+
+            // Extra characters that shouldn't be valid
+            yield return ("[42,43]extra", typeof(int), null);
+            yield return ("extra[42,43]", typeof(int), null);
+
+            // Type-specific invalid inputs
+            yield return ("[42.5,43.7]", typeof(int), null); // Decimal for int
+            yield return ("[A,Z]", typeof(int), null); // Character for int
         }
     }
 }
