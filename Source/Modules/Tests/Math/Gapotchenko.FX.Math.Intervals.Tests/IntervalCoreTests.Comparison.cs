@@ -32,13 +32,13 @@ partial class IntervalCoreTests
     {
         var interval = NewInterval(ValueInterval.Inclusive(10, 20));
 
-        Assert.AreEqual(1, CompareTo(interval, 9));
-        Assert.AreEqual(0, CompareTo(interval, 10));
+        Assert.AreEqual(1, DoCompareTo(interval, 9));
+        Assert.AreEqual(0, DoCompareTo(interval, 10));
 
-        Assert.AreEqual(0, CompareTo(interval, 15));
+        Assert.AreEqual(0, DoCompareTo(interval, 15));
 
-        Assert.AreEqual(0, CompareTo(interval, 20));
-        Assert.AreEqual(-1, CompareTo(interval, 21));
+        Assert.AreEqual(0, DoCompareTo(interval, 20));
+        Assert.AreEqual(-1, DoCompareTo(interval, 21));
     }
 
     [TestMethod]
@@ -46,15 +46,15 @@ partial class IntervalCoreTests
     {
         var interval = NewInterval(ValueInterval.Exclusive(10, 20));
 
-        Assert.AreEqual(1, CompareTo(interval, 9));
-        Assert.AreEqual(1, CompareTo(interval, 10));
-        Assert.AreEqual(0, CompareTo(interval, 11));
+        Assert.AreEqual(1, DoCompareTo(interval, 9));
+        Assert.AreEqual(1, DoCompareTo(interval, 10));
+        Assert.AreEqual(0, DoCompareTo(interval, 11));
 
-        Assert.AreEqual(0, CompareTo(interval, 15));
+        Assert.AreEqual(0, DoCompareTo(interval, 15));
 
-        Assert.AreEqual(0, CompareTo(interval, 19));
-        Assert.AreEqual(-1, CompareTo(interval, 20));
-        Assert.AreEqual(-1, CompareTo(interval, 21));
+        Assert.AreEqual(0, DoCompareTo(interval, 19));
+        Assert.AreEqual(-1, DoCompareTo(interval, 20));
+        Assert.AreEqual(-1, DoCompareTo(interval, 21));
     }
 
     [TestMethod]
@@ -62,9 +62,9 @@ partial class IntervalCoreTests
     {
         var interval = InfiniteInterval<int>();
 
-        Assert.AreEqual(0, CompareTo(interval, int.MinValue));
-        Assert.AreEqual(0, CompareTo(interval, 0));
-        Assert.AreEqual(0, CompareTo(interval, int.MaxValue));
+        Assert.AreEqual(0, DoCompareTo(interval, int.MinValue));
+        Assert.AreEqual(0, DoCompareTo(interval, 0));
+        Assert.AreEqual(0, DoCompareTo(interval, int.MaxValue));
     }
 
     [TestMethod]
@@ -72,10 +72,10 @@ partial class IntervalCoreTests
     {
         var interval = NewInterval(ValueInterval.Exclusive(19, 20));
 
-        Assert.AreEqual(1, CompareTo(interval, 18));
-        Assert.AreEqual(1, CompareTo(interval, 19));
-        Assert.AreEqual(-1, CompareTo(interval, 20));
-        Assert.AreEqual(-1, CompareTo(interval, 21));
+        Assert.AreEqual(1, DoCompareTo(interval, 18));
+        Assert.AreEqual(1, DoCompareTo(interval, 19));
+        Assert.AreEqual(-1, DoCompareTo(interval, 20));
+        Assert.AreEqual(-1, DoCompareTo(interval, 21));
     }
 
     [TestMethod]
@@ -83,11 +83,11 @@ partial class IntervalCoreTests
     {
         var interval = NewInterval(ValueInterval.Exclusive(19.0, 20.0));
 
-        Assert.AreEqual(1, CompareTo(interval, 18));
-        Assert.AreEqual(1, CompareTo(interval, 19));
-        Assert.AreEqual(0, CompareTo(interval, 19.5));
-        Assert.AreEqual(-1, CompareTo(interval, 20));
-        Assert.AreEqual(-1, CompareTo(interval, 21));
+        Assert.AreEqual(1, DoCompareTo(interval, 18));
+        Assert.AreEqual(1, DoCompareTo(interval, 19));
+        Assert.AreEqual(0, DoCompareTo(interval, 19.5));
+        Assert.AreEqual(-1, DoCompareTo(interval, 20));
+        Assert.AreEqual(-1, DoCompareTo(interval, 21));
     }
 
     [TestMethod]
@@ -95,9 +95,9 @@ partial class IntervalCoreTests
     {
         var interval = EmptyInterval<int>();
 
-        Assert.AreEqual(0, CompareTo(interval, int.MinValue));
-        Assert.AreEqual(0, CompareTo(interval, 0));
-        Assert.AreEqual(0, CompareTo(interval, int.MaxValue));
+        Assert.AreEqual(0, DoCompareTo(interval, int.MinValue));
+        Assert.AreEqual(0, DoCompareTo(interval, 0));
+        Assert.AreEqual(0, DoCompareTo(interval, int.MaxValue));
     }
 
     [TestMethod]
@@ -105,30 +105,47 @@ partial class IntervalCoreTests
     {
         IInterval<int>? interval = null;
 
-        Assert.AreEqual(default, CompareTo(interval, int.MinValue));
-        Assert.AreEqual(default, CompareTo(interval, 0));
-        Assert.AreEqual(default, CompareTo(interval, int.MaxValue));
+        Assert.AreEqual(0, DoCompareTo(interval, int.MinValue));
+        Assert.AreEqual(0, DoCompareTo(interval, 0));
+        Assert.AreEqual(0, DoCompareTo(interval, int.MaxValue));
     }
 
-    int CompareTo<T>(IInterval<T>? interval, T value)
+    int DoCompareTo<T>(IInterval<T>? interval, T value)
         where T : IComparable<T>, IEquatable<T>
     {
-        int? c = interval?.CompareTo(value);
-        bool comparisonExists = interval?.IsEmpty == false;
+        const int NonExistentConvention = 0;
 
-        Assert.AreEqual(LessOperator(interval, value), comparisonExists && c < 0);
-        Assert.AreEqual(LessOperator(value, interval), comparisonExists && c > 0);
+        int? c;
+        if (interval is null)
+        {
+            // Comparison with a null interval does not exist.
+            c = null;
+        }
+        else
+        {
+            c = interval.CompareTo(value);
+            if (interval.IsEmpty)
+            {
+                // Comparison with an empty interval is undefined.
+                Assert.AreEqual(NonExistentConvention, c, "Comparison result by convention for empty intervals.");
+                // Unset the comparison result to match its true mathematical meaning.
+                c = null;
+            }
+        }
 
-        Assert.AreEqual(GreaterOperator(interval, value), comparisonExists && c > 0);
-        Assert.AreEqual(GreaterOperator(value, interval), comparisonExists && c < 0);
+        Assert.AreEqual(LessOperator(interval, value), c < 0);
+        Assert.AreEqual(LessOperator(value, interval), c > 0);
 
-        Assert.AreEqual(LessOrEqualOperator(interval, value), comparisonExists && c <= 0);
-        Assert.AreEqual(LessOrEqualOperator(value, interval), comparisonExists && c >= 0);
+        Assert.AreEqual(GreaterOperator(interval, value), c > 0);
+        Assert.AreEqual(GreaterOperator(value, interval), c < 0);
 
-        Assert.AreEqual(GreaterOrEqualOperator(interval, value), comparisonExists && c >= 0);
-        Assert.AreEqual(GreaterOrEqualOperator(value, interval), comparisonExists && c <= 0);
+        Assert.AreEqual(LessOrEqualOperator(interval, value), c <= 0);
+        Assert.AreEqual(LessOrEqualOperator(value, interval), c >= 0);
 
-        return c ?? default;
+        Assert.AreEqual(GreaterOrEqualOperator(interval, value), c >= 0);
+        Assert.AreEqual(GreaterOrEqualOperator(value, interval), c <= 0);
+
+        return c ?? NonExistentConvention;
     }
 
     #endregion
