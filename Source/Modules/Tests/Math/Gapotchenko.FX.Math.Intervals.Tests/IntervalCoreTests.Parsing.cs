@@ -69,12 +69,15 @@ partial class IntervalCoreTests
     {
         get
         {
+            // Empty intervals
             yield return ("∅", Interval.Empty<int>(), null);
             yield return ("{}", Interval.Empty<int>(), null);
 
+            // Degenerate intervals
             yield return ("{42}", Interval.Degenerate(42), null);
             yield return ("[42,42]", Interval.Degenerate(42), null);
 
+            // Infinite intervals
             yield return ("(-∞,∞)", Interval.Infinite<int>(), null);
             yield return ("(-∞,+∞)", Interval.Infinite<int>(), null);
             yield return ("(-inf,inf)", Interval.Infinite<int>(), null);
@@ -108,10 +111,46 @@ partial class IntervalCoreTests
     {
         get
         {
-            yield return ("[]", typeof(int), null);
+            // Empty or whitespace-only strings
+            yield return ("", typeof(int), null);
+            yield return (" ", typeof(int), null);
+            yield return ("  ", typeof(int), null);
+            yield return ("\t", typeof(int), null);
+            yield return ("\n", typeof(int), null);
+
+            // Missing brackets
             yield return ("42", typeof(int), null);
+            yield return ("42,43", typeof(int), null);
+            yield return ("42;43", typeof(int), null);
+            yield return ("10,20", typeof(int), null);
+
+            // Empty brackets
+            yield return ("[]", typeof(int), null);
+            yield return ("()", typeof(int), null);
+            yield return ("[)", typeof(int), null);
+            yield return ("(]", typeof(int), null);
+
+            // Missing separators
+            yield return ("[42]", typeof(int), null);
+            yield return ("(42)", typeof(int), null);
+            yield return ("{42,43}", typeof(int), null);
+
+            // Missing values
             yield return ("[42,]", typeof(int), null);
             yield return ("[,42]", typeof(int), null);
+            yield return ("[,]", typeof(int), null);
+            yield return ("[;]", typeof(int), null);
+            yield return ("[42;]", typeof(int), null);
+            yield return ("[;42]", typeof(int), null);
+
+            // Invalid infinity representations
+            yield return ("(∞,∞)", typeof(int), null);
+            yield return ("(-∞,-∞)", typeof(int), null);
+            yield return ("(∞,-∞)", typeof(int), null);
+            yield return ("{∞}", typeof(int), null);
+            yield return ("(infinity,infinity)", typeof(int), null);
+            yield return ("(-∞∞,∞∞)", typeof(int), null);
+            yield return ("[infinity]", typeof(int), null);
         }
     }
 }

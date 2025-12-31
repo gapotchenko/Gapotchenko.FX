@@ -16,18 +16,36 @@ static class IntervalEngine
 {
     /// <exception cref="ArgumentException">If one interval boundary is empty, another should be empty too.</exception>
     [StackTraceHidden]
-    public static void ValidateBoundaryArguments<T>(in IntervalBoundary<T> from, in IntervalBoundary<T> to)
+    public static void ValidateBoundaryArguments<T>(
+        in IntervalBoundary<T> from,
+        in IntervalBoundary<T> to,
+        [CallerArgumentExpression(nameof(from))] string? fromParamName = null,
+        [CallerArgumentExpression(nameof(to))] string? toParamName = null)
     {
-        string? message = VerifyBoundaries(from, to, true);
+        var (message, paramName) = VerifyBoundaries(from, to, true, fromParamName, toParamName);
         if (message != null)
-            throw new ArgumentException(message);
+            throw new ArgumentException(message, paramName);
     }
 
-    public static string? VerifyBoundaries<T>(in IntervalBoundary<T> from, in IntervalBoundary<T> to, bool message)
+    public static (string? Message, string? ParamName) VerifyBoundaries<T>(
+        in IntervalBoundary<T> left,
+        in IntervalBoundary<T> right,
+        bool message,
+        [CallerArgumentExpression(nameof(left))] string? leftParamName = null,
+        [CallerArgumentExpression(nameof(right))] string? rightParamName = null)
     {
-        if (from.Kind is IntervalBoundaryKind.Empty != to.Kind is IntervalBoundaryKind.Empty)
-            return message ? Resources.OneEmptyBoundaryRequiresAnother : string.Empty;
-        return null;
+        // Presence mismatch.
+        if (left.Kind is IntervalBoundaryKind.Empty != right.Kind is IntervalBoundaryKind.Empty)
+            return (message ? Resources.OneEmptyBoundaryRequiresAnother : string.Empty, null);
+
+        // Infinity sign violation.
+        if (left.Kind is IntervalBoundaryKind.PositiveInfinity)
+            return (message ? "The left interval boundary cannot be a positive infinity." : string.Empty, leftParamName);
+        if (right.Kind is IntervalBoundaryKind.NegativeInfinity)
+            return (message ? "The right interval boundary cannot be a negative infinity." : string.Empty, rightParamName);
+
+        // No errors.
+        return (null, null);
     }
 
     public static bool DoesEmptyBoundaryMatchAnother<T>(in IntervalBoundary<T> from, in IntervalBoundary<T> to) =>

@@ -205,7 +205,7 @@ static class IntervalParser
 
     static bool ValidateModel<T>(in IntervalModel<T> model, bool throwOnError)
     {
-        string? message = IntervalEngine.VerifyBoundaries(model.From, model.To, throwOnError);
+        var (message, _) = IntervalEngine.VerifyBoundaries(model.From, model.To, throwOnError, null, null);
         if (message != null)
         {
             if (throwOnError)
