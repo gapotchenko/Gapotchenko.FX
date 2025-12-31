@@ -167,11 +167,30 @@ static class IntervalParser
                 {
                     case "∞" or "+∞":
                     case "inf" or "+inf":
+                        if (!ValidateInfiniteBoundary(kind, throwOnError))
+                            return null;
                         return IntervalBoundary.PositiveInfinity<T>();
 
                     case "-∞":
                     case "-inf":
+                        if (!ValidateInfiniteBoundary(kind, throwOnError))
+                            return null;
                         return IntervalBoundary.NegativeInfinity<T>();
+                }
+
+                static bool ValidateInfiniteBoundary(IntervalBoundaryKind kind, bool throwOnError)
+                {
+                    if (kind != IntervalBoundaryKind.Exclusive)
+                    {
+                        if (throwOnError)
+                            throw new FormatException("An infinite interval boundary must be exclusive.");
+                        else
+                            return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
             }
         }

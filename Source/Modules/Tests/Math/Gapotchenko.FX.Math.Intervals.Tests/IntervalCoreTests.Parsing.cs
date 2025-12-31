@@ -151,6 +151,9 @@ partial class IntervalCoreTests
             yield return ("[;42]", typeof(int), null);
 
             // Invalid infinity representations
+            yield return ("[-∞,∞)", typeof(int), null);
+            yield return ("(-∞,∞]", typeof(int), null);
+            yield return ("[-∞,∞]", typeof(int), null);
             yield return ("(∞,∞)", typeof(int), null);
             yield return ("(-∞,-∞)", typeof(int), null);
             yield return ("(∞,-∞)", typeof(int), null);
