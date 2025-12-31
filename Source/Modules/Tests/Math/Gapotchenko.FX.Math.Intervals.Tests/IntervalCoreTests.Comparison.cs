@@ -127,23 +127,23 @@ partial class IntervalCoreTests
             if (interval.IsEmpty)
             {
                 // Comparison with an empty interval is undefined.
-                Assert.AreEqual(NonExistentConvention, c, "Comparison result by convention for empty intervals.");
+                Assert.AreEqual(NonExistentConvention, c);
                 // Unset the comparison result to match its true mathematical meaning.
                 c = null;
             }
         }
 
-        Assert.AreEqual(LessOperator(interval, value), c < 0);
-        Assert.AreEqual(LessOperator(value, interval), c > 0);
+        Assert.AreEqual(c < 0, LessOperator(interval, value));
+        Assert.AreEqual(c > 0, LessOperator(value, interval));
 
-        Assert.AreEqual(GreaterOperator(interval, value), c > 0);
-        Assert.AreEqual(GreaterOperator(value, interval), c < 0);
+        Assert.AreEqual(c > 0, GreaterOperator(interval, value));
+        Assert.AreEqual(c < 0, GreaterOperator(value, interval));
 
-        Assert.AreEqual(LessOrEqualOperator(interval, value), c <= 0);
-        Assert.AreEqual(LessOrEqualOperator(value, interval), c >= 0);
+        Assert.AreEqual(c <= 0, LessOrEqualOperator(interval, value));
+        Assert.AreEqual(c >= 0, LessOrEqualOperator(value, interval));
 
-        Assert.AreEqual(GreaterOrEqualOperator(interval, value), c >= 0);
-        Assert.AreEqual(GreaterOrEqualOperator(value, interval), c <= 0);
+        Assert.AreEqual(c >= 0, GreaterOrEqualOperator(interval, value));
+        Assert.AreEqual(c <= 0, GreaterOrEqualOperator(value, interval));
 
         return c ?? NonExistentConvention;
     }
