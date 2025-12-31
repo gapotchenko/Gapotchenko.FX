@@ -69,9 +69,15 @@ partial class IntervalCoreTests
     {
         get
         {
-            // Empty intervals
+            // Empty set notation
             yield return ("∅", Interval.Empty<int>(), null);
             yield return ("{}", Interval.Empty<int>(), null);
+
+            // Mathematically empty intervals
+            yield return ("(10,10)", Interval.Empty<int>(), null);
+            yield return ("[10,10)", Interval.Empty<int>(), null);
+            yield return ("(10,10]", Interval.Empty<int>(), null);
+            yield return ("(11,10)", Interval.Empty<int>(), null);
 
             // Degenerate intervals
             yield return ("{42}", Interval.Degenerate(42), null);
@@ -83,12 +89,46 @@ partial class IntervalCoreTests
             yield return ("(-inf,inf)", Interval.Infinite<int>(), null);
             yield return ("(-inf,+inf)", Interval.Infinite<int>(), null);
 
+            // Half-bounded intervals (left unbounded)
+            yield return ("(-∞,10]", Interval.ToInclusive(10), null);
+            yield return ("(-∞,10)", Interval.ToExclusive(10), null);
+            yield return ("(-inf,42]", Interval.ToInclusive(42), null);
+
+            // Half-bounded intervals (right unbounded)
+            yield return ("[10,∞)", Interval.FromInclusive(10), null);
+            yield return ("(10,∞)", Interval.FromExclusive(10), null);
+            yield return ("[42,+∞)", Interval.FromInclusive(42), null);
+            yield return ("[42,+inf)", Interval.FromInclusive(42), null);
+
+            // Character intervals
             yield return ("[A,Z]", Interval.Inclusive('A', 'Z'), null);
             yield return ("(A,Z)", Interval.Exclusive('A', 'Z'), null);
             yield return ("[A,Z)", Interval.InclusiveExclusive('A', 'Z'), null);
             yield return ("(A,Z]", Interval.ExclusiveInclusive('A', 'Z'), null);
+            yield return ("[a,z]", Interval.Inclusive('a', 'z'), null);
+            yield return ("[0,9]", Interval.Inclusive('0', '9'), null);
 
+            // Integer intervals with negative numbers
+            yield return ("[-10,10]", Interval.Inclusive(-10, 10), null);
+            yield return ("(-10,10)", Interval.Exclusive(-10, 10), null);
+            yield return ("[-10,0]", Interval.Inclusive(-10, 0), null);
+            yield return ("[0,10]", Interval.Inclusive(0, 10), null);
+
+            // Decimal intervals
             yield return ("[42.5,43.7]", Interval.Inclusive(42.5m, 43.7m), NumberFormatInfo.InvariantInfo);
+            yield return ("[-10.5,10.5]", Interval.Inclusive(-10.5m, 10.5m), NumberFormatInfo.InvariantInfo);
+            yield return ("[0.0,1.0]", Interval.Inclusive(0.0m, 1.0m), NumberFormatInfo.InvariantInfo);
+            var fr = new CultureInfo("fr-FR");
+            yield return ("[1,5;2,5]", Interval.Inclusive(1.5m, 2.5m), fr);
+
+            // Double intervals
+            yield return ("[1.5,2.5]", Interval.Inclusive(1.5, 2.5), NumberFormatInfo.InvariantInfo);
+            yield return ("[-3.14,3.14]", Interval.Inclusive(-3.14, 3.14), NumberFormatInfo.InvariantInfo);
+
+            // Long intervals
+            yield return ("[1000000,2000000]", Interval.Inclusive(1000000L, 2000000L), null);
+            yield return ("[-9223372036854775808,9223372036854775807]", Interval.Inclusive(long.MinValue, long.MaxValue), null);
+            yield return ($"[{long.MinValue},{long.MaxValue}]", Interval.Inclusive(long.MinValue, long.MaxValue), null);
         }
     }
 
@@ -96,14 +136,44 @@ partial class IntervalCoreTests
     {
         get
         {
+            // Empty intervals with whitespace
             yield return ("{ }", Interval.Empty<int>(), null);
+            yield return ("{  }", Interval.Empty<int>(), null);
 
+            // Degenerate with whitespace
             yield return ("{ 42 }", Interval.Degenerate(42), null);
+            yield return ("{  42  }", Interval.Degenerate(42), null);
+            yield return ("{ -10 }", Interval.Degenerate(-10), null);
 
+            // Infinity (case-insensitive)
+            yield return ("(-Inf,iNf)", Interval.Infinite<int>(), null);
+
+            // Intervals with whitespace and comma separator
             yield return ("[42, 43]", Interval.Inclusive(42, 43), null);
-            yield return ("[42; 43]", Interval.Inclusive(42, 43), null);
             yield return ("[ 42 , 43 ]", Interval.Inclusive(42, 43), null);
+            yield return ("[ 42,43 ]", Interval.Inclusive(42, 43), null);
+            yield return ("[42 , 43]", Interval.Inclusive(42, 43), null);
+            yield return ("[ -10 , 10 ]", Interval.Inclusive(-10, 10), null);
+
+            // Intervals with whitespace and semicolon separator
+            yield return ("[42; 43]", Interval.Inclusive(42, 43), null);
             yield return ("[ 42 ; 43 ]", Interval.Inclusive(42, 43), null);
+            yield return ("[ 42;43 ]", Interval.Inclusive(42, 43), null);
+            yield return ("[42 ; 43]", Interval.Inclusive(42, 43), null);
+
+            // Intervals with whitespace and different boundary types
+            yield return ("( 10 , 20 )", Interval.Exclusive(10, 20), null);
+            yield return ("[ 10 , 20 )", Interval.InclusiveExclusive(10, 20), null);
+            yield return ("( 10 , 20 ]", Interval.ExclusiveInclusive(10, 20), null);
+
+            // Intervals with whitespace and infinity
+            yield return ("( -∞ , ∞ )", Interval.Infinite<int>(), null);
+            yield return ("[ 10 , ∞ )", Interval.FromInclusive(10), null);
+            yield return ("( -∞ , 10 ]", Interval.ToInclusive(10), null);
+
+            // Character intervals with whitespace
+            yield return ("[ A , Z ]", Interval.Inclusive('A', 'Z'), null);
+            yield return ("( A ; Z )", Interval.Exclusive('A', 'Z'), null);
         }
     }
 
