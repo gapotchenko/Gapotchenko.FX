@@ -13,6 +13,7 @@
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.IO.Vfs.Properties;
 using Gapotchenko.FX.IO.Vfs.Utils;
+using Gapotchenko.FX.Threading.Tasks;
 using System.Buffers;
 using System.Diagnostics;
 using System.Text;
@@ -115,9 +116,19 @@ partial class FileSystemViewExtensions
 
     #region Append
 
-    /// <inheritdoc cref="File.AppendText(string)"/>
+    /// <summary>
+    /// Creates a <see cref="StreamWriter"/> that appends UTF-8 encoded text to an existing file,
+    /// or to a new file if the specified file does not exist.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
+    /// <param name="path">The path to the file to append to.</param>
+    /// <returns>A stream writer that appends UTF-8 encoded text to the specified file or to a new file.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
+    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to a non-existing directory or to an unmapped drive.</exception>
+    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
+    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
     public static StreamWriter AppendTextFile(this IFileSystemView view, string path)
     {
         ArgumentNullException.ThrowIfNull(view);
@@ -126,6 +137,24 @@ partial class FileSystemViewExtensions
             return File.AppendText(path);
         else
             return new StreamWriter(AppendFileCore(view, path));
+    }
+
+    /// <summary>
+    /// Asynchronously creates a <see cref="StreamWriter"/> that appends UTF-8 encoded text to an existing file,
+    /// or to a new file if the specified file does not exist.
+    /// </summary>
+    /// <inheritdoc cref="AppendTextFile(IFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static async Task<StreamWriter> AppendTextFileAsync(this IFileSystemView view, string path, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        if (view is LocalFileSystemView)
+            return await TaskBridge.ExecuteAsync(() => File.AppendText(path), cancellationToken).ConfigureAwait(false);
+        else
+            return new StreamWriter(await AppendFileCoreAsync(view, path, cancellationToken).ConfigureAwait(false));
     }
 
     static StreamWriter AppendTextFile(this IFileSystemView view, string path, Encoding encoding)
@@ -140,6 +169,9 @@ partial class FileSystemViewExtensions
 
     static Stream AppendFileCore(IFileSystemView view, string path) =>
         view.OpenFile(path, FileMode.Append, FileAccess.Write, FileShare.Read);
+
+    static Task<Stream> AppendFileCoreAsync(IFileSystemView view, string path, CancellationToken cancellationToken) =>
+        view.OpenFileAsync(path, FileMode.Append, FileAccess.Write, FileShare.Read, cancellationToken);
 
     #endregion
 
