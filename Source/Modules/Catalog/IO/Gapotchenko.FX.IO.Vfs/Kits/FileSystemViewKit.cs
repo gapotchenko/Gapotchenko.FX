@@ -8,6 +8,7 @@
 
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.IO.Vfs.Utils;
+using Gapotchenko.FX.Threading.Tasks;
 using System.Security;
 using System.Text;
 
@@ -103,7 +104,15 @@ public abstract class FileSystemViewKit : IFileSystemView
         OpenFile(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 
     /// <inheritdoc/>
+    public virtual Task<Stream> ReadFileAsync(string path, CancellationToken cancellationToken) =>
+        OpenFileAsync(path, FileMode.Open, FileAccess.Read, FileShare.Read, cancellationToken);
+
+    /// <inheritdoc/>
     public abstract Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share);
+
+    /// <inheritdoc/>
+    public virtual Task<Stream> OpenFileAsync(string path, FileMode mode, FileAccess access, FileShare share, CancellationToken cancellationToken) =>
+        TaskBridge.ExecuteAsync(() => OpenFile(path, mode, access, share), cancellationToken);
 
     /// <inheritdoc/>
     public abstract void DeleteFile(string path);

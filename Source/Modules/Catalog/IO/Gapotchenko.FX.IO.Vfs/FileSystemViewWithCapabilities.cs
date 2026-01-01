@@ -80,10 +80,22 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.ReadFile(path);
     }
 
+    public override Task<Stream> ReadFileAsync(string path, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.ReadFileAsync(path, cancellationToken);
+    }
+
     public override Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share)
     {
         EnsureCanOpenFile(mode, access);
         return base.OpenFile(path, mode, access, share);
+    }
+
+    public override Task<Stream> OpenFileAsync(string path, FileMode mode, FileAccess access, FileShare share, CancellationToken cancellationToken = default)
+    {
+        EnsureCanOpenFile(mode, access);
+        return base.OpenFileAsync(path, mode, access, share, cancellationToken);
     }
 
     public override void DeleteFile(string path)

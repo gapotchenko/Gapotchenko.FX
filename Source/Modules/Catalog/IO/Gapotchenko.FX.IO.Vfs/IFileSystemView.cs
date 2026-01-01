@@ -24,8 +24,41 @@ public interface IFileSystemView : IReadOnlyFileSystemView
 
     #region Files
 
-    /// <inheritdoc cref="File.Open(string, FileMode, FileAccess, FileShare)"/>
+    /// <summary>
+    /// Opens a <see cref="Stream"/> on the specified path,
+    /// having the specified mode with read, write, or read/write access and the specified sharing option.
+    /// </summary>
+    /// <param name="path">The path of a file to open.</param>
+    /// <param name="mode">
+    /// The <see cref="FileMode"/> value that specifies whether a file is created if one does not exist,
+    /// and determines whether the contents of existing files are retained or overwritten.
+    /// </param>
+    /// <param name="access">The <see cref="FileAccess"/> value that specifies the operations that can be performed on the file.</param>
+    /// <param name="share">The <see cref="FileShare"/> value specifying the type of access other streams have to the file.</param>
+    /// <returns>
+    /// A <see cref="Stream"/> on the specified path,
+    /// having the specified mode with read, write, or read/write access and the specified sharing option.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
+    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
+    /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
+    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
+    /// <exception cref="UnauthorizedAccessException"><paramref name="path"/> is a directory name.</exception>
+    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
     Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share);
+
+    /// <summary>
+    /// Asynchronously opens a <see cref="Stream"/> on the specified path,
+    /// having the specified mode with read, write, or read/write access and the specified sharing option.
+    /// </summary>
+    /// <inheritdoc cref="OpenFile(string, FileMode, FileAccess, FileShare)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="mode"><inheritdoc/></param>
+    /// <param name="access"><inheritdoc/></param>
+    /// <param name="share"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<Stream> OpenFileAsync(string path, FileMode mode, FileAccess access, FileShare share, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="File.Delete(string)"/>
     void DeleteFile(string path);

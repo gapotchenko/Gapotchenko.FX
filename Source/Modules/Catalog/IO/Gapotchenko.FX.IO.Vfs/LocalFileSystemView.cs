@@ -8,6 +8,7 @@
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Memory;
+using Gapotchenko.FX.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -54,6 +55,14 @@ sealed class LocalFileSystemView : FileSystemViewKit
 #endif
 
     public override Stream ReadFile(string path) => File.OpenRead(path);
+
+    public override async Task<Stream> ReadFileAsync(string path, CancellationToken cancellationToken)
+    {
+        return await TaskBridge.ExecuteAsync(
+            () => File.OpenRead(path),
+            cancellationToken)
+            .ConfigureAwait(false);
+    }
 
     public override Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) => File.Open(path, mode, access, share);
 

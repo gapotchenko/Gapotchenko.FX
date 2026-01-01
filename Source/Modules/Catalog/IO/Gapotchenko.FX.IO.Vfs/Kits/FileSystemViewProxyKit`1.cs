@@ -74,8 +74,16 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual Stream ReadFile(string path) => BaseView.ReadFile(path);
 
     /// <inheritdoc/>
+    public virtual Task<Stream> ReadFileAsync(string path, CancellationToken cancellationToken = default) =>
+        BaseView.ReadFileAsync(path, cancellationToken);
+
+    /// <inheritdoc/>
     public virtual Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) =>
         BaseView.OpenFile(path, mode, access, share);
+
+    /// <inheritdoc/>
+    public virtual Task<Stream> OpenFileAsync(string path, FileMode mode, FileAccess access, FileShare share, CancellationToken cancellationToken = default) =>
+        BaseView.OpenFileAsync(path, mode, access, share, cancellationToken);
 
     /// <inheritdoc/>
     public virtual void DeleteFile(string path) => BaseView.DeleteFile(path);

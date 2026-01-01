@@ -90,8 +90,27 @@ public interface IReadOnlyFileSystemView
     /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
     IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);
 
-    /// <inheritdoc cref="File.OpenRead(string)"/>
+    /// <summary>
+    /// Opens an existing file for reading.
+    /// </summary>
+    /// <param name="path">The file to be opened for reading.</param>
+    /// <returns>A read-only <see cref="Stream"/> on the specified path.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
+    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
+    /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
+    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
+    /// <exception cref="UnauthorizedAccessException"><paramref name="path"/> is a directory name.</exception>
+    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
     Stream ReadFile(string path);
+
+    /// <summary>
+    /// Asynchronously opens an existing file for reading.
+    /// </summary>
+    /// <inheritdoc cref="ReadFile(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token</param>
+    Task<Stream> ReadFileAsync(string path, CancellationToken cancellationToken = default);
 
     #endregion
 
