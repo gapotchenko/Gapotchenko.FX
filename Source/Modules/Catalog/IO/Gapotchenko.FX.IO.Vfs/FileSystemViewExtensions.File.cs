@@ -458,6 +458,28 @@ partial class FileSystemViewExtensions
         }
     }
 
+    /// <inheritdoc cref="File.AppendAllText(string, string)"/>
+    /// <param name="view">The file system view.</param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static async Task AppendAllFileTextAsync(this IFileSystemView view, string path, ReadOnlyMemory<char> contents, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+#if NET9_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.AppendAllTextAsync(path, contents, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            using var writer = await view.AppendTextFileAsync(path, cancellationToken).ConfigureAwait(false);
+            await writer.WriteAsync(contents, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
     /// <inheritdoc cref="File.AppendAllText(string, string, Encoding)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
