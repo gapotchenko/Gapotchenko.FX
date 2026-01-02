@@ -9,6 +9,8 @@ Release date: not released yet
 - Added string parsing functionality for `Interval<T>` and `ValueInterval<T>` types
 - Added `SemanticVersion.Parse` and `SemanticVersion.TryParse` method overloads accepting `ReadOnlySpan<char>` parameters
 - Improved `SemanticVersion` type converter
+- Polyfills:
+    - Added `Write(ReadOnlySpan<char>)` and `WriteLine(ReadOnlySpan<char>)` polyfill methods for `System.IO.TextWriter` type
 
 ## 2025
 
