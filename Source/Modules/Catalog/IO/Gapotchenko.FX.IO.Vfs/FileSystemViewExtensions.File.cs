@@ -157,7 +157,17 @@ partial class FileSystemViewExtensions
             return new StreamWriter(await AppendFileCoreAsync(view, path, cancellationToken).ConfigureAwait(false));
     }
 
-    static StreamWriter AppendTextFile(this IFileSystemView view, string path, Encoding encoding)
+    /// <summary>
+    /// Creates a <see cref="StreamWriter"/> that appends text using the specified encoding to an existing file,
+    /// or to a new file if the specified file does not exist.
+    /// </summary>
+    /// <returns>A stream writer that appends text using the specified encoding to the specified file or to a new file.</returns>
+    /// <inheritdoc cref="AppendTextFile(IFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="encoding">The character encoding to use.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="encoding"/> is <see langword="null"/>.</exception>
+    public static StreamWriter AppendTextFile(this IFileSystemView view, string path, Encoding encoding)
     {
         ArgumentNullException.ThrowIfNull(view);
         ArgumentNullException.ThrowIfNull(encoding);
@@ -169,6 +179,29 @@ partial class FileSystemViewExtensions
 
     static Stream AppendFileCore(IFileSystemView view, string path) =>
         view.OpenFile(path, FileMode.Append, FileAccess.Write, FileShare.Read);
+
+    /// <summary>
+    /// Asynchronously creates a <see cref="StreamWriter"/> that appends text using the specified encoding to an existing file,
+    /// or to a new file if the specified file does not exist.
+    /// </summary>
+    /// <inheritdoc cref="AppendTextFile(IFileSystemView, string, Encoding)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="encoding"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static async Task<StreamWriter> AppendTextFileAsync(
+        this IFileSystemView view,
+        string path,
+        Encoding encoding,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+        ArgumentNullException.ThrowIfNull(encoding);
+
+        return new StreamWriter(
+            await AppendFileCoreAsync(view, path, cancellationToken).ConfigureAwait(false),
+            encoding);
+    }
 
     static Task<Stream> AppendFileCoreAsync(IFileSystemView view, string path, CancellationToken cancellationToken) =>
         view.OpenFileAsync(path, FileMode.Append, FileAccess.Write, FileShare.Read, cancellationToken);
