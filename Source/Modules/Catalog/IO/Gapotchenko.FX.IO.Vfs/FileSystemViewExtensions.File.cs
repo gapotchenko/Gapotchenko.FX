@@ -346,15 +346,13 @@ partial class FileSystemViewExtensions
 
     #region Read/write/append text
 
-    #region Reat text
+    #region Read text
 
     /// <inheritdoc cref="File.ReadAllText(string)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     public static string ReadAllFileText(this IReadOnlyFileSystemView view, string path)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
             return File.ReadAllText(path);
         else
@@ -367,8 +365,6 @@ partial class FileSystemViewExtensions
     /// <param name="encoding"><inheritdoc/></param>
     public static string ReadAllFileText(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
             return File.ReadAllText(path, encoding);
         else
@@ -377,6 +373,8 @@ partial class FileSystemViewExtensions
 
     static string ReadAllFileTextCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
+        ArgumentNullException.ThrowIfNull(view);
+
         using var reader = new StreamReader(view.ReadFile(path), encoding);
         return reader.ReadToEnd();
     }
@@ -391,8 +389,6 @@ partial class FileSystemViewExtensions
     /// <param name="contents"><inheritdoc/></param>
     public static void WriteAllFileText(this IFileSystemView view, string path, string? contents)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
         {
             File.WriteAllText(path, contents);
@@ -411,8 +407,6 @@ partial class FileSystemViewExtensions
     /// <param name="encoding"><inheritdoc/></param>
     public static void WriteAllFileText(this IFileSystemView view, string path, string? contents, Encoding encoding)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
         {
             File.WriteAllText(path, contents, encoding);
@@ -594,17 +588,23 @@ partial class FileSystemViewExtensions
 
     #region Read/write/append lines
 
+    #region Read lines
+
     /// <inheritdoc cref="File.ReadLines(string)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     public static IEnumerable<string> ReadFileLines(this IReadOnlyFileSystemView view, string path)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
+        {
             return File.ReadLines(path);
+        }
         else
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
             return ReadFileLinesCore(view, path, Encoding.UTF8);
+        }
     }
 
     /// <inheritdoc cref="File.ReadLines(string, Encoding)"/>
@@ -613,12 +613,16 @@ partial class FileSystemViewExtensions
     /// <param name="encoding"><inheritdoc/></param>
     public static IEnumerable<string> ReadFileLines(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
+        {
             return File.ReadAllLines(path, encoding);
+        }
         else
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
             return ReadFileLinesCore(view, path, encoding ?? throw new ArgumentNullException(nameof(encoding)));
+        }
     }
 
     static IEnumerable<string> ReadFileLinesCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
@@ -634,12 +638,16 @@ partial class FileSystemViewExtensions
     /// <param name="path"><inheritdoc/></param>
     public static string[] ReadAllFileLines(this IReadOnlyFileSystemView view, string path)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
+        {
             return File.ReadAllLines(path);
+        }
         else
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
             return ReadAllFileLinesCore(view, path, Encoding.UTF8);
+        }
     }
 
     /// <inheritdoc cref="File.ReadAllLines(string, Encoding)"/>
@@ -648,12 +656,16 @@ partial class FileSystemViewExtensions
     /// <param name="encoding"><inheritdoc/></param>
     public static string[] ReadAllFileLines(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
+        {
             return File.ReadAllLines(path, encoding);
+        }
         else
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
             return ReadAllFileLinesCore(view, path, encoding ?? throw new ArgumentNullException(nameof(encoding)));
+        }
     }
 
     static string[] ReadAllFileLinesCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
@@ -667,20 +679,23 @@ partial class FileSystemViewExtensions
         return lines.ToArray();
     }
 
+    #endregion
+
+    #region Write lines
+
     /// <inheritdoc cref="File.WriteAllLines(string, IEnumerable{string})"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
     public static void WriteAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
         {
             File.WriteAllLines(path, contents!);
         }
         else
         {
+            ArgumentNullException.ThrowIfNull(view);
             ArgumentNullException.ThrowIfNull(contents);
 
             using var writer = view.CreateTextFile(path);
@@ -695,14 +710,13 @@ partial class FileSystemViewExtensions
     /// <param name="encoding"><inheritdoc/></param>
     public static void WriteAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents, Encoding encoding)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
         {
             File.WriteAllLines(path, contents!, encoding);
         }
         else
         {
+            ArgumentNullException.ThrowIfNull(view);
             ArgumentNullException.ThrowIfNull(contents);
 
             using var writer = view.CreateTextFile(path, encoding);
@@ -716,20 +730,28 @@ partial class FileSystemViewExtensions
             writer.WriteLine(line);
     }
 
-    /// <inheritdoc cref="File.AppendAllLines(string, IEnumerable{string})"/>
+    #endregion
+
+    #region Append lines
+
+    /// <summary>
+    /// Appends lines to a file, and then closes the file.
+    /// If the specified file does not exist, this method creates a file, writes the specified lines to the file, and then closes the file.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
-    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="path">The file to append the lines to. The file is created if it doesn't already exist.</param>
+    /// <param name="contents">The lines to append to the file.</param>
+    /// <inheritdoc cref="AppendTextFile(IFileSystemView, string)" path="/exception"/>
+    /// <exception cref="ArgumentNullException"><paramref name="contents"/> is <see langword="null"/>.</exception>
     public static void AppendAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
         {
             File.AppendAllLines(path, contents!);
         }
         else
         {
+            ArgumentNullException.ThrowIfNull(view);
             ArgumentNullException.ThrowIfNull(contents);
 
             using var writer = view.AppendTextFile(path);
@@ -737,27 +759,34 @@ partial class FileSystemViewExtensions
         }
     }
 
-    /// <inheritdoc cref="File.AppendAllLines(string, IEnumerable{string}, Encoding)"/>
-    /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
-    /// <param name="contents"><inheritdoc/></param>
-    /// <param name="encoding"><inheritdoc/></param>
+    /// <summary>
+    /// Appends lines to a file by using a specified encoding, and then closes the file.
+    /// If the specified file does not exist, this method creates a file, writes the specified lines to the file, and then closes the file.
+    /// </summary>
+    /// <inheritdoc cref="AppendAllFileLines(IFileSystemView, string, IEnumerable{string?})"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path">The file to append the lines to. The file is created if it doesn't already exist.</param>
+    /// <param name="contents">The lines to append to the file.</param>
+    /// <param name="encoding">The character encoding to use.</param>
+    /// <inheritdoc cref="AppendTextFile(IFileSystemView, string, Encoding)" path="/exception"/>
+    /// <exception cref="ArgumentNullException"><paramref name="contents"/> is <see langword="null"/>.</exception>
     public static void AppendAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents, Encoding encoding)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
         {
             File.AppendAllLines(path, contents!, encoding);
         }
         else
         {
+            ArgumentNullException.ThrowIfNull(view);
             ArgumentNullException.ThrowIfNull(contents);
 
             using var writer = view.AppendTextFile(path, encoding);
             WriteAllLinesCore(writer, contents);
         }
     }
+
+    #endregion
 
     #endregion
 
