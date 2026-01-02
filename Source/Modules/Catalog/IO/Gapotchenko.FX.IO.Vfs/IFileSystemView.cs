@@ -42,7 +42,7 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
     /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
-    /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
+    /// <exception cref="IOException">An I/O error occurred while working the file.</exception>
     /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
     /// <exception cref="UnauthorizedAccessException"><paramref name="path"/> is a directory name.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>

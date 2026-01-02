@@ -123,12 +123,7 @@ partial class FileSystemViewExtensions
     /// <param name="view">The file system view.</param>
     /// <param name="path">The path to the file to append to.</param>
     /// <returns>A stream writer that appends UTF-8 encoded text to the specified file or to a new file.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
-    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to a non-existing directory or to an unmapped drive.</exception>
-    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
+    /// <inheritdoc cref="IFileSystemView.OpenFile(string, FileMode, FileAccess, FileShare)" path="/exception"/>
     public static StreamWriter AppendTextFile(this IFileSystemView view, string path)
     {
         ArgumentNullException.ThrowIfNull(view);
@@ -433,14 +428,16 @@ partial class FileSystemViewExtensions
 
     #region Append text
 
-    /// <inheritdoc cref="File.AppendAllText(string, string)"/>
+    /// <summary>
+    /// Opens a file, appends the specified string to the file, and then closes the file.
+    /// If the file does not exist, this method creates a file, writes the specified string to the file, then closes the file.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
-    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="path">The file to append to.</param>
+    /// <param name="contents">The text to append to the file.</param>
+    /// <inheritdoc cref="AppendTextFile(IFileSystemView, string)" path="/exception"/>
     public static void AppendAllFileText(this IFileSystemView view, string path, string? contents)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
         {
             File.AppendAllText(path, contents);
@@ -452,15 +449,13 @@ partial class FileSystemViewExtensions
         }
     }
 
-    /// <inheritdoc cref="File.AppendAllText(string, string)"/>
-    /// <param name="view">The file system view.</param>
+    /// <inheritdoc cref="AppendAllFileText(IFileSystemView, string, string?)"/>
+    /// <param name="view"><inheritdoc/></param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
     /// <param name="cancellationToken">The cancellation token.</param>
     public static async Task AppendAllFileTextAsync(this IFileSystemView view, string path, string? contents, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
         if (view is LocalFileSystemView)
         {
@@ -480,14 +475,9 @@ partial class FileSystemViewExtensions
         }
     }
 
-    /// <inheritdoc cref="File.AppendAllText(string, string)"/>
-    /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
-    /// <param name="contents"><inheritdoc/></param>
+    /// <inheritdoc cref="AppendAllFileText(IFileSystemView, string, string?)"/>
     public static void AppendAllFileText(this IFileSystemView view, string path, ReadOnlySpan<char> contents)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
 #if NET9_0_OR_GREATER
         if (view is LocalFileSystemView)
         {
@@ -501,15 +491,9 @@ partial class FileSystemViewExtensions
         }
     }
 
-    /// <inheritdoc cref="File.AppendAllText(string, string)"/>
-    /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
-    /// <param name="contents"><inheritdoc/></param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <inheritdoc cref="AppendAllFileTextAsync(IFileSystemView, string, string?, CancellationToken)"/>
     public static async Task AppendAllFileTextAsync(this IFileSystemView view, string path, ReadOnlyMemory<char> contents, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
 #if NET9_0_OR_GREATER
         if (view is LocalFileSystemView)
         {
@@ -523,15 +507,13 @@ partial class FileSystemViewExtensions
         }
     }
 
-    /// <inheritdoc cref="File.AppendAllText(string, string, Encoding)"/>
+    /// <inheritdoc cref="AppendAllFileText(IFileSystemView, string, string?)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
-    /// <param name="encoding"><inheritdoc/></param>
+    /// <param name="encoding">The character encoding to use.</param>
     public static void AppendAllFileText(this IFileSystemView view, string path, string? contents, Encoding encoding)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
         {
             File.AppendAllText(path, contents, encoding);
@@ -543,15 +525,9 @@ partial class FileSystemViewExtensions
         }
     }
 
-    /// <inheritdoc cref="File.AppendAllText(string, string, Encoding)"/>
-    /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
-    /// <param name="contents"><inheritdoc/></param>
-    /// <param name="encoding"><inheritdoc/></param>
+    /// <inheritdoc cref="AppendAllFileText(IFileSystemView, string, string?, Encoding)"/>
     public static void AppendAllFileText(this IFileSystemView view, string path, ReadOnlySpan<char> contents, Encoding encoding)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
 #if NET9_0_OR_GREATER
         if (view is LocalFileSystemView)
         {
