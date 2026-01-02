@@ -508,7 +508,7 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="AppendAllFileText(IFileSystemView, string, string?)"/>
-    /// <param name="view">The file system view.</param>
+    /// <param name="view"><inheritdoc/></param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
     /// <param name="encoding">The character encoding to use.</param>
@@ -526,6 +526,32 @@ partial class FileSystemViewExtensions
     }
 
     /// <inheritdoc cref="AppendAllFileText(IFileSystemView, string, string?, Encoding)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="encoding"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static async Task AppendAllFileTextAsync(
+        this IFileSystemView view,
+        string path,
+        string? contents,
+        Encoding encoding,
+        CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.AppendAllTextAsync(path, contents, encoding, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            using var writer = await view.AppendTextFileAsync(path, encoding, cancellationToken).ConfigureAwait(false);
+            await writer.WriteAsync(contents.AsMemory(), cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    /// <inheritdoc cref="AppendAllFileText(IFileSystemView, string, string?, Encoding)"/>
     public static void AppendAllFileText(this IFileSystemView view, string path, ReadOnlySpan<char> contents, Encoding encoding)
     {
 #if NET9_0_OR_GREATER
@@ -538,6 +564,27 @@ partial class FileSystemViewExtensions
         {
             using var writer = view.AppendTextFile(path, encoding);
             writer.Write(contents);
+        }
+    }
+
+    /// <inheritdoc cref="AppendTextFileAsync(IFileSystemView, string, Encoding, CancellationToken)"/>
+    public static async Task AppendAllFileTextAsync(
+        this IFileSystemView view,
+        string path,
+        ReadOnlyMemory<char> contents,
+        Encoding encoding,
+        CancellationToken cancellationToken = default)
+    {
+#if NET9_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.AppendAllTextAsync(path, contents, encoding, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            using var writer = await view.AppendTextFileAsync(path, encoding, cancellationToken).ConfigureAwait(false);
+            await writer.WriteAsync(contents, cancellationToken).ConfigureAwait(false);
         }
     }
 
