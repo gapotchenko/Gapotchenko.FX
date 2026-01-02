@@ -409,6 +409,27 @@ partial class FileSystemViewExtensions
         }
     }
 
+    /// <inheritdoc cref="File.AppendAllText(string, string)"/>
+    /// <param name="view">The file system view.</param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
+    public static void AppendAllFileText(this IFileSystemView view, string path, ReadOnlySpan<char> contents)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+#if NET9_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            File.AppendAllText(path, contents);
+        }
+        else
+#endif
+        {
+            using var writer = view.AppendTextFile(path);
+            writer.Write(contents);
+        }
+    }
+
     /// <inheritdoc cref="File.AppendAllText(string, string, Encoding)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
@@ -423,6 +444,28 @@ partial class FileSystemViewExtensions
             File.AppendAllText(path, contents, encoding);
         }
         else
+        {
+            using var writer = view.AppendTextFile(path, encoding);
+            writer.Write(contents);
+        }
+    }
+
+    /// <inheritdoc cref="File.AppendAllText(string, string, Encoding)"/>
+    /// <param name="view">The file system view.</param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="encoding"><inheritdoc/></param>
+    public static void AppendAllFileText(this IFileSystemView view, string path, ReadOnlySpan<char> contents, Encoding encoding)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+#if NET9_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            File.AppendAllText(path, contents, encoding);
+        }
+        else
+#endif
         {
             using var writer = view.AppendTextFile(path, encoding);
             writer.Write(contents);
