@@ -10,7 +10,9 @@
 #define TFF_TEXTWRITER_SPAN
 #endif
 
+using Gapotchenko.FX.Threading.Tasks;
 using System.Buffers;
+using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.IO;
 
@@ -84,6 +86,73 @@ public static class TextWriterPolyfills
         {
             pool.Return(array);
         }
+#endif
+    }
+
+    /// <summary>
+    /// Asynchronously writes the text representation of a character memory region to the stream.
+    /// </summary>
+    /// <param name="writer">The text writer.</param>
+    /// <param name="buffer">The character memory region to write to the stream.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+#if TFF_TEXTWRITER_SPAN
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static Task WriteAsync(
+#if !TFF_TEXTWRITER_SPAN
+        this
+#endif
+        TextWriter writer,
+        ReadOnlyMemory<char> buffer,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(writer);
+
+#if TFF_TEXTWRITER_SPAN
+        return writer.WriteAsync(buffer, cancellationToken);
+#else
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+        
+        if (MemoryMarshal.TryGetArray(buffer, out var segment))
+            return writer.WriteAsync(segment.Array!, segment.Offset, segment.Count);
+        else
+            return TaskBridge.ExecuteAsync(() => writer.Write(buffer.Span), cancellationToken);
+#endif
+    }
+
+    /// <summary>
+    /// Asynchronously writes the text representation of a character memory region to the stream,
+    /// followed by a line terminator.
+    /// </summary>
+    /// <param name="writer">The text writer.</param>
+    /// <param name="buffer">The character memory region to write to the stream.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+#if TFF_TEXTWRITER_SPAN
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static Task WriteLineAsync(
+#if !TFF_TEXTWRITER_SPAN
+        this
+#endif
+        TextWriter writer,
+        ReadOnlyMemory<char> buffer,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(writer);
+
+#if TFF_TEXTWRITER_SPAN
+        return writer.WriteLineAsync(buffer, cancellationToken);
+#else
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled(cancellationToken);
+
+        if (MemoryMarshal.TryGetArray(buffer, out var segment))
+            return writer.WriteLineAsync(segment.Array!, segment.Offset, segment.Count);
+        else
+            return TaskBridge.ExecuteAsync(() => writer.WriteLine(buffer.Span), cancellationToken);
 #endif
     }
 }
