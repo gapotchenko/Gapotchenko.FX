@@ -413,6 +413,34 @@ partial class FileSystemViewExtensions
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static async Task AppendAllFileTextAsync(this IFileSystemView view, string path, string? contents, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.AppendAllTextAsync(path, contents, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            using var writer = await view.AppendTextFileAsync(path, cancellationToken).ConfigureAwait(false);
+            await
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
+                writer.WriteAsync(contents.AsMemory(), cancellationToken)
+#else
+                writer.WriteAsync(contents)
+#endif
+                .ConfigureAwait(false);
+        }
+    }
+
+    /// <inheritdoc cref="File.AppendAllText(string, string)"/>
+    /// <param name="view">The file system view.</param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
     public static void AppendAllFileText(this IFileSystemView view, string path, ReadOnlySpan<char> contents)
     {
         ArgumentNullException.ThrowIfNull(view);
