@@ -351,6 +351,8 @@ partial class FileSystemViewExtensions
 
     #region Read/write/append text
 
+    #region Reat text
+
     /// <inheritdoc cref="File.ReadAllText(string)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
@@ -383,6 +385,10 @@ partial class FileSystemViewExtensions
         using var reader = new StreamReader(view.ReadFile(path), encoding);
         return reader.ReadToEnd();
     }
+
+    #endregion
+
+    #region Write text
 
     /// <inheritdoc cref="File.WriteAllText(string, string)"/>
     /// <param name="view">The file system view.</param>
@@ -422,6 +428,10 @@ partial class FileSystemViewExtensions
             writer.Write(contents);
         }
     }
+
+    #endregion
+
+    #region Append text
 
     /// <inheritdoc cref="File.AppendAllText(string, string)"/>
     /// <param name="view">The file system view.</param>
@@ -554,6 +564,8 @@ partial class FileSystemViewExtensions
             writer.Write(contents);
         }
     }
+
+    #endregion
 
     #endregion
 
