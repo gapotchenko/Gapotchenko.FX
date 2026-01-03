@@ -56,15 +56,14 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override Stream ReadFile(string path) => File.OpenRead(path);
 
-    public override async Task<Stream> ReadFileAsync(string path, CancellationToken cancellationToken)
-    {
-        return await TaskBridge.ExecuteAsync(
-            () => File.OpenRead(path),
-            cancellationToken)
-            .ConfigureAwait(false);
-    }
-
     public override Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) => File.Open(path, mode, access, share);
+
+    public override Task<Stream> OpenFileAsync(string path, FileMode mode, FileAccess access, FileShare share, CancellationToken cancellationToken)
+    {
+        return TaskBridge.ExecuteAsync(
+            Stream () => new FileStream(path, mode, access, share, 4096, true),
+            cancellationToken);
+    }
 
     public override void DeleteFile(string path) => File.Delete(path);
 
