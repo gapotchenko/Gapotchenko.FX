@@ -98,9 +98,9 @@ partial class FileSystemViewExtensions
     /// <param name="path"><inheritdoc/></param>
     public static Stream CreateFile(this IFileSystemView view, string path)
     {
-        if (view is null)
-            throw new ArgumentNullException(nameof(view));
-        else if (view is LocalFileSystemView)
+        ArgumentNullException.ThrowIfNull(view);
+
+        if (view is LocalFileSystemView)
             return File.Create(path);
         else
             return view.OpenFile(path, FileMode.Create);
@@ -166,10 +166,7 @@ partial class FileSystemViewExtensions
     {
         ArgumentNullException.ThrowIfNull(view);
 
-        if (view is LocalFileSystemView)
-            return await TaskBridge.ExecuteAsync(() => File.AppendText(path), cancellationToken).ConfigureAwait(false);
-        else
-            return new StreamWriter(await AppendFileCoreAsync(view, path, cancellationToken).ConfigureAwait(false));
+        return new StreamWriter(await AppendFileCoreAsync(view, path, cancellationToken).ConfigureAwait(false));
     }
 
     /// <summary>

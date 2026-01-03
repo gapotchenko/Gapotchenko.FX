@@ -122,6 +122,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual void CreateDirectory(string path) => BaseView.CreateDirectory(path);
 
     /// <inheritdoc/>
+    public virtual Task CreateDirectoryAsync(string path, CancellationToken cancellationToken = default) =>
+        BaseView.CreateDirectoryAsync(path, cancellationToken);
+
+    /// <inheritdoc/>
     public virtual void DeleteDirectory(string path, bool recursive) => BaseView.DeleteDirectory(path, recursive);
 
     /// <inheritdoc/>

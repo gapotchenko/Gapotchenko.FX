@@ -172,6 +172,10 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract void CreateDirectory(string path);
 
     /// <inheritdoc/>
+    public virtual Task CreateDirectoryAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => CreateDirectory(path), cancellationToken);
+
+    /// <inheritdoc/>
     public abstract void DeleteDirectory(string path, bool recursive);
 
     /// <inheritdoc/>

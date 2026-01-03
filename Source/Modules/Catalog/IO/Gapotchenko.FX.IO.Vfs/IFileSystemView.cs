@@ -103,6 +103,15 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <inheritdoc cref="Directory.CreateDirectory(string)"/>
     void CreateDirectory(string path);
 
+    /// <summary>
+    /// Asynchronously creates all directories and subdirectories in the specified path unless they already exist.
+    /// </summary>
+    /// <inheritdoc cref="CreateDirectory(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous directory creation operation.</returns>
+    Task CreateDirectoryAsync(string path, CancellationToken cancellationToken = default);
+
     /// <inheritdoc cref="Directory.Delete(string, bool)"/>
     void DeleteDirectory(string path, bool recursive);
 
@@ -140,7 +149,7 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     #region Entries
 
     /// <summary>
-    /// Sets the date and time that the specified file or directory was last written to.
+    /// Sets the date and time when the specified file or directory was last written to.
     /// </summary>
     /// <inheritdoc cref="Directory.SetLastWriteTimeUtc(string, DateTime)"/>
     /// <param name="path"><inheritdoc/></param>
@@ -151,7 +160,7 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     void SetLastWriteTime(string path, DateTime lastWriteTime);
 
     /// <summary>
-    /// Sets the date and time that the specified file or directory was created.
+    /// Sets the date and time when the specified file or directory was created.
     /// </summary>
     /// <inheritdoc cref="Directory.SetCreationTimeUtc(string, DateTime)"/>
     /// <param name="path"><inheritdoc/></param>
@@ -162,7 +171,7 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     void SetCreationTime(string path, DateTime creationTime);
 
     /// <summary>
-    /// Sets the date and time that the specified file or directory was last accessed.
+    /// Sets the date and time when the specified file or directory was last accessed.
     /// </summary>
     /// <inheritdoc cref="Directory.SetLastAccessTimeUtc(string, DateTime)"/>
     /// <param name="path"><inheritdoc/></param>

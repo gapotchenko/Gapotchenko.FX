@@ -156,6 +156,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         base.CreateDirectory(path);
     }
 
+    public override Task CreateDirectoryAsync(string path, CancellationToken cancellationToken = default)
+    {
+        EnsureCanWrite();
+        return base.CreateDirectoryAsync(path, cancellationToken);
+    }
+
     public override void DeleteDirectory(string path, bool recursive)
     {
         EnsureCanWrite();
