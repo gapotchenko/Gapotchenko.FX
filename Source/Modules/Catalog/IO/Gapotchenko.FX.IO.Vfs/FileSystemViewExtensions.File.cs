@@ -24,17 +24,37 @@ partial class FileSystemViewExtensions
 {
     #region Open
 
-    /// <inheritdoc cref="File.OpenWrite(string)"/>
+    /// <summary>
+    /// Opens an existing file or creates a new file for writing.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
+    /// <param name="path">The file to be opened for writing.</param>
+    /// <returns>An unshared <see cref="Stream"/> object on the specified path with <see cref="FileAccess.Write"/> access.</returns>
+    /// <inheritdoc cref="IFileSystemView.OpenFile(string, FileMode, FileAccess, FileShare)" path="/exception"/>
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
     public static Stream WriteFile(this IFileSystemView view, string path)
+    {
+        if (view is LocalFileSystemView)
+        {
+            return File.OpenWrite(path);
+        }
+        else
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
+            return view.OpenFile(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+        }
+    }
+
+    /// <summary>
+    /// Asynchronously opens an existing file or creates a new file for writing.
+    /// </summary>
+    /// <inheritdoc cref="WriteFile(IFileSystemView, string)"/>
+    public static Task<Stream> WriteFileAsync(this IFileSystemView view, string path, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(view);
 
-        if (view is LocalFileSystemView)
-            return File.OpenWrite(path);
-        else
-            return view.OpenFile(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+        return view.OpenFileAsync(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, cancellationToken);
     }
 
     /// <inheritdoc cref="File.OpenText(string)"/>
