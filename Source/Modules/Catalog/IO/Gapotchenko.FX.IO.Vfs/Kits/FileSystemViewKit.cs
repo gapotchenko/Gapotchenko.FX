@@ -398,7 +398,15 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual DateTime GetCreationTime(string path) => throw new NotSupportedException();
 
     /// <inheritdoc/>
+    public virtual Task<DateTime> GetCreationTimeAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => GetCreationTime(path), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual void SetCreationTime(string path, DateTime creationTime) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public Task SetCreationTimeAsync(string path, DateTime creationTime, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => SetCreationTime(path, creationTime), cancellationToken);
 
     /// <inheritdoc/>
     public virtual DateTime GetLastWriteTime(string path) => throw new NotSupportedException();

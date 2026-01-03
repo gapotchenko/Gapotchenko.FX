@@ -227,6 +227,11 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="File.GetCreationTimeUtc(string)"/>
     DateTime GetCreationTime(string path);
 
+    /// <inheritdoc cref="GetCreationTime(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<DateTime> GetCreationTimeAsync(string path, CancellationToken cancellationToken = default);
+
     /// <remarks>
     /// If the file or directory described in the <paramref name="path"/> parameter does not exist,
     /// this method returns <see cref="DateTime.MinValue"/>.

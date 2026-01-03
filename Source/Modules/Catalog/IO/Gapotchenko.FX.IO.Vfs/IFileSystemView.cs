@@ -171,6 +171,15 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     void SetCreationTime(string path, DateTime creationTime);
 
     /// <summary>
+    /// Asynchronously sets the date and time when the specified file or directory was created.
+    /// </summary>
+    /// <inheritdoc cref="SetCreationTime(string, DateTime)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="creationTime"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task SetCreationTimeAsync(string path, DateTime creationTime, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Sets the date and time when the specified file or directory was last accessed.
     /// </summary>
     /// <inheritdoc cref="Directory.SetLastAccessTimeUtc(string, DateTime)"/>
