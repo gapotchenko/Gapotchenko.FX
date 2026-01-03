@@ -70,18 +70,39 @@ partial class FileSystemViewExtensions
             return new StreamReader(view.ReadFile(path), Encoding.UTF8);
     }
 
-    /// <inheritdoc cref="File.Open(string, FileMode)"/>
-    /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
-    /// <param name="mode"><inheritdoc/></param>
+    /// <summary>
+    /// Opens a <see cref="Stream"/> on the specified path with read/write access with no sharing.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="Stream"/> opened in the specified mode and path, with read/write access and not shared.
+    /// </returns>
+    /// <inheritdoc cref="OpenFile(IFileSystemView, string, FileMode, FileAccess)"/>
     public static Stream OpenFile(this IFileSystemView view, string path, FileMode mode) =>
         OpenFile(view, path, mode, FileAccess.ReadWrite);
 
-    /// <inheritdoc cref="File.Open(string, FileMode, FileAccess)"/>
+    /// <summary>
+    /// Asynchronously opens a <see cref="Stream"/> on the specified path with read/write access with no sharing.
+    /// </summary>
+    /// <inheritdoc cref="OpenFile(IFileSystemView, string, FileMode)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="mode"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static Task<Stream> OpenFileAsync(this IFileSystemView view, string path, FileMode mode, CancellationToken cancellationToken = default) =>
+        OpenFileAsync(view, path, mode, FileAccess.ReadWrite, cancellationToken);
+
+    /// <summary>
+    /// Opens a <see cref="Stream"/> on the specified path, with the specified mode and access with no sharing.
+    /// </summary>
+    /// <returns>
+    /// An unshared <see cref="Stream"/> that provides access to the specified file, with the specified mode and access.
+    /// </returns>
+    /// <inheritdoc cref="IFileSystemView.OpenFile(string, FileMode, FileAccess, FileShare)" />
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="mode"><inheritdoc/></param>
     /// <param name="access"><inheritdoc/></param>
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
     public static Stream OpenFile(this IFileSystemView view, string path, FileMode mode, FileAccess access)
     {
         ArgumentNullException.ThrowIfNull(view);
@@ -89,13 +110,38 @@ partial class FileSystemViewExtensions
         return view.OpenFile(path, mode, access, FileShare.None);
     }
 
+    /// <summary>
+    /// Asynchronously opens a <see cref="Stream"/> on the specified path, with the specified mode and access with no sharing.
+    /// </summary>
+    /// <inheritdoc cref="OpenFile(IFileSystemView, string, FileMode, FileAccess)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="mode"><inheritdoc/></param>
+    /// <param name="access"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static Task<Stream> OpenFileAsync(
+        this IFileSystemView view,
+        string path,
+        FileMode mode,
+        FileAccess access,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        return view.OpenFileAsync(path, mode, access, FileShare.None, cancellationToken);
+    }
+
     #endregion
 
     #region Create
 
-    /// <inheritdoc cref="File.Create(string)"/>
+    /// <summary>
+    /// Creates, or truncates and overwrites, a file in the specified path.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
+    /// <param name="path">The path and name of the file to create.</param>
+    /// <returns>A <see cref="Stream"/> that provides read/write access to the file specified in <paramref name="path"/>.</returns>
+    /// <inheritdoc cref="IFileSystemView.OpenFile(string, FileMode, FileAccess, FileShare)" path="/exception"/>
     public static Stream CreateFile(this IFileSystemView view, string path)
     {
         ArgumentNullException.ThrowIfNull(view);
@@ -106,9 +152,29 @@ partial class FileSystemViewExtensions
             return view.OpenFile(path, FileMode.Create);
     }
 
-    /// <inheritdoc cref="File.CreateText(string)"/>
-    /// <param name="view">The file system view.</param>
+    /// <summary>
+    /// Asynchronously creates, or truncates and overwrites, a file in the specified path.
+    /// </summary>
+    /// <inheritdoc cref="CreateFile(IFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
     /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static Task<Stream> CreateFileAsync(this IFileSystemView view, string path, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        return view.OpenFileAsync(path, FileMode.Create, cancellationToken);
+    }
+
+    /// <summary>
+    /// Creates or opens a file for writing UTF-8 encoded text.
+    /// If the file already exists, its contents are replaced.
+    /// </summary>
+    /// <param name="view">The file system view.</param>
+    /// <param name="path">The file to be opened for writing.</param>
+    /// <returns>A <see cref="StreamWriter"/> that writes to the specified file using UTF-8 encoding.</returns>
+    /// <inheritdoc cref="IFileSystemView.OpenFile(string, FileMode, FileAccess, FileShare)" path="/exception"/>
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
     public static StreamWriter CreateTextFile(this IFileSystemView view, string path)
     {
         ArgumentNullException.ThrowIfNull(view);
@@ -117,6 +183,24 @@ partial class FileSystemViewExtensions
             return File.CreateText(path);
         else
             return new StreamWriter(CreateFileForWritingCore(view, path));
+    }
+
+    /// <summary>
+    /// Asynchronously creates or opens a file for writing UTF-8 encoded text.
+    /// If the file already exists, its contents are replaced.
+    /// </summary>
+    /// <inheritdoc cref="CreateTextFile(IFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static async Task<StreamWriter> CreateTextFileAsync(
+        this IFileSystemView view,
+        string path,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        return new StreamWriter(await CreateFileForWritingCoreAsync(view, path, cancellationToken).ConfigureAwait(false));
     }
 
     static StreamWriter CreateTextFile(this IFileSystemView view, string path, Encoding encoding)
@@ -129,8 +213,25 @@ partial class FileSystemViewExtensions
             encoding);
     }
 
+    static async Task<StreamWriter> CreateTextFileAsync(
+        this IFileSystemView view,
+        string path,
+        Encoding encoding,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+        ArgumentNullException.ThrowIfNull(encoding);
+
+        return new StreamWriter(
+            await CreateFileForWritingCoreAsync(view, path, cancellationToken).ConfigureAwait(false),
+            encoding);
+    }
+
     static Stream CreateFileForWritingCore(IFileSystemView view, string path) =>
         view.OpenFile(path, FileMode.Create, FileAccess.Write, FileShare.Read);
+
+    static Task<Stream> CreateFileForWritingCoreAsync(IFileSystemView view, string path, CancellationToken cancellationToken) =>
+        view.OpenFileAsync(path, FileMode.Create, FileAccess.Write, FileShare.Read, cancellationToken);
 
     #endregion
 
@@ -733,9 +834,6 @@ partial class FileSystemViewExtensions
         }
         else
         {
-            ArgumentNullException.ThrowIfNull(view);
-            ArgumentNullException.ThrowIfNull(contents);
-
             using var writer = view.CreateTextFile(path, encoding);
             WriteAllLinesCore(writer, contents);
         }
