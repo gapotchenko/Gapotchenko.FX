@@ -323,6 +323,8 @@ partial class FileSystemViewExtensions
 
     #region Read/write bytes
 
+    #region Read
+
     /// <inheritdoc cref="File.ReadAllBytes(string)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
@@ -437,28 +439,37 @@ partial class FileSystemViewExtensions
         }
     }
 
-    /// <inheritdoc cref="File.WriteAllBytes(string, byte[])"/>
+    #endregion
+
+    #region Write
+
+    /// <summary>
+    /// Creates a new file, writes the specified byte array to the file, and then closes the file.
+    /// If the target file already exists, it is truncated and overwritten.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
-    /// <param name="bytes"><inheritdoc/></param>
+    /// <param name="path">The file to write to.</param>
+    /// <param name="bytes">The bytes to write to the file.</param>
+    /// <inheritdoc cref="IFileSystemView.OpenFile(string, FileMode, FileAccess, FileShare)" path="/exception"/>
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="bytes"/> is <see langword="null"/>.</exception>
     public static void WriteAllFileBytes(this IFileSystemView view, string path, byte[] bytes)
     {
-        if (view is null)
-        {
-            throw new ArgumentNullException(nameof(view));
-        }
-        else if (view is LocalFileSystemView)
+        if (view is LocalFileSystemView)
         {
             File.WriteAllBytes(path, bytes);
         }
         else
         {
+            ArgumentNullException.ThrowIfNull(view);
             ArgumentNullException.ThrowIfNull(bytes);
 
             using var stream = CreateFileForWritingCore(view, path);
             stream.Write(bytes, 0, bytes.Length);
         }
     }
+
+    #endregion
 
     #endregion
 
