@@ -730,6 +730,12 @@ partial class FileSystemViewExtensions
             writer.WriteLine(line);
     }
 
+    static async Task WriteAllLinesCoreAsync(StreamWriter writer, IEnumerable<string?> contents, CancellationToken cancellationToken)
+    {
+        foreach (string? line in contents)
+            await writer.WriteLineAsync(line.AsMemory(), cancellationToken).ConfigureAwait(false);
+    }
+
     #endregion
 
     #region Append lines
@@ -759,6 +765,34 @@ partial class FileSystemViewExtensions
         }
     }
 
+    /// <inheritdoc cref="AppendAllFileLines(IFileSystemView, string, IEnumerable{string?})"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous append operation.</returns>
+    public static async Task AppendAllFileLinesAsync(
+        this IFileSystemView view,
+        string path,
+        IEnumerable<string?> contents,
+        CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.AppendAllLinesAsync(path, contents!, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+            ArgumentNullException.ThrowIfNull(contents);
+
+            using var writer = await view.AppendTextFileAsync(path, cancellationToken).ConfigureAwait(false);
+            await WriteAllLinesCoreAsync(writer, contents, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
     /// <summary>
     /// Appends lines to a file by using a specified encoding, and then closes the file.
     /// If the specified file does not exist, this method creates a file, writes the specified lines to the file, and then closes the file.
@@ -783,6 +817,36 @@ partial class FileSystemViewExtensions
 
             using var writer = view.AppendTextFile(path, encoding);
             WriteAllLinesCore(writer, contents);
+        }
+    }
+
+    /// <inheritdoc cref="AppendAllFileLines(IFileSystemView, string, IEnumerable{string?}, Encoding)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="encoding"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous append operation.</returns>
+    public static async Task AppendAllFileLinesAsync(
+        this IFileSystemView view,
+        string path,
+        IEnumerable<string?> contents,
+        Encoding encoding,
+        CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.AppendAllLinesAsync(path, contents!, encoding, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+            ArgumentNullException.ThrowIfNull(contents);
+
+            using var writer = await view.AppendTextFileAsync(path, encoding, cancellationToken).ConfigureAwait(false);
+            await WriteAllLinesCoreAsync(writer, contents, cancellationToken).ConfigureAwait(false);
         }
     }
 
