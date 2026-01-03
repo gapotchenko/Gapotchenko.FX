@@ -6,14 +6,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-#define TFF_STREAM_SPAN
-#endif
-
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.IO.Vfs.Properties;
 using Gapotchenko.FX.IO.Vfs.Utils;
-using Gapotchenko.FX.Threading.Tasks;
 using System.Buffers;
 using System.Diagnostics;
 using System.Text;
@@ -368,8 +363,10 @@ partial class FileSystemViewExtensions
         byte[]? rentedArray = null;
         try
         {
+            const int bufferSize = 512;
+
 #if TFF_STREAM_SPAN
-            Span<byte> buffer = stackalloc byte[512];
+            Span<byte> buffer = stackalloc byte[bufferSize];
 #else
 #if TFF_CER
             try
@@ -378,7 +375,7 @@ partial class FileSystemViewExtensions
             finally
 #endif
             {
-                rentedArray = arrayPool.Rent(512);
+                rentedArray = arrayPool.Rent(bufferSize);
             }
             byte[] buffer = rentedArray;
 #endif

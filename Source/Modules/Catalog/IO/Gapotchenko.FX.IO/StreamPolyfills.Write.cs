@@ -4,7 +4,7 @@
 // Portions © .NET Foundation and its Licensors
 //
 // File introduced by: Oleksiy Gapotchenko
-// Year of introduction: 2025
+// Year of introduction: 2026
 
 using System.Buffers;
 
@@ -13,38 +13,33 @@ namespace Gapotchenko.FX.IO;
 partial class StreamPolyfills
 {
     /// <summary>
-    /// Reads a sequence of bytes from the current stream and
-    /// advances the position within the stream by the number of bytes read.
+    /// Writes a sequence of bytes to the current stream and
+    /// advances the current position within this stream by the number of bytes written.
     /// </summary>
     /// <remarks>
     /// This is a polyfill provided by Gapotchenko.FX.
     /// </remarks>
-    /// <param name="stream">The stream to read the bytes from.</param>
+    /// <param name="stream">The stream to write the bytes to.</param>
     /// <param name="buffer">
     /// A region of memory.
-    /// When this method returns, the contents of this region are replaced by the bytes read from the current source.
+    /// This method writes the contents of this region to the current stream.
     /// </param>
-    /// <returns>
-    /// The total number of bytes read into the buffer.
-    /// This can be less than the size of the buffer if that many bytes are not currently available,
-    /// or zero (<c>0</c>) if the buffer's length is zero or the end of the stream has been reached.
-    /// </returns>
 #if TFF_STREAM_SPAN
     [EditorBrowsable(EditorBrowsableState.Never)]
 #else
     // TODO: method use should be discouraged because the polyfill implementation incurs memory allocations and copying.
 #endif
-    public static int Read(
+    public static void Write(
 #if !TFF_STREAM_SPAN
         this
 #endif
         Stream stream,
-        Span<byte> buffer)
+        ReadOnlySpan<byte> buffer)
     {
         ArgumentNullException.ThrowIfNull(stream);
 
 #if TFF_STREAM_SPAN
-        return stream.Read(buffer);
+        stream.Write(buffer);
 #else
         int count = buffer.Length;
 
@@ -52,10 +47,8 @@ partial class StreamPolyfills
         byte[] array = pool.Rent(count);
         try
         {
-            int bytesRead = stream.Read(array, 0, count);
-            if (bytesRead > 0)
-                array.AsSpan(0, bytesRead).CopyTo(buffer);
-            return bytesRead;
+            buffer.CopyTo(array);
+            stream.Write(array, 0, count);
         }
         finally
         {

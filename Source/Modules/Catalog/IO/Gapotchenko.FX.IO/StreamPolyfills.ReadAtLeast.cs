@@ -144,7 +144,7 @@ partial class StreamPolyfills
         int totalRead = 0;
         while (totalRead < minimumBytes)
         {
-            int read = Read(stream, buffer.Slice(totalRead));
+            int read = stream.Read(buffer[totalRead..]);
             if (read == 0)
             {
                 if (throwOnEndOfStream)
@@ -173,7 +173,7 @@ partial class StreamPolyfills
         int totalRead = 0;
         while (totalRead < minimumBytes)
         {
-            int read = await stream.ReadAsync(buffer.Slice(totalRead), cancellationToken).ConfigureAwait(false);
+            int read = await stream.ReadAsync(buffer[totalRead..], cancellationToken).ConfigureAwait(false);
             if (read == 0)
             {
                 if (throwOnEndOfStream)
