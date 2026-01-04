@@ -318,7 +318,7 @@ partial class FileSystemViewExtensions
 
     #region Read/write bytes
 
-    #region Read
+    #region Read bytes
 
     /// <inheritdoc cref="File.ReadAllBytes(string)"/>
     /// <param name="view">The file system view.</param>
@@ -438,17 +438,9 @@ partial class FileSystemViewExtensions
 
     #endregion
 
-    #region Write
+    #region Write bytes
 
-    /// <summary>
-    /// Creates a new file, writes the specified byte array to the file, and then closes the file.
-    /// If the target file already exists, it is truncated and overwritten.
-    /// </summary>
-    /// <param name="view">The file system view.</param>
-    /// <param name="path">The file to write to.</param>
-    /// <param name="bytes">The bytes to write to the file.</param>
-    /// <inheritdoc cref="IFileSystemView.OpenFile(string, FileMode, FileAccess, FileShare)" path="/exception"/>
-    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="WriteAllFileBytes(IFileSystemView, string, ReadOnlySpan{byte})"/>
     /// <exception cref="ArgumentNullException"><paramref name="bytes"/> is <see langword="null"/>.</exception>
     public static void WriteAllFileBytes(this IFileSystemView view, string path, byte[] bytes)
     {
@@ -463,6 +455,32 @@ partial class FileSystemViewExtensions
 
             using var stream = CreateFileForWritingCore(view, path);
             stream.Write(bytes, 0, bytes.Length);
+        }
+    }
+
+    /// <summary>
+    /// Creates a new file, writes the specified byte array to the file, and then closes the file.
+    /// If the target file already exists, it is truncated and overwritten.
+    /// </summary>
+    /// <param name="view">The file system view.</param>
+    /// <param name="path">The file to write to.</param>
+    /// <param name="bytes">The bytes to write to the file.</param>
+    /// <inheritdoc cref="IFileSystemView.OpenFile(string, FileMode, FileAccess, FileShare)" path="/exception"/>
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
+    public static void WriteAllFileBytes(this IFileSystemView view, string path, ReadOnlySpan<byte> bytes)
+    {
+#if NET9_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            File.WriteAllBytes(path, bytes);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
+            using var stream = CreateFileForWritingCore(view, path);
+            stream.Write(bytes);
         }
     }
 
@@ -509,10 +527,15 @@ partial class FileSystemViewExtensions
 
     #region Write text
 
-    /// <inheritdoc cref="File.WriteAllText(string, string)"/>
+    /// <summary>
+    /// Creates a new file, write the contents to the file, and then closes the file.
+    /// If the target file already exists, it is truncated and overwritten.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
-    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="path">The file to write to.</param>
+    /// <param name="contents">The text to write to the file.</param>
+    /// <inheritdoc cref="IFileSystemView.OpenFile(string, FileMode, FileAccess, FileShare)" path="/exception"/>
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
     public static void WriteAllFileText(this IFileSystemView view, string path, string? contents)
     {
         if (view is LocalFileSystemView)
@@ -526,11 +549,32 @@ partial class FileSystemViewExtensions
         }
     }
 
-    /// <inheritdoc cref="File.WriteAllText(string, string, Encoding)"/>
-    /// <param name="view">The file system view.</param>
+    /// <inheritdoc cref="WriteAllFileText(IFileSystemView, string, string?)"/>
+    public static void WriteAllFileText(this IFileSystemView view, string path, ReadOnlySpan<char> contents)
+    {
+#if NET9_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            File.WriteAllText(path, contents);
+        }
+        else
+#endif
+        {
+            using var writer = view.CreateTextFile(path);
+            writer.Write(contents);
+        }
+    }
+
+    /// <summary>
+    /// Creates a new file, writes the specified string to the file using the specified encoding, and then closes the file.
+    /// If the target file already exists, it is truncated and overwritten.
+    /// </summary>
+    /// <inheritdoc cref="WriteAllFileText(IFileSystemView, string, string?)"/>
+    /// <param name="view"><inheritdoc/></param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
-    /// <param name="encoding"><inheritdoc/></param>
+    /// <param name="encoding">The character encoding to use.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="encoding"/> is <see langword="null"/>.</exception>
     public static void WriteAllFileText(this IFileSystemView view, string path, string? contents, Encoding encoding)
     {
         if (view is LocalFileSystemView)
@@ -538,6 +582,22 @@ partial class FileSystemViewExtensions
             File.WriteAllText(path, contents, encoding);
         }
         else
+        {
+            using var writer = view.CreateTextFile(path, encoding);
+            writer.Write(contents);
+        }
+    }
+
+    /// <inheritdoc cref="WriteAllFileText(IFileSystemView, string, string?, Encoding)"/>
+    public static void WriteAllFileText(this IFileSystemView view, string path, ReadOnlySpan<char> contents, Encoding encoding)
+    {
+#if NET9_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            File.WriteAllText(path, contents, encoding);
+        }
+        else
+#endif
         {
             using var writer = view.CreateTextFile(path, encoding);
             writer.Write(contents);
