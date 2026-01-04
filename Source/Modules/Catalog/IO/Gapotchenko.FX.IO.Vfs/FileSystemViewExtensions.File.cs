@@ -458,8 +458,27 @@ partial class FileSystemViewExtensions
         }
     }
 
+    /// <inheritdoc cref="WriteAllFileBytesAsync(IFileSystemView, string, ReadOnlyMemory{byte}, CancellationToken)"/>
+    public static async Task WriteAllFileBytesAsync(this IFileSystemView view, string path, byte[] bytes, CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.WriteAllBytesAsync(path, bytes, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+            ArgumentNullException.ThrowIfNull(bytes);
+
+            using var stream = await CreateFileForWritingCoreAsync(view, path, cancellationToken).ConfigureAwait(false);
+            await stream.WriteAsync(bytes.AsMemory(), cancellationToken).ConfigureAwait(false);
+        }
+    }
+
     /// <summary>
-    /// Creates a new file, writes the specified byte array to the file, and then closes the file.
+    /// Creates a new file, writes the specified bytes to the file, and then closes the file.
     /// If the target file already exists, it is truncated and overwritten.
     /// </summary>
     /// <param name="view">The file system view.</param>
@@ -481,6 +500,37 @@ partial class FileSystemViewExtensions
 
             using var stream = CreateFileForWritingCore(view, path);
             stream.Write(bytes);
+        }
+    }
+
+    /// <summary>
+    /// Asynchronously creates a new file, writes the specified bytes to the file, and then closes the file.
+    /// If the target file already exists, it is truncated and overwritten.
+    /// </summary>
+    /// <inheritdoc cref="WriteAllFileBytes(IFileSystemView, string, ReadOnlySpan{byte})"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="bytes"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+    public static async Task WriteAllFileBytesAsync(
+        this IFileSystemView view,
+        string path,
+        ReadOnlyMemory<byte> bytes,
+        CancellationToken cancellationToken = default)
+    {
+#if NET9_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.WriteAllBytesAsync(path, bytes, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
+            using var stream = await CreateFileForWritingCoreAsync(view, path, cancellationToken).ConfigureAwait(false);
+            await stream.WriteAsync(bytes, cancellationToken).ConfigureAwait(false);
         }
     }
 
