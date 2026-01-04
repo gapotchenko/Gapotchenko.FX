@@ -549,6 +549,31 @@ partial class FileSystemViewExtensions
         }
     }
 
+    /// <summary>
+    /// Asynchronously creates a new file, write the contents to the file, and then closes the file.
+    /// If the target file already exists, it is truncated and overwritten.
+    /// </summary>
+    /// <inheritdoc cref="WriteAllFileText(IFileSystemView, string, string?)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+    public static async Task WriteAllFileTextAsync(this IFileSystemView view, string path, string? contents, CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.WriteAllTextAsync(path, contents, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            using var writer = await view.CreateTextFileAsync(path, cancellationToken).ConfigureAwait(false);
+            await writer.WriteAsync(contents.AsMemory(), cancellationToken).ConfigureAwait(false);
+        }
+    }
+
     /// <inheritdoc cref="WriteAllFileText(IFileSystemView, string, string?)"/>
     public static void WriteAllFileText(this IFileSystemView view, string path, ReadOnlySpan<char> contents)
     {
@@ -585,6 +610,37 @@ partial class FileSystemViewExtensions
         {
             using var writer = view.CreateTextFile(path, encoding);
             writer.Write(contents);
+        }
+    }
+
+    /// <summary>
+    /// Asynchronously creates a new file, writes the specified string to the file using the specified encoding, and then closes the file.
+    /// If the target file already exists, it is truncated and overwritten.
+    /// </summary>
+    /// <inheritdoc cref="WriteAllFileText(IFileSystemView, string, string?, Encoding)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="encoding"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+    public static async Task WriteAllFileTextAsync(
+        this IFileSystemView view,
+        string path,
+        string? contents,
+        Encoding encoding,
+        CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.WriteAllTextAsync(path, contents, encoding, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            using var writer = await view.CreateTextFileAsync(path, encoding, cancellationToken).ConfigureAwait(false);
+            await writer.WriteAsync(contents.AsMemory(), cancellationToken).ConfigureAwait(false);
         }
     }
 
