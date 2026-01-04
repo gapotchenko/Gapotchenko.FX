@@ -590,6 +590,26 @@ partial class FileSystemViewExtensions
         }
     }
 
+    /// <inheritdoc cref="WriteAllFileTextAsync(IFileSystemView, string, string?, CancellationToken)"/>
+    public static async Task WriteAllFileTextAsync(
+        this IFileSystemView view,
+        string path,
+        ReadOnlyMemory<char> contents,
+        CancellationToken cancellationToken = default)
+    {
+#if NET9_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.WriteAllTextAsync(path, contents, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            using var writer = await view.CreateTextFileAsync(path, cancellationToken).ConfigureAwait(false);
+            await writer.WriteAsync(contents, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
     /// <summary>
     /// Creates a new file, writes the specified string to the file using the specified encoding, and then closes the file.
     /// If the target file already exists, it is truncated and overwritten.
@@ -657,6 +677,27 @@ partial class FileSystemViewExtensions
         {
             using var writer = view.CreateTextFile(path, encoding);
             writer.Write(contents);
+        }
+    }
+
+    /// <inheritdoc cref="WriteAllFileTextAsync(IFileSystemView, string, string?, Encoding, CancellationToken)"/>
+    public static async Task WriteAllFileTextAsync(
+        this IFileSystemView view,
+        string path,
+        ReadOnlyMemory<char> contents,
+        Encoding encoding,
+        CancellationToken cancellationToken = default)
+    {
+#if NET9_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.WriteAllTextAsync(path, contents, encoding, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            using var writer = await view.CreateTextFileAsync(path, encoding, cancellationToken).ConfigureAwait(false);
+            await writer.WriteAsync(contents, cancellationToken).ConfigureAwait(false);
         }
     }
 
