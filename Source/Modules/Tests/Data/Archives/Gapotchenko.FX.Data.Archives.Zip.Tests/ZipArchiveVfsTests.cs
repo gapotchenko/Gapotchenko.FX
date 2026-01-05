@@ -13,7 +13,7 @@ public sealed class ZipArchiveVfsTests : FileSystemViewVfsTestKit
         return new ArchiveVfs(new MemoryStream());
     }
 
-    protected override bool TryRoundTripVfs([MaybeNullWhen(false)] ref IFileSystemView vfs)
+    protected override bool TryRoundTripVfs(ref IFileSystemView vfs)
     {
         var archiveVfs = (ArchiveVfs)vfs;
 

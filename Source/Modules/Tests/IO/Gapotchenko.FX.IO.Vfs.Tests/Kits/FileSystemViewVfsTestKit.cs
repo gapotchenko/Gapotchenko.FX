@@ -39,15 +39,11 @@ public abstract partial class FileSystemViewVfsTestKit
     /// </summary>
     /// <param name="vfs">
     /// The virtual file system to round trip.
-    /// When the method return value is <see langword="true"/>, the parameter contains the freshly opened virtual file system
+    /// When the method returns <see langword="true"/>, the parameter contains a freshly opened virtual file system,
+    /// the previous file system is disposed.
     /// </param>
     /// <returns><see langword="true"/> when round-tripping is supported; otherwise, <see langword="false"/>.</returns>
-    protected virtual bool TryRoundTripVfs([MaybeNullWhen(false)] ref IFileSystemView vfs)
-    {
-        DisposeVfs(vfs);
-        vfs = null;
-        return false;
-    }
+    protected virtual bool TryRoundTripVfs(ref IFileSystemView vfs) => false;
 
     protected static IVirtualFileSystem CreateTemporaryVfs(out string rootPath)
     {
@@ -68,7 +64,15 @@ public abstract partial class FileSystemViewVfsTestKit
 
     void RunVfsTest(VfsTest mutate, VfsPhasedTest? verify)
     {
-        var vfs = CreateVfs(out string rootPath);
+        RunVfsTest(mutate, verify, Fn.Identity);
+    }
+
+    void RunVfsTest(
+        VfsTest mutate,
+        VfsPhasedTest? verify,
+        Func<IFileSystemView, IFileSystemView> transformVfs)
+    {
+        var vfs = transformVfs(CreateVfs(out string rootPath));
         try
         {
             mutate(vfs, rootPath);
@@ -76,6 +80,7 @@ public abstract partial class FileSystemViewVfsTestKit
             if (verify is not null)
             {
                 verify(vfs, rootPath, 0);
+
                 if (TryRoundTripVfs(ref vfs))
                     verify(vfs, rootPath, 1);
             }
