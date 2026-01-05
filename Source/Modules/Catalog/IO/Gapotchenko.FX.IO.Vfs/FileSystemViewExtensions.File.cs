@@ -1040,6 +1040,37 @@ partial class FileSystemViewExtensions
     }
 
     /// <summary>
+    /// Asynchronously creates a new file, writes a collection of strings to the file, and then closes the file.
+    /// </summary>
+    /// <inheritdoc cref="WriteAllFileLines(IFileSystemView, string, IEnumerable{string?})"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+    public static async Task WriteAllFileLinesAsync(
+        this IFileSystemView view,
+        string path,
+        IEnumerable<string?> contents,
+        CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.WriteAllLinesAsync(path, contents!, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+            ArgumentNullException.ThrowIfNull(contents);
+
+            using var writer = await view.CreateTextFileAsync(path, cancellationToken).ConfigureAwait(false);
+            await WriteAllLinesCoreAsync(writer, contents, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
     /// Creates a new file by using the specified encoding, writes a collection of strings to the file, and then closes the file.
     /// </summary>
     /// <inheritdoc cref="WriteAllFileLines(IFileSystemView, string, IEnumerable{string?})" />
@@ -1058,6 +1089,39 @@ partial class FileSystemViewExtensions
         {
             using var writer = view.CreateTextFile(path, encoding);
             WriteAllLinesCore(writer, contents);
+        }
+    }
+
+    /// <summary>
+    /// Asynchronously creates a new file by using the specified encoding, writes a collection of strings to the file, and then closes the file.
+    /// </summary>
+    /// <inheritdoc cref="WriteAllFileLines(IFileSystemView, string, IEnumerable{string?}, Encoding)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="encoding"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+    public static async Task WriteAllFileLinesAsync(
+        this IFileSystemView view,
+        string path,
+        IEnumerable<string?> contents,
+        Encoding encoding,
+        CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            await File.WriteAllLinesAsync(path, contents!, encoding, cancellationToken).ConfigureAwait(false);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+            ArgumentNullException.ThrowIfNull(contents);
+
+            using var writer = await view.CreateTextFileAsync(path, encoding, cancellationToken).ConfigureAwait(false);
+            await WriteAllLinesCoreAsync(writer, contents, cancellationToken).ConfigureAwait(false);
         }
     }
 
