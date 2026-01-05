@@ -60,6 +60,13 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <param name="cancellationToken">The cancellation token.</param>
     Task<Stream> OpenFileAsync(string path, FileMode mode, FileAccess access, FileShare share, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Deletes the specified file.
+    /// </summary>
+    /// <param name="path">
+    /// The name of the file to be deleted.
+    /// Wildcard characters are not supported.
+    /// </param>
     /// <inheritdoc cref="File.Delete(string)"/>
     void DeleteFile(string path);
 
@@ -112,6 +119,14 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <returns>A task that represents the asynchronous directory creation operation.</returns>
     Task CreateDirectoryAsync(string path, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Deletes the specified directory and, if indicated, any subdirectories and files in the directory.
+    /// </summary>
+    /// <param name="path">The name of the directory to remove.</param>
+    /// <param name="recursive">
+    /// <see langword="true"/> to remove directories, subdirectories, and files in <paramref name="path"/>;
+    /// otherwise, <see langword="false"/>.
+    /// </param>
     /// <inheritdoc cref="Directory.Delete(string, bool)"/>
     void DeleteDirectory(string path, bool recursive);
 
