@@ -15,9 +15,13 @@ partial class FileSystemViewExtensions
     /// <inheritdoc cref="Directory.Delete(string)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
-    public static void DeleteDirectory(this IFileSystemView view, string path) =>
-        (view ?? throw new ArgumentNullException(nameof(view)))
-        .DeleteDirectory(path, false);
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
+    public static void DeleteDirectory(this IFileSystemView view, string path)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        view.DeleteDirectory(path, false);
+    }
 
     #region Copy
 
