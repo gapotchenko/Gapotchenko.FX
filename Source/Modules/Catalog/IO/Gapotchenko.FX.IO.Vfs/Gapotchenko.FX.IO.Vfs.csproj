@@ -33,6 +33,6 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <!--<Import Project="$(MasteringDir)/OOB/System.Linq.AsyncEnumerable.props" />-->
+  <Import Project="$(MasteringDir)/OOB/System.Linq.AsyncEnumerable.props" />
 
 </Project>

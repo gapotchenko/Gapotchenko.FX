@@ -11,6 +11,7 @@ using Gapotchenko.FX.IO.Vfs.Properties;
 using Gapotchenko.FX.IO.Vfs.Utils;
 using System.Buffers;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Gapotchenko.FX.IO.Vfs;
@@ -1055,9 +1056,13 @@ partial class FileSystemViewExtensions
 
     #region Read lines
 
-    /// <inheritdoc cref="File.ReadLines(string)"/>
+    /// <summary>
+    /// Reads the lines of a file.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
+    /// <param name="path">The file to read.</param>
+    /// <inheritdoc cref="IReadOnlyFileSystemView.ReadFile(string)" path="/exception" />
+    /// <returns>A sequence of lines of the file.</returns>
     public static IEnumerable<string> ReadFileLines(this IReadOnlyFileSystemView view, string path)
     {
         if (view is LocalFileSystemView)
@@ -1072,10 +1077,13 @@ partial class FileSystemViewExtensions
         }
     }
 
-    /// <inheritdoc cref="File.ReadLines(string, Encoding)"/>
-    /// <param name="view">The file system view.</param>
+    /// <summary>
+    /// Read the lines of a file that has a specified encoding.
+    /// </summary>
+    /// <inheritdoc cref="ReadFileLines(IReadOnlyFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
     /// <param name="path"><inheritdoc/></param>
-    /// <param name="encoding"><inheritdoc/></param>
+    /// <param name="encoding">The character encoding to use.</param>
     public static IEnumerable<string> ReadFileLines(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
         if (view is LocalFileSystemView)
@@ -1085,8 +1093,9 @@ partial class FileSystemViewExtensions
         else
         {
             ArgumentNullException.ThrowIfNull(view);
+            ArgumentNullException.ThrowIfNull(encoding);
 
-            return ReadFileLinesCore(view, path, encoding ?? throw new ArgumentNullException(nameof(encoding)));
+            return ReadFileLinesCore(view, path, encoding);
         }
     }
 
@@ -1098,13 +1107,34 @@ partial class FileSystemViewExtensions
             yield return line;
     }
 
-    //static IEnumerable<string> ReadFileLinesCoreAsync(IReadOnlyFileSystemView view, string path, Encoding encoding, CancellationToken cancellationToken)
-    //{
-    //    using var reader = new StreamReader(view.ReadFile(path), encoding);
+    static IAsyncEnumerable<string> ReadFileLinesCoreAsync(IReadOnlyFileSystemView view, string path, Encoding encoding, CancellationToken cancellationToken)
+    {
+        return CoreImpl(view, path, encoding, cancellationToken);
 
-    //    while (reader.ReadLine() is not null and var line)
-    //        yield return line;
-    //}
+        static async IAsyncEnumerable<string> CoreImpl(
+            IReadOnlyFileSystemView view,
+            string path,
+            Encoding encoding,
+            CancellationToken cancellationToken,
+            [EnumeratorCancellation] CancellationToken enumeratorCancellationToken = default)
+        {
+            using var reader = new StreamReader(await view.ReadFileAsync(path, cancellationToken).ConfigureAwait(false), encoding);
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, enumeratorCancellationToken);
+
+            while (await reader.ReadLineAsync(
+#if NET7_0_OR_GREATER
+                cts.Token
+#endif
+                ).ConfigureAwait(false) is { } line)
+            {
+                yield return line;
+
+#if !NET7_0_OR_GREATER
+                cts.Token.ThrowIfCancellationRequested();
+#endif
+            }
+        }
+    }
 
     /// <inheritdoc cref="File.ReadAllLines(string)"/>
     /// <param name="view">The file system view.</param>
@@ -1152,7 +1182,7 @@ partial class FileSystemViewExtensions
         return [.. lines];
     }
 
-    #endregion
+#endregion
 
     #region Write lines
 
@@ -1393,7 +1423,7 @@ partial class FileSystemViewExtensions
 
     #endregion
 
-    #endregion
+#endregion
 
     #region Copy
 

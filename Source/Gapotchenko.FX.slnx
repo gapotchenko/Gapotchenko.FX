@@ -165,6 +165,7 @@
     <Project Path="Profiles/Gapotchenko.FX.Profiles.Math/Gapotchenko.FX.Profiles.Math.csproj" />
   </Folder>
   <Folder Name="/03. Misc/">
+    <File Path="../.editorconfig" />
     <File Path="../README.md" />
   </Folder>
   <Folder Name="/03. Misc/Documentation/">
