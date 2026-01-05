@@ -9,6 +9,8 @@
 using System.Collections;
 using Xunit;
 
+using Assert = Xunit.Assert;
+
 namespace Gapotchenko.FX.Collections.Tests.Bench;
 
 partial class IDictionary_Generic_Tests<TKey, TValue>

@@ -11,6 +11,8 @@ using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Linq;
 using Xunit;
 
+using Assert = Xunit.Assert;
+
 #pragma warning disable xUnit2017 // Do not use Contains() to check if a value exists in a collection
 
 namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;

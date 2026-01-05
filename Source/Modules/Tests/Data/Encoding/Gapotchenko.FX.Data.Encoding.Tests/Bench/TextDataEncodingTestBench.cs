@@ -91,7 +91,7 @@ public static class TextDataEncodingTestBench
         var rawArray = raw.ToArray();
 
         // "Lowercase" and "Uppercase" data encoding options cannot be used simultaneously.
-        Assert.ThrowsException<ArgumentException>(() =>
+        Assert.ThrowsExactly<ArgumentException>(() =>
             dataEncoding.GetString(
                 rawArray,
                 options | DataEncodingOptions.Lowercase | DataEncodingOptions.Uppercase));
@@ -99,10 +99,10 @@ public static class TextDataEncodingTestBench
         if (dataEncoding.IsCaseSensitive)
         {
             // "Lowercase" option cannot be used with a case-sensitive data encoding.
-            Assert.ThrowsException<ArgumentException>(() => dataEncoding.GetString(rawArray, options | DataEncodingOptions.Lowercase));
+            Assert.ThrowsExactly<ArgumentException>(() => dataEncoding.GetString(rawArray, options | DataEncodingOptions.Lowercase));
 
             // "Uppercase" option cannot be used with a case-sensitive data encoding.
-            Assert.ThrowsException<ArgumentException>(() => dataEncoding.GetString(rawArray, options | DataEncodingOptions.Uppercase));
+            Assert.ThrowsExactly<ArgumentException>(() => dataEncoding.GetString(rawArray, options | DataEncodingOptions.Uppercase));
         }
         else
         {
@@ -212,10 +212,10 @@ public static class TextDataEncodingTestBench
 
             if (!raw.SequenceEqual(actualDecoded))
             {
-                Assert.Fail(
+                Assert.Fail(string.Format(
                     "Encoding round trip error for data block {0}. Actual decoded data are {1}.",
                     Base16.GetString(raw, DataEncodingOptions.Indent),
-                    Base16.GetString(actualDecoded, DataEncodingOptions.Indent));
+                    Base16.GetString(actualDecoded, DataEncodingOptions.Indent)));
             }
         }
 

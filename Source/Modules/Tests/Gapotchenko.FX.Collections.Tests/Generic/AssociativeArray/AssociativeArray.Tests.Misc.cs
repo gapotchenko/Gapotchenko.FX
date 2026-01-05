@@ -1,6 +1,8 @@
 ﻿using Gapotchenko.FX.Collections.Generic;
 using Xunit;
 
+using Assert = Xunit.Assert;
+
 namespace Gapotchenko.FX.Collections.Tests.Generic.AssociativeArray;
 
 public class AssociativeArray_Tests_Misc

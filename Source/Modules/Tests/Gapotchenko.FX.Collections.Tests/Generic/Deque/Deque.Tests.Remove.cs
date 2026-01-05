@@ -3,6 +3,8 @@ using Gapotchenko.FX.Collections.Tests.Utils;
 using Gapotchenko.FX.Linq;
 using Xunit;
 
+using Assert = Xunit.Assert;
+
 namespace Gapotchenko.FX.Collections.Tests.Generic.Deque;
 
 partial class Deque_Tests<T>

@@ -41,7 +41,7 @@ partial class GraphTests
             Edges = { ('a', 'a') }
         };
 
-        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologically().ToList());
+        Assert.ThrowsExactly<GraphCircularReferenceException>(() => g.OrderTopologically().ToList());
 
         /***************/
 
@@ -50,7 +50,7 @@ partial class GraphTests
             Edges = { ('a', 'b'), ('b', 'c'), ('c', 'a') }
         };
 
-        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologically().ToList());
+        Assert.ThrowsExactly<GraphCircularReferenceException>(() => g.OrderTopologically().ToList());
     }
 
     [TestMethod]
@@ -169,7 +169,7 @@ partial class GraphTests
             Edges = { ('a', 'a') }
         };
 
-        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologically().ThenBy(Fn.Identity).ToList());
+        Assert.ThrowsExactly<GraphCircularReferenceException>(() => g.OrderTopologically().ThenBy(Fn.Identity).ToList());
 
         /***************/
 
@@ -178,7 +178,7 @@ partial class GraphTests
             Edges = { ('a', 'b'), ('b', 'c'), ('c', 'a') }
         };
 
-        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologically().ThenBy(Fn.Identity).ToList());
+        Assert.ThrowsExactly<GraphCircularReferenceException>(() => g.OrderTopologically().ThenBy(Fn.Identity).ToList());
 
         /***************/
 
@@ -303,7 +303,7 @@ partial class GraphTests
             Edges = { ('a', 'a') }
         };
 
-        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologically().Reverse().ToList());
+        Assert.ThrowsExactly<GraphCircularReferenceException>(() => g.OrderTopologically().Reverse().ToList());
 
         /***************/
 
@@ -312,7 +312,7 @@ partial class GraphTests
             Edges = { ('a', 'b'), ('b', 'c'), ('c', 'a') }
         };
 
-        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologically().Reverse().ToList());
+        Assert.ThrowsExactly<GraphCircularReferenceException>(() => g.OrderTopologically().Reverse().ToList());
     }
 
     [TestMethod]
@@ -431,7 +431,7 @@ partial class GraphTests
             Edges = { ('a', 'a') }
         };
 
-        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologically().Reverse().ThenBy(Fn.Identity).ToList());
+        Assert.ThrowsExactly<GraphCircularReferenceException>(() => g.OrderTopologically().Reverse().ThenBy(Fn.Identity).ToList());
 
         /***************/
 
@@ -440,7 +440,7 @@ partial class GraphTests
             Edges = { ('a', 'b'), ('b', 'c'), ('c', 'a') }
         };
 
-        Assert.ThrowsException<GraphCircularReferenceException>(() => g.OrderTopologically().Reverse().ThenBy(Fn.Identity).ToList());
+        Assert.ThrowsExactly<GraphCircularReferenceException>(() => g.OrderTopologically().Reverse().ThenBy(Fn.Identity).ToList());
 
         /***************/
 

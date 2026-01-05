@@ -3,6 +3,8 @@
 using System.Collections;
 using Xunit;
 
+using Assert = Xunit.Assert;
+
 #pragma warning disable IDE0040 // Add accessibility modifiers
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
 #pragma warning disable IDE1006 // Naming Styles
