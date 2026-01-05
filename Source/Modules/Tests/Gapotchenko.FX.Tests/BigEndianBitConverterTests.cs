@@ -13,12 +13,12 @@ public class BigEndianBitConverterTests
         BigEndianBitConverter.FillBytes(true, buffer);
         Assert.AreEqual(1, buffer[0]);
         Assert.IsTrue(BigEndianBitConverter.GetBytes(true).SequenceEqual(buffer));
-        Assert.AreEqual(true, BigEndianBitConverter.ToBoolean(buffer));
+        Assert.IsTrue(BigEndianBitConverter.ToBoolean(buffer));
 
         BigEndianBitConverter.FillBytes(false, buffer);
         Assert.AreEqual(0, buffer[0]);
         Assert.IsTrue(BigEndianBitConverter.GetBytes(false).SequenceEqual(buffer));
-        Assert.AreEqual(false, BigEndianBitConverter.ToBoolean(buffer));
+        Assert.IsFalse(BigEndianBitConverter.ToBoolean(buffer));
     }
 
     [TestMethod]

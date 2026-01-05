@@ -28,7 +28,7 @@ public class Base16Tests
         var instance = Base16.Instance;
 
         Assert.AreEqual(0.5, instance.Efficiency);
-        Assert.AreEqual(instance.Efficiency, Base16.Efficiency);
+        Assert.AreEqual(Base16.Efficiency, instance.Efficiency);
 
         Assert.AreEqual(2, instance.Padding);
         Assert.IsTrue(instance.CanPad);

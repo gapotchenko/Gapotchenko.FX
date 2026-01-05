@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Data.Encoding.Tests.Bench;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Data.Encoding.Tests;
 
@@ -198,7 +197,7 @@ public class KuonBase24Tests
     [DataRow(DataEncodingOptions.None)]
     [DataRow(DataEncodingOptions.Padding)]
     public void KuonBase24_RT_Random(DataEncodingOptions options) =>
-        TextDataEncodingTestBench.RandomRoundTrip(KuonBase24.Instance, 16, 100000);
+        TextDataEncodingTestBench.RandomRoundTrip(KuonBase24.Instance, 16, 100000, options);
 
     [TestMethod]
     //

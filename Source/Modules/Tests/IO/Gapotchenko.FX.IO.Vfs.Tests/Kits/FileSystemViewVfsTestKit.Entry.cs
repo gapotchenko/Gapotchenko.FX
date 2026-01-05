@@ -213,7 +213,7 @@ partial class FileSystemViewVfsTestKit
                 {
                     var entryPaths = ToUniqueHashSet(vfs.EnumerateEntries(directoryPath));
 
-                    Assert.AreEqual(4, entryPaths.Count);
+                    Assert.HasCount(4, entryPaths);
                     VerifySearchPattern(vfs, directoryPath, null, SearchOption.TopDirectoryOnly, entryPaths);
                     VerifyEntriesExistence(vfs, entryPaths, 3, 1);
                     VerifySpecialDirectories(vfs, entryPaths, 0);
@@ -233,7 +233,7 @@ partial class FileSystemViewVfsTestKit
                     {
                         var filePaths = ToUniqueHashSet(vfs.EnumerateFiles(directoryPath));
 
-                        Assert.AreEqual(3, filePaths.Count);
+                        Assert.HasCount(3, filePaths);
                         VerifySearchPattern(vfs, directoryPath, null, SearchOption.TopDirectoryOnly, filePaths);
                         VerifyFilesExistence(vfs, filePaths);
                         VerifySpecialDirectories(vfs, filePaths, 0);
@@ -252,7 +252,7 @@ partial class FileSystemViewVfsTestKit
                     {
                         var directoryPaths = ToUniqueHashSet(vfs.EnumerateDirectories(directoryPath));
 
-                        Assert.AreEqual(1, directoryPaths.Count);
+                        Assert.HasCount(1, directoryPaths);
                         VerifySearchPattern(vfs, directoryPath, null, SearchOption.TopDirectoryOnly, directoryPaths);
                         VerifyDirectoriesExistence(vfs, directoryPaths);
                         VerifySpecialDirectories(vfs, directoryPaths, 0);
@@ -277,7 +277,7 @@ partial class FileSystemViewVfsTestKit
                 {
                     var entryPaths = ToUniqueHashSet(vfs.EnumerateEntries(rootPath, searchPattern));
 
-                    Assert.AreEqual(2, entryPaths.Count);
+                    Assert.HasCount(2, entryPaths);
                     VerifySearchPattern(vfs, rootPath, searchPattern, SearchOption.TopDirectoryOnly, entryPaths);
                     VerifyEntriesExistence(vfs, entryPaths, 2, 0);
                     VerifySpecialDirectories(vfs, entryPaths, 0);
@@ -291,7 +291,7 @@ partial class FileSystemViewVfsTestKit
                     {
                         var filePaths = ToUniqueHashSet(vfs.EnumerateFiles(rootPath, searchPattern));
 
-                        Assert.AreEqual(2, filePaths.Count);
+                        Assert.HasCount(2, filePaths);
                         VerifySearchPattern(vfs, rootPath, searchPattern, SearchOption.TopDirectoryOnly, filePaths);
                         VerifyFilesExistence(vfs, filePaths);
                         VerifySpecialDirectories(vfs, filePaths, 0);
@@ -317,7 +317,7 @@ partial class FileSystemViewVfsTestKit
                 {
                     var entryPaths = ToUniqueHashSet(vfs.EnumerateEntries(directoryPath));
 
-                    Assert.AreEqual(3, entryPaths.Count);
+                    Assert.HasCount(3, entryPaths);
                     VerifySearchPattern(vfs, directoryPath, null, SearchOption.TopDirectoryOnly, entryPaths);
                     VerifyEntriesExistence(vfs, entryPaths, 1, 2);
                     VerifySpecialDirectories(vfs, entryPaths, 0);
@@ -333,7 +333,7 @@ partial class FileSystemViewVfsTestKit
 
                     entryPaths = ToUniqueHashSet(vfs.EnumerateEntries(directoryPath, "*", SearchOption.AllDirectories));
 
-                    Assert.AreEqual(5, entryPaths.Count);
+                    Assert.HasCount(5, entryPaths);
                     VerifySearchPattern(vfs, directoryPath, "*", SearchOption.AllDirectories, entryPaths);
                     VerifyEntriesExistence(vfs, entryPaths, 2, 3);
                     VerifySpecialDirectories(vfs, entryPaths, 0);
@@ -349,7 +349,7 @@ partial class FileSystemViewVfsTestKit
                     var enumerationOptions = new EnumerationOptions { ReturnSpecialDirectories = true };
                     entryPaths = ToUniqueHashSet(vfs.EnumerateEntries(directoryPath, "*", enumerationOptions));
 
-                    Assert.AreEqual(5, entryPaths.Count);
+                    Assert.HasCount(5, entryPaths);
                     VerifySearchPattern(vfs, directoryPath, "*", enumerationOptions, entryPaths);
                     VerifyEntriesExistence(vfs, entryPaths, 1, 4);
                     VerifySpecialDirectories(vfs, entryPaths, 2);
@@ -369,7 +369,7 @@ partial class FileSystemViewVfsTestKit
                     // Count of special directories for the inner directories plus for the directory being enumerated.
                     int countOfSpecialDirectories = (countOfInnerDirectories + 1) * countOfSpecialDirectoriesPerDirectory;
 
-                    Assert.AreEqual(countOfInnerFiles + countOfInnerDirectories + countOfSpecialDirectories, entryPaths.Count);
+                    Assert.HasCount(countOfInnerFiles + countOfInnerDirectories + countOfSpecialDirectories, entryPaths);
                     VerifySearchPattern(vfs, directoryPath, "*", enumerationOptions, entryPaths);
                     VerifyEntriesExistence(vfs, entryPaths, countOfInnerFiles, countOfInnerDirectories + countOfSpecialDirectories);
                     VerifySpecialDirectories(vfs, entryPaths, countOfSpecialDirectories);
@@ -387,7 +387,7 @@ partial class FileSystemViewVfsTestKit
                     // The last level of the directory hierarchy is restricted by MaxRecursionDepth = 1 option.
                     countOfSpecialDirectories -= countOfSpecialDirectoriesPerDirectory;
 
-                    Assert.AreEqual(countOfInnerFiles + countOfInnerDirectories + countOfSpecialDirectories, entryPaths.Count);
+                    Assert.HasCount(countOfInnerFiles + countOfInnerDirectories + countOfSpecialDirectories, entryPaths);
                     VerifySearchPattern(vfs, directoryPath, "*", enumerationOptions, entryPaths);
                     VerifyEntriesExistence(vfs, entryPaths, countOfInnerFiles, countOfInnerDirectories + countOfSpecialDirectories);
                     VerifySpecialDirectories(vfs, entryPaths, countOfSpecialDirectories);
@@ -399,7 +399,7 @@ partial class FileSystemViewVfsTestKit
                     {
                         var filePaths = ToUniqueHashSet(vfs.EnumerateFiles(directoryPath));
 
-                        Assert.AreEqual(1, filePaths.Count);
+                        Assert.HasCount(1, filePaths);
                         VerifySearchPattern(vfs, directoryPath, null, SearchOption.TopDirectoryOnly, filePaths);
                         VerifyFilesExistence(vfs, filePaths);
 
@@ -414,7 +414,7 @@ partial class FileSystemViewVfsTestKit
 
                         filePaths = ToUniqueHashSet(vfs.EnumerateFiles(directoryPath, "*", SearchOption.AllDirectories));
 
-                        Assert.AreEqual(2, filePaths.Count);
+                        Assert.HasCount(2, filePaths);
                         VerifySearchPattern(vfs, directoryPath, "*", SearchOption.AllDirectories, filePaths);
                         VerifyFilesExistence(vfs, filePaths);
 
@@ -429,7 +429,7 @@ partial class FileSystemViewVfsTestKit
                     {
                         var directoryPaths = ToUniqueHashSet(vfs.EnumerateDirectories(directoryPath));
 
-                        Assert.AreEqual(2, directoryPaths.Count);
+                        Assert.HasCount(2, directoryPaths);
                         VerifySearchPattern(vfs, directoryPath, null, SearchOption.TopDirectoryOnly, directoryPaths);
                         VerifyDirectoriesExistence(vfs, directoryPaths);
                         VerifySpecialDirectories(vfs, directoryPaths, 0);
@@ -445,7 +445,7 @@ partial class FileSystemViewVfsTestKit
 
                         directoryPaths = ToUniqueHashSet(vfs.EnumerateDirectories(directoryPath, "*", SearchOption.AllDirectories));
 
-                        Assert.AreEqual(3, directoryPaths.Count);
+                        Assert.HasCount(3, directoryPaths);
                         VerifySearchPattern(vfs, directoryPath, "*", SearchOption.AllDirectories, directoryPaths);
                         VerifyDirectoriesExistence(vfs, directoryPaths);
                         VerifySpecialDirectories(vfs, directoryPaths, 0);
@@ -461,7 +461,7 @@ partial class FileSystemViewVfsTestKit
                         var enumerationOptions = new EnumerationOptions { ReturnSpecialDirectories = true };
                         directoryPaths = ToUniqueHashSet(vfs.EnumerateDirectories(directoryPath, "*", enumerationOptions));
 
-                        Assert.AreEqual(4, directoryPaths.Count);
+                        Assert.HasCount(4, directoryPaths);
                         VerifySearchPattern(vfs, directoryPath, "*", enumerationOptions, directoryPaths);
                         VerifyDirectoriesExistence(vfs, directoryPaths);
                         VerifySpecialDirectories(vfs, directoryPaths, 2);
@@ -480,7 +480,7 @@ partial class FileSystemViewVfsTestKit
                         // Count of special directories for the inner directories plus for the directory being enumerated.
                         int countOfSpecialDirectories = (countOfInnerDirectories + 1) * countOfSpecialDirectoriesPerDirectory;
 
-                        Assert.AreEqual(countOfInnerDirectories + countOfSpecialDirectories, directoryPaths.Count);
+                        Assert.HasCount(countOfInnerDirectories + countOfSpecialDirectories, directoryPaths);
                         VerifySearchPattern(vfs, directoryPath, "*", enumerationOptions, directoryPaths);
                         VerifyDirectoriesExistence(vfs, directoryPaths);
                         VerifySpecialDirectories(vfs, directoryPaths, countOfSpecialDirectories);
@@ -498,7 +498,7 @@ partial class FileSystemViewVfsTestKit
                         // The last level of the directory hierarchy is restricted by MaxRecursionDepth = 1 option.
                         countOfSpecialDirectories -= countOfSpecialDirectoriesPerDirectory;
 
-                        Assert.AreEqual(countOfInnerDirectories + countOfSpecialDirectories, directoryPaths.Count);
+                        Assert.HasCount(countOfInnerDirectories + countOfSpecialDirectories, directoryPaths);
                         VerifySearchPattern(vfs, directoryPath, "*", enumerationOptions, directoryPaths);
                         VerifyDirectoriesExistence(vfs, directoryPaths);
                         VerifySpecialDirectories(vfs, directoryPaths, countOfSpecialDirectories);
@@ -643,15 +643,17 @@ partial class FileSystemViewVfsTestKit
             int enumeratedRecursionLevel = GetPathRecursionLevel(s);
             int recursionDepth = enumeratedRecursionLevel - baseRecursionLevel - 1;
 
-            Assert.IsTrue(
-                recursionDepth >= 0,
+            Assert.IsGreaterThanOrEqualTo(
+                0,
+                recursionDepth,
                 string.Format(
                     "Enumerated path '{0}' points outside of the directory being enumerated '{1}'.",
                     enumeratedPath,
                     path));
 
-            Assert.IsTrue(
-                recursionDepth <= maxRecursionDepth,
+            Assert.IsLessThanOrEqualTo(
+                maxRecursionDepth,
+                recursionDepth,
                 string.Format("Enumerated path '{0}' goes deeper than the maximum recursion depth.", enumeratedPath));
         }
 

@@ -53,7 +53,7 @@ public class ProcessArgumentsTests
             process.StandardOutput.ReadLine();
 
             var arguments = process.ReadArgumentList().ToList();
-            Assert.AreEqual(2, arguments.Count);
+            Assert.HasCount(2, arguments);
             Assert.AreEqual("dotnet", arguments[0]);
             Assert.AreEqual("fsi", arguments[1]);
         }

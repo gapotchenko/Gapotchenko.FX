@@ -21,7 +21,7 @@ public class Crc8Tests
         var algorithm = Crc8.Standard;
         var ha = algorithm.CreateHashAlgorithm();
         var hash = ha.ComputeHash(ChecksumTestBench.TV19);
-        Assert.AreEqual(1, hash.Length);
+        Assert.HasCount(1, hash);
         Assert.AreEqual(0xf4, hash[0]);
     }
 

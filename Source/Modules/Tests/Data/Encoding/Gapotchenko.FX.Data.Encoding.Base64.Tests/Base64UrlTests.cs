@@ -27,7 +27,7 @@ public class Base64UrlTests
 
         Assert.AreEqual(Base64Url.Efficiency, instance.Efficiency);
         Assert.IsFalse(instance.PrefersPadding);
-        Assert.IsFalse(actualEncoded.EndsWith('='));
+        Assert.DoesNotEndWith("=", actualEncoded);
 
         // -----------------------------------------------------------------
 

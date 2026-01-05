@@ -370,8 +370,8 @@ public class OptionalTests
             var some = Optional.Some(value);
 
             Assert.AreEqual(0, comparer.Compare(none, none));
-            Assert.IsTrue(comparer.Compare(some, none) > 0);
-            Assert.IsTrue(comparer.Compare(none, some) < 0);
+            Assert.IsGreaterThan(0, comparer.Compare(some, none));
+            Assert.IsLessThan(0, comparer.Compare(none, some));
             Assert.AreEqual(0, comparer.Compare(some, some));
         }
     }
@@ -391,7 +391,7 @@ public class OptionalTests
         Assert.IsFalse(b > b);
 
         var comparer = Comparer<Optional<int>>.Default;
-        Assert.IsTrue(comparer.Compare(a, b) > 0);
+        Assert.IsGreaterThan(0, comparer.Compare(a, b));
     }
 
     [TestMethod]
@@ -409,7 +409,7 @@ public class OptionalTests
         Assert.IsFalse(b < b);
 
         var comparer = Comparer<Optional<int>>.Default;
-        Assert.IsTrue(comparer.Compare(a, b) < 0);
+        Assert.IsLessThan(0, comparer.Compare(a, b));
     }
 
     [TestMethod]
@@ -427,7 +427,7 @@ public class OptionalTests
         Assert.IsTrue(b >= b);
 
         var comparer = Comparer<Optional<int>>.Default;
-        Assert.IsTrue(comparer.Compare(a, b) >= 0);
+        Assert.IsGreaterThanOrEqualTo(0, comparer.Compare(a, b));
     }
 
     [TestMethod]
@@ -445,7 +445,7 @@ public class OptionalTests
         Assert.IsTrue(b <= b);
 
         var comparer = Comparer<Optional<int>>.Default;
-        Assert.IsTrue(comparer.Compare(a, b) <= 0);
+        Assert.IsLessThanOrEqualTo(0, comparer.Compare(a, b));
     }
 
     #endregion
