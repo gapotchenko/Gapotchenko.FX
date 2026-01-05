@@ -56,6 +56,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual bool FileExists([NotNullWhen(true)] string? path) => BaseView.FileExists(path);
 
     /// <inheritdoc/>
+    public virtual Task<bool> FileExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default) =>
+        BaseView.FileExistsAsync(path, cancellationToken);
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateFiles(string path) => BaseView.EnumerateFiles(path);
 
     /// <inheritdoc/>
@@ -104,6 +108,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual bool DirectoryExists([NotNullWhen(true)] string? path) => BaseView.DirectoryExists(path);
 
     /// <inheritdoc/>
+    public virtual Task<bool> DirectoryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default) =>
+        BaseView.DirectoryExistsAsync(path, cancellationToken);
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateDirectories(string path) => BaseView.EnumerateDirectories(path);
 
     /// <inheritdoc/>
@@ -142,6 +150,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
 
     /// <inheritdoc/>
     public virtual bool EntryExists([NotNullWhen(true)] string? path) => BaseView.EntryExists(path);
+
+    /// <inheritdoc/>
+    public virtual Task<bool> EntryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default) =>
+        BaseView.EntryExistsAsync(path, cancellationToken);
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path) => BaseView.EnumerateEntries(path);

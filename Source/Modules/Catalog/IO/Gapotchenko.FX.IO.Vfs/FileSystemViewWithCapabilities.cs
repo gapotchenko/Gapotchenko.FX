@@ -50,6 +50,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.FileExists(path);
     }
 
+    public override Task<bool> FileExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.FileExistsAsync(path, cancellationToken);
+    }
+
     public override IEnumerable<string> EnumerateFiles(string path)
     {
         EnsureCanRead();
@@ -126,6 +132,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.DirectoryExists(path);
     }
 
+    public override Task<bool> DirectoryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.DirectoryExistsAsync(path, cancellationToken);
+    }
+
     public override IEnumerable<string> EnumerateDirectories(string path)
     {
         EnsureCanRead();
@@ -188,6 +200,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     {
         EnsureCanRead();
         return base.EntryExists(path);
+    }
+
+    public override Task<bool> EntryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.EntryExistsAsync(path, cancellationToken);
     }
 
     public override IEnumerable<string> EnumerateEntries(string path)

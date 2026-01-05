@@ -53,6 +53,14 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="File.Exists(string?)"/>
     bool FileExists([NotNullWhen(true)] string? path);
 
+    /// <summary>
+    /// Asynchronously determines whether the specified file exists.
+    /// </summary>
+    /// <inheritdoc cref="FileExists(string?)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<bool> FileExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default);
+
     /// <inheritdoc cref="Directory.EnumerateFiles(string)"/>
     IEnumerable<string> EnumerateFiles(string path);
 
@@ -125,6 +133,14 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="Directory.Exists(string?)"/>
     bool DirectoryExists([NotNullWhen(true)] string? path);
 
+    /// <summary>
+    /// Asynchronously determines whether the given path refers to an existing file system directory.
+    /// </summary>
+    /// <inheritdoc cref="DirectoryExists(string?)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<bool> DirectoryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default);
+
     /// <inheritdoc cref="Directory.EnumerateDirectories(string)"/>
     IEnumerable<string> EnumerateDirectories(string path);
 
@@ -179,6 +195,14 @@ public interface IReadOnlyFileSystemView
     /// <see langword="false"/> if neither directory nor file exists or an error occurs when trying to determine if the specified file system entry exists.
     /// </returns>
     bool EntryExists([NotNullWhen(true)] string? path);
+
+    /// <summary>
+    /// Asynchronously determines whether the given path refers to an existing file or directory in the file system.
+    /// </summary>
+    /// <inheritdoc cref="EntryExists(string?)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<bool> EntryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string)"/>
     IEnumerable<string> EnumerateEntries(string path);

@@ -80,6 +80,10 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract bool FileExists([NotNullWhen(true)] string? path);
 
     /// <inheritdoc/>
+    public virtual Task<bool> FileExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => FileExists(path), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateFiles(string path) => EnumerateFiles(path, "*");
 
     /// <inheritdoc/>
@@ -149,6 +153,10 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract bool DirectoryExists([NotNullWhen(true)] string? path);
 
     /// <inheritdoc/>
+    public virtual Task<bool> DirectoryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => DirectoryExists(path), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateDirectories(string path) => EnumerateDirectories(path, "*");
 
     /// <inheritdoc/>
@@ -206,6 +214,11 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual bool EntryExists([NotNullWhen(true)] string? path) =>
         FileExists(path) ||
         DirectoryExists(path);
+
+    /// <inheritdoc/>
+    public virtual async Task<bool> EntryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default) =>
+        await FileExistsAsync(path, cancellationToken).ConfigureAwait(false) ||
+        await DirectoryExistsAsync(path, cancellationToken).ConfigureAwait(false);
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path) =>
