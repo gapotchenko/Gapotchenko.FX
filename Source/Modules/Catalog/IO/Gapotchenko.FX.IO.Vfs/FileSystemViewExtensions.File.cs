@@ -1295,6 +1295,29 @@ partial class FileSystemViewExtensions
         }
     }
 
+    /// <summary>
+    /// Asynchronously opens a text file, reads all lines of the file, and then closes the file.
+    /// </summary>
+    /// <inheritdoc cref="ReadAllFileLines(IReadOnlyFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static Task<string[]> ReadAllFileLinesAsync(this IReadOnlyFileSystemView view, string path, CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            return File.ReadAllLinesAsync(path, cancellationToken);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
+            return ReadAllFileLinesCoreAsync(view, path, Encoding.UTF8, cancellationToken);
+        }
+    }
+
     /// <inheritdoc cref="ReadAllFileLines(IReadOnlyFileSystemView, string)"/>
     /// <param name="view"><inheritdoc/></param>
     /// <param name="path"><inheritdoc/></param>
@@ -1314,6 +1337,31 @@ partial class FileSystemViewExtensions
         }
     }
 
+    /// <summary>
+    /// Asynchronously opens a text file, reads all lines of the file with the specified encoding, and then closes the file.
+    /// </summary>
+    /// <inheritdoc cref="ReadAllFileLinesAsync(IReadOnlyFileSystemView, string, CancellationToken)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="encoding">The character encoding to use.</param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
+    public static Task<string[]> ReadAllFileLinesAsync(this IReadOnlyFileSystemView view, string path, Encoding encoding, CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            return File.ReadAllLinesAsync(path, encoding, cancellationToken);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+            ArgumentNullException.ThrowIfNull(encoding);
+
+            return ReadAllFileLinesCoreAsync(view, path, encoding, cancellationToken);
+        }
+    }
+
     static string[] ReadAllFileLinesCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
         using var reader = new StreamReader(view.ReadFile(path), encoding);
@@ -1321,6 +1369,28 @@ partial class FileSystemViewExtensions
         var lines = new List<string>();
         while (reader.ReadLine() is not null and var line)
             lines.Add(line);
+
+        return [.. lines];
+    }
+
+    static async Task<string[]> ReadAllFileLinesCoreAsync(IReadOnlyFileSystemView view, string path, Encoding encoding, CancellationToken cancellationToken)
+    {
+        using var reader = new StreamReader(
+            await view.ReadFileAsync(path, cancellationToken).ConfigureAwait(false),
+            encoding);
+
+        var lines = new List<string>();
+        while (await reader.ReadLineAsync(
+#if NET7_0_OR_GREATER
+            cancellationToken
+#endif
+            ).ConfigureAwait(false) is { } line)
+        {
+#if !NET7_0_OR_GREATER
+            cancellationToken.ThrowIfCancellationRequested();
+#endif
+            lines.Add(line);
+        }
 
         return [.. lines];
     }
