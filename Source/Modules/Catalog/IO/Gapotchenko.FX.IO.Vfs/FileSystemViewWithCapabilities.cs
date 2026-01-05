@@ -110,6 +110,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         base.DeleteFile(path);
     }
 
+    public override Task DeleteFileAsync(string path, CancellationToken cancellationToken = default)
+    {
+        EnsureCanWrite();
+        return base.DeleteFileAsync(path, cancellationToken);
+    }
+
     public override void CopyFile(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)
     {
         EnsureCanReadAndWrite();
@@ -178,6 +184,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     {
         EnsureCanWrite();
         base.DeleteDirectory(path, recursive);
+    }
+
+    public override Task DeleteDirectoryAsync(string path, bool recursive, CancellationToken cancellationToken = default)
+    {
+        EnsureCanWrite();
+        return base.DeleteDirectoryAsync(path, recursive, cancellationToken);
     }
 
     public override void CopyDirectory(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)

@@ -71,6 +71,15 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     void DeleteFile(string path);
 
     /// <summary>
+    /// Asynchronously deletes the specified file.
+    /// </summary>
+    /// <inheritdoc cref="DeleteFile(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous file deletion operation.</returns>
+    Task DeleteFileAsync(string path, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Copies an existing file to a new file.
     /// Overwriting a file of the same name is controlled by the <paramref name="overwrite"/> parameter.
     /// Additional operation options are controlled by the <paramref name="options"/> parameter.
@@ -129,6 +138,16 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// </param>
     /// <inheritdoc cref="Directory.Delete(string, bool)"/>
     void DeleteDirectory(string path, bool recursive);
+
+    /// <summary>
+    /// Asynchronously deletes the specified directory and, if indicated, any subdirectories and files in the directory.
+    /// </summary>
+    /// <inheritdoc cref="DeleteDirectory(string, bool)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="recursive"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous directory deletion operation.</returns>
+    Task DeleteDirectoryAsync(string path, bool recursive, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Copies an existing directory to a new directory.

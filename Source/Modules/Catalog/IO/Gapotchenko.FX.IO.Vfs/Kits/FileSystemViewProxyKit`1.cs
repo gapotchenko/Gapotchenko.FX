@@ -93,6 +93,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual void DeleteFile(string path) => BaseView.DeleteFile(path);
 
     /// <inheritdoc/>
+    public virtual Task DeleteFileAsync(string path, CancellationToken cancellationToken = default) =>
+        BaseView.DeleteFileAsync(path, cancellationToken);
+
+    /// <inheritdoc/>
     public virtual void CopyFile(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options) =>
         BaseView.CopyFile(sourcePath, destinationPath, overwrite, options);
 
@@ -135,6 +139,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
 
     /// <inheritdoc/>
     public virtual void DeleteDirectory(string path, bool recursive) => BaseView.DeleteDirectory(path, recursive);
+
+    /// <inheritdoc/>
+    public virtual Task DeleteDirectoryAsync(string path, bool recursive, CancellationToken cancellationToken = default) =>
+        BaseView.DeleteDirectoryAsync(path, recursive, cancellationToken);
 
     /// <inheritdoc/>
     public virtual void CopyDirectory(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options) =>

@@ -122,6 +122,10 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract void DeleteFile(string path);
 
     /// <inheritdoc/>
+    public virtual Task DeleteFileAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => DeleteFile(path), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual void CopyFile(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)
     {
         VfsValidationKit.Arguments.ValidatePath(sourcePath);
@@ -185,6 +189,10 @@ public abstract class FileSystemViewKit : IFileSystemView
 
     /// <inheritdoc/>
     public abstract void DeleteDirectory(string path, bool recursive);
+
+    /// <inheritdoc/>
+    public virtual Task DeleteDirectoryAsync(string path, bool recursive, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => DeleteDirectory(path, recursive), cancellationToken);
 
     /// <inheritdoc/>
     public virtual void CopyDirectory(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)
