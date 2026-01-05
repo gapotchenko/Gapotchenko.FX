@@ -213,6 +213,9 @@ public interface IReadOnlyFileSystemView
     /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
     IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions);
 
+    /// <summary>
+    /// Returns the last write date and time, in Coordinated Universal Time (UTC), of the specified file or directory.
+    /// </summary>
     /// <remarks>
     /// If the file or directory described in the <paramref name="path"/> parameter does not exist,
     /// this method returns <see cref="DateTime.MinValue"/>.
@@ -220,11 +223,17 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="File.GetLastWriteTimeUtc(string)"/>
     DateTime GetLastWriteTime(string path);
 
+    /// <summary>
+    /// Asynchronously returns the last write date and time, in Coordinated Universal Time (UTC), of the specified file or directory.
+    /// </summary>
     /// <inheritdoc cref="GetLastWriteTime(string)"/>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="cancellationToken">The cancellation token.</param>
     Task<DateTime> GetLastWriteTimeAsync(string path, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Returns the creation date and time, in Coordinated Universal Time (UTC), of the specified file or directory.
+    /// </summary>
     /// <remarks>
     /// If the file or directory described in the <paramref name="path"/> parameter does not exist,
     /// this method returns <see cref="DateTime.MinValue"/>.
@@ -232,11 +241,17 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="File.GetCreationTimeUtc(string)"/>
     DateTime GetCreationTime(string path);
 
+    /// <summary>
+    /// Asynchronously returns the creation date and time, in Coordinated Universal Time (UTC), of the specified file or directory.
+    /// </summary>
     /// <inheritdoc cref="GetCreationTime(string)"/>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="cancellationToken">The cancellation token.</param>
     Task<DateTime> GetCreationTimeAsync(string path, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Returns the date and time, in Coordinated Universal Time (UTC), that the specified file or directory was last accessed.
+    /// </summary>
     /// <remarks>
     /// If the file or directory described in the <paramref name="path"/> parameter does not exist,
     /// this method returns <see cref="DateTime.MinValue"/>.
