@@ -127,16 +127,14 @@ public class TextDataEncodingAlphabetTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void DataTextEncoding_Alphabet_C1()
     {
-        new TextDataEncodingAlphabet("abca");
+        Assert.ThrowsExactly<Exception>(() => new TextDataEncodingAlphabet("abca"));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void DataTextEncoding_Alphabet_C2()
     {
-        new TextDataEncodingAlphabet("abcA", false);
+        Assert.ThrowsExactly<Exception>(() => new TextDataEncodingAlphabet("abcA", false));
     }
 }

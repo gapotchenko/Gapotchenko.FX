@@ -7,18 +7,16 @@ namespace Gapotchenko.FX.Text.Tests;
 public class StringBuilderTests
 {
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void StringBuilder_AJ_E1()
     {
-        StringBuilderExtensions.AppendJoin(null!, ", ", Enumerable.Empty<int>());
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(null!, ", ", Enumerable.Empty<int>()));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void StringBuilder_AJ_E2()
     {
         var sb = new StringBuilder();
-        StringBuilderExtensions.AppendJoin(sb, ", ", (IEnumerable<int>)null!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(sb, ", ", (IEnumerable<int>)null!));
     }
 
     [TestMethod]
@@ -67,18 +65,16 @@ public class StringBuilderTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void StringBuilder_AJ_A1()
     {
-        StringBuilderExtensions.AppendJoin(null!, ", ", new object[0]);
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(null!, ", ", new object[0]));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void StringBuilder_AJ_A2()
     {
         var sb = new StringBuilder();
-        StringBuilderExtensions.AppendJoin(sb, ", ", (object[])null!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(sb, ", ", (object[])null!));
     }
 
     [TestMethod]
@@ -127,18 +123,16 @@ public class StringBuilderTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void StringBuilder_AJ_SA1()
     {
-        StringBuilderExtensions.AppendJoin(null!, ", ", []);
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(null!, ", ", []));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void StringBuilder_AJ_SA2()
     {
         var sb = new StringBuilder();
-        StringBuilderExtensions.AppendJoin(sb, ", ", (string[]?)null!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(sb, ", ", (string[]?)null!));
     }
 
     [TestMethod]
@@ -187,18 +181,16 @@ public class StringBuilderTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void StringBuilder_AJ_CS_E1()
     {
-        StringBuilderExtensions.AppendJoin(null!, ';', Enumerable.Empty<int>());
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(null!, ';', Enumerable.Empty<int>()));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void StringBuilder_AJ_CS_E2()
     {
         var sb = new StringBuilder();
-        StringBuilderExtensions.AppendJoin(sb, ';', (IEnumerable<int>?)null!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(sb, ';', (IEnumerable<int>?)null!));
     }
 
     [TestMethod]
@@ -238,18 +230,16 @@ public class StringBuilderTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void StringBuilder_AJ_CS_E7()
     {
-        StringBuilderExtensions.AppendJoin(null!, ';', new object[0]);
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(null!, ';', new object[0]));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void StringBuilder_AJ_CS_A1()
     {
         var sb = new StringBuilder();
-        StringBuilderExtensions.AppendJoin(sb, ';', (object[]?)null!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(sb, ';', (object[]?)null!));
     }
 
     [TestMethod]
@@ -289,18 +279,16 @@ public class StringBuilderTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void StringBuilder_AJ_CS_SA1()
     {
-        StringBuilderExtensions.AppendJoin(null!, ';', []);
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(null!, ';', []));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void StringBuilder_AJ_CS_SA2()
     {
         var sb = new StringBuilder();
-        StringBuilderExtensions.AppendJoin(sb, ';', (string[]?)null!);
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(sb, ';', (string[]?)null!));
     }
 
     [TestMethod]

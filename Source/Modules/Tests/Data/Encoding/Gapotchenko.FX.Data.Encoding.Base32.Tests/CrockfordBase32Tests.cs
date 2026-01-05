@@ -113,8 +113,7 @@ public class CrockfordBase32Tests
     public void CrockfordBase32_Int32_TV5() => TestVector(32, "10*", DataEncodingOptions.Checksum);
 
     [TestMethod]
-    [ExpectedException(typeof(FormatException))]
-    public void CrockfordBase32_Int32_TV6() => TestVector(32, "10~", DataEncodingOptions.Checksum);
+    public void CrockfordBase32_Int32_TV6() => Assert.ThrowsExactly<FormatException>(() => TestVector(32, "10~", DataEncodingOptions.Checksum));
 
     [TestMethod]
     public void CrockfordBase32_Int32_TV7() => TestVector(1234, "16JD", DataEncodingOptions.Checksum);
@@ -166,8 +165,7 @@ public class CrockfordBase32Tests
     public void CrockfordBase32_Int64_TV4() => TestVector(32L, "10*", DataEncodingOptions.Checksum);
 
     [TestMethod]
-    [ExpectedException(typeof(FormatException))]
-    public void CrockfordBase32_Int64_TV5() => TestVector(32L, "10~", DataEncodingOptions.Checksum);
+    public void CrockfordBase32_Int64_TV5() => Assert.ThrowsExactly<FormatException>(() => TestVector(32L, "10~", DataEncodingOptions.Checksum));
 
     [TestMethod]
     public void CrockfordBase32_Int64_TV6() => TestVector(1234L, "16JD", DataEncodingOptions.Checksum);
