@@ -320,21 +320,24 @@ partial class FileSystemViewExtensions
 
     #region Read bytes
 
-    /// <inheritdoc cref="File.ReadAllBytes(string)"/>
+    /// <summary>
+    /// Opens a binary file, reads the contents of the file into a byte array, and then closes the file.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
+    /// <param name="path">The file to read.</param>
+    /// <returns>A byte array containing the contents of the file.</returns>
+    /// <inheritdoc cref="IReadOnlyFileSystemView.ReadFile(string)" path="/exception" />
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
     public static byte[] ReadAllFileBytes(this IReadOnlyFileSystemView view, string path)
     {
-        if (view is null)
-        {
-            throw new ArgumentNullException(nameof(view));
-        }
-        else if (view is LocalFileSystemView)
+        if (view is LocalFileSystemView)
         {
             return File.ReadAllBytes(path);
         }
         else
         {
+            ArgumentNullException.ThrowIfNull(view);
+
             using var stream = view.ReadFile(path);
             return ReadAllBytesCore(stream);
         }
