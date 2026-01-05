@@ -343,6 +343,35 @@ partial class FileSystemViewExtensions
         }
     }
 
+    /// <summary>
+    /// Asynchronously opens a binary file, reads the contents of the file into a byte array, and then closes the file.
+    /// </summary>
+    /// <inheritdoc cref="ReadAllFileBytes(IReadOnlyFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static Task<byte[]> ReadAllFileBytesAsync(this IReadOnlyFileSystemView view, string path, CancellationToken cancellationToken = default)
+    {
+#if NET9_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            return File.ReadAllBytesAsync(path, cancellationToken);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
+            return CoreImpl(view, path, cancellationToken);
+
+            static async Task<byte[]> CoreImpl(IReadOnlyFileSystemView view, string path, CancellationToken cancellationToken)
+            {
+                using var stream = await view.ReadFileAsync(path, cancellationToken).ConfigureAwait(false);
+                return await ReadAllBytesCoreAsync(stream, cancellationToken).ConfigureAwait(false);
+            }
+        }
+    }
+
     static byte[] ReadAllBytesCore(Stream stream)
     {
         long length = stream.CanSeek ? stream.Length : -1;
@@ -360,16 +389,32 @@ partial class FileSystemViewExtensions
         return bytes;
     }
 
+    static async ValueTask<byte[]> ReadAllBytesCoreAsync(Stream stream, CancellationToken cancellationToken)
+    {
+        long length = stream.CanSeek ? stream.Length : -1;
+
+        if (length == 0)
+            return [];
+        else if (length == -1)
+            return await ReadAllBytesUnknownLengthAsync(stream, cancellationToken).ConfigureAwait(false);
+        else if (length > ArrayHelper.ArrayMaxLength)
+            throw new IOException(Resources.FileTooLong2GB);
+
+        int count = (int)length;
+        byte[] bytes = new byte[count];
+        await stream.ReadExactlyAsync(bytes, 0, count, cancellationToken).ConfigureAwait(false);
+        return bytes;
+    }
+
     static byte[] ReadAllBytesUnknownLength(Stream stream)
     {
         var arrayPool = ArrayPool<byte>.Shared;
         byte[]? rentedArray = null;
         try
         {
-            const int bufferSize = 512;
-
+            const int initialBufferSize = 512;
 #if TFF_STREAM_SPAN
-            Span<byte> buffer = stackalloc byte[bufferSize];
+            Span<byte> buffer = stackalloc byte[initialBufferSize];
 #else
 #if TFF_CER
             try
@@ -378,7 +423,7 @@ partial class FileSystemViewExtensions
             finally
 #endif
             {
-                rentedArray = arrayPool.Rent(bufferSize);
+                rentedArray = arrayPool.Rent(initialBufferSize);
             }
             byte[] buffer = rentedArray;
 #endif
@@ -436,6 +481,63 @@ partial class FileSystemViewExtensions
         {
             if (rentedArray != null)
                 arrayPool.Return(rentedArray);
+        }
+    }
+
+    static async ValueTask<byte[]> ReadAllBytesUnknownLengthAsync(Stream stream, CancellationToken cancellationToken)
+    {
+        var arrayPool = ArrayPool<byte>.Shared;
+
+        byte[] buffer = arrayPool.Rent(512);
+        try
+        {
+            for (int bytesRead = 0; ;)
+            {
+                Debug.Assert(bytesRead < buffer.Length);
+                int n =
+                    await stream
+                    .ReadAsync(
+#if TFF_STREAM_SPAN
+                        buffer.AsMemory(bytesRead, buffer.Length - bytesRead),
+#else
+                        buffer, bytesRead, buffer.Length - bytesRead,
+#endif
+                        cancellationToken)
+                    .ConfigureAwait(false);
+
+                if (n == 0)
+                {
+                    // The end of stream.
+                    return buffer.AsSpan(0, bytesRead).ToArray();
+                }
+
+                bytesRead += n;
+
+                if (bytesRead == buffer.Length)
+                {
+                    uint newLength = (uint)buffer.Length * 2;
+                    if (newLength > ArrayHelper.ArrayMaxLength)
+                        newLength = (uint)Math.Max(ArrayHelper.ArrayMaxLength, buffer.Length + 1);
+
+#if TFF_CER
+                    try
+                    {
+                    }
+                    finally
+#endif
+                    {
+                        byte[] newBuffer = arrayPool.Rent((int)newLength);
+                        buffer.AsSpan().CopyTo(newBuffer);
+                        arrayPool.Return(buffer);
+                        buffer = newBuffer;
+                    }
+                }
+            }
+        }
+        finally
+        {
+            if (buffer != null)
+                arrayPool.Return(buffer);
         }
     }
 
