@@ -1016,10 +1016,13 @@ partial class FileSystemViewExtensions
 
     #region Write lines
 
-    /// <inheritdoc cref="File.WriteAllLines(string, IEnumerable{string})"/>
+    /// <summary>
+    /// Creates a new file, writes a collection of strings to the file, and then closes the file.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
-    /// <param name="contents"><inheritdoc/></param>
+    /// <param name="path">The file to write to.</param>
+    /// <param name="contents">The lines to write to the file.</param>
+    /// <inheritdoc cref="CreateTextFile(IFileSystemView, string)" path="/exception" />
     public static void WriteAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents)
     {
         if (view is LocalFileSystemView)
@@ -1036,11 +1039,15 @@ partial class FileSystemViewExtensions
         }
     }
 
-    /// <inheritdoc cref="File.WriteAllLines(string, IEnumerable{string}, Encoding)"/>
-    /// <param name="view">The file system view.</param>
+    /// <summary>
+    /// Creates a new file by using the specified encoding, writes a collection of strings to the file, and then closes the file.
+    /// </summary>
+    /// <inheritdoc cref="WriteAllFileLines(IFileSystemView, string, IEnumerable{string?})" />
+    /// <param name="view"><inheritdoc/></param>
     /// <param name="path"><inheritdoc/></param>
     /// <param name="contents"><inheritdoc/></param>
-    /// <param name="encoding"><inheritdoc/></param>
+    /// <param name="encoding">The character encoding to use.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="encoding"/> is <see langword="null"/>.</exception>
     public static void WriteAllFileLines(this IFileSystemView view, string path, IEnumerable<string?> contents, Encoding encoding)
     {
         if (view is LocalFileSystemView)
