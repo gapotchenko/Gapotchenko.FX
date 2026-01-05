@@ -52,17 +52,25 @@ partial class FileSystemViewExtensions
         return view.OpenFileAsync(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, cancellationToken);
     }
 
-    /// <inheritdoc cref="File.OpenText(string)"/>
+    /// <summary>
+    /// Opens an existing UTF-8 encoded text file for reading.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
+    /// <param name="path">The file to be opened for reading.</param>
+    /// <inheritdoc cref="IReadOnlyFileSystemView.ReadFile(string)" path="/exception" />
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
     public static StreamReader ReadTextFile(this IReadOnlyFileSystemView view, string path)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         if (view is LocalFileSystemView)
+        {
             return File.OpenText(path);
+        }
         else
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
             return new StreamReader(view.ReadFile(path), Encoding.UTF8);
+        }
     }
 
     /// <summary>
