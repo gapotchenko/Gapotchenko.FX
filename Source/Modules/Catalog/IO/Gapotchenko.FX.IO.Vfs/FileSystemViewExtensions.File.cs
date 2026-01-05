@@ -697,6 +697,30 @@ partial class FileSystemViewExtensions
     }
 
     /// <summary>
+    /// Asynchronously opens a file, reads all text in the file, and then closes the file.
+    /// </summary>
+    /// <inheritdoc cref="ReadAllFileText(IReadOnlyFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous read operation, which contains the contents of the file.</returns>
+    public static Task<string> ReadAllFileTextAsync(this IReadOnlyFileSystemView view, string path, CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            return File.ReadAllTextAsync(path, cancellationToken);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
+            return ReadAllFileTextCoreAsync(view, path, Encoding.UTF8, cancellationToken);
+        }
+    }
+
+    /// <summary>
     /// Opens a file, reads all text in the file with the specified encoding, and then closes the file.
     /// </summary>
     /// <inheritdoc cref="ReadAllFileText(IReadOnlyFileSystemView, string)"/>
@@ -715,6 +739,32 @@ partial class FileSystemViewExtensions
             ArgumentNullException.ThrowIfNull(encoding);
 
             return ReadAllFileTextCore(view, path, encoding);
+        }
+    }
+
+    /// <summary>
+    /// Asynchronously opens a file, reads all text in the file with the specified encoding, and then closes the file.
+    /// </summary>
+    /// <inheritdoc cref="ReadAllFileTextAsync(IReadOnlyFileSystemView, string, CancellationToken)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="encoding">The character encoding to use.</param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
+    /// <returns>A task that represents the asynchronous read operation, which contains the contents of the file.</returns>
+    public static Task<string> ReadAllFileTextAsync(this IReadOnlyFileSystemView view, string path, Encoding encoding, CancellationToken cancellationToken = default)
+    {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            return File.ReadAllTextAsync(path, encoding, cancellationToken);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+            ArgumentNullException.ThrowIfNull(encoding);
+
+            return ReadAllFileTextCoreAsync(view, path, encoding, cancellationToken);
         }
     }
 
