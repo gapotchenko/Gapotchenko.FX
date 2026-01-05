@@ -1098,6 +1098,14 @@ partial class FileSystemViewExtensions
             yield return line;
     }
 
+    //static IEnumerable<string> ReadFileLinesCoreAsync(IReadOnlyFileSystemView view, string path, Encoding encoding, CancellationToken cancellationToken)
+    //{
+    //    using var reader = new StreamReader(view.ReadFile(path), encoding);
+
+    //    while (reader.ReadLine() is not null and var line)
+    //        yield return line;
+    //}
+
     /// <inheritdoc cref="File.ReadAllLines(string)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>

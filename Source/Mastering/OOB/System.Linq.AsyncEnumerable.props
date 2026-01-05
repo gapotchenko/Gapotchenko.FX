@@ -1,0 +1,14 @@
+<Project>
+
+  <PropertyGroup>
+    <TFF_ASYNC_ENUMERABLE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' ">true</TFF_ASYNC_ENUMERABLE_OOB>
+    <TFF_ASYNC_ENUMERABLE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETStandard' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '2.1')) ">true</TFF_ASYNC_ENUMERABLE_OOB>
+    <TFF_ASYNC_ENUMERABLE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '3.0')) ">true</TFF_ASYNC_ENUMERABLE_OOB>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TFF_ASYNC_ENUMERABLE_OOB)' == 'true' ">
+    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.1" />
+    <MasteringFrameworkFeature Include="TFF_ASYNC_ENUMERABLE;TFF_ASYNC_ENUMERABLE_OOB" />
+  </ItemGroup>
+
+</Project>

@@ -64,7 +64,7 @@ class Program
     static void Main(string[] args)
     {
         //File.AppendAllTextAsync()
-        //FileSystemView.Local.Write
+        //FileSystemView.Local.ReadFileLines
         try
         {
             ExecuteOnce a = new(() => Console.WriteLine("Once!"));
