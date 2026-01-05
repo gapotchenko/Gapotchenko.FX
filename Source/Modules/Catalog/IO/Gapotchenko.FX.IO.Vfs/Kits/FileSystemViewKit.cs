@@ -426,7 +426,15 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual DateTime GetLastAccessTime(string path) => throw new NotSupportedException();
 
     /// <inheritdoc/>
+    public virtual Task<DateTime> GetLastAccessTimeAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => GetLastAccessTime(path), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual void SetLastAccessTime(string path, DateTime lastAccessTime) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public Task SetLastAccessTimeAsync(string path, DateTime lastAccessTime, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => SetLastAccessTime(path, lastAccessTime), cancellationToken);
 
     /// <inheritdoc/>
     public virtual FileAttributes GetAttributes(string path) => throw new NotSupportedException();

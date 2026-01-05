@@ -260,6 +260,14 @@ public interface IReadOnlyFileSystemView
     DateTime GetLastAccessTime(string path);
 
     /// <summary>
+    /// Asynchronously returns the date and time, in Coordinated Universal Time (UTC), that the specified file or directory was last accessed.
+    /// </summary>
+    /// <inheritdoc cref="GetLastAccessTime(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<DateTime> GetLastAccessTimeAsync(string path, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Gets the <see cref="FileAttributes"/> of the specified file or directory.
     /// </summary>
     /// <param name="path">The file or directory for which to obtain attribute information.</param>

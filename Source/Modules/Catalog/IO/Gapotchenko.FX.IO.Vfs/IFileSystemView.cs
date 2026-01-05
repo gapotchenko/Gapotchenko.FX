@@ -200,6 +200,15 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     void SetLastAccessTime(string path, DateTime lastAccessTime);
 
     /// <summary>
+    /// Asynchronously sets the date and time when the specified file or directory was last accessed.
+    /// </summary>
+    /// <inheritdoc cref="SetLastAccessTime(string, DateTime)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="lastAccessTime"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task SetLastAccessTimeAsync(string path, DateTime lastAccessTime, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Sets the specified <see cref="FileAttributes"/> of the file or directory on the specified path.
     /// </summary>
     /// <param name="path">The file or directory for which to set the attribute information.</param>

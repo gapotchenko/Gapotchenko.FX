@@ -268,10 +268,22 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.GetLastAccessTime(path);
     }
 
+    public override Task<DateTime> GetLastAccessTimeAsync(string path, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.GetLastAccessTimeAsync(path, cancellationToken);
+    }
+
     public override void SetLastAccessTime(string path, DateTime lastAccessTime)
     {
         EnsureCanWrite();
         base.SetLastAccessTime(path, lastAccessTime);
+    }
+
+    public override Task SetLastAccessTimeAsync(string path, DateTime lastAccessTime, CancellationToken cancellationToken = default)
+    {
+        EnsureCanWrite();
+        return base.SetLastAccessTimeAsync(path, lastAccessTime, cancellationToken);
     }
 
     public override FileAttributes GetAttributes(string path)
