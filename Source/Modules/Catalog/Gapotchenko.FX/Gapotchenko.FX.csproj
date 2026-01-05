@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <Import Project="$(MasteringDir)\OOB\Microsoft.Bcl.HashCode.props" />
+  <Import Project="$(MasteringDir)/OOB/Microsoft.Bcl.Memory.props" />
   <Import Project="$(MasteringDir)\OOB\System.Memory.props" />
   <Import Project="$(MasteringDir)\OOB\System.Runtime.CompilerServices.Unsafe.props " />
   <Import Project="$(MasteringDir)\OOB\System.Runtime.InteropServices.RuntimeInformation.props" />

@@ -1,0 +1,14 @@
+<Project>
+
+  <PropertyGroup>
+    <TFF_RANGE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' ">true</TFF_RANGE_OOB>
+    <TFF_RANGE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETStandard' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '2.1')) ">true</TFF_RANGE_OOB>
+    <TFF_RANGE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '3.0')) ">true</TFF_RANGE_OOB>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TFF_RANGE_OOB)' == 'true' ">
+    <PackageReference Include="Microsoft.Bcl.Memory" Version="10.0.1" />
+    <MasteringFrameworkFeature Include="TFF_RANGE;TFF_RANGE_OOB" />
+  </ItemGroup>
+
+</Project>
