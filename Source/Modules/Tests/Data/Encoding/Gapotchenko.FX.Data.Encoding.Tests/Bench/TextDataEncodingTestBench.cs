@@ -136,7 +136,7 @@ public static class TextDataEncodingTestBench
 
         if (prefersPadding)
             Assert.AreEqual(actualEncoded, actualEncodedRepadded);
-        Assert.IsTrue(actualEncodedRepadded.Length % dataEncoding.Padding == 0);
+        Assert.AreEqual(0, actualEncodedRepadded.Length % dataEncoding.Padding);
 
         if (!dataEncoding.CanPad)
         {
@@ -171,10 +171,10 @@ public static class TextDataEncodingTestBench
         // -----------------------------------------------------------------
 
         int maxCharCount = dataEncoding.GetMaxCharCount(raw.Length, options);
-        Assert.IsTrue(actualEncoded.Length <= maxCharCount, "GetMaxCharCount returned an invalid value.");
+        Assert.IsLessThanOrEqualTo(maxCharCount, actualEncoded.Length, "GetMaxCharCount returned an invalid value.");
 
         int maxByteCount = dataEncoding.GetMaxByteCount(actualEncoded.Length, options);
-        Assert.IsTrue(actualDecoded.Length <= maxByteCount, "GetMaxByteCount returned an invalid value.");
+        Assert.IsLessThanOrEqualTo(maxByteCount, actualDecoded.Length, "GetMaxByteCount returned an invalid value.");
 
         // -----------------------------------------------------------------
         // Check actual encoding efficiency and boundaries
@@ -186,7 +186,7 @@ public static class TextDataEncodingTestBench
             if ((options & DataEncodingOptions.Compress) == 0)
             {
                 float actualEfficiencyCeiling = (float)raw.Length / actualEncodedBytesCount;
-                Assert.IsTrue(actualEfficiencyCeiling <= dataEncoding.MaxEfficiency, "Max encoding efficiency violated.");
+                Assert.IsLessThanOrEqualTo(dataEncoding.MaxEfficiency, actualEfficiencyCeiling, "Max encoding efficiency violated.");
             }
 
             if (actualEncodedBytesCount > 1)
@@ -197,7 +197,7 @@ public static class TextDataEncodingTestBench
                     rawBytesCount += 4;
 
                 float actualEfficiencyFloor = (float)rawBytesCount / (actualEncodedBytesCount - 1);
-                Assert.IsTrue(actualEfficiencyFloor >= dataEncoding.MinEfficiency, "Min encoding efficiency violated.");
+                Assert.IsGreaterThanOrEqualTo(dataEncoding.MinEfficiency, actualEfficiencyFloor, "Min encoding efficiency violated.");
             }
         }
     }

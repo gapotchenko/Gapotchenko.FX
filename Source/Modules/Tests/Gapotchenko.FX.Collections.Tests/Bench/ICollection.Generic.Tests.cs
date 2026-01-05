@@ -47,7 +47,7 @@ public abstract class ICollection_Generic_Tests<T> : IEnumerable_Generic_Tests<T
     protected virtual bool IsReadOnly_ValidityValue => IsReadOnly;
     protected virtual bool AddRemoveClear_ThrowsNotSupported => false;
     protected virtual bool DefaultValueAllowed => true;
-    protected virtual IEnumerable<T> InvalidValues => Array.Empty<T>();
+    protected virtual IEnumerable<T> InvalidValues => [];
 
     protected virtual void AddToCollection(ICollection<T> collection, int numberOfItemsToAdd)
     {
@@ -239,7 +239,7 @@ public abstract class ICollection_Generic_Tests<T> : IEnumerable_Generic_Tests<T
         {
             int seed = 840;
             ICollection<T> collection = GenericICollectionFactory(count);
-            List<T> items = collection.ToList();
+            List<T> items = [.. collection];
             T toAdd = CreateT(seed++);
             while (collection.Contains(toAdd))
                 toAdd = CreateT(seed++);
@@ -263,7 +263,7 @@ public abstract class ICollection_Generic_Tests<T> : IEnumerable_Generic_Tests<T
         if (!IsReadOnly && !AddRemoveClear_ThrowsNotSupported)
         {
             ICollection<T> collection = GenericICollectionFactory(count);
-            List<T> itemsToRemove = collection.ToList();
+            List<T> itemsToRemove = [.. collection];
             for (int i = 0; i < count; i++)
                 collection.Remove(collection.ElementAt(0));
             collection.Add(CreateT(254));

@@ -6,6 +6,10 @@
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NoWarn>xUnit1042</NoWarn>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="MSTest.TestAdapter" Version="4.0.2" />
     <PackageReference Include="MSTest.TestFramework" Version="4.0.2" />

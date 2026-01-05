@@ -1061,7 +1061,7 @@ public abstract partial class IntervalCoreTests
 
         set.IntersectWith(interval);
 
-        Assert.AreEqual(0, set.Count);
+        Assert.IsEmpty(set);
     }
 
     [TestMethod]
@@ -1109,7 +1109,7 @@ public abstract partial class IntervalCoreTests
 
         set.ExceptWith(interval);
 
-        Assert.AreEqual(0, set.Count);
+        Assert.IsEmpty(set);
     }
 
     #endregion
