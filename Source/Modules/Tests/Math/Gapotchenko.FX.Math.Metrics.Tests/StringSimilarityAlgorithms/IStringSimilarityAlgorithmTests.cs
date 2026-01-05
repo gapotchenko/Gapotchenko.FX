@@ -27,8 +27,8 @@ public abstract class IStringSimilarityAlgorithmTests : IStringMetricAlgorithmTe
         {
             var actualSimilarity = SimilarityAlgorithm.Calculate(a, b);
 
-            Assert.IsTrue(actualSimilarity >= 0);
-            Assert.IsTrue(actualSimilarity <= 1);
+            Assert.IsGreaterThanOrEqualTo(0, actualSimilarity);
+            Assert.IsLessThanOrEqualTo(1, actualSimilarity);
             Assert.AreEqual(expectedSimilarity, actualSimilarity, delta);
 
             var actualSimilarity2 = (double)MetricAlgorithm.Calculate(a, b);

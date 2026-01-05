@@ -270,7 +270,7 @@ public partial class GraphTests
     }
 
     [TestMethod]
-    public void Graph_Relexes_GetReduction()
+    public void Graph_Reflexes_GetReduction()
     {
         var g = new Graph<int>
         {
@@ -1064,41 +1064,41 @@ public partial class GraphTests
         };
 
         var connectedComponents = g.ConnectedComponents.ToHashSet(GraphEqualityComparer<int>.Default);
-        Assert.AreEqual(3, connectedComponents.Count);
+        Assert.HasCount(3, connectedComponents);
 
-        Assert.IsTrue(
-            connectedComponents.Contains(
-                new Graph<int>
+        Assert.Contains(
+            new Graph<int>
+            {
+                Edges =
                 {
-                    Edges =
-                    {
-                        (1, 7), (9, 7),
-                        (7, 2), (7, 4), (7, 8), (7, 10),
-                        (2, 4),
-                    }
-                }),
+                    (1, 7), (9, 7),
+                    (7, 2), (7, 4), (7, 8), (7, 10),
+                    (2, 4),
+                }
+            },
+            connectedComponents,
             "Subgraph 1 is missing.");
 
-        Assert.IsTrue(
-            connectedComponents.Contains(
-                new Graph<int>
+        Assert.Contains(
+            new Graph<int>
+            {
+                Edges =
                 {
-                    Edges =
-                    {
-                        (5, 11)
-                    }
-                }),
+                    (5, 11)
+                }
+            },
+            connectedComponents,
             "Subgraph 2 is missing.");
 
-        Assert.IsTrue(
-            connectedComponents.Contains(
-                new Graph<int>
+        Assert.Contains(
+            new Graph<int>
+            {
+                Edges =
                 {
-                    Edges =
-                    {
-                        (6, 3), (6, 12)
-                    }
-                }),
+                    (6, 3), (6, 12)
+                }
+            },
+            connectedComponents,
             "Subgraph 3 is missing.");
     }
 }

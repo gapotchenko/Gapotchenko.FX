@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <NoWarn>$(NoWarn),IDE0330</NoWarn>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageTag Include="async;recursive;reentrant;threading;bridge;mutex;lock;monitor;event;condition variable" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Threading.TaskBridge" />
