@@ -74,6 +74,25 @@ partial class FileSystemViewExtensions
     }
 
     /// <summary>
+    /// Asynchronously opens an existing UTF-8 encoded text file for reading.
+    /// </summary>
+    /// <inheritdoc cref="ReadTextFile(IReadOnlyFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static async Task<StreamReader> ReadTextFileAsync(
+        this IReadOnlyFileSystemView view,
+        string path,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        return new StreamReader(
+            await view.ReadFileAsync(path, cancellationToken).ConfigureAwait(false),
+            Encoding.UTF8);
+    }
+
+    /// <summary>
     /// Opens a <see cref="Stream"/> on the specified path with read/write access with no sharing.
     /// </summary>
     /// <returns>
