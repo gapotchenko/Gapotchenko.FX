@@ -1142,8 +1142,9 @@ partial class FileSystemViewExtensions
     /// </summary>
     /// <param name="view">The file system view.</param>
     /// <param name="path">The file to read.</param>
-    /// <inheritdoc cref="IReadOnlyFileSystemView.ReadFile(string)" path="/exception" />
     /// <returns>A sequence of lines of the file.</returns>
+    /// <inheritdoc cref="IReadOnlyFileSystemView.ReadFile(string)" path="/exception" />
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
     public static IEnumerable<string> ReadFileLines(this IReadOnlyFileSystemView view, string path)
     {
         if (view is LocalFileSystemView)
@@ -1272,9 +1273,14 @@ partial class FileSystemViewExtensions
         }
     }
 
-    /// <inheritdoc cref="File.ReadAllLines(string)"/>
+    /// <summary>
+    /// Opens a text file, reads all lines of the file, and then closes the file.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
+    /// <param name="path">The file to read.</param>
+    /// <returns>A string array containing all lines of the file.</returns>
+    /// <inheritdoc cref="IReadOnlyFileSystemView.ReadFile(string)" path="/exception" />
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
     public static string[] ReadAllFileLines(this IReadOnlyFileSystemView view, string path)
     {
         if (view is LocalFileSystemView)
@@ -1289,10 +1295,10 @@ partial class FileSystemViewExtensions
         }
     }
 
-    /// <inheritdoc cref="File.ReadAllLines(string, Encoding)"/>
-    /// <param name="view">The file system view.</param>
+    /// <inheritdoc cref="ReadAllFileLines(IReadOnlyFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
     /// <param name="path"><inheritdoc/></param>
-    /// <param name="encoding"><inheritdoc/></param>
+    /// <param name="encoding">The character encoding to use.</param>
     public static string[] ReadAllFileLines(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
         if (view is LocalFileSystemView)
@@ -1302,8 +1308,9 @@ partial class FileSystemViewExtensions
         else
         {
             ArgumentNullException.ThrowIfNull(view);
+            ArgumentNullException.ThrowIfNull(encoding);
 
-            return ReadAllFileLinesCore(view, path, encoding ?? throw new ArgumentNullException(nameof(encoding)));
+            return ReadAllFileLinesCore(view, path, encoding);
         }
     }
 
