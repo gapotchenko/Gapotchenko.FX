@@ -412,7 +412,15 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual DateTime GetLastWriteTime(string path) => throw new NotSupportedException();
 
     /// <inheritdoc/>
+    public virtual Task<DateTime> GetLastWriteTimeAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => GetLastWriteTime(path), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual void SetLastWriteTime(string path, DateTime lastWriteTime) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public Task SetLastWriteTimeAsync(string path, DateTime lastWriteTime, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => SetLastWriteTime(path, lastWriteTime), cancellationToken);
 
     /// <inheritdoc/>
     public virtual DateTime GetLastAccessTime(string path) => throw new NotSupportedException();

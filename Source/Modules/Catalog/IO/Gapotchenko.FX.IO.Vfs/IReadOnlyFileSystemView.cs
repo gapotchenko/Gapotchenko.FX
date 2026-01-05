@@ -220,6 +220,11 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="File.GetLastWriteTimeUtc(string)"/>
     DateTime GetLastWriteTime(string path);
 
+    /// <inheritdoc cref="GetLastWriteTime(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<DateTime> GetLastWriteTimeAsync(string path, CancellationToken cancellationToken = default);
+
     /// <remarks>
     /// If the file or directory described in the <paramref name="path"/> parameter does not exist,
     /// this method returns <see cref="DateTime.MinValue"/>.

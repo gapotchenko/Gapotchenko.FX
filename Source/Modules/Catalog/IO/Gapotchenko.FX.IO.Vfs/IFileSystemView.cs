@@ -160,6 +160,15 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     void SetLastWriteTime(string path, DateTime lastWriteTime);
 
     /// <summary>
+    /// Asynchronously sets the date and time when the specified file or directory was last written to.
+    /// </summary>
+    /// <inheritdoc cref="SetLastWriteTime(string, DateTime)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="lastWriteTime"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task SetLastWriteTimeAsync(string path, DateTime lastWriteTime, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Sets the date and time when the specified file or directory was created.
     /// </summary>
     /// <inheritdoc cref="Directory.SetCreationTimeUtc(string, DateTime)"/>

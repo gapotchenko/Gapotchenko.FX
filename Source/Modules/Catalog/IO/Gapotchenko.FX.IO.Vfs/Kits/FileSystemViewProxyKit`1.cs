@@ -176,7 +176,15 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual DateTime GetLastWriteTime(string path) => BaseView.GetLastWriteTime(path);
 
     /// <inheritdoc/>
+    public virtual Task<DateTime> GetLastWriteTimeAsync(string path, CancellationToken cancellationToken = default) =>
+        BaseView.GetLastWriteTimeAsync(path, cancellationToken);
+
+    /// <inheritdoc/>
     public virtual void SetLastWriteTime(string path, DateTime lastWriteTime) => BaseView.SetLastWriteTime(path, lastWriteTime);
+
+    /// <inheritdoc/>
+    public virtual Task SetLastWriteTimeAsync(string path, DateTime lastWriteTime, CancellationToken cancellationToken = default) =>
+        BaseView.SetLastWriteTimeAsync(path, lastWriteTime, cancellationToken);
 
     /// <inheritdoc/>
     public virtual DateTime GetLastAccessTime(string path) => BaseView.GetLastAccessTime(path);
