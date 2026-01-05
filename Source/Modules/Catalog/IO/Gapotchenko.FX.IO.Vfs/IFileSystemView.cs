@@ -216,5 +216,14 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <inheritdoc cref="File.SetAttributes(string, FileAttributes)"/>
     void SetAttributes(string path, FileAttributes attributes);
 
+    /// <summary>
+    /// Asynchronously sets the specified <see cref="FileAttributes"/> of the file or directory on the specified path.
+    /// </summary>
+    /// <inheritdoc cref="SetAttributes(string, FileAttributes)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="attributes"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task SetAttributesAsync(string path, FileAttributes attributes, CancellationToken cancellationToken = default);
+
     #endregion
 }

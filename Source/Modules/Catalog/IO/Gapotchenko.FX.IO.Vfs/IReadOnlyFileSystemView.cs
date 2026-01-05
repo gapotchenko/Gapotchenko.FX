@@ -274,6 +274,14 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="File.GetAttributes(string)"/>
     FileAttributes GetAttributes(string path);
 
+    /// <summary>
+    /// Asynchronously gets the <see cref="FileAttributes"/> of the specified file or directory.
+    /// </summary>
+    /// <inheritdoc cref="GetAttributes(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<FileAttributes> GetAttributesAsync(string path, CancellationToken cancellationToken = default);
+
     #endregion
 
     #region Paths

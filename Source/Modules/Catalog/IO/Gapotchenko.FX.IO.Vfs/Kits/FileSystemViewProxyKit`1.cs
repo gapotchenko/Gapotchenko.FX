@@ -204,7 +204,15 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual FileAttributes GetAttributes(string path) => BaseView.GetAttributes(path);
 
     /// <inheritdoc/>
+    public virtual Task<FileAttributes> GetAttributesAsync(string path, CancellationToken cancellationToken = default) =>
+        BaseView.GetAttributesAsync(path, cancellationToken);
+
+    /// <inheritdoc/>
     public virtual void SetAttributes(string path, FileAttributes attributes) => BaseView.SetAttributes(path, attributes);
+
+    /// <inheritdoc/>
+    public virtual Task SetAttributesAsync(string path, FileAttributes attributes, CancellationToken cancellationToken = default) =>
+        BaseView.SetAttributesAsync(path, attributes, cancellationToken);
 
     #endregion
 

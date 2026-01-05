@@ -292,10 +292,22 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.GetAttributes(path);
     }
 
+    public override Task<FileAttributes> GetAttributesAsync(string path, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.GetAttributesAsync(path, cancellationToken);
+    }
+
     public override void SetAttributes(string path, FileAttributes attributes)
     {
         EnsureCanWrite();
         base.SetAttributes(path, attributes);
+    }
+
+    public override Task SetAttributesAsync(string path, FileAttributes attributes, CancellationToken cancellationToken = default)
+    {
+        EnsureCanWrite();
+        return base.SetAttributesAsync(path, attributes, cancellationToken);
     }
 
     #endregion

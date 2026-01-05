@@ -440,7 +440,15 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual FileAttributes GetAttributes(string path) => throw new NotSupportedException();
 
     /// <inheritdoc/>
+    public virtual Task<FileAttributes> GetAttributesAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => GetAttributes(path), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual void SetAttributes(string path, FileAttributes attributes) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public Task SetAttributesAsync(string path, FileAttributes attributes, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => SetAttributes(path, attributes), cancellationToken);
 
     #endregion
 
