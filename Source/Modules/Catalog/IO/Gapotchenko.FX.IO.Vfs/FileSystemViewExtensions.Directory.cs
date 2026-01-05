@@ -23,6 +23,21 @@ partial class FileSystemViewExtensions
         view.DeleteDirectory(path, false);
     }
 
+    /// <summary>
+    /// Asynchronously deletes the specified directory.
+    /// </summary>
+    /// <inheritdoc cref="DeleteDirectory(IFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous directory deletion operation.</returns>
+    public static Task DeleteDirectoryAsync(this IFileSystemView view, string path, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        return view.DeleteDirectoryAsync(path, false, cancellationToken);
+    }
+
     #region Copy
 
     /// <summary>
