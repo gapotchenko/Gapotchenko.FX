@@ -36,7 +36,7 @@ public class CrockfordBase32Tests
     [DataRow("1Ll", "111")]
     [DataRow("1Ii", "111")]
     [DataRow("Loi", "101")]
-    public void CrockfordBase32_Canonicilization(string from, string to) =>
+    public void CrockfordBase32_Canonicalization(string from, string to) =>
         Assert.AreEqual(
             to,
             CrockfordBase32.Instance.Canonicalize(from.AsSpan()));

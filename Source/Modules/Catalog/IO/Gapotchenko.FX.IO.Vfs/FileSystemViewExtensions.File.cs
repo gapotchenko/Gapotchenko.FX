@@ -1149,7 +1149,7 @@ partial class FileSystemViewExtensions
         while (reader.ReadLine() is not null and var line)
             lines.Add(line);
 
-        return lines.ToArray();
+        return [.. lines];
     }
 
     #endregion

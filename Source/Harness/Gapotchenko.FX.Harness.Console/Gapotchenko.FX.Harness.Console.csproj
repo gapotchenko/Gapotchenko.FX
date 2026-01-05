@@ -6,7 +6,11 @@
     <!--<Prefer32Bit>true</Prefer32Bit>-->
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <NoWarn>$(NoWarn),CS0162</NoWarn>
+    <AnalysisMode>none</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>

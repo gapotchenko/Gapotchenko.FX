@@ -67,7 +67,7 @@ public class StringBuilderTests
     [TestMethod]
     public void StringBuilder_AJ_A1()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(null!, ", ", new object[0]));
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(null!, ", ", Array.Empty<object>()));
     }
 
     [TestMethod]
@@ -81,7 +81,7 @@ public class StringBuilderTests
     public void StringBuilder_AJ_A3()
     {
         var sb = new StringBuilder("X");
-        var returnedSB = StringBuilderExtensions.AppendJoin(sb, ", ", new object[0]);
+        var returnedSB = StringBuilderExtensions.AppendJoin(sb, ", ", Array.Empty<object>());
         Assert.AreSame(sb, returnedSB);
         Assert.AreEqual("X", sb.ToString());
     }
@@ -232,7 +232,7 @@ public class StringBuilderTests
     [TestMethod]
     public void StringBuilder_AJ_CS_E7()
     {
-        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(null!, ';', new object[0]));
+        Assert.ThrowsExactly<ArgumentNullException>(() => StringBuilderExtensions.AppendJoin(null!, ';', Array.Empty<object>()));
     }
 
     [TestMethod]
@@ -246,7 +246,7 @@ public class StringBuilderTests
     public void StringBuilder_AJ_CS_A2()
     {
         var sb = new StringBuilder("X");
-        var returnedSB = StringBuilderExtensions.AppendJoin(sb, ';', new object[0]);
+        var returnedSB = StringBuilderExtensions.AppendJoin(sb, ';', Array.Empty<object>());
         Assert.AreSame(sb, returnedSB);
         Assert.AreEqual("X", sb.ToString());
     }

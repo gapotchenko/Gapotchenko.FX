@@ -36,7 +36,7 @@ partial class IntervalExtensions
         else if (interval.IsEmpty)
             set.Clear();
         else
-            set.ExceptWith(set.Except(interval).ToList());
+            set.ExceptWith([.. set.Except(interval)]);
     }
 
     /// <summary>
@@ -66,6 +66,6 @@ partial class IntervalExtensions
         else if (interval.IsEmpty)
             return;
         else
-            set.ExceptWith(set.Intersect(interval).ToList());
+            set.ExceptWith([.. set.Intersect(interval)]);
     }
 }

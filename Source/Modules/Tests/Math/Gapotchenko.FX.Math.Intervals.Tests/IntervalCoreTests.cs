@@ -590,8 +590,8 @@ public abstract partial class IntervalCoreTests
         Assert.IsFalse(a.IntervalEquals(b));
         Assert.IsFalse(b.IntervalEquals(a));
 
-        Assert.IsFalse(a == b);
-        Assert.IsFalse(b == a);
+        Assert.AreNotEqual(b, a);
+        Assert.AreNotEqual(a, b);
     }
 
     #endregion
