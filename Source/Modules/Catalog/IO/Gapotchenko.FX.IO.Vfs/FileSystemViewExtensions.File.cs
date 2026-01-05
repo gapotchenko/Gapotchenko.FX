@@ -675,35 +675,66 @@ partial class FileSystemViewExtensions
 
     #region Read text
 
-    /// <inheritdoc cref="File.ReadAllText(string)"/>
+    /// <summary>
+    /// Opens a text file, reads all the text in the file, and then closes the file.
+    /// </summary>
     /// <param name="view">The file system view.</param>
-    /// <param name="path"><inheritdoc/></param>
+    /// <param name="path">The file to read.</param>
+    /// <returns>A string containing all the text in the file.</returns>
+    /// <inheritdoc cref="IReadOnlyFileSystemView.ReadFile(string)" path="/exception" />
     public static string ReadAllFileText(this IReadOnlyFileSystemView view, string path)
     {
         if (view is LocalFileSystemView)
+        {
             return File.ReadAllText(path);
+        }
         else
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
             return ReadAllFileTextCore(view, path, Encoding.UTF8);
+        }
     }
 
-    /// <inheritdoc cref="File.ReadAllText(string, Encoding)"/>
-    /// <param name="view">The file system view.</param>
+    /// <summary>
+    /// Opens a file, reads all text in the file with the specified encoding, and then closes the file.
+    /// </summary>
+    /// <inheritdoc cref="ReadAllFileText(IReadOnlyFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
     /// <param name="path"><inheritdoc/></param>
-    /// <param name="encoding"><inheritdoc/></param>
+    /// <param name="encoding">The character encoding to use.</param>
     public static string ReadAllFileText(this IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
         if (view is LocalFileSystemView)
+        {
             return File.ReadAllText(path, encoding);
+        }
         else
+        {
+            ArgumentNullException.ThrowIfNull(view);
+            ArgumentNullException.ThrowIfNull(encoding);
+
             return ReadAllFileTextCore(view, path, encoding);
+        }
     }
 
     static string ReadAllFileTextCore(IReadOnlyFileSystemView view, string path, Encoding encoding)
     {
-        ArgumentNullException.ThrowIfNull(view);
-
         using var reader = new StreamReader(view.ReadFile(path), encoding);
         return reader.ReadToEnd();
+    }
+
+    static async Task<string> ReadAllFileTextCoreAsync(IReadOnlyFileSystemView view, string path, Encoding encoding, CancellationToken cancellationToken)
+    {
+        using var reader = new StreamReader(
+            await view.ReadFileAsync(path, cancellationToken).ConfigureAwait(false),
+            encoding);
+
+        return await reader.ReadToEndAsync(
+#if NET7_0_OR_GREATER
+            cancellationToken
+#endif
+            ).ConfigureAwait(false);
     }
 
     #endregion
