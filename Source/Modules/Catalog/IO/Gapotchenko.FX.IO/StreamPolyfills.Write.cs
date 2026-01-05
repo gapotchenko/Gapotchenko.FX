@@ -41,8 +41,8 @@ partial class StreamPolyfills
 #else
         int count = buffer.Length;
 
-        var pool = ArrayPool<byte>.Shared;
-        byte[] array = pool.Rent(count);
+        var arrayPool = ArrayPool<byte>.Shared;
+        byte[] array = arrayPool.Rent(count);
         try
         {
             buffer.CopyTo(array);
@@ -50,10 +50,12 @@ partial class StreamPolyfills
         }
         finally
         {
-            pool.Return(array);
+            arrayPool.Return(array);
         }
 #endif
     }
+
+#if TFF_VALUETASK
 
     /// <summary>
     /// Asynchronously writes a sequence of bytes to the current stream,
@@ -69,7 +71,7 @@ partial class StreamPolyfills
 #else
     // TODO: method use should be discouraged because the polyfill implementation incurs memory copying.
 #endif
-    public static Task WriteAsync(
+    public static ValueTask WriteAsync(
 #if !TFF_STREAM_SPAN
         this
 #endif
@@ -80,32 +82,32 @@ partial class StreamPolyfills
         ArgumentNullException.ThrowIfNull(stream);
 
 #if TFF_STREAM_SPAN
-        return stream.WriteAsync(buffer, cancellationToken).AsTask();
+        return stream.WriteAsync(buffer, cancellationToken);
 #else
         if (MemoryMarshal.TryGetArray(buffer, out ArraySegment<byte> array))
-        {
-            return stream.WriteAsync(array.Array!, array.Offset, array.Count, cancellationToken);
-        }
+            return new(stream.WriteAsync(array.Array!, array.Offset, array.Count, cancellationToken));
         else
-        {
             return CoreImpl(stream, buffer, cancellationToken);
-        }
 
-        static async Task CoreImpl(Stream stream, ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
+        static async ValueTask CoreImpl(Stream stream, ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken)
         {
             int count = buffer.Length;
-            var pool = ArrayPool<byte>.Shared;
-            byte[] sharedBuffer = pool.Rent(count);
+
+            var arrayPool = ArrayPool<byte>.Shared;
+            byte[] array = arrayPool.Rent(count);
             try
             {
-                buffer.Span.CopyTo(sharedBuffer);
-                await stream.WriteAsync(sharedBuffer, 0, count, cancellationToken).ConfigureAwait(false);
+                buffer.Span.CopyTo(array);
+                await stream.WriteAsync(array, 0, count, cancellationToken).ConfigureAwait(false);
             }
             finally
             {
-                pool.Return(sharedBuffer);
+                arrayPool.Return(array);
             }
         }
 #endif
     }
+
+#endif
+
 }

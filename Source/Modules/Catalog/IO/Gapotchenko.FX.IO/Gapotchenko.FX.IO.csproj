@@ -36,4 +36,6 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <Import Project="$(MasteringDir)\OOB\System.Threading.Tasks.Extensions.props" />
+
 </Project>

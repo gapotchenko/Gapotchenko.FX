@@ -41,8 +41,8 @@ public static class TextWriterPolyfills
 #if TFF_TEXTWRITER_SPAN
         writer.Write(buffer);
 #else
-        var pool = ArrayPool<char>.Shared;
-        char[] array = pool.Rent(buffer.Length);
+        var arrayPool = ArrayPool<char>.Shared;
+        char[] array = arrayPool.Rent(buffer.Length);
         try
         {
             buffer.CopyTo(new Span<char>(array));
@@ -50,7 +50,7 @@ public static class TextWriterPolyfills
         }
         finally
         {
-            pool.Return(array);
+            arrayPool.Return(array);
         }
 #endif
     }
@@ -75,8 +75,8 @@ public static class TextWriterPolyfills
 #if TFF_TEXTWRITER_SPAN
         writer.WriteLine(buffer);
 #else
-        var pool = ArrayPool<char>.Shared;
-        char[] array = pool.Rent(buffer.Length);
+        var arrayPool = ArrayPool<char>.Shared;
+        char[] array = arrayPool.Rent(buffer.Length);
         try
         {
             buffer.CopyTo(new Span<char>(array));
@@ -84,7 +84,7 @@ public static class TextWriterPolyfills
         }
         finally
         {
-            pool.Return(array);
+            arrayPool.Return(array);
         }
 #endif
     }

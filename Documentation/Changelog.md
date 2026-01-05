@@ -10,7 +10,7 @@ Release date: not released yet
 - Added `SemanticVersion.Parse` and `SemanticVersion.TryParse` method overloads accepting `ReadOnlySpan<char>` parameters
 - Improved `SemanticVersion` type converter
 - Polyfills:
-    - Added `System.IO.Stream` polyfill methods: `Read(Span<byte>)`, `Write(ReadOnlySpan<byte>)`, `WriteAsync(ReadOnlyMemory<byte>, CancellationToken)`
+    - Added `System.IO.Stream` polyfill methods: `Read(Span<byte>)`, `ReadAsync(Memory<byte>, CancellationToken)`, `Write(ReadOnlySpan<byte>)`, `WriteAsync(ReadOnlyMemory<byte>, CancellationToken)`
     - Added `System.IO.TextWriter` polyfill methods: `Write(ReadOnlySpan<char>)`, `WriteLine(ReadOnlySpan<char>)`, `WriteAsync(ReadOnlyMemory<char>, CancellationToken)`, and `WriteLineAsync(ReadOnlyMemory<char>, CancellationToken)`
 
 ## 2025
