@@ -47,6 +47,9 @@ public interface IReadOnlyFileSystemView
 
     #region Files
 
+    /// <summary>
+    /// Determines whether the specified file exists.
+    /// </summary>
     /// <inheritdoc cref="File.Exists(string?)"/>
     bool FileExists([NotNullWhen(true)] string? path);
 
@@ -163,15 +166,19 @@ public interface IReadOnlyFileSystemView
     /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
     IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions);
 
-    /// <summary>
-    /// Determines whether the given path refers to an existing file or directory in the file system.
-    /// </summary>
-    /// <inheritdoc cref="FileSystem.EntryExists(string?)"/>
-    bool EntryExists([NotNullWhen(true)] string? path);
-
     #endregion
 
     #region Entries
+
+    /// <summary>
+    /// Determines whether the given path refers to an existing file or directory in the file system.
+    /// </summary>
+    /// <param name="path">The path to test.</param>
+    /// <returns>
+    /// <see langword="true"/> if path refers to an existing file or directory;
+    /// <see langword="false"/> if neither directory nor file exists or an error occurs when trying to determine if the specified file system entry exists.
+    /// </returns>
+    bool EntryExists([NotNullWhen(true)] string? path);
 
     /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string)"/>
     IEnumerable<string> EnumerateEntries(string path);
