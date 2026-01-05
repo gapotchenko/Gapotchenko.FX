@@ -25,13 +25,13 @@ public abstract class IStringSimilarityAlgorithmTests : IStringMetricAlgorithmTe
 
         void Run(string a, string b)
         {
-            var actualSimilarity = SimilarityAlgorithm.Calculate(a, b);
+            double actualSimilarity = SimilarityAlgorithm.Calculate(a, b);
 
             Assert.IsGreaterThanOrEqualTo(0, actualSimilarity);
             Assert.IsLessThanOrEqualTo(1, actualSimilarity);
             Assert.AreEqual(expectedSimilarity, actualSimilarity, delta);
 
-            var actualSimilarity2 = (double)MetricAlgorithm.Calculate(a, b);
+            double actualSimilarity2 = (double)MetricAlgorithm.Calculate(a, b);
             Assert.AreEqual(actualSimilarity, actualSimilarity2);
         }
     }

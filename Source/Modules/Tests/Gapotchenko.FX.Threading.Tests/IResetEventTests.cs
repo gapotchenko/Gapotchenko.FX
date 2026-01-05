@@ -7,7 +7,6 @@
 // Year of introduction: 2024
 
 using Gapotchenko.FX.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Threading.Tests;
 

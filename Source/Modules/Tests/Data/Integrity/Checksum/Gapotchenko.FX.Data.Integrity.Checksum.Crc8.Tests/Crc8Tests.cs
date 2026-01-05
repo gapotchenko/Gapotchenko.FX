@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Data.Integrity.Checksum.Tests.Bench;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Data.Integrity.Checksum.Tests;
 
@@ -20,7 +19,7 @@ public class Crc8Tests
     {
         var algorithm = Crc8.Standard;
         var ha = algorithm.CreateHashAlgorithm();
-        var hash = ha.ComputeHash(ChecksumTestBench.TV19);
+        byte[] hash = ha.ComputeHash(ChecksumTestBench.TV19);
         Assert.HasCount(1, hash);
         Assert.AreEqual(0xf4, hash[0]);
     }

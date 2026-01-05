@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Gapotchenko.FX.Diagnostics.Process.Tests;
+﻿namespace Gapotchenko.FX.Diagnostics.Process.Tests;
 
 using Process = System.Diagnostics.Process;
 

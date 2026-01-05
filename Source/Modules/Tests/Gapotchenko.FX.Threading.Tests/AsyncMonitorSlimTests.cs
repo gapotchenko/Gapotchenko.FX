@@ -5,8 +5,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Gapotchenko.FX.Threading.Tests;
 
 #if PREVIEW

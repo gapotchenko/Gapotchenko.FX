@@ -8,11 +8,11 @@ public class CartesianProductTests
     [TestMethod]
     public void CartesianProduct_Of_2x0()
     {
-        var factors = new int[][]
-        {
+        int[][] factors =
+        [
             [1, 2],
             []
-        };
+        ];
 
         int l1 = factors[0].Length;
         int l2 = factors[1].Length;
@@ -27,11 +27,11 @@ public class CartesianProductTests
     [TestMethod]
     public void CartesianProduct_Of_2x3()
     {
-        var factors = new int[][]
-        {
+        int[][] factors =
+        [
             [1, 2],
             [5, 6, 7]
-        };
+        ];
 
         int l1 = factors[0].Length;
         int l2 = factors[1].Length;

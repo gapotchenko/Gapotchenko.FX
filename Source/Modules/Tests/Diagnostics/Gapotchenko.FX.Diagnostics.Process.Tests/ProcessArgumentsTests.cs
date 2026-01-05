@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Gapotchenko.FX.Diagnostics.Process.Tests;
+﻿namespace Gapotchenko.FX.Diagnostics.Process.Tests;
 
 using Process = System.Diagnostics.Process;
 
@@ -25,7 +23,7 @@ public class ProcessArgumentsTests
             // Ensure that the process is fully initialized.
             process.StandardOutput.ReadLine();
 
-            var commandLine = process.ReadArguments();
+            string commandLine = process.ReadArguments();
             Assert.AreEqual("dotnet fsi", CommandLine.Build(CommandLine.Split(commandLine)));
         }
         finally

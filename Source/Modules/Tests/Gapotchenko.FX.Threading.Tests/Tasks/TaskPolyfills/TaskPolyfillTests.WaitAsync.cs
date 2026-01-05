@@ -6,7 +6,6 @@
 // Year of introduction: 2023
 
 using Gapotchenko.FX.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Threading.Tests.Tasks.TaskPolyfills;
 

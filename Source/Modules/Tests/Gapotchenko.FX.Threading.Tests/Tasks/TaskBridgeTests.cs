@@ -6,7 +6,6 @@
 // Year of introduction: 2019
 
 using Gapotchenko.FX.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading.Tests.Tasks;
@@ -37,7 +36,7 @@ public sealed class TaskBridgeTests
             for (int i = 0; i < 10000; i++)
             {
                 int tid = Environment.CurrentManagedThreadId;
-                mapArg[tid] = mapArg.TryGetValue(tid, out var count) ? count + 1 : 1;
+                mapArg[tid] = mapArg.TryGetValue(tid, out int count) ? count + 1 : 1;
                 await Task.Yield();
             }
         }
