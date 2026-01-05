@@ -1078,7 +1078,33 @@ partial class FileSystemViewExtensions
     }
 
     /// <summary>
-    /// Read the lines of a file that has a specified encoding.
+    /// Asynchronously reads the lines of a file.
+    /// </summary>
+    /// <inheritdoc cref="ReadFileLines(IReadOnlyFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static IAsyncEnumerable<string> ReadFileLinesAsync(
+        this IReadOnlyFileSystemView view,
+        string path,
+        CancellationToken cancellationToken = default)
+    {
+#if NET7_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            return File.ReadLinesAsync(path, cancellationToken);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+
+            return ReadFileLinesCoreAsync(view, path, Encoding.UTF8, cancellationToken);
+        }
+    }
+
+    /// <summary>
+    /// Reads the lines of a file that has a specified encoding.
     /// </summary>
     /// <inheritdoc cref="ReadFileLines(IReadOnlyFileSystemView, string)"/>
     /// <param name="view"><inheritdoc/></param>
@@ -1096,6 +1122,35 @@ partial class FileSystemViewExtensions
             ArgumentNullException.ThrowIfNull(encoding);
 
             return ReadFileLinesCore(view, path, encoding);
+        }
+    }
+
+    /// <summary>
+    /// Asynchronously reads the lines of a file that has a specified encoding.
+    /// </summary>
+    /// <inheritdoc cref="ReadFileLines(IReadOnlyFileSystemView, string, Encoding)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="encoding"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static IAsyncEnumerable<string> ReadFileLinesAsync(
+        this IReadOnlyFileSystemView view,
+        string path,
+        Encoding encoding,
+        CancellationToken cancellationToken = default)
+    {
+#if NET7_0_OR_GREATER
+        if (view is LocalFileSystemView)
+        {
+            return File.ReadLinesAsync(path, encoding, cancellationToken);
+        }
+        else
+#endif
+        {
+            ArgumentNullException.ThrowIfNull(view);
+            ArgumentNullException.ThrowIfNull(encoding);
+
+            return ReadFileLinesCoreAsync(view, path, encoding, cancellationToken);
         }
     }
 
@@ -1182,7 +1237,7 @@ partial class FileSystemViewExtensions
         return [.. lines];
     }
 
-#endregion
+    #endregion
 
     #region Write lines
 
@@ -1423,7 +1478,7 @@ partial class FileSystemViewExtensions
 
     #endregion
 
-#endregion
+    #endregion
 
     #region Copy
 
