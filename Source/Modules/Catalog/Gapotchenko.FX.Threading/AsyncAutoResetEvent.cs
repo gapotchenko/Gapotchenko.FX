@@ -1,6 +1,6 @@
 ﻿// Gapotchenko.FX
-// Copyright © Gapotchenko and Contributors
 //
+// Copyright © Gapotchenko and Contributors
 // Portions © Stephen Cleary
 //
 // File introduced by: Oleksiy Gapotchenko

@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 // Portions © .NET Foundation and its Licensors
 //
@@ -14,14 +15,6 @@ namespace Gapotchenko.FX.Threading.Utils;
 [StackTraceHidden]
 static class ExceptionHelper
 {
-    public static void ThrowIfArgumentIsNull(
-        [NotNull] object? value,
-        [CallerArgumentExpression(nameof(value))] string? parameterName = null)
-    {
-        if (value is null)
-            throw new ArgumentNullException(parameterName);
-    }
-
     public static void ThrowIfThisArgumentIsNull([NotNull] object? value)
     {
 #pragma warning disable CA2201 // Do not raise reserved exception types

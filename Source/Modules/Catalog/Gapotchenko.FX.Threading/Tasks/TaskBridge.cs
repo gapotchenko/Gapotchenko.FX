@@ -24,7 +24,7 @@ public static class TaskBridge
     /// <param name="task">The asynchronous <see cref="Task"/> to execute.</param>
     public static void Execute(Task task)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ArgumentNullException.ThrowIfNull(task);
 
         // Use a quick path when possible.
         if (task.IsCompleted)
@@ -61,7 +61,7 @@ public static class TaskBridge
     /// <param name="task">The function that returns an asynchronous <see cref="Task"/> to execute.</param>
     public static void Execute(Func<Task> task)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ArgumentNullException.ThrowIfNull(task);
 
         ExecuteCore(task);
     }
@@ -73,7 +73,7 @@ public static class TaskBridge
     /// <returns>A result of the executed task.</returns>
     public static TResult Execute<TResult>(Task<TResult> task)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ArgumentNullException.ThrowIfNull(task);
 
         // Use a quick path when possible.
         if (task.IsCompleted)
@@ -106,7 +106,7 @@ public static class TaskBridge
     /// <returns>A result of the executed task.</returns>
     public static TResult Execute<TResult>(Func<Task<TResult>> task)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ArgumentNullException.ThrowIfNull(task);
 
         return ExecuteCore(task);
     }
@@ -118,7 +118,7 @@ public static class TaskBridge
     /// <param name="task">The cancelable asynchronous <see cref="Task"/> to execute.</param>
     public static void Execute(Func<CancellationToken, Task> task)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ArgumentNullException.ThrowIfNull(task);
 
         ExecuteCore(task);
     }
@@ -131,7 +131,7 @@ public static class TaskBridge
     /// <param name="cancellationToken">The additional cancellation token to propagate to the executed task.</param>
     public static void Execute(Func<CancellationToken, Task> task, CancellationToken cancellationToken)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ArgumentNullException.ThrowIfNull(task);
 
         ExecuteCore(task, cancellationToken);
     }
@@ -144,7 +144,7 @@ public static class TaskBridge
     /// <returns>A result of the executed task.</returns>
     public static TResult Execute<TResult>(Func<CancellationToken, Task<TResult>> task)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ArgumentNullException.ThrowIfNull(task);
 
         return ExecuteCore(task, CancellationToken.None);
     }
@@ -158,7 +158,7 @@ public static class TaskBridge
     /// <returns>A result of the executed task.</returns>
     public static TResult Execute<TResult>(Func<CancellationToken, Task<TResult>> task, CancellationToken cancellationToken)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(task);
+        ArgumentNullException.ThrowIfNull(task);
 
         return ExecuteCore(task, cancellationToken);
     }
@@ -178,7 +178,7 @@ public static class TaskBridge
     /// <returns>A <see cref="Task{TResult}"/> that executes the specified function.</returns>
     public static async Task<TResult> ExecuteAsync<TResult>(Func<TResult> func)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(func);
+        ArgumentNullException.ThrowIfNull(func);
 
         var result = Optional.None<TResult>();
 
@@ -214,7 +214,7 @@ public static class TaskBridge
     /// <returns>A <see cref="Task{TResult}"/> that executes the specified function.</returns>
     public static async Task<TResult> ExecuteAsync<TResult>(Func<TResult> func, CancellationToken cancellationToken)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(func);
+        ArgumentNullException.ThrowIfNull(func);
 
         var result = Optional.None<TResult>();
 

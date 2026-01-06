@@ -4,7 +4,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
-using Gapotchenko.FX.Threading.Utils;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading;
@@ -40,7 +39,7 @@ public sealed class AsyncMonitorSlim : AsyncMonitorImpl<IAsyncLockable>
     /// <exception cref="ArgumentNullException"><paramref name="obj"/> is <see langword="null"/>.</exception>
     public static IAsyncMonitor For(object obj)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(obj);
+        ArgumentNullException.ThrowIfNull(obj);
 
         return AsyncMonitorObjectTable.GetDescriptor(obj).SlimMonitor;
     }

@@ -40,7 +40,7 @@ public static class Poll
         int millisecondsTimeout,
         CancellationToken cancellationToken = default)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(condition);
+        ArgumentNullException.ThrowIfNull(condition);
         ExceptionHelper.ValidateTimeoutArgument(millisecondsTimeout);
 
         Stopwatch? sw = null;
