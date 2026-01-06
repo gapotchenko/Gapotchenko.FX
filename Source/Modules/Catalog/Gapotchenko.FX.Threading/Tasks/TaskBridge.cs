@@ -260,12 +260,28 @@ public static class TaskBridge
                 using (context)
                 {
                     // Continue the task execution until its completion.
-                    RunInContext(context, null, null);
+                    try
+                    {
+                        RunInContext(context, null, null);
+                    }
+#if TFF_THREAD_ABORT
+                    catch (ThreadAbortException)
+                    {
+                        // Ignore a background thread abort.
+
+                        // Reset thread abort to not drain the thread pool.
+                        ThreadHelper.TryResetAbort();
+                    }
+#endif
+                    catch (ThreadInterruptedException)
+                    {
+                        // Ignore a background thread interruption.
+                    }
                 }
             }
 
             // Run the task in the background.
-            StartLongRunningTask(DetachedRun);
+            StartDetachedTask(DetachedRun);
         }
     }
 
@@ -338,7 +354,7 @@ public static class TaskBridge
     {
         Debug.Assert(action is not null);
 
-        return StartLongRunningTask(action);
+        return StartDetachedTask(action);
     }
 
     static Task ExecuteAsyncCore(Action action, CancellationToken cancellationToken)
@@ -380,7 +396,7 @@ public static class TaskBridge
             }
         }
 
-        var task = StartLongRunningTask(Task, cancellationToken);
+        var task = StartDetachedTask(Task, cancellationToken);
         Volatile.Write(ref executionTask, task);
 
         return task;
@@ -443,7 +459,9 @@ public static class TaskBridge
         }
     }
 
-    static Task StartLongRunningTask(Action action, CancellationToken cancellationToken = default)
+    static Task StartDetachedTask(
+        Action action,
+        CancellationToken cancellationToken = default)
     {
         Debug.Assert(action is not null);
 
