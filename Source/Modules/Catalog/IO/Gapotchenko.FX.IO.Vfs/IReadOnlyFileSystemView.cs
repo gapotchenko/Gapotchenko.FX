@@ -64,23 +64,15 @@ public interface IReadOnlyFileSystemView
     /// <summary>
     /// Returns an enumerable collection of full file names in a specified path.
     /// </summary>
-    /// <param name="path">The path to the directory to search.</param>
     /// <returns>
     /// An enumerable collection of the full names (including paths) for the files in the directory specified by path.
     /// </returns>
-    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
-    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
-    /// <exception cref="IOException"><paramref name="path"/> is a file name.</exception>
-    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
+    /// <inheritdoc cref="EnumerateEntries(string)"/>
     IEnumerable<string> EnumerateFiles(string path);
 
     /// <summary>
     /// Returns an enumerable collection of full file names that match a search pattern in a specified path.
     /// </summary>
-    /// <inheritdoc cref="EnumerateFiles(string)" />
-    /// <param name="path"><inheritdoc/></param>
     /// <param name="searchPattern">
     /// The search string to match against the names of files in path.
     /// This parameter can contain a combination of valid literal path and wildcard (<c>*</c> and <c>?</c>) characters,
@@ -90,25 +82,22 @@ public interface IReadOnlyFileSystemView
     /// An enumerable collection of the full names (including paths) for the files in the directory specified by path and
     /// that match the specified search pattern.
     /// </returns>
-    /// <exception cref="ArgumentNullException"><paramref name="searchPattern"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="searchPattern"/> does not contain a valid pattern.</exception>
+    /// <inheritdoc cref="EnumerateEntries(string, string)"/>
+    /// <param name="path"><inheritdoc/></param>
     IEnumerable<string> EnumerateFiles(string path, string searchPattern);
 
     /// <summary>
     /// Returns an enumerable collection of full file names that match a search pattern in a specified path,
     /// and optionally searches subdirectories.
     /// </summary>
-    /// <inheritdoc cref="EnumerateFiles(string, string)" />
-    /// <param name="path"><inheritdoc/></param>
-    /// <param name="searchPattern"><inheritdoc/></param>
-    /// <param name="searchOption">
-    /// One of the enumeration values that specifies whether the search operation should include only the current directory or should include all subdirectories.
-    /// </param>
+    /// <param name="searchPattern"><inheritdoc cref="EnumerateFiles(string, string)"/></param>
     /// <returns>
     /// An enumerable collection of the full names (including paths) for the files in the directory specified by path and
     /// that match the specified search pattern and search option.
     /// </returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="searchOption"/> is not a valid <see cref="SearchOption"/> value.</exception>
+    /// <inheritdoc cref="EnumerateEntries(string, string, SearchOption)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchOption"><inheritdoc/></param>
     IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
 
     /// <summary>
@@ -116,16 +105,15 @@ public interface IReadOnlyFileSystemView
     /// that match a search pattern and enumeration options in a specified path,
     /// and optionally searches subdirectories.
     /// </summary>
-    /// <inheritdoc cref="EnumerateFiles(string, string)" />
-    /// <param name="path"><inheritdoc/></param>
-    /// <param name="searchPattern"><inheritdoc/></param>
-    /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
+    /// <param name="searchPattern"><inheritdoc cref="EnumerateFiles(string, string)"/></param>
     /// <returns>
     /// An enumerable collection of the full names (including paths) for the files
     /// in the directory specified by <paramref name="path"/>
     /// and that match the specified search pattern and enumeration options.
     /// </returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="enumerationOptions"/> is not a valid <see cref="EnumerationOptions"/> value.</exception>
+    /// <inheritdoc cref="EnumerateEntries(string, string, EnumerationOptions)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="enumerationOptions"><inheritdoc/></param>
     IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);
 
     /// <summary>
