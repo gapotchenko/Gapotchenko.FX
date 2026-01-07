@@ -14,9 +14,9 @@ namespace Gapotchenko.FX.Threading.Tasks;
 /// </summary>
 public static class TaskBridge
 {
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     // Public Facade
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
     /// <summary>
     /// Synchronously completes the execution of an already started asynchronous <see cref="Task"/>.
@@ -163,56 +163,37 @@ public static class TaskBridge
         return ExecuteCore(task, cancellationToken);
     }
 
+    // ------------------------------------------------------------------------
+
     /// <summary>
-    /// Asynchronously executes a synchronous long-running <see cref="Action"/>.
+    /// Asynchronously executes a synchronous <see cref="Action"/>.
     /// </summary>
     /// <param name="action">The synchronous action to execute.</param>
     /// <returns>A <see cref="Task"/> that executes the specified action.</returns>
-    public static Task ExecuteAsync(Action action) =>
-        ExecuteAsyncCore(action ?? throw new ArgumentNullException(nameof(action)));
+    public static Task ExecuteAsync(Action action) => ExecuteAsync(action, TaskCreationOptions.None);
 
-    /// <summary>
-    /// Asynchronously executes a synchronous long-running <see cref="Func{TResult}"/>.
-    /// </summary>
-    /// <param name="func">The synchronous function to execute.</param>
-    /// <returns>A <see cref="Task{TResult}"/> that executes the specified function.</returns>
-    public static async Task<TResult> ExecuteAsync<TResult>(Func<TResult> func)
+    /// <inheritdoc cref="ExecuteAsync(Action)"/>
+    /// <param name="action"><inheritdoc/></param>
+    /// <param name="taskCreationOptions">The <see cref="TaskCreationOptions"/> value that controls the behavior of the created task.</param>
+    public static Task ExecuteAsync(Action action, TaskCreationOptions taskCreationOptions)
     {
-        ArgumentNullException.ThrowIfNull(func);
+        ArgumentNullException.ThrowIfNull(action);
 
-        var result = Optional.None<TResult>();
-
-        await
-            ExecuteAsyncCore(
-                () =>
-                {
-                    result = func();
-                })
-            .ConfigureAwait(false);
-
-        return result.Value;
+        return ExecuteAsyncCore(action, taskCreationOptions);
     }
 
     /// <summary>
-    /// Asynchronously executes a synchronous long-running <see cref="Action"/>.
-    /// If a cancellation is requested then a thread abort is issued for the execution thread of a synchronous action.
+    /// Asynchronously executes a synchronous <see cref="Func{TResult}"/>.
     /// </summary>
-    /// <param name="action">The cancelable synchronous action to execute.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A <see cref="Task"/> that executes the specified action.</returns>
-    public static Task ExecuteAsync(Action action, CancellationToken cancellationToken) =>
-        ExecuteAsyncCore(
-            action ?? throw new ArgumentNullException(nameof(action)),
-            cancellationToken);
-
-    /// <summary>
-    /// Asynchronously executes a synchronous long-running <see cref="Func{TResult}"/>.
-    /// If a cancellation is requested then a thread abort is issued for the execution thread of a synchronous function.
-    /// </summary>
-    /// <param name="func">The cancelable synchronous function to execute.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="func">The synchronous function to execute.</param>
     /// <returns>A <see cref="Task{TResult}"/> that executes the specified function.</returns>
-    public static async Task<TResult> ExecuteAsync<TResult>(Func<TResult> func, CancellationToken cancellationToken)
+    public static Task<TResult> ExecuteAsync<TResult>(Func<TResult> func) =>
+        ExecuteAsync(func, TaskCreationOptions.None);
+
+    /// <inheritdoc cref="ExecuteAsync{TResult}(Func{TResult})"/>
+    /// <param name="func"><inheritdoc/></param>
+    /// <param name="taskCreationOptions">The <see cref="TaskCreationOptions"/> value that controls the behavior of the created task.</param>
+    public static async Task<TResult> ExecuteAsync<TResult>(Func<TResult> func, TaskCreationOptions taskCreationOptions)
     {
         ArgumentNullException.ThrowIfNull(func);
 
@@ -224,15 +205,72 @@ public static class TaskBridge
                 {
                     result = func();
                 },
+                taskCreationOptions)
+            .ConfigureAwait(false);
+
+        return result.Value;
+    }
+
+    /// <summary>
+    /// Asynchronously executes a synchronous <see cref="Action"/>.
+    /// If a cancellation is requested then a thread executing the synchronous action is terminated.
+    /// </summary>
+    /// <param name="action">The cancelable synchronous action to execute.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="Task"/> that executes the specified action.</returns>
+    public static Task ExecuteAsync(Action action, CancellationToken cancellationToken) =>
+        ExecuteAsync(action, TaskCreationOptions.None, cancellationToken);
+
+    /// <inheritdoc cref="ExecuteAsync(Action, CancellationToken)"/>
+    /// <param name="action"><inheritdoc/></param>
+    /// <param name="taskCreationOptions">The <see cref="TaskCreationOptions"/> value that controls the behavior of the created task.</param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
+    public static Task ExecuteAsync(Action action, TaskCreationOptions taskCreationOptions, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        return ExecuteAsyncCore(action, taskCreationOptions, cancellationToken);
+    }
+
+    /// <summary>
+    /// Asynchronously executes a synchronous <see cref="Func{TResult}"/>.
+    /// If a cancellation is requested then a thread executing the synchronous function is terminated.
+    /// </summary>
+    /// <param name="func">The cancelable synchronous function to execute.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="Task{TResult}"/> that executes the specified function.</returns>
+    public static Task<TResult> ExecuteAsync<TResult>(Func<TResult> func, CancellationToken cancellationToken) =>
+        ExecuteAsync(func, TaskCreationOptions.None, cancellationToken);
+
+    /// <inheritdoc cref="ExecuteAsync{TResult}(Func{TResult}, CancellationToken)"/>
+    /// <param name="func"><inheritdoc/></param>
+    /// <param name="taskCreationOptions">The <see cref="TaskCreationOptions"/> value that controls the behavior of the created task.</param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
+    public static async Task<TResult> ExecuteAsync<TResult>(
+        Func<TResult> func,
+        TaskCreationOptions taskCreationOptions,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(func);
+
+        var result = Optional.None<TResult>();
+
+        await
+            ExecuteAsyncCore(
+                () =>
+                {
+                    result = func();
+                },
+                taskCreationOptions,
                 cancellationToken)
             .ConfigureAwait(false);
 
         return result.Value;
     }
 
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     // Core Implementation
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
     static void ExecuteCore(Func<Task> task)
     {
@@ -350,58 +388,6 @@ public static class TaskBridge
         }
     }
 
-    static Task ExecuteAsyncCore(Action action)
-    {
-        Debug.Assert(action is not null);
-
-        return StartDetachedTask(action);
-    }
-
-    static Task ExecuteAsyncCore(Action action, CancellationToken cancellationToken)
-    {
-        Debug.Assert(action is not null);
-
-        // Use a quick path when possible.
-        if (!cancellationToken.CanBeCanceled)
-            return ExecuteAsyncCore(action);
-
-        Task? executionTask = null;
-
-        void Task()
-        {
-            // Use a graceful cancellation opportunity.
-            if (cancellationToken.IsCancellationRequested)
-                throw new TaskCanceledException(Volatile.Read(ref executionTask));
-
-            // Execute a cancelable synchronous action.
-            try
-            {
-                using (cancellationToken.Register(
-                    static state => ThreadHelper.TryCancel((Thread)state!),
-                    Thread.CurrentThread))
-                {
-                    action();
-                }
-            }
-            catch (ThreadAbortException)
-            {
-                // Allow the task to continue interacting with a task scheduler.
-                ThreadHelper.TryResetAbort();
-
-                throw new TaskCanceledException(Volatile.Read(ref executionTask));
-            }
-            catch (ThreadInterruptedException)
-            {
-                throw new TaskCanceledException(Volatile.Read(ref executionTask));
-            }
-        }
-
-        var task = StartDetachedTask(Task, cancellationToken);
-        Volatile.Write(ref executionTask, task);
-
-        return task;
-    }
-
     static void RunInContext(ExclusiveSynchronizationContext context, Func<Task>? task, Action? cancel)
     {
         var savedContext = SynchronizationContext.Current;
@@ -459,18 +445,76 @@ public static class TaskBridge
         }
     }
 
+    // ------------------------------------------------------------------------
+
+    static Task ExecuteAsyncCore(
+        Action action,
+        TaskCreationOptions taskCreationOptions,
+        CancellationToken cancellationToken)
+    {
+        Debug.Assert(action is not null);
+
+        // Use a quick path when possible.
+        if (!cancellationToken.CanBeCanceled)
+            return ExecuteAsyncCore(action, taskCreationOptions);
+
+        Task? executionTask = null;
+
+        void Task()
+        {
+            // Use a graceful cancellation opportunity.
+            if (cancellationToken.IsCancellationRequested)
+                throw new TaskCanceledException(Volatile.Read(ref executionTask));
+
+            // Execute a cancelable synchronous action.
+            try
+            {
+                using (cancellationToken.Register(
+                    static state => ThreadHelper.TryCancel((Thread)state!),
+                    Thread.CurrentThread))
+                {
+                    action();
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                // Allow the task to continue interacting with a task scheduler.
+                ThreadHelper.TryResetAbort();
+
+                throw new TaskCanceledException(Volatile.Read(ref executionTask));
+            }
+            catch (ThreadInterruptedException)
+            {
+                throw new TaskCanceledException(Volatile.Read(ref executionTask));
+            }
+        }
+
+        var task = StartDetachedTask(Task, taskCreationOptions, cancellationToken);
+        Volatile.Write(ref executionTask, task);
+
+        return task;
+    }
+
+    static Task ExecuteAsyncCore(Action action, TaskCreationOptions taskCreationOptions)
+    {
+        Debug.Assert(action is not null);
+
+        return StartDetachedTask(action, taskCreationOptions);
+    }
+
+    // ------------------------------------------------------------------------
+
     static Task StartDetachedTask(
         Action action,
+        TaskCreationOptions taskCreationOptions = TaskCreationOptions.None,
         CancellationToken cancellationToken = default)
     {
         Debug.Assert(action is not null);
 
-        // Running a synchronous action as a long-running task prevents thread pool pollution.
-        // In this way, the task mostly acts as a standalone managed thread.
         return Task.Factory.StartNew(
             action,
             cancellationToken,
-            TaskCreationOptions.LongRunning | TaskCreationOptions.DenyChildAttach,
+            taskCreationOptions | TaskCreationOptions.DenyChildAttach,
             TaskScheduler.Default);
     }
 }
