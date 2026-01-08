@@ -8,7 +8,7 @@
 using Gapotchenko.FX.Threading.Tasks;
 using System.Runtime.CompilerServices;
 
-namespace Gapotchenko.FX.Linq.Async;
+namespace Gapotchenko.FX.Linq;
 
 /// <summary>
 /// Bridges synchronous and asynchronous enumeration models together.
