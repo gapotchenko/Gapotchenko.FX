@@ -6,11 +6,12 @@
 
 Release date: not released yet
 
+- Added `AsyncEnumerableBridge` class provided by `Gapotchenko.FX.Linq.Async` module that bridges synchronous and asynchronous enumeration models together
 - Added string parsing functionality for `Interval<T>` and `ValueInterval<T>` types
 - Added `SemanticVersion.Parse` and `SemanticVersion.TryParse` method overloads accepting `ReadOnlySpan<char>` parameters
 - Improved `SemanticVersion` type converter
 - Added `ExecuteAsync` methods to `Gapotchenko.FX.Threading.Tasks.TaskBridge` class accepting `TaskCreationOptions` parameters
-- Existing `ExecuteAsync` methods of `Gapotchenko.FX.Threading.Tasks.TaskBridge` class without `TaskCreationOptions` parameters now create thread pool tasks instead of long running tasks
+- Existing `ExecuteAsync` methods of `Gapotchenko.FX.Threading.Tasks.TaskBridge` class without `TaskCreationOptions` parameters now create thread pool tasks instead of long-running tasks
   (equivalent of specifying `TaskCreationOptions.None`)
 - Polyfills:
     - Added `System.IO.Stream` polyfill methods: `Read(Span<byte>)`, `ReadAsync(Memory<byte>, CancellationToken)`, `Write(ReadOnlySpan<byte>)`, `WriteAsync(ReadOnlyMemory<byte>, CancellationToken)`
