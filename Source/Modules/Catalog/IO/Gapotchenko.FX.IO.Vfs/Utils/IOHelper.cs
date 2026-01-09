@@ -249,6 +249,55 @@ static class IOHelper
         }
     }
 
+    public static async Task CopyFileNaiveAsync(
+        VfsReadOnlyLocation source,
+        VfsLocation destination,
+        bool overwrite,
+        VfsCopyOptions options,
+        CancellationToken cancellationToken)
+    {
+        if ((options & VfsCopyOptions.Archive) != 0)
+        {
+            var metadata = await EntryMetadata.GetFromAsync(source, destination.View, cancellationToken).ConfigureAwait(false);
+
+            await CopyFileNaiveAsync(
+                source,
+                destination,
+                overwrite,
+                options & ~VfsCopyOptions.Archive,
+                cancellationToken).ConfigureAwait(false);
+
+            await metadata.SetToAsync(destination, cancellationToken).ConfigureAwait(false);
+        }
+        else
+        {
+#if TFF_ASYNC_DISPOSABLE
+            await
+#endif
+            using (var sourceStream = await source.View.ReadFileAsync(source.Path, cancellationToken).ConfigureAwait(false))
+#if TFF_ASYNC_DISPOSABLE
+            await
+#endif
+            using (var destinationStream = await destination.View.OpenFileAsync(
+                destination.Path,
+                overwrite ? FileMode.Create : FileMode.CreateNew,
+                FileAccess.Write,
+                FileShare.None,
+                cancellationToken).ConfigureAwait(false))
+            {
+                await sourceStream.CopyToAsync(
+                    destinationStream,
+#if !(NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER)
+                    65536,
+#endif
+                    cancellationToken)
+                    .ConfigureAwait(false);
+            }
+
+            await CopyEntryAttributesAsync(source, destination, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
     #endregion
 
     #endregion
