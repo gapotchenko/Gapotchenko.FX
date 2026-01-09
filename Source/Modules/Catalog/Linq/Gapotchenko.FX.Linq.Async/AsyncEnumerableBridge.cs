@@ -133,7 +133,7 @@ public static class AsyncEnumerableBridge
             CancellationToken cancellationToken,
             [EnumeratorCancellation] CancellationToken enumeratorCancellationToken = default)
         {
-            var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, enumeratorCancellationToken);
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, enumeratorCancellationToken);
 
             var enumerator = await TaskBridge.ExecuteAsync(getEnumerator, cts.Token).ConfigureAwait(false);
             try
