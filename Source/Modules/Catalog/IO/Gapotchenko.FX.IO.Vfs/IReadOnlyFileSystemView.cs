@@ -69,6 +69,13 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="EnumerateEntries(string)"/>
     IEnumerable<string> EnumerateFiles(string path);
 
+    /// <inheritdoc cref="EnumerateFiles(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Returns an enumerable collection of full file names that match a search pattern in a specified path.
     /// </summary>
@@ -195,6 +202,13 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="EnumerateEntries(string)"/>
     IEnumerable<string> EnumerateDirectories(string path);
 
+    /// <inheritdoc cref="EnumerateDirectories(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Returns an enumerable collection of directory full names that match a search pattern in a specified path.
     /// </summary>
@@ -309,6 +323,13 @@ public interface IReadOnlyFileSystemView
     /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
     /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
     IEnumerable<string> EnumerateEntries(string path);
+
+    /// <inheritdoc cref="EnumerateEntries(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Returns an enumerable collection of file names and directory names

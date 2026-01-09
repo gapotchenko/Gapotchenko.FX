@@ -89,6 +89,12 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual IEnumerable<string> EnumerateFiles(string path) => EnumerateFiles(path, "*");
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        CancellationToken cancellationToken = default) =>
+        EnumerateFilesAsync(path, "*", cancellationToken);
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateFiles(string path, string searchPattern) =>
         EnumerateFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
 
@@ -199,6 +205,12 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual IEnumerable<string> EnumerateDirectories(string path) => EnumerateDirectories(path, "*");
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        CancellationToken cancellationToken = default) =>
+        EnumerateDirectoriesAsync(path, "*", cancellationToken);
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateDirectories(string path, string searchPattern) =>
         EnumerateDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
 
@@ -301,6 +313,12 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path) =>
         EnumerateEntries(path, "*");
+
+    /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        CancellationToken cancellationToken = default) =>
+        EnumerateEntriesAsync(path, "*", cancellationToken);
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern) =>

@@ -62,6 +62,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.EnumerateFiles(path);
     }
 
+    public override IAsyncEnumerable<string> EnumerateFilesAsync(string path, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.EnumerateFilesAsync(path, cancellationToken);
+    }
+
     public override IEnumerable<string> EnumerateFiles(string path, string searchPattern)
     {
         EnsureCanRead();
@@ -168,6 +174,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.EnumerateDirectories(path);
     }
 
+    public override IAsyncEnumerable<string> EnumerateDirectoriesAsync(string path, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.EnumerateDirectoriesAsync(path, cancellationToken);
+    }
+
     public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern)
     {
         EnsureCanRead();
@@ -260,6 +272,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     {
         EnsureCanRead();
         return base.EnumerateEntries(path);
+    }
+
+    public override IAsyncEnumerable<string> EnumerateEntriesAsync(string path, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.EnumerateEntriesAsync(path, cancellationToken);
     }
 
     public override IEnumerable<string> EnumerateEntries(string path, string searchPattern)
