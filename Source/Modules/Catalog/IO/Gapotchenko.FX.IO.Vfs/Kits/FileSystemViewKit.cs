@@ -8,6 +8,7 @@
 
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.IO.Vfs.Utils;
+using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Threading.Tasks;
 using System.Security;
 using System.Text;
@@ -94,6 +95,18 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        CancellationToken cancellationToken = default)
+    {
+        return AsyncEnumerableBridge.EnumerateAsync(
+            () => EnumerateFiles(path, searchPattern, searchOption),
+            cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
     {
         VfsValidationKit.Arguments.ValidatePath(path);
@@ -171,6 +184,18 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        CancellationToken cancellationToken = default)
+    {
+        return AsyncEnumerableBridge.EnumerateAsync(
+            () => EnumerateDirectories(path, searchPattern, searchOption),
+            cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
     {
         VfsValidationKit.Arguments.ValidatePath(path);
@@ -237,14 +262,32 @@ public abstract class FileSystemViewKit : IFileSystemView
         EnumerateEntries(path, searchPattern, SearchOption.TopDirectoryOnly);
 
     /// <inheritdoc/>
-    public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
-        EnumerateFiles(path, searchPattern, searchOption)
-        .Concat(EnumerateDirectories(path, searchPattern, searchOption));
+    public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption)
+    {
+        return
+            EnumerateFiles(path, searchPattern, searchOption)
+            .Concat(EnumerateDirectories(path, searchPattern, searchOption));
+    }
 
     /// <inheritdoc/>
-    public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
-        EnumerateFiles(path, searchPattern, enumerationOptions)
-        .Concat(EnumerateDirectories(path, searchPattern, enumerationOptions));
+    public virtual IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        CancellationToken cancellationToken = default)
+    {
+        return
+            EnumerateFilesAsync(path, searchPattern, searchOption, cancellationToken)
+            .Concat(EnumerateDirectoriesAsync(path, searchPattern, searchOption, cancellationToken));
+    }
+
+    /// <inheritdoc/>
+    public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        return
+            EnumerateFiles(path, searchPattern, enumerationOptions)
+            .Concat(EnumerateDirectories(path, searchPattern, enumerationOptions));
+    }
 
     IEnumerable<string> EnumerateEntriesCore(
         string path,

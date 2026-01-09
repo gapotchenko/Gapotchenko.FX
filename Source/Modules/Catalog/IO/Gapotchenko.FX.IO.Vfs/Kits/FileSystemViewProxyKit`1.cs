@@ -71,6 +71,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
         BaseView.EnumerateFiles(path, searchPattern, searchOption);
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateFilesAsync(string path, string searchPattern, SearchOption searchOption, CancellationToken cancellationToken = default) =>
+        BaseView.EnumerateFilesAsync(path, searchPattern, searchOption, cancellationToken);
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
         BaseView.EnumerateFiles(path, searchPattern, enumerationOptions);
 
@@ -127,6 +131,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
         BaseView.EnumerateDirectories(path, searchPattern, searchOption);
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateDirectoriesAsync(string path, string searchPattern, SearchOption searchOption, CancellationToken cancellationToken = default) =>
+        BaseView.EnumerateDirectoriesAsync(path, searchPattern, searchOption, cancellationToken);
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
         BaseView.EnumerateDirectories(path, searchPattern, enumerationOptions);
 
@@ -173,6 +181,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
         BaseView.EnumerateEntries(path, searchPattern, searchOption);
+
+    /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateEntriesAsync(string path, string searchPattern, SearchOption searchOption, CancellationToken cancellationToken = default) =>
+        BaseView.EnumerateEntriesAsync(path, searchPattern, searchOption, cancellationToken);
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions) =>

@@ -14,6 +14,7 @@
     <ProjectReference Include="..\..\Gapotchenko.FX.Collections\Gapotchenko.FX.Collections.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Memory\Gapotchenko.FX.Memory.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX.Threading\Gapotchenko.FX.Threading.csproj" />
+    <ProjectReference Include="..\..\Linq\Gapotchenko.FX.Linq.Async\Gapotchenko.FX.Linq.Async.csproj" />
     <ProjectReference Include="..\..\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
   </ItemGroup>

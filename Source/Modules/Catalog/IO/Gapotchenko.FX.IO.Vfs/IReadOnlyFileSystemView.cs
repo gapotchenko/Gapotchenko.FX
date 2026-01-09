@@ -99,6 +99,17 @@ public interface IReadOnlyFileSystemView
     /// <param name="searchOption"><inheritdoc/></param>
     IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
 
+    /// <inheritdoc cref="EnumerateFiles(string, string, SearchOption)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="searchOption"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Returns an enumerable collection of full file names
     /// that match a search pattern and enumeration options in a specified path,
@@ -194,6 +205,17 @@ public interface IReadOnlyFileSystemView
     /// <param name="searchOption"><inheritdoc/></param>
     IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
 
+    /// <inheritdoc cref="EnumerateDirectories(string, string, SearchOption)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="searchOption"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Returns an enumerable collection of directory full names
     /// that match a search pattern and enumeration options in a specified path,
@@ -286,6 +308,17 @@ public interface IReadOnlyFileSystemView
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="searchOption"/> is not a valid <see cref="SearchOption"/> value.</exception>
     IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption);
+
+    /// <inheritdoc cref="EnumerateEntries(string, string, SearchOption)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="searchOption"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Returns an enumerable collection of file names and directory names
