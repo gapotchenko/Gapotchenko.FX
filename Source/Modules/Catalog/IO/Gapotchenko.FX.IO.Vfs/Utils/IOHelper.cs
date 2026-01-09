@@ -267,6 +267,19 @@ static class IOHelper
         }
     }
 
+    static async Task CopyEntryAttributesAsync(
+        VfsReadOnlyLocation source,
+        VfsLocation destination,
+        CancellationToken cancellationToken)
+    {
+        if (source.View.SupportsLastWriteTime && destination.View.SupportsLastWriteTime)
+        {
+            var lastWriteTime = await source.View.GetLastWriteTimeAsync(source.Path, cancellationToken).ConfigureAwait(false);
+            EnsureEntryExist(source.Path, lastWriteTime);
+            await destination.View.SetLastWriteTimeAsync(destination.Path, lastWriteTime, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
     /// <summary>
     /// Represents file-system entry metadata other than the last write time.
     /// </summary>
@@ -274,24 +287,59 @@ static class IOHelper
     {
         public static EntryMetadata GetFrom(
             in VfsReadOnlyLocation location,
-            IReadOnlyFileSystemView? capabilitiesHint = null) =>
-            new(location.View, location.Path, capabilitiesHint);
-
-        EntryMetadata(IReadOnlyFileSystemView view, string path, IReadOnlyFileSystemView? capabilitiesHint)
+            IReadOnlyFileSystemView? capabilitiesHint)
         {
+            var (view, path) = location;
+
+            DateTime? creationTime = null;
             if (view.SupportsCreationTime && (capabilitiesHint?.SupportsCreationTime ?? true))
             {
-                var creationTime = view.GetCreationTime(path);
-                EnsureEntryExist(path, creationTime);
-                CreationTime = creationTime;
+                var time = view.GetCreationTime(path);
+                EnsureEntryExist(location, time);
+                creationTime = time;
             }
 
+            DateTime? lastAccessTime = null;
             if (view.SupportsLastAccessTime && (capabilitiesHint?.SupportsLastAccessTime ?? true))
             {
-                var lastAccessTime = view.GetLastAccessTime(path);
-                EnsureEntryExist(path, lastAccessTime);
-                LastAccessTime = lastAccessTime;
+                var time = view.GetLastAccessTime(path);
+                EnsureEntryExist(location, time);
+                lastAccessTime = time;
             }
+
+            return new(creationTime, lastAccessTime);
+        }
+
+        public static async Task<EntryMetadata> GetFromAsync(
+            VfsReadOnlyLocation location,
+            IReadOnlyFileSystemView? capabilitiesHint,
+            CancellationToken cancellationToken)
+        {
+            var (view, path) = location;
+
+            DateTime? creationTime = null;
+            if (view.SupportsCreationTime && (capabilitiesHint?.SupportsCreationTime ?? true))
+            {
+                var time = await view.GetCreationTimeAsync(path, cancellationToken).ConfigureAwait(false);
+                EnsureEntryExist(location, time);
+                creationTime = time;
+            }
+
+            DateTime? lastAccessTime = null;
+            if (view.SupportsLastAccessTime && (capabilitiesHint?.SupportsLastAccessTime ?? true))
+            {
+                var time = await view.GetLastAccessTimeAsync(path, cancellationToken).ConfigureAwait(false);
+                EnsureEntryExist(location, time);
+                lastAccessTime = time;
+            }
+
+            return new(creationTime, lastAccessTime);
+        }
+
+        EntryMetadata(DateTime? creationTime, DateTime? lastAccessTime)
+        {
+            CreationTime = creationTime;
+            LastAccessTime = lastAccessTime;
         }
 
         public void SetTo(in VfsLocation location)
@@ -303,6 +351,17 @@ static class IOHelper
 
             if (LastAccessTime.HasValue && view.SupportsLastAccessTime)
                 view.SetLastAccessTime(path, LastAccessTime.Value);
+        }
+
+        public async Task SetToAsync(VfsLocation location, CancellationToken cancellationToken)
+        {
+            var (view, path) = location;
+
+            if (CreationTime.HasValue && view.SupportsCreationTime)
+                await view.SetCreationTimeAsync(path, CreationTime.Value, cancellationToken);
+
+            if (LastAccessTime.HasValue && view.SupportsLastAccessTime)
+                await view.SetLastAccessTimeAsync(path, LastAccessTime.Value, cancellationToken);
         }
 
         public DateTime? CreationTime { get; }
