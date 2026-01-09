@@ -10,6 +10,7 @@ using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.IO.Vfs.Utils;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using System.Security;
 using System.Text;
 
@@ -123,9 +124,11 @@ public abstract class FileSystemViewKit : IFileSystemView
         EnumerationOptions enumerationOptions,
         CancellationToken cancellationToken = default)
     {
-        return AsyncEnumerableBridge.EnumerateAsync(
-            () => EnumerateFiles(path, searchPattern, enumerationOptions),
-            cancellationToken);
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+        VfsValidationKit.Arguments.ValidateEnumerationOptions(enumerationOptions);
+
+        return EnumerateEntriesCoreAsync(path, searchPattern, enumerationOptions, true, false, cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -224,9 +227,11 @@ public abstract class FileSystemViewKit : IFileSystemView
         EnumerationOptions enumerationOptions,
         CancellationToken cancellationToken = default)
     {
-        return AsyncEnumerableBridge.EnumerateAsync(
-            () => EnumerateDirectories(path, searchPattern, enumerationOptions),
-            cancellationToken);
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+        VfsValidationKit.Arguments.ValidateEnumerationOptions(enumerationOptions);
+
+        return EnumerateEntriesCoreAsync(path, searchPattern, enumerationOptions, false, true, cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -276,6 +281,8 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual async Task<bool> EntryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default) =>
         await FileExistsAsync(path, cancellationToken).ConfigureAwait(false) ||
         await DirectoryExistsAsync(path, cancellationToken).ConfigureAwait(false);
+
+    #region Enumeration
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path) =>
@@ -367,9 +374,9 @@ public abstract class FileSystemViewKit : IFileSystemView
         // Polyfill implementation that uses more basic but available primitives
         // ----------------------------------------------------------------------
 
-        return EnumerateEntriesPolyfillImpl(path, maxRecursionDepth);
+        return PolyfillImpl(path, maxRecursionDepth);
 
-        IEnumerable<string> EnumerateEntriesPolyfillImpl(string path, int remainingRecursionDepth)
+        IEnumerable<string> PolyfillImpl(string path, int remainingRecursionDepth)
         {
             var searchExpression = new VfsSearchExpression(
                 searchPattern,
@@ -493,6 +500,194 @@ public abstract class FileSystemViewKit : IFileSystemView
                 };
         }
     }
+
+    IAsyncEnumerable<string> EnumerateEntriesCoreAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions options,
+        bool enumerateFiles,
+        bool enumerateDirectories,
+        CancellationToken cancellationToken)
+    {
+        EnsureCanRead();
+
+        // ----------------------------------------------------------------------
+        // Parameters calculation
+        // ----------------------------------------------------------------------
+
+        VfsSearchKit.AdjustPatternPath(this, ref path, ref searchPattern);
+
+        int maxRecursionDepth = VfsSearchKit.GetMaxRecursionDepth(options);
+
+        var attributesToSkip = options.AttributesToSkip;
+        if (attributesToSkip != 0 && !SupportsAttributes)
+            attributesToSkip = 0;
+
+        // ----------------------------------------------------------------------
+        // Short circuit handling
+        // ----------------------------------------------------------------------
+
+        if (options.MatchType == MatchType.Win32 &&
+            VfsSearchKit.IsDefaultMatchCasing(this, options.MatchCasing))
+        {
+            if (maxRecursionDepth is 0 or int.MaxValue &&
+                attributesToSkip == 0 &&
+                !options.ReturnSpecialDirectories &&
+                !options.IgnoreInaccessible)
+            {
+                var searchOption = maxRecursionDepth is 0 ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
+                return EnumerateEntriesMatrixAsync(path, searchPattern, searchOption, enumerateFiles, enumerateDirectories, cancellationToken);
+            }
+        }
+
+        // ----------------------------------------------------------------------
+        // Polyfill implementation that uses more basic but available primitives
+        // ----------------------------------------------------------------------
+
+        return PolyfillImplAsync(path, maxRecursionDepth, cancellationToken);
+
+        async IAsyncEnumerable<string> PolyfillImplAsync(
+            string path,
+            int remainingRecursionDepth,
+            CancellationToken cancellationToken,
+            [EnumeratorCancellation] CancellationToken enumeratorCancellationToken = default)
+        {
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, enumeratorCancellationToken);
+            cancellationToken = cts.Token;
+
+            var searchExpression = new VfsSearchExpression(
+                searchPattern,
+                DirectorySeparatorChar,
+                options.MatchType,
+                VfsSearchKit.GetSearchExpressionOptions(this, options.MatchCasing));
+
+            var pendingHierarchies = new Queue<(string Path, int RemainingRecursionDepth)>();
+
+            for (; ; )
+            {
+                await foreach (string i in EnumerateHierarchyAsync(path, remainingRecursionDepth, cancellationToken).ConfigureAwait(false))
+                    yield return i;
+
+                if (pendingHierarchies.TryDequeue(out var next))
+                {
+                    // Next hierarchy.
+                    path = next.Path;
+                    remainingRecursionDepth = next.RemainingRecursionDepth;
+                }
+                else
+                {
+                    // No hierarchies left.
+                    break;
+                }
+            }
+
+            async IAsyncEnumerable<string> EnumerateHierarchyAsync(
+                string path,
+                int remainingRecursionDepth,
+                CancellationToken cancellationToken,
+                [EnumeratorCancellation] CancellationToken enumeratorCancellationToken = default)
+            {
+                using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, enumeratorCancellationToken);
+                cancellationToken = cts.Token;
+
+                IAsyncEnumerable<string> query;
+
+                try
+                {
+                    query = EnumerateEntriesMatrixAsync(
+                        path,
+                        "*",
+                        SearchOption.TopDirectoryOnly,
+                        enumerateFiles,
+                        enumerateDirectories || remainingRecursionDepth > 0,
+                        cancellationToken);
+                }
+                catch (Exception e) when (options.IgnoreInaccessible && e is UnauthorizedAccessException or SecurityException)
+                {
+                    // Ignore an access error.
+                    yield break;
+                }
+
+                if (enumerateDirectories && options.ReturnSpecialDirectories)
+                {
+                    // Emulate special directories.
+
+                    // The current directory ".".
+                    yield return this.JoinPaths(path, ".");
+
+                    // The parent directory "..".
+                    if (!GetDirectoryName(path.AsSpan()).IsEmpty)
+                    {
+                        string directoryPath = this.JoinPaths(path, "..");
+                        if (!options.IgnoreInaccessible || await DirectoryExistsAsync(directoryPath, cancellationToken).ConfigureAwait(false))
+                            yield return directoryPath;
+                    }
+                }
+
+                await foreach (string entryPath in query.ConfigureAwait(false))
+                {
+                    FileAttributes? entryAttributes = null;
+
+                    if (attributesToSkip != 0)
+                    {
+                        var attributes = await GetAttributesAsync(entryPath, cancellationToken).ConfigureAwait(false);
+                        if ((attributes & attributesToSkip) != 0)
+                            continue;
+                        entryAttributes = attributes;
+                    }
+
+                    bool fileExists = false;
+                    if (enumerateFiles &&
+                        ((entryAttributes.HasValue && (entryAttributes.Value & FileAttributes.Directory) == 0) ||
+                        (fileExists = await FileExistsAsync(entryPath, cancellationToken).ConfigureAwait(false))))
+                    {
+                        if (searchExpression.IsMatch(GetFileName(entryPath.AsSpan())))
+                        {
+                            if (fileExists || !options.IgnoreInaccessible || await FileExistsAsync(entryPath, cancellationToken).ConfigureAwait(false))
+                                yield return entryPath;
+                        }
+                        continue;
+                    }
+
+                    if (options.IgnoreInaccessible && !await DirectoryExistsAsync(entryPath, cancellationToken).ConfigureAwait(false))
+                        continue;
+
+                    if (enumerateDirectories)
+                    {
+                        if (searchExpression.IsMatch(GetFileName(entryPath.AsSpan())))
+                            yield return entryPath;
+                    }
+
+                    if (remainingRecursionDepth > 0)
+                        pendingHierarchies.Enqueue((entryPath, remainingRecursionDepth - 1));
+                }
+            }
+        }
+
+        // ----------------------------------------------------------------------
+        // Helper functions
+        // ----------------------------------------------------------------------
+
+        IAsyncEnumerable<string> EnumerateEntriesMatrixAsync(
+           string path,
+           string searchPattern,
+           SearchOption searchOption,
+           bool enumerateFiles,
+           bool enumerateDirectories,
+           CancellationToken cancellationToken)
+        {
+            return
+                (enumerateFiles, enumerateDirectories) switch
+                {
+                    (true, false) => EnumerateFilesAsync(path, searchPattern, searchOption, cancellationToken),
+                    (false, true) => EnumerateDirectoriesAsync(path, searchPattern, searchOption, cancellationToken),
+                    (true, true) => EnumerateEntriesAsync(path, searchPattern, searchOption, cancellationToken),
+                    (false, false) => AsyncEnumerable.Empty<string>()
+                };
+        }
+    }
+
+    #endregion
 
     /// <inheritdoc/>
     public virtual DateTime GetCreationTime(string path) => throw new NotSupportedException();
