@@ -45,7 +45,7 @@ public static class AsyncEnumerableBridge
     /// <summary>
     /// Asynchronously enumerates the values from a synchronous <see cref="IEnumerable{T}"/> source.
     /// </summary>
-    /// <param name="source">The asynchronous <see cref="IEnumerable{T}"/> source to enumerate the values from.</param>
+    /// <param name="source">The synchronous <see cref="IEnumerable{T}"/> source to enumerate the values from.</param>
     /// <typeparam name="T">The type of values to enumerate.</typeparam>
     /// <returns>An <see cref="IAsyncEnumerable{T}"/> that enumerates the values from the specified <see cref="IEnumerable{T}"/> source.</returns>
     [return: NotNullIfNotNull(nameof(source))]
@@ -64,7 +64,24 @@ public static class AsyncEnumerableBridge
         if (source is null)
             return null;
         else
-            return EnumerateAsyncCore(source, cancellationToken);
+            return EnumerateAsyncCore(source.GetEnumerator, cancellationToken);
+    }
+
+    /// <summary>
+    /// Asynchronously enumerates the values from a synchronous <see cref="IEnumerable{T}"/> source.
+    /// If a cancellation is requested then a thread executing the synchronous enumeration is terminated.
+    /// </summary>
+    /// <inheritdoc cref="EnumerateAsync{T}(IEnumerable{T})"/>
+    /// <param name="sourceFunc">The function returning a synchronous <see cref="IEnumerable{T}"/> source to enumerate the values from.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="sourceFunc"/> is <see langword="null"/>.</exception>
+    public static IAsyncEnumerable<T> EnumerateAsync<T>(Func<IEnumerable<T>> sourceFunc, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(sourceFunc);
+
+        return EnumerateAsyncCore(
+            () => sourceFunc().GetEnumerator(),
+            cancellationToken);
     }
 
     // ------------------------------------------------------------------------
@@ -107,18 +124,18 @@ public static class AsyncEnumerableBridge
 
     // ------------------------------------------------------------------------
 
-    static IAsyncEnumerable<T> EnumerateAsyncCore<T>(IEnumerable<T> source, CancellationToken cancellationToken)
+    static IAsyncEnumerable<T> EnumerateAsyncCore<T>(Func<IEnumerator<T>> getEnumerator, CancellationToken cancellationToken)
     {
-        return ImplCore(source, cancellationToken);
+        return ImplCore(getEnumerator, cancellationToken);
 
         static async IAsyncEnumerable<T> ImplCore(
-            IEnumerable<T> source,
+            Func<IEnumerator<T>> getEnumerator,
             CancellationToken cancellationToken,
             [EnumeratorCancellation] CancellationToken enumeratorCancellationToken = default)
         {
             var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, enumeratorCancellationToken);
 
-            var enumerator = await TaskBridge.ExecuteAsync(source.GetEnumerator, cts.Token).ConfigureAwait(false);
+            var enumerator = await TaskBridge.ExecuteAsync(getEnumerator, cts.Token).ConfigureAwait(false);
             try
             {
                 while (await TaskBridge.ExecuteAsync(enumerator.MoveNext, cts.Token).ConfigureAwait(false))
