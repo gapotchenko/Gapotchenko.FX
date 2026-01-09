@@ -93,6 +93,13 @@ public abstract class FileSystemViewKit : IFileSystemView
         EnumerateFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        string searchPattern,
+        CancellationToken cancellationToken = default) =>
+        EnumerateFilesAsync(path, searchPattern, SearchOption.TopDirectoryOnly, cancellationToken);
+
+    /// <inheritdoc/>
     public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
 
     /// <inheritdoc/>
@@ -196,6 +203,13 @@ public abstract class FileSystemViewKit : IFileSystemView
         EnumerateDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        string searchPattern,
+        CancellationToken cancellationToken = default) =>
+        EnumerateDirectoriesAsync(path, searchPattern, SearchOption.TopDirectoryOnly, cancellationToken);
+
+    /// <inheritdoc/>
     public abstract IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
 
     /// <inheritdoc/>
@@ -291,6 +305,13 @@ public abstract class FileSystemViewKit : IFileSystemView
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern) =>
         EnumerateEntries(path, searchPattern, SearchOption.TopDirectoryOnly);
+
+    /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        string searchPattern,
+        CancellationToken cancellationToken = default) =>
+        EnumerateEntriesAsync(path, searchPattern, SearchOption.TopDirectoryOnly, cancellationToken);
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption)

@@ -85,6 +85,15 @@ public interface IReadOnlyFileSystemView
     /// <param name="path"><inheritdoc/></param>
     IEnumerable<string> EnumerateFiles(string path, string searchPattern);
 
+    /// <inheritdoc cref="EnumerateFiles(string, string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        string searchPattern,
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Returns an enumerable collection of full file names that match a search pattern in a specified path,
     /// and optionally searches subdirectories.
@@ -202,6 +211,15 @@ public interface IReadOnlyFileSystemView
     /// <param name="path"><inheritdoc/></param>
     IEnumerable<string> EnumerateDirectories(string path, string searchPattern);
 
+    /// <inheritdoc cref="EnumerateDirectories(string, string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        string searchPattern,
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Returns an enumerable collection of directory full names that match a search pattern in a specified path,
     /// and optionally searches subdirectories.
@@ -311,6 +329,15 @@ public interface IReadOnlyFileSystemView
     /// <exception cref="ArgumentNullException"><paramref name="searchPattern"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException"><paramref name="searchPattern"/> does not contain a valid pattern.</exception>
     IEnumerable<string> EnumerateEntries(string path, string searchPattern);
+
+    /// <inheritdoc cref="EnumerateEntries(string, string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        string searchPattern,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Returns an enumerable collection of file names and directory names
