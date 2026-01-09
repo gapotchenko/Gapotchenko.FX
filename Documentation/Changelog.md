@@ -16,6 +16,7 @@ Release date: not released yet
 - Polyfills:
     - Added `System.IO.Stream` polyfill methods: `Read(Span<byte>)`, `ReadAsync(Memory<byte>, CancellationToken)`, `Write(ReadOnlySpan<byte>)`, `WriteAsync(ReadOnlyMemory<byte>, CancellationToken)`
     - Added `System.IO.TextWriter` polyfill methods: `Write(ReadOnlySpan<char>)`, `WriteLine(ReadOnlySpan<char>)`, `WriteAsync(ReadOnlyMemory<char>, CancellationToken)`, and `WriteLineAsync(ReadOnlyMemory<char>, CancellationToken)`
+- Retired support for target .NET Core frameworks older then .NET 8.0
 
 ## 2025
 
