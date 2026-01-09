@@ -86,6 +86,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.EnumerateFiles(path, searchPattern, enumerationOptions);
     }
 
+    public override IAsyncEnumerable<string> EnumerateFilesAsync(string path, string searchPattern, EnumerationOptions enumerationOptions, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.EnumerateFilesAsync(path, searchPattern, enumerationOptions, cancellationToken);
+    }
+
     public override Stream ReadFile(string path)
     {
         EnsureCanRead();
@@ -180,6 +186,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.EnumerateDirectories(path, searchPattern, enumerationOptions);
     }
 
+    public override IAsyncEnumerable<string> EnumerateDirectoriesAsync(string path, string searchPattern, EnumerationOptions enumerationOptions, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.EnumerateDirectoriesAsync(path, searchPattern, enumerationOptions, cancellationToken);
+    }
+
     public override void CreateDirectory(string path)
     {
         EnsureCanWrite();
@@ -260,6 +272,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     {
         EnsureCanRead();
         return base.EnumerateEntries(path, searchPattern, enumerationOptions);
+    }
+
+    public override IAsyncEnumerable<string> EnumerateEntriesAsync(string path, string searchPattern, EnumerationOptions enumerationOptions, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.EnumerateEntriesAsync(path, searchPattern, enumerationOptions, cancellationToken);
     }
 
     public override DateTime GetCreationTime(string path)

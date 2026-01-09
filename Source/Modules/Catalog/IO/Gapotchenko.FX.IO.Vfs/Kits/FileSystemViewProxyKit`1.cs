@@ -79,6 +79,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
         BaseView.EnumerateFiles(path, searchPattern, enumerationOptions);
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateFilesAsync(string path, string searchPattern, EnumerationOptions enumerationOptions, CancellationToken cancellationToken = default) =>
+        BaseView.EnumerateFilesAsync(path, searchPattern, enumerationOptions, cancellationToken);
+
+    /// <inheritdoc/>
     public virtual Stream ReadFile(string path) => BaseView.ReadFile(path);
 
     /// <inheritdoc/>
@@ -139,6 +143,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
         BaseView.EnumerateDirectories(path, searchPattern, enumerationOptions);
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateDirectoriesAsync(string path, string searchPattern, EnumerationOptions enumerationOptions, CancellationToken cancellationToken = default) =>
+        BaseView.EnumerateDirectoriesAsync(path, searchPattern, enumerationOptions, cancellationToken);
+
+    /// <inheritdoc/>
     public virtual void CreateDirectory(string path) => BaseView.CreateDirectory(path);
 
     /// <inheritdoc/>
@@ -189,6 +197,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
         BaseView.EnumerateEntries(path, searchPattern, enumerationOptions);
+
+    /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateEntriesAsync(string path, string searchPattern, EnumerationOptions enumerationOptions, CancellationToken cancellationToken = default) =>
+        BaseView.EnumerateEntriesAsync(path, searchPattern, enumerationOptions, cancellationToken);
 
     /// <inheritdoc/>
     public virtual DateTime GetCreationTime(string path) => BaseView.GetCreationTime(path);

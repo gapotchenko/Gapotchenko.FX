@@ -126,6 +126,17 @@ public interface IReadOnlyFileSystemView
     /// <param name="enumerationOptions"><inheritdoc/></param>
     IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);
 
+    /// <inheritdoc cref="EnumerateFiles(string, string, EnumerationOptions)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="enumerationOptions"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions enumerationOptions,
+        CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Opens an existing file for reading.
     /// </summary>
@@ -232,6 +243,17 @@ public interface IReadOnlyFileSystemView
     /// <param name="enumerationOptions"><inheritdoc/></param>
     IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions);
 
+    /// <inheritdoc cref="EnumerateDirectories(string, string, EnumerationOptions)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="enumerationOptions"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions enumerationOptions,
+        CancellationToken cancellationToken = default);
+
     #endregion
 
     #region Entries
@@ -335,6 +357,17 @@ public interface IReadOnlyFileSystemView
     /// </returns>
     /// <exception cref="ArgumentNullException"><paramref name="enumerationOptions"/> is <see langword="null"/>.</exception>
     IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions);
+
+    /// <inheritdoc cref="EnumerateEntries(string, string, EnumerationOptions)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="enumerationOptions"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions enumerationOptions,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Returns the last write date and time, in Coordinated Universal Time (UTC), of the specified file or directory.

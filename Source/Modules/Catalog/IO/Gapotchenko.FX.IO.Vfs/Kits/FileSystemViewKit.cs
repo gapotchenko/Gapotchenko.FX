@@ -117,6 +117,18 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions enumerationOptions,
+        CancellationToken cancellationToken = default)
+    {
+        return AsyncEnumerableBridge.EnumerateAsync(
+            () => EnumerateFiles(path, searchPattern, enumerationOptions),
+            cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public virtual Stream ReadFile(string path) =>
         OpenFile(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 
@@ -206,6 +218,18 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions enumerationOptions,
+        CancellationToken cancellationToken = default)
+    {
+        return AsyncEnumerableBridge.EnumerateAsync(
+            () => EnumerateDirectories(path, searchPattern, enumerationOptions),
+            cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public abstract void CreateDirectory(string path);
 
     /// <inheritdoc/>
@@ -287,6 +311,18 @@ public abstract class FileSystemViewKit : IFileSystemView
         return
             EnumerateFiles(path, searchPattern, enumerationOptions)
             .Concat(EnumerateDirectories(path, searchPattern, enumerationOptions));
+    }
+
+    /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions enumerationOptions,
+        CancellationToken cancellationToken = default)
+    {
+        return
+            EnumerateFilesAsync(path, searchPattern, enumerationOptions, cancellationToken)
+            .Concat(EnumerateDirectoriesAsync(path, searchPattern, enumerationOptions, cancellationToken));
     }
 
     IEnumerable<string> EnumerateEntriesCore(
