@@ -6,9 +6,16 @@
     <TFF_ASYNC_ENUMERABLE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '3.0')) ">true</TFF_ASYNC_ENUMERABLE_OOB>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TFF_ASYNC_ENUMERABLE_OOB)' == 'true' ">
+  <PropertyGroup>
+    <TFF_ASYNC_LINQ_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' ">true</TFF_ASYNC_LINQ_OOB>
+    <TFF_ASYNC_LINQ_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETStandard' ">true</TFF_ASYNC_LINQ_OOB>
+    <TFF_ASYNC_LINQ_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '10.0')) ">true</TFF_ASYNC_LINQ_OOB>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TFF_ASYNC_ENUMERABLE_OOB)' == 'true' OR '$(TFF_ASYNC_LINQ_OOB)' == 'true' ">
     <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.1" />
-    <MasteringFrameworkFeature Include="TFF_ASYNC_ENUMERABLE;TFF_ASYNC_ENUMERABLE_OOB" />
+    <MasteringFrameworkFeature Condition=" '$(TFF_ASYNC_ENUMERABLE_OOB)' == 'true' " Include="TFF_ASYNC_ENUMERABLE;TFF_ASYNC_ENUMERABLE_OOB" />
+    <MasteringFrameworkFeature Condition=" '$(TFF_ASYNC_LINQ_OOB)' == 'true' " Include="TFF_ASYNC_LINQ;TFF_ASYNC_LINQ_OOB" />
   </ItemGroup>
 
 </Project>

@@ -73,7 +73,7 @@
 
   <!-- .NET 10.0 -->
   <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '10.0')) ">
-    <MasteringFrameworkFeature Include="TFF_EXTENSION_DECLARATION" />
+    <MasteringFrameworkFeature Include="TFF_EXTENSION_DECLARATION;TFF_ASYNC_LINQ" />
   </ItemGroup>
 
   <!-- ================================================================== -->
