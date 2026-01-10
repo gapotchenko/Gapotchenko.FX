@@ -158,6 +158,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         base.MoveFile(sourcePath, destinationPath, overwrite, options);
     }
 
+    public override Task MoveFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options, CancellationToken cancellationToken = default)
+    {
+        EnsureCanReadAndWrite();
+        return base.MoveFileAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
+    }
+
     #endregion
 
     #region Directories

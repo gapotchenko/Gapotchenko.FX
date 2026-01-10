@@ -124,6 +124,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual void MoveFile(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options) =>
         BaseView.MoveFile(sourcePath, destinationPath, overwrite, options);
 
+    /// <inheritdoc/>
+    public virtual Task MoveFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options, CancellationToken cancellationToken = default) =>
+        BaseView.MoveFileAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
+
     #endregion
 
     #region Directories

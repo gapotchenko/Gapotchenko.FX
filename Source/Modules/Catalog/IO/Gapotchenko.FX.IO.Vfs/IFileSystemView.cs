@@ -125,6 +125,21 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <param name="options">The operation options.</param>
     void MoveFile(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options);
 
+    /// <summary>
+    /// Asynchronously moves a specified file to a new location,
+    /// providing the options to specify a new file name and
+    /// to overwrite the destination file if it already exists.
+    /// Additional operation options are controlled by the <paramref name="options"/> parameter.
+    /// </summary>
+    /// <inheritdoc cref="MoveFile(string, string, bool, VfsMoveOptions)"/>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous file move operation.</returns>
+    Task MoveFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options, CancellationToken cancellationToken = default);
+
     #endregion
 
     #region Directories

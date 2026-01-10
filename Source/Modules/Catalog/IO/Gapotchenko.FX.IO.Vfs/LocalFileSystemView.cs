@@ -112,6 +112,28 @@ sealed class LocalFileSystemView : FileSystemViewKit
         }
     }
 
+    public override Task MoveFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options, CancellationToken cancellationToken = default)
+    {
+        const VfsMoveOptions supportedOptions = VfsMoveOptions.None;
+        if ((options & ~supportedOptions) == 0)
+        {
+            return TaskBridge.ExecuteAsync(() =>
+            {
+#if NETCOREAPP3_0_OR_GREATER
+                File.Move(sourcePath, destinationPath, overwrite);
+#else
+                if (overwrite && File.Exists(destinationPath))
+                    File.Delete(destinationPath);
+                File.Move(sourcePath, destinationPath);
+#endif
+            }, cancellationToken);
+        }
+        else
+        {
+            return base.MoveFileAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
+        }
+    }
+
     #endregion
 
     #region Directories

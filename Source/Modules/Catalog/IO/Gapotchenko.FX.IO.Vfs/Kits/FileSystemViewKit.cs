@@ -205,6 +205,21 @@ public abstract class FileSystemViewKit : IFileSystemView
         IOHelper.MoveFileNaive(new(this, sourcePath), new(this, destinationPath), overwrite, options);
     }
 
+    /// <inheritdoc/>
+    public virtual Task MoveFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options, CancellationToken cancellationToken = default)
+    {
+        VfsValidationKit.Arguments.ValidatePath(sourcePath);
+        VfsValidationKit.Arguments.ValidatePath(destinationPath);
+        VfsValidationKit.Arguments.ValidateMoveOptions(options);
+
+        return IOHelper.MoveFileNaiveAsync(
+            new(this, sourcePath),
+            new(this, destinationPath),
+            overwrite,
+            options,
+            cancellationToken);
+    }
+
     #endregion
 
     #region Directories

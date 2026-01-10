@@ -175,6 +175,19 @@ static class IOHelper
             MoveFileNaive(source, destination, overwrite, options);
     }
 
+    public static Task MoveFileOptimizedAsync(
+        VfsLocation source,
+        VfsLocation destination,
+        bool overwrite,
+        VfsMoveOptions options,
+        CancellationToken cancellationToken)
+    {
+        if (source.View == destination.View)
+            return destination.View.MoveFileAsync(source.Path, destination.Path, overwrite, options, cancellationToken);
+        else
+            return MoveFileNaiveAsync(source, destination, overwrite, options, cancellationToken);
+    }
+
     public static void MoveFileNaive(
         in VfsLocation source,
         in VfsLocation destination,
