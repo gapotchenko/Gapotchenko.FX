@@ -1665,9 +1665,12 @@ partial class FileSystemViewExtensions
         string sourcePath,
         string destinationPath,
         bool overwrite = false,
-        VfsCopyOptions options = VfsCopyOptions.None) =>
-        (view ?? throw new ArgumentNullException(nameof(view)))
-        .CopyFile(sourcePath, destinationPath, overwrite, options);
+        VfsCopyOptions options = VfsCopyOptions.None)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        view.CopyFile(sourcePath, destinationPath, overwrite, options);
+    }
 
     /// <summary>
     /// Copies an existing file to a new file in the specified destination location.
@@ -1759,9 +1762,12 @@ partial class FileSystemViewExtensions
         string sourcePath,
         string destinationPath,
         bool overwrite = false,
-        VfsMoveOptions options = VfsMoveOptions.None) =>
-        (view ?? throw new ArgumentNullException(nameof(view)))
-        .MoveFile(sourcePath, destinationPath, overwrite, options);
+        VfsMoveOptions options = VfsMoveOptions.None)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        view.MoveFile(sourcePath, destinationPath, overwrite, options);
+    }
 
     /// <summary>
     /// Moves a specified file to a new location,

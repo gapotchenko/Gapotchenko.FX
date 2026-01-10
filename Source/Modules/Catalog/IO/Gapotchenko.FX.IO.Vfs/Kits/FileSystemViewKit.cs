@@ -202,7 +202,11 @@ public abstract class FileSystemViewKit : IFileSystemView
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
         VfsValidationKit.Arguments.ValidateMoveOptions(options);
 
-        IOHelper.MoveFileNaive(new(this, sourcePath), new(this, destinationPath), overwrite, options);
+        IOHelper.MoveFileNaive(
+            new(this, sourcePath),
+            new(this, destinationPath),
+            overwrite,
+            options);
     }
 
     /// <inheritdoc/>

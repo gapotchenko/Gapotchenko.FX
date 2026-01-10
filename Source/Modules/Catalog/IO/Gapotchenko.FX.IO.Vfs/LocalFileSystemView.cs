@@ -97,19 +97,9 @@ sealed class LocalFileSystemView : FileSystemViewKit
     {
         const VfsMoveOptions supportedOptions = VfsMoveOptions.None;
         if ((options & ~supportedOptions) == 0)
-        {
-#if NETCOREAPP3_0_OR_GREATER
-            File.Move(sourcePath, destinationPath, overwrite);
-#else
-            if (overwrite && File.Exists(destinationPath))
-                File.Delete(destinationPath);
-            File.Move(sourcePath, destinationPath);
-#endif
-        }
+            MoveFileNativeCore(sourcePath, destinationPath, overwrite);
         else
-        {
             base.MoveFile(sourcePath, destinationPath, overwrite, options);
-        }
     }
 
     public override Task MoveFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options, CancellationToken cancellationToken = default)
@@ -117,21 +107,25 @@ sealed class LocalFileSystemView : FileSystemViewKit
         const VfsMoveOptions supportedOptions = VfsMoveOptions.None;
         if ((options & ~supportedOptions) == 0)
         {
-            return TaskBridge.ExecuteAsync(() =>
-            {
-#if NETCOREAPP3_0_OR_GREATER
-                File.Move(sourcePath, destinationPath, overwrite);
-#else
-                if (overwrite && File.Exists(destinationPath))
-                    File.Delete(destinationPath);
-                File.Move(sourcePath, destinationPath);
-#endif
-            }, cancellationToken);
+            return TaskBridge.ExecuteAsync(
+                () => MoveFileNativeCore(sourcePath, destinationPath, overwrite, cancellationToken),
+                cancellationToken);
         }
         else
         {
             return base.MoveFileAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
         }
+    }
+
+    static void MoveFileNativeCore(string sourcePath, string destinationPath, bool overwrite, CancellationToken cancellationToken = default)
+    {
+#if NETCOREAPP3_0_OR_GREATER
+        File.Move(sourcePath, destinationPath, overwrite);
+#else
+        if (overwrite && File.Exists(destinationPath))
+            File.Delete(destinationPath);
+        File.Move(sourcePath, destinationPath);
+#endif
     }
 
     #endregion
