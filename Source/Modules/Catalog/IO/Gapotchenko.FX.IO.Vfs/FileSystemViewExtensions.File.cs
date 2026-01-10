@@ -1848,6 +1848,22 @@ partial class FileSystemViewExtensions
         string destinationPath) =>
         MoveFile(view, sourcePath, destinationPath, false);
 
+    /// <summary>
+    /// Asynchronously moves a specified file to a new location,
+    /// providing the option to specify a new file name.
+    /// </summary>
+    /// <inheritdoc cref="IFileSystemView.MoveFileAsync(string, string, bool, VfsMoveOptions, CancellationToken)"/>
+    /// <param name="view">The file system view to move the file at.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
+    public static Task MoveFileAsync(
+        this IFileSystemView view,
+        string sourcePath,
+        string destinationPath,
+        CancellationToken cancellationToken = default) =>
+        MoveFileAsync(view, sourcePath, destinationPath, false, VfsMoveOptions.None, cancellationToken);
+
     /// <inheritdoc cref="IFileSystemView.MoveFile(string, string, bool, VfsMoveOptions)"/>
     /// <param name="view">The file system view to move the file at.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
@@ -1866,6 +1882,26 @@ partial class FileSystemViewExtensions
         view.MoveFile(sourcePath, destinationPath, overwrite, options);
     }
 
+    /// <inheritdoc cref="IFileSystemView.MoveFileAsync(string, string, bool, VfsMoveOptions, CancellationToken)"/>
+    /// <param name="view">The file system view to move the file at.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
+    public static Task MoveFileAsync(
+        this IFileSystemView view,
+        string sourcePath,
+        string destinationPath,
+        bool overwrite = false,
+        VfsMoveOptions options = VfsMoveOptions.None,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        return view.MoveFileAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
+    }
+
     // ------------------------------------------------------------------------
 
     /// <summary>
@@ -1878,6 +1914,18 @@ partial class FileSystemViewExtensions
         string sourcePath,
         VfsLocation destination) =>
         MoveFile(sourceView, sourcePath, destination, false, VfsMoveOptions.None);
+
+    /// <summary>
+    /// Asynchronously moves a specified file to a new location,
+    /// providing the option to specify a new file name.
+    /// </summary>
+    /// <inheritdoc cref="MoveFileAsync(IFileSystemView, string, VfsLocation, bool, VfsMoveOptions, CancellationToken)"/>
+    public static Task MoveFileAsync(
+        this IFileSystemView sourceView,
+        string sourcePath,
+        VfsLocation destination,
+        CancellationToken cancellationToken = default) =>
+        MoveFileAsync(sourceView, sourcePath, destination, false, VfsMoveOptions.None, cancellationToken);
 
     /// <inheritdoc cref="IFileSystemView.MoveFile(string, string, bool, VfsMoveOptions)"/>
     /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> of the file to move.</param>
@@ -1899,6 +1947,31 @@ partial class FileSystemViewExtensions
             destination,
             overwrite,
             options);
+    }
+
+    /// <inheritdoc cref="IFileSystemView.MoveFileAsync(string, string, bool, VfsMoveOptions, CancellationToken)"/>
+    /// <param name="sourceView">The source <see cref="IFileSystemView"/> of the file to move.</param>
+    /// <param name="sourcePath">The path of the file to move.</param>
+    /// <param name="destination">The destination location to move the file to.</param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static Task MoveFileAsync(
+        this IFileSystemView sourceView, string sourcePath,
+        VfsLocation destination,
+        bool overwrite = false,
+        VfsMoveOptions options = VfsMoveOptions.None,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(sourceView);
+        VfsValidationKit.Arguments.ValidateMoveOptions(options);
+
+        return IOHelper.MoveFileOptimizedAsync(
+            new(sourceView, sourcePath),
+            destination,
+            overwrite,
+            options,
+            cancellationToken);
     }
 
     #endregion
