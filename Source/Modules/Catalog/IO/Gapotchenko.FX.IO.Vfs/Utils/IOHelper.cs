@@ -245,6 +245,19 @@ static class IOHelper
             CopyFileNaive(source, destination, overwrite, options);
     }
 
+    public static Task CopyFileOptimizedAsync(
+        VfsReadOnlyLocation source,
+        VfsLocation destination,
+        bool overwrite,
+        VfsCopyOptions options,
+        CancellationToken cancellationToken)
+    {
+        if (source.View == destination.View)
+            return destination.View.CopyFileAsync(source.Path, destination.Path, overwrite, options, cancellationToken);
+        else
+            return CopyFileNaiveAsync(source, destination, overwrite, options, cancellationToken);
+    }
+
     public static void CopyFileNaive(
         in VfsReadOnlyLocation source,
         in VfsLocation destination,
@@ -290,7 +303,7 @@ static class IOHelper
         {
             var metadata = await EntryMetadata.GetFromAsync(source, destination.View, cancellationToken).ConfigureAwait(false);
 
-            await CopyFileNaiveAsync(
+            await CopyFileOptimizedAsync(
                 source,
                 destination,
                 overwrite,

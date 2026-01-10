@@ -146,6 +146,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         base.CopyFile(sourcePath, destinationPath, overwrite, options);
     }
 
+    public override Task CopyFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options, CancellationToken cancellationToken = default)
+    {
+        EnsureCanReadAndWrite();
+        return base.CopyFileAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
+    }
+
     public override void MoveFile(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options)
     {
         EnsureCanReadAndWrite();

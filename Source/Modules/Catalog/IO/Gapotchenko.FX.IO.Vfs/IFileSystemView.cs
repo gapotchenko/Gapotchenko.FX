@@ -97,6 +97,20 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     void CopyFile(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options);
 
     /// <summary>
+    /// Asynchronously copies an existing file to a new file.
+    /// Overwriting a file of the same name is controlled by the <paramref name="overwrite"/> parameter.
+    /// Additional operation options are controlled by the <paramref name="options"/> parameter.
+    /// </summary>
+    /// <inheritdoc cref="CopyFile(string, string, bool, VfsCopyOptions)"/>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous file copy operation.</returns>
+    Task CopyFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Moves a specified file to a new location,
     /// providing the options to specify a new file name and
     /// to overwrite the destination file if it already exists.

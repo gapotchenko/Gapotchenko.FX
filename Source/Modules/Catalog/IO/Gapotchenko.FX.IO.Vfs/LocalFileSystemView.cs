@@ -80,6 +80,19 @@ sealed class LocalFileSystemView : FileSystemViewKit
         }
     }
 
+    public override Task CopyFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options, CancellationToken cancellationToken = default)
+    {
+        const VfsCopyOptions supportedOptions = VfsCopyOptions.None;
+        if ((options & ~supportedOptions) == 0)
+        {
+            return TaskBridge.ExecuteAsync(() => File.Copy(sourcePath, destinationPath, overwrite), cancellationToken);
+        }
+        else
+        {
+            return base.CopyFileAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
+        }
+    }
+
     public override void MoveFile(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options)
     {
         const VfsMoveOptions supportedOptions = VfsMoveOptions.None;
