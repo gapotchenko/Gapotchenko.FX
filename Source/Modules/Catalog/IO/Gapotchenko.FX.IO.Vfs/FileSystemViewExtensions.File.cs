@@ -1654,6 +1654,22 @@ partial class FileSystemViewExtensions
         string destinationPath) =>
         CopyFile(view, sourcePath, destinationPath, false);
 
+    /// <summary>
+    /// Asynchronously copies an existing file to a new file.
+    /// Overwriting a file of the same name is not allowed.
+    /// </summary>
+    /// <inheritdoc cref="IFileSystemView.CopyFileAsync(string, string, bool, VfsCopyOptions, CancellationToken)"/>
+    /// <param name="view">The file system view.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
+    public static Task CopyFileAsync(
+        this IFileSystemView view,
+        string sourcePath,
+        string destinationPath,
+        CancellationToken cancellationToken = default) =>
+        CopyFileAsync(view, sourcePath, destinationPath, false, cancellationToken: cancellationToken);
+
     /// <inheritdoc cref="IFileSystemView.CopyFile(string, string, bool, VfsCopyOptions)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
@@ -1672,6 +1688,28 @@ partial class FileSystemViewExtensions
         view.CopyFile(sourcePath, destinationPath, overwrite, options);
     }
 
+    /// <inheritdoc cref="IFileSystemView.CopyFileAsync(string, string, bool, VfsCopyOptions, CancellationToken)"/>
+    /// <param name="view">The file system view.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
+    public static Task CopyFileAsync(
+        this IFileSystemView view,
+        string sourcePath,
+        string destinationPath,
+        bool overwrite = false,
+        VfsCopyOptions options = VfsCopyOptions.None,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        return view.CopyFileAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
+    }
+
+    // ------------------------------------------------------------------------
+
     /// <summary>
     /// Copies an existing file to a new file in the specified destination location.
     /// Overwriting a file of the same name is not allowed.
@@ -1688,6 +1726,26 @@ partial class FileSystemViewExtensions
     public static void CopyFile(
         this IReadOnlyFileSystemView sourceView, string sourcePath,
         string destinationPath) =>
+        throw new InvalidOperationException();
+
+    /// <summary>
+    /// Asynchronously copies an existing file to a new file in the specified destination location.
+    /// Overwriting a file of the same name is not allowed.
+    /// </summary>
+    /// <inheritdoc cref="CopyFileAsync(IReadOnlyFileSystemView, string, VfsLocation, bool, VfsCopyOptions, CancellationToken)"/>
+    public static Task CopyFileAsync(
+        this IReadOnlyFileSystemView sourceView, string sourcePath,
+        VfsLocation destination,
+        CancellationToken cancellationToken = default) =>
+        CopyFileAsync(sourceView, sourcePath, destination, false, VfsCopyOptions.None, cancellationToken);
+
+    /// <inheritdoc cref="CopyFileAsync(IReadOnlyFileSystemView, string, VfsLocation, CancellationToken)"/>
+    [Obsolete("Use CopyFileAsync(string, VfsLocation, CancellationToken) method instead.", true)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task CopyFileAsync(
+        this IReadOnlyFileSystemView sourceView, string sourcePath,
+        string destinationPath,
+        CancellationToken cancellationToken = default) =>
         throw new InvalidOperationException();
 
     /// <summary>
@@ -1733,6 +1791,45 @@ partial class FileSystemViewExtensions
         VfsCopyOptions options = VfsCopyOptions.None) =>
         throw new InvalidOperationException();
 
+    /// <summary>
+    /// <inheritdoc cref="CopyFile(IReadOnlyFileSystemView, string, VfsLocation, bool, VfsCopyOptions)"/>
+    /// </summary>
+    /// <param name="sourceView"><inheritdoc/></param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destination"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous file copy operation.</returns>
+    public static Task CopyFileAsync(
+        this IReadOnlyFileSystemView sourceView, string sourcePath,
+        VfsLocation destination,
+        bool overwrite = false,
+        VfsCopyOptions options = VfsCopyOptions.None,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(sourceView);
+        VfsValidationKit.Arguments.ValidateCopyOptions(options);
+
+        return IOHelper.CopyFileOptimizedAsync(
+            new(sourceView, sourcePath),
+            destination,
+            overwrite,
+            options,
+            cancellationToken);
+    }
+
+    /// <inheritdoc cref="CopyFileAsync(IReadOnlyFileSystemView, string, VfsLocation, bool, VfsCopyOptions, CancellationToken)"/>
+    [Obsolete("Use CopyFileAsync(string, VfsLocation, bool, VfsCopyOptions, CancellationToken) method instead.", true)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task CopyFileAsync(
+        this IReadOnlyFileSystemView sourceView, string sourcePath,
+        string destinationPath,
+        bool overwrite = false,
+        VfsCopyOptions options = VfsCopyOptions.None,
+        CancellationToken cancellationToken = default) =>
+        throw new InvalidOperationException();
+
     #endregion
 
     #region Move
@@ -1768,6 +1865,8 @@ partial class FileSystemViewExtensions
 
         view.MoveFile(sourcePath, destinationPath, overwrite, options);
     }
+
+    // ------------------------------------------------------------------------
 
     /// <summary>
     /// Moves a specified file to a new location,
