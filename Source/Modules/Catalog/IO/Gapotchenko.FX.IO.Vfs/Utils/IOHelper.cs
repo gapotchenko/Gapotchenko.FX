@@ -222,8 +222,8 @@ static class IOHelper
         var (sourceView, sourcePath) = source;
 
         // Copy to the destination.
-        await CopyFileNaiveAsync(
-            new VfsReadOnlyLocation(sourceView, sourcePath),
+        await sourceView.CopyFileAsync(
+            sourcePath,
             destination,
             overwrite,
             VfsCopyOptions.Archive,
