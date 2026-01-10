@@ -110,6 +110,19 @@ static class IOHelper
             CopyDirectoryNaive(source, destination, overwrite, options);
     }
 
+    public static Task CopyDirectoryOptimizedAsync(
+        VfsReadOnlyLocation source,
+        VfsLocation destination,
+        bool overwrite,
+        VfsCopyOptions options,
+        CancellationToken cancellationToken)
+    {
+        if (source.View == destination.View)
+            return destination.View.CopyDirectoryAsync(source.Path, destination.Path, overwrite, options, cancellationToken);
+        else
+            return CopyDirectoryNaiveAsync(source, destination, overwrite, options, cancellationToken);
+    }
+
     public static void CopyDirectoryNaive(
         in VfsReadOnlyLocation source,
         in VfsLocation destination,

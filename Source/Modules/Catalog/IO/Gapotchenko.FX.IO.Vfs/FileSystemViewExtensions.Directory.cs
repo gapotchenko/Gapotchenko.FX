@@ -72,6 +72,8 @@ partial class FileSystemViewExtensions
         view.CopyDirectory(sourcePath, destinationPath, overwrite, options);
     }
 
+    // ------------------------------------------------------------------------
+
     /// <summary>
     /// Copies an existing directory to a new directory in the specified destination location.
     /// Overwriting a directory of the same name is not allowed.

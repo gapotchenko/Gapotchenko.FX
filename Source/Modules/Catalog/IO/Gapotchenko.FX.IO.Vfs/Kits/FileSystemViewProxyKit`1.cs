@@ -189,6 +189,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
         BaseView.CopyDirectory(sourcePath, destinationPath, overwrite, options);
 
     /// <inheritdoc/>
+    public virtual Task CopyDirectoryAsync(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options, CancellationToken cancellationToken = default) =>
+        BaseView.CopyDirectoryAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
+
+    /// <inheritdoc/>
     public virtual void MoveDirectory(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options) =>
         BaseView.MoveDirectory(sourcePath, destinationPath, overwrite, options);
 

@@ -258,6 +258,12 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         base.CopyDirectory(sourcePath, destinationPath, overwrite, options);
     }
 
+    public override Task CopyDirectoryAsync(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options, CancellationToken cancellationToken = default)
+    {
+        EnsureCanReadAndWrite();
+        return base.CopyDirectoryAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
+    }
+
     public override void MoveDirectory(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options)
     {
         EnsureCanReadAndWrite();

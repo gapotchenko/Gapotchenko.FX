@@ -323,6 +323,21 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
+    public virtual Task CopyDirectoryAsync(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options, CancellationToken cancellationToken = default)
+    {
+        VfsValidationKit.Arguments.ValidatePath(sourcePath);
+        VfsValidationKit.Arguments.ValidatePath(destinationPath);
+        VfsValidationKit.Arguments.ValidateCopyOptions(options);
+
+        return IOHelper.CopyDirectoryNaiveAsync(
+            new(this, sourcePath),
+            new(this, destinationPath),
+            overwrite,
+            options,
+            cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public virtual void MoveDirectory(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options)
     {
         VfsValidationKit.Arguments.ValidatePath(sourcePath);

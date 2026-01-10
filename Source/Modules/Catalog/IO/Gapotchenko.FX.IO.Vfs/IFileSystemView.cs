@@ -193,6 +193,20 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     void CopyDirectory(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options);
 
     /// <summary>
+    /// Asynchronously copies an existing directory to a new directory.
+    /// Overwriting a directory of the same name is controlled by the <paramref name="overwrite"/> parameter.
+    /// Additional operation options are controlled by the <paramref name="options"/> parameter.
+    /// </summary>
+    /// <inheritdoc cref="CopyDirectory(string, string, bool, VfsCopyOptions)"/>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous directory copy operation.</returns>
+    Task CopyDirectoryAsync(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Moves a specified directory to a new location,
     /// providing the options to specify a new directory name and
     /// to overwrite the destination directory if it already exists.
