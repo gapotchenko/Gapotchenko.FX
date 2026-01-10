@@ -199,6 +199,36 @@ static class IOHelper
         }
     }
 
+    public static async Task MoveFileNaiveAsync(
+        VfsLocation source,
+        VfsLocation destination,
+        bool overwrite,
+        VfsMoveOptions options,
+        CancellationToken cancellationToken)
+    {
+        var (sourceView, sourcePath) = source;
+
+        // Copy to the destination.
+        await CopyFileNaiveAsync(
+            new VfsReadOnlyLocation(sourceView, sourcePath),
+            destination,
+            overwrite,
+            VfsCopyOptions.Archive,
+            cancellationToken).ConfigureAwait(false);
+
+        // Delete from the source.
+        try
+        {
+            await sourceView.DeleteFileAsync(sourcePath, cancellationToken).ConfigureAwait(false);
+        }
+        catch
+        {
+            // Rollback the copy if the move is not possible to complete.
+            await destination.View.DeleteFileAsync(destination.Path, cancellationToken).ConfigureAwait(false);
+            throw;
+        }
+    }
+
     #endregion
 
     #region Copy
