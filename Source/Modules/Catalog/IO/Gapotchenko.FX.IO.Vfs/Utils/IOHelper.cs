@@ -155,6 +155,53 @@ static class IOHelper
         }
     }
 
+    public static async Task CopyDirectoryNaiveAsync(
+        VfsReadOnlyLocation source,
+        VfsLocation destination,
+        bool overwrite,
+        VfsCopyOptions options,
+        CancellationToken cancellationToken)
+    {
+        var (sourceView, sourcePath) = source;
+        if (!await sourceView.DirectoryExistsAsync(sourcePath, cancellationToken).ConfigureAwait(false))
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindDirectory(sourcePath));
+
+        var (destinationView, destinationPath) = destination;
+        if (!overwrite && await destinationView.DirectoryExistsAsync(destinationPath, cancellationToken).ConfigureAwait(false))
+            throw new IOException(VfsResourceKit.DirectoryAlreadyExists(destinationPath));
+        else
+            VfsValidationKit.Arguments.ValidatePath(destinationPath);
+
+        await CopyDirectoryCoreAsync(sourcePath, destinationPath, cancellationToken).ConfigureAwait(false);
+
+        async Task CopyDirectoryCoreAsync(string sourcePath, string destinationPath, CancellationToken cancellationToken)
+        {
+            var sourceLocation = new VfsReadOnlyLocation(sourceView, sourcePath);
+            EntryMetadata? metadata = (options & VfsCopyOptions.Archive) != 0
+                ? await EntryMetadata.GetFromAsync(sourceLocation, destinationView, cancellationToken).ConfigureAwait(false)
+                : null;
+
+            await destinationView.CreateDirectoryAsync(destinationPath, cancellationToken).ConfigureAwait(false);
+
+            await foreach (string sourceEntryPath in sourceView.EnumerateEntriesAsync(sourcePath, cancellationToken).ConfigureAwait(false))
+            {
+                string destinationEntryPath = destinationView.CombinePaths(
+                    destinationPath,
+                    sourceView.GetFileName(sourceEntryPath));
+
+                if (await sourceView.FileExistsAsync(sourceEntryPath, cancellationToken).ConfigureAwait(false))
+                    await sourceView.CopyFileAsync(sourceEntryPath, new VfsLocation(destinationView, destinationEntryPath), overwrite, options, cancellationToken).ConfigureAwait(false);
+                else
+                    await CopyDirectoryCoreAsync(sourceEntryPath, destinationEntryPath, cancellationToken).ConfigureAwait(false);
+            }
+
+            var destinationLocation = new VfsLocation(destinationView, destinationPath);
+            await CopyEntryAttributesAsync(sourceLocation, destinationLocation, cancellationToken).ConfigureAwait(false);
+            if (metadata is { } actualMetadata)
+                await actualMetadata.SetToAsync(destinationLocation, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
     #endregion
 
     #endregion

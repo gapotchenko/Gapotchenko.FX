@@ -315,7 +315,11 @@ public abstract class FileSystemViewKit : IFileSystemView
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
         VfsValidationKit.Arguments.ValidateCopyOptions(options);
 
-        IOHelper.CopyDirectoryNaive(new(this, sourcePath), new(this, destinationPath), overwrite, options);
+        IOHelper.CopyDirectoryNaive(
+            new(this, sourcePath),
+            new(this, destinationPath),
+            overwrite,
+            options);
     }
 
     /// <inheritdoc/>
@@ -325,7 +329,11 @@ public abstract class FileSystemViewKit : IFileSystemView
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
         VfsValidationKit.Arguments.ValidateMoveOptions(options);
 
-        IOHelper.MoveDirectoryNaive(new(this, sourcePath), new(this, destinationPath), overwrite, options);
+        IOHelper.MoveDirectoryNaive(
+            new(this, sourcePath),
+            new(this, destinationPath),
+            overwrite,
+            options);
     }
 
     #endregion
