@@ -2,7 +2,7 @@
 
 ## 2026
 
-### Gapotchenko FX 2026.1
+### Gapotchenko.FX 2026.1
 
 Release date: not released yet
 
@@ -22,7 +22,7 @@ Release date: not released yet
 
 ## 2025
 
-### Gapotchenko FX 2025.1
+### Gapotchenko.FX 2025.1
 
 Release date: December 25, 2025
 
@@ -54,7 +54,7 @@ Release date: December 25, 2025
 
 ## 2024
 
-### Gapotchenko FX 2024.2
+### Gapotchenko.FX 2024.2
 
 Release date: December 31, 2024
 
@@ -72,7 +72,7 @@ Release date: December 31, 2024
     - Fixed issue with nested `Gapotchenko.FX.Optional<T>` values that could occur during implicit value conversion to `Gapotchenko.FX.Optional<object>`
     - Fixed issue in `Gapotchenko.FX.Reflection.Loader` module that was caused by not taking into account a base directory of the assembly that had probing paths specified in its `App.config` file
 
-### Gapotchenko FX 2024.1
+### Gapotchenko.FX 2024.1
 
 Release date: November 10, 2024
 
@@ -130,7 +130,7 @@ Release date: November 10, 2024
 
 ## 2022
 
-### Gapotchenko FX 2022.2
+### Gapotchenko.FX 2022.2
 
 Release date: May 1, 2022
 
@@ -142,7 +142,7 @@ Release date: May 1, 2022
 - Added ability to read the command-line arguments of a running OS process
 - Improved multi-platform support. Reached the functional parity among Linux, macOS, and Windows platforms  
 
-### Gapotchenko FX 2022.1
+### Gapotchenko.FX 2022.1
 
 Release date: April 7, 2022
 
@@ -158,7 +158,7 @@ Release date: April 7, 2022
 
 ## 2021
 
-### Gapotchenko FX 2021.2
+### Gapotchenko.FX 2021.2
 
 Release date: December 31, 2021
 
@@ -174,7 +174,7 @@ Release date: December 31, 2021
 - Improved `AssemblyAutoLoader` which can now work simultaneously with app domains and assembly load contexts
 - String metric functions now take an optional `maxDistance` parameter that limits computational resources required to calculate the distance
 
-### Gapotchenko FX 2021.1
+### Gapotchenko.FX 2021.1
 
 Release date: July 6, 2021
 
