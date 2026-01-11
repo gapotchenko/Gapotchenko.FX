@@ -6,6 +6,7 @@
 // Year of introduction: 2025
 
 using Gapotchenko.FX.IO.Vfs;
+using Gapotchenko.FX.Threading.Tasks;
 
 namespace Gapotchenko.FX.Data.Archives.Kits;
 
@@ -36,8 +37,25 @@ public abstract class DataArchiveFormatKit<TArchive, TOptions> : IDataArchiveFor
         return CreateCore(stream, leaveOpen, options, context);
     }
 
+    async Task<IVirtualFileSystem> IVfsStorageFormat.CreateAsync(Stream stream, bool leaveOpen, VfsOptions? options, VfsStorageContext? context, CancellationToken cancellationToken) =>
+        await CreateAsync(stream, leaveOpen, (TOptions?)options, context, cancellationToken).ConfigureAwait(false);
+
+    /// <inheritdoc/>
+    public Task<TArchive> CreateAsync(Stream stream, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        return CreateCoreAsync(stream, leaveOpen, options, context, cancellationToken);
+    }
+
     /// <inheritdoc cref="Create(Stream, bool, TOptions?, VfsStorageContext?)"/>
     protected abstract TArchive CreateCore(Stream stream, bool leaveOpen, TOptions? options, VfsStorageContext? context);
+
+    /// <inheritdoc cref="CreateAsync(Stream, bool, TOptions?, VfsStorageContext?, CancellationToken)"/>
+    protected virtual Task<TArchive> CreateCoreAsync(Stream stream, bool leaveOpen, TOptions? options, VfsStorageContext? context, CancellationToken cancellationToken)
+    {
+        return TaskBridge.ExecuteAsync(() => CreateCore(stream, leaveOpen, options, context), cancellationToken);
+    }
 
     IVirtualFileSystem IVfsStorageFormat.Mount(Stream stream, bool writable, bool leaveOpen, VfsOptions? options, VfsStorageContext? context) =>
         Mount(stream, writable, leaveOpen, (TOptions?)options, context);

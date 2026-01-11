@@ -31,6 +31,18 @@ public interface IVfsStorageFormat
     IVirtualFileSystem Create(Stream stream, bool leaveOpen = false, VfsOptions? options = null, VfsStorageContext? context = null);
 
     /// <summary>
+    /// Asynchronously creates a new file system in the specified data stream.
+    /// The existing data in the stream, if any, will be overwritten.
+    /// </summary>
+    /// <inheritdoc cref="Create(Stream, bool, VfsOptions?, VfsStorageContext?)"/>
+    /// <param name="stream"><inheritdoc/></param>
+    /// <param name="leaveOpen"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="context"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<IVirtualFileSystem> CreateAsync(Stream stream, bool leaveOpen = false, VfsOptions? options = null, VfsStorageContext? context = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Mounts (opens) an existing file system
     /// using the specified data stream.
     /// </summary>
@@ -96,6 +108,18 @@ public interface IVfsStorageFormat<TVfs, TOptions> : IVfsStorageFormat
     /// <returns>The <typeparamref name="TVfs"/> instance for the created storage.</returns>
     /// <inheritdoc cref="IVfsStorageFormat.Create(Stream, bool, VfsOptions?, VfsStorageContext?)"/>
     TVfs Create(Stream stream, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null);
+
+    /// <summary>
+    /// Asynchronously creates a new file system in the specified data stream.
+    /// The existing data in the stream, if any, will be overwritten.
+    /// </summary>
+    /// <inheritdoc cref="Create(Stream, bool, TOptions?, VfsStorageContext?)"/>
+    /// <param name="stream"><inheritdoc/></param>
+    /// <param name="leaveOpen"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="context"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<TVfs> CreateAsync(Stream stream, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Mounts (opens) an existing <typeparamref name="TVfs"/> storage
