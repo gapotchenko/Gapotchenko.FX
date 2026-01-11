@@ -55,6 +55,39 @@ public abstract partial class FileSystemViewVfsTestKit
         return vfs;
     }
 
+    protected static IFileSystemView UnwrapVfs(IFileSystemView view, out object? cookie)
+    {
+        if (view is IVfsTransform vt)
+        {
+            cookie = vt.GetType();
+            return vt.UnderlyingVfs;
+        }
+        else
+        {
+            cookie = null;
+            return view;
+        }
+    }
+
+    protected static IFileSystemView WrapVfs(IFileSystemView view, object? cookie)
+    {
+        if (cookie is null)
+        {
+            return view;
+        }
+        else if (cookie is Type type)
+        {
+            if (type == typeof(SwapSyncAsyncVfsTransform))
+                return new SwapSyncAsyncVfsTransform(view);
+            else
+                throw new NotImplementedException();
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     // ------------------------------------------------------------------------
 
     void RunVfsTest(VfsTest test) =>
@@ -70,6 +103,7 @@ public abstract partial class FileSystemViewVfsTestKit
     void RunVfsTest(VfsTest mutate, VfsPhasedTest? verify)
     {
         RunVfsTest(mutate, verify, Fn.Identity);
+        RunVfsTest(mutate, verify, x => new SwapSyncAsyncVfsTransform(x));
     }
 
     void RunVfsTest(
