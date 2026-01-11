@@ -78,7 +78,7 @@ public interface IVfsStorageFormat
 /// </summary>
 /// <typeparam name="TVfs">The type of the virtual file system.</typeparam>
 /// <typeparam name="TOptions">The type of the virtual file system options.</typeparam>
-public interface IVfsStorageFormat<out TVfs, TOptions> : IVfsStorageFormat
+public interface IVfsStorageFormat<TVfs, TOptions> : IVfsStorageFormat
     where TVfs : IVirtualFileSystem
     where TOptions : VfsOptions
 {

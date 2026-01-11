@@ -21,7 +21,7 @@ public interface IDataArchiveFormat : IVfsFileStorageFormat
 /// </summary>
 /// <typeparam name="TArchive">The type of the data archive.</typeparam>
 /// <typeparam name="TOptions">The type of the data archive options.</typeparam>
-public interface IDataArchiveFormat<out TArchive, TOptions> :
+public interface IDataArchiveFormat<TArchive, TOptions> :
     IDataArchiveFormat,
     IVfsFileStorageFormat<TArchive, TOptions>
     where TArchive : IDataArchive

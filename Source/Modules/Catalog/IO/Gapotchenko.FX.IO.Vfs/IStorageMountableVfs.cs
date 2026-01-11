@@ -24,7 +24,7 @@ public interface IStorageMountableVfs : IVirtualFileSystem
 /// </summary>
 /// <typeparam name="TVfs">The type of the virtual file system.</typeparam>
 /// <typeparam name="TOptions">The type of the virtual file system options.</typeparam>
-public interface IStorageMountableVfs<out TVfs, TOptions> : IStorageMountableVfs
+public interface IStorageMountableVfs<TVfs, TOptions> : IStorageMountableVfs
     where TVfs : IVirtualFileSystem
     where TOptions : StorageMountableVfsOptions
 {
