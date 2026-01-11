@@ -43,6 +43,38 @@ public static class VfsStorageExtensions
     }
 
     /// <summary>
+    /// Asynchronously opens an existing file representing a <typeparamref name="TVfs"/> storage for reading
+    /// in the specified location.
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains a read-only <typeparamref name="TVfs"/> instance opened in the specified location.
+    /// </returns>
+    /// <inheritdoc cref="ReadFile"/>
+    /// <param name="storage"><inheritdoc/></param>
+    /// <param name="location"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static async Task<TVfs> ReadFileAsync<TVfs, TOptions>(
+        this IVfsStorage<TVfs, TOptions> storage,
+        VfsReadOnlyLocation location,
+        TOptions? options = null,
+        CancellationToken cancellationToken = default)
+        where TVfs : IVirtualFileSystem
+        where TOptions : VfsOptions
+    {
+        ArgumentNullException.ThrowIfNull(storage);
+
+        return await
+            storage.Format.MountAsync(
+                await location.View.ReadFileAsync(location.Path, cancellationToken).ConfigureAwait(false),
+                options: options,
+                context: CreateStorageContext(location),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// Opens an existing file or creates a new file representing a <typeparamref name="TVfs"/> storage for writing
     /// in the specified location.
     /// </summary>
@@ -154,6 +186,22 @@ public static class VfsStorageExtensions
             return OpenNewFileCore(format, location, FileMode.CreateNew, access, share, options);
     }
 
+    static async Task<TVfs> WriteFileCoreAsync<TVfs, TOptions>(
+        IVfsFileStorageFormat<TVfs, TOptions> format,
+        VfsLocation location,
+        FileAccess access,
+        FileShare share,
+        TOptions? options,
+        CancellationToken cancellationToken)
+        where TVfs : IVirtualFileSystem
+        where TOptions : VfsOptions
+    {
+        if (await location.View.FileExistsAsync(location.Path, cancellationToken).ConfigureAwait(false))
+            return await OpenExistingFileCoreAsync(format, location, FileMode.Open, access, share, options, cancellationToken).ConfigureAwait(false);
+        else
+            return await OpenNewFileCoreAsync(format, location, FileMode.CreateNew, access, share, options, cancellationToken).ConfigureAwait(false);
+    }
+
     static TVfs OpenExistingFileCore<TVfs, TOptions>(
         IVfsFileStorageFormat<TVfs, TOptions> format,
         VfsLocation location,
@@ -171,6 +219,26 @@ public static class VfsStorageExtensions
             context: CreateStorageContext(location));
     }
 
+    static async Task<TVfs> OpenExistingFileCoreAsync<TVfs, TOptions>(
+        IVfsFileStorageFormat<TVfs, TOptions> format,
+        VfsLocation location,
+        FileMode mode,
+        FileAccess access,
+        FileShare share,
+        TOptions? options,
+        CancellationToken cancellationToken)
+        where TVfs : IVirtualFileSystem
+        where TOptions : VfsOptions
+    {
+        var stream = await location.View.OpenFileAsync(location.Path, mode, access, share, cancellationToken).ConfigureAwait(false);
+        return await format.MountAsync(
+            stream,
+            (access & FileAccess.Write) != 0,
+            options: options,
+            context: CreateStorageContext(location),
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+    }
+
     static TVfs OpenNewFileCore<TVfs, TOptions>(
         IVfsFileStorageFormat<TVfs, TOptions> format,
         VfsLocation location,
@@ -185,6 +253,25 @@ public static class VfsStorageExtensions
             location.View.OpenFile(location.Path, mode, access, share),
             options: options,
             context: CreateStorageContext(location));
+    }
+
+    static async Task<TVfs> OpenNewFileCoreAsync<TVfs, TOptions>(
+        IVfsFileStorageFormat<TVfs, TOptions> format,
+        VfsLocation location,
+        FileMode mode,
+        FileAccess access,
+        FileShare share,
+        TOptions? options,
+        CancellationToken cancellationToken)
+        where TVfs : IVirtualFileSystem
+        where TOptions : VfsOptions
+    {
+        var stream = await location.View.OpenFileAsync(location.Path, mode, access, share, cancellationToken).ConfigureAwait(false);
+        return await format.CreateAsync(
+            stream,
+            options: options,
+            context: CreateStorageContext(location),
+            cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     static VfsStorageContext CreateStorageContext(VfsReadOnlyLocation location)
