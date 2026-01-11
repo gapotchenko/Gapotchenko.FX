@@ -68,8 +68,25 @@ public abstract class DataArchiveFormatKit<TArchive, TOptions> : IDataArchiveFor
         return MountCore(stream, writable, leaveOpen, options, context);
     }
 
+    async Task<IVirtualFileSystem> IVfsStorageFormat.MountAsync(Stream stream, bool writable, bool leaveOpen, VfsOptions? options, VfsStorageContext? context, CancellationToken cancellationToken) =>
+        await MountAsync(stream, writable, leaveOpen, (TOptions?)options, context, cancellationToken).ConfigureAwait(false);
+
+    /// <inheritdoc/>
+    public Task<TArchive> MountAsync(Stream stream, bool writable = false, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        return MountCoreAsync(stream, writable, leaveOpen, options, context, cancellationToken);
+    }
+
     /// <inheritdoc cref="Mount(Stream, bool, bool, TOptions?, VfsStorageContext?)"/>
     protected abstract TArchive MountCore(Stream stream, bool writable, bool leaveOpen, TOptions? options, VfsStorageContext? context);
+
+    /// <inheritdoc cref="MountAsync(Stream, bool, bool, TOptions?, VfsStorageContext?, CancellationToken)"/>
+    protected virtual Task<TArchive> MountCoreAsync(Stream stream, bool writable, bool leaveOpen, TOptions? options, VfsStorageContext? context, CancellationToken cancellationToken)
+    {
+        return TaskBridge.ExecuteAsync(() => MountCore(stream, writable, leaveOpen, options, context), cancellationToken);
+    }
 
     bool IVfsStorageFormat.IsMountable(Stream stream, VfsOptions? options, VfsStorageContext? context) =>
         IsMountable(stream, (TOptions?)options, context);
