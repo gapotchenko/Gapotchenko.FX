@@ -40,7 +40,12 @@ public interface IVfsStorageFormat
     /// <param name="options"><inheritdoc/></param>
     /// <param name="context"><inheritdoc/></param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    Task<IVirtualFileSystem> CreateAsync(Stream stream, bool leaveOpen = false, VfsOptions? options = null, VfsStorageContext? context = null, CancellationToken cancellationToken = default);
+    Task<IVirtualFileSystem> CreateAsync(
+        Stream stream,
+        bool leaveOpen = false,
+        VfsOptions? options = null,
+        VfsStorageContext? context = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Mounts (opens) an existing file system
@@ -82,7 +87,13 @@ public interface IVfsStorageFormat
     /// <param name="context"><inheritdoc/></param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous mount operation. The task result contains the <see cref="IVirtualFileSystem"/> instance representing the mounted file system.</returns>
-    Task<IVirtualFileSystem> MountAsync(Stream stream, bool writable = false, bool leaveOpen = false, VfsOptions? options = null, VfsStorageContext? context = null, CancellationToken cancellationToken = default);
+    Task<IVirtualFileSystem> MountAsync(
+        Stream stream,
+        bool writable = false,
+        bool leaveOpen = false,
+        VfsOptions? options = null,
+        VfsStorageContext? context = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Determines whether the specified data stream can be mounted using the current storage format.
