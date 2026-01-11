@@ -77,8 +77,8 @@ public abstract partial class FileSystemViewVfsTestKit
         }
         else if (cookie is Type type)
         {
-            if (type == typeof(SwapSyncAsyncVfsTransform))
-                return new SwapSyncAsyncVfsTransform(view);
+            if (type == typeof(VfsSyncAsyncSwapTransform))
+                return new VfsSyncAsyncSwapTransform(view);
             else
                 throw new NotImplementedException();
         }
@@ -103,7 +103,7 @@ public abstract partial class FileSystemViewVfsTestKit
     void RunVfsTest(VfsTest mutate, VfsPhasedTest? verify)
     {
         RunVfsTest(mutate, verify, Fn.Identity);
-        RunVfsTest(mutate, verify, x => new SwapSyncAsyncVfsTransform(x));
+        RunVfsTest(mutate, verify, x => new VfsSyncAsyncSwapTransform(x));
     }
 
     void RunVfsTest(
@@ -150,6 +150,7 @@ public abstract partial class FileSystemViewVfsTestKit
     void RunStatefulVfsTest<T>(VfsTestInitialize<T> initialize, VfsStatefulTest<T> mutate, VfsStatefulPhasedTest<T>? verify, VfsTestCleanup<T>? cleanup)
     {
         RunStatefulVfsTest(initialize, mutate, verify, cleanup, Fn.Identity, null);
+        RunStatefulVfsTest(initialize, mutate, verify, cleanup, x => new VfsSyncAsyncSwapTransform(x), null);
     }
 
     void RunStatefulVfsTest<T>(

@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.IO.Vfs.Tests.Utils;
 /// Swaps synchronous and asynchronous VFS operations.
 /// </summary>
 /// <param name="baseView">The base file system view.</param>
-sealed class SwapSyncAsyncVfsTransform(IFileSystemView baseView) : FileSystemViewProxyKit(baseView), IVfsTransform
+sealed class VfsSyncAsyncSwapTransform(IFileSystemView baseView) : FileSystemViewProxyKit(baseView), IVfsTransform
 {
     public IFileSystemView UnderlyingVfs => BaseView;
 
