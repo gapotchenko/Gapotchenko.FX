@@ -97,6 +97,32 @@ public static class VfsStorageExtensions
     }
 
     /// <summary>
+    /// Asynchronously opens an existing file or creates a new file representing a <typeparamref name="TVfs"/> storage for writing
+    /// in the specified location.
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains an unshared <typeparamref name="TVfs"/> instance opened for the specified location with read/write access.
+    /// </returns>
+    /// <inheritdoc cref="WriteFile"/>
+    /// <param name="storage"><inheritdoc/></param>
+    /// <param name="location"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static Task<TVfs> WriteFileAsync<TVfs, TOptions>(
+        this IVfsStorage<TVfs, TOptions> storage,
+        VfsLocation location,
+        TOptions? options = null,
+        CancellationToken cancellationToken = default)
+        where TVfs : IVirtualFileSystem
+        where TOptions : VfsOptions
+    {
+        ArgumentNullException.ThrowIfNull(storage);
+
+        return WriteFileCoreAsync(storage.Format, location, FileAccess.ReadWrite, FileShare.None, options, cancellationToken);
+    }
+
+    /// <summary>
     /// Creates or overwrites a file representing a <typeparamref name="TVfs"/> storage in the specified location.
     /// </summary>
     /// <typeparam name="TVfs">The type of the file storage.</typeparam>
@@ -114,6 +140,31 @@ public static class VfsStorageExtensions
         ArgumentNullException.ThrowIfNull(storage);
 
         return OpenNewFileCore(storage.Format, location, FileMode.Create, FileAccess.ReadWrite, FileShare.None, options);
+    }
+
+    /// <summary>
+    /// Asynchronously creates or overwrites a file representing a <typeparamref name="TVfs"/> storage in the specified location.
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains a <typeparamref name="TVfs"/> instance for the created file.
+    /// </returns>
+    /// <inheritdoc cref="CreateFile"/>
+    /// <param name="storage"><inheritdoc/></param>
+    /// <param name="location"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static Task<TVfs> CreateFileAsync<TVfs, TOptions>(
+        this IVfsStorage<TVfs, TOptions> storage,
+        VfsLocation location,
+        TOptions? options = null,
+        CancellationToken cancellationToken = default)
+        where TVfs : IVirtualFileSystem
+        where TOptions : VfsOptions
+    {
+        ArgumentNullException.ThrowIfNull(storage);
+
+        return OpenNewFileCoreAsync(storage.Format, location, FileMode.Create, FileAccess.ReadWrite, FileShare.None, options, cancellationToken);
     }
 
     /// <summary>
@@ -140,13 +191,11 @@ public static class VfsStorageExtensions
         where TOptions : VfsOptions
     {
         ArgumentNullException.ThrowIfNull(storage);
-
         VfsValidationKit.Arguments.ValidateFileAccess(access);
-        if (access == FileAccess.Write)
-            throw new ArgumentException("File storage cannot be opened when only write access is requested.", nameof(access));
+
+        ValidateFileOpenAccess(access);
 
         var format = storage.Format;
-
         switch (mode)
         {
             case FileMode.Open:
@@ -169,6 +218,69 @@ public static class VfsStorageExtensions
                 VfsValidationKit.Arguments.ValidateFileMode(mode);
                 throw new SwitchExpressionException(mode);
         }
+    }
+
+    /// <summary>
+    /// Asynchronously opens a file representing a <typeparamref name="TVfs"/> storage in the specified location,
+    /// with the specified mode, access, and sharing options.
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains an <typeparamref name="TVfs"/> instance opened for the specified location with the specified mode, access, and sharing options taken into account.
+    /// </returns>
+    /// <inheritdoc cref="OpenFile"/>
+    /// <param name="storage"><inheritdoc/></param>
+    /// <param name="location"><inheritdoc/></param>
+    /// <param name="mode"><inheritdoc/></param>
+    /// <param name="access"><inheritdoc/></param>
+    /// <param name="share"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public static Task<TVfs> OpenFileAsync<TVfs, TOptions>(
+        this IVfsStorage<TVfs, TOptions> storage,
+        VfsLocation location,
+        FileMode mode,
+        FileAccess access = FileAccess.ReadWrite,
+        FileShare share = FileShare.None,
+        TOptions? options = null,
+        CancellationToken cancellationToken = default)
+        where TVfs : IVirtualFileSystem
+        where TOptions : VfsOptions
+    {
+        ArgumentNullException.ThrowIfNull(storage);
+        VfsValidationKit.Arguments.ValidateFileAccess(access);
+
+        ValidateFileOpenAccess(access);
+
+        var format = storage.Format;
+        switch (mode)
+        {
+            case FileMode.Open:
+                return OpenExistingFileCoreAsync(format, location, mode, access, share, options, cancellationToken);
+
+            case FileMode.Create:
+            case FileMode.CreateNew:
+            case FileMode.Truncate:
+                return OpenNewFileCoreAsync(format, location, mode, access, share, options, cancellationToken);
+
+            case FileMode.OpenOrCreate:
+                return WriteFileCoreAsync(format, location, access, share, options, cancellationToken);
+
+            case FileMode.Append:
+                throw new ArgumentException(
+                    ResourceHelper.FileStorageCannotBeOpenedInMode(mode),
+                    nameof(mode));
+
+            default:
+                VfsValidationKit.Arguments.ValidateFileMode(mode);
+                throw new SwitchExpressionException(mode);
+        }
+    }
+
+    static void ValidateFileOpenAccess(FileAccess access, [CallerArgumentExpression(nameof(access))] string? paramName = null)
+    {
+        if (access is FileAccess.Write)
+            throw new ArgumentException("File storage cannot be opened when only write access is requested.", paramName);
     }
 
     static TVfs WriteFileCore<TVfs, TOptions>(
