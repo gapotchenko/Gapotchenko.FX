@@ -8,7 +8,7 @@
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.Threading.Tasks;
 
-namespace Gapotchenko.FX.IO.Vfs.Tests;
+namespace Gapotchenko.FX.IO.Vfs.Tests.Utils;
 
 sealed class TempLocalVfs : FileSystemViewProxyKit, IVirtualFileSystem
 {
