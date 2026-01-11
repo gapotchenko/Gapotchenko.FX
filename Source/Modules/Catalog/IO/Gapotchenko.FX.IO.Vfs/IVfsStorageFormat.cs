@@ -108,6 +108,21 @@ public interface IVfsStorageFormat
     /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
     /// <exception cref="NotSupportedException"><paramref name="stream"/> does not support seeking.</exception>
     bool IsMountable(Stream stream, VfsOptions? options = null, VfsStorageContext? context = null);
+
+    /// <summary>
+    /// Asynchronously determines whether the specified data stream can be mounted using the current storage format.
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result is <see langword="true"/> if the <paramref name="stream"/> can be mounted using the current storage format;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <inheritdoc cref="IsMountable(Stream, VfsOptions?, VfsStorageContext?)"/>
+    /// <param name="stream"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="context"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<bool> IsMountableAsync(Stream stream, VfsOptions? options = null, VfsStorageContext? context = null, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -200,4 +215,11 @@ public interface IVfsStorageFormat<TVfs, TOptions> : IVfsStorageFormat
 
     /// <inheritdoc cref="IVfsStorageFormat.IsMountable(Stream, VfsOptions?, VfsStorageContext?)"/>
     bool IsMountable(Stream stream, TOptions? options = null, VfsStorageContext? context = null);
+
+    /// <inheritdoc cref="IVfsStorageFormat.IsMountableAsync(Stream, VfsOptions?, VfsStorageContext?, CancellationToken)"/>
+    Task<bool> IsMountableAsync(
+        Stream stream,
+        TOptions? options = null,
+        VfsStorageContext? context = null,
+        CancellationToken cancellationToken = default);
 }

@@ -22,6 +22,9 @@ public abstract class VfsStorageFormatKit<TVfs, TOptions> : IVfsStorageFormat<TV
     IVirtualFileSystem IVfsStorageFormat.Create(Stream stream, bool leaveOpen, VfsOptions? options, VfsStorageContext? context) =>
         Create(stream, leaveOpen, (TOptions?)options, context);
 
+    async Task<IVirtualFileSystem> IVfsStorageFormat.CreateAsync(Stream stream, bool leaveOpen, VfsOptions? options, VfsStorageContext? context, CancellationToken cancellationToken) =>
+        await CreateAsync(stream, leaveOpen, (TOptions?)options, context, cancellationToken).ConfigureAwait(false);
+
     /// <inheritdoc/>
     public TVfs Create(Stream stream, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null)
     {
@@ -29,9 +32,6 @@ public abstract class VfsStorageFormatKit<TVfs, TOptions> : IVfsStorageFormat<TV
 
         return CreateCore(stream, leaveOpen, options, context);
     }
-
-    async Task<IVirtualFileSystem> IVfsStorageFormat.CreateAsync(Stream stream, bool leaveOpen, VfsOptions? options, VfsStorageContext? context, CancellationToken cancellationToken) =>
-        await CreateAsync(stream, leaveOpen, (TOptions?)options, context, cancellationToken).ConfigureAwait(false);
 
     /// <inheritdoc/>
     public Task<TVfs> CreateAsync(Stream stream, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null, CancellationToken cancellationToken = default)
@@ -84,6 +84,9 @@ public abstract class VfsStorageFormatKit<TVfs, TOptions> : IVfsStorageFormat<TV
     bool IVfsStorageFormat.IsMountable(Stream stream, VfsOptions? options, VfsStorageContext? context) =>
         IsMountable(stream, (TOptions?)options, context);
 
+    Task<bool> IVfsStorageFormat.IsMountableAsync(Stream stream, VfsOptions? options, VfsStorageContext? context, CancellationToken cancellationToken) =>
+        IsMountableAsync(stream, (TOptions?)options, context, cancellationToken);
+
     /// <inheritdoc/>
     public bool IsMountable(Stream stream, TOptions? options = null, VfsStorageContext? context = null)
     {
@@ -113,6 +116,45 @@ public abstract class VfsStorageFormatKit<TVfs, TOptions> : IVfsStorageFormat<TV
         }
     }
 
+    /// <inheritdoc/>
+    public async Task<bool> IsMountableAsync(
+        Stream stream,
+        TOptions? options = null,
+        VfsStorageContext? context = null,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        bool hasException = false;
+        long oldPosition = stream.Position;
+        try
+        {
+            return await IsMountableCoreAsync(stream, options, context, cancellationToken).ConfigureAwait(false);
+        }
+        catch
+        {
+            hasException = true;
+            throw;
+        }
+        finally
+        {
+            try
+            {
+                stream.Position = oldPosition;
+            }
+            catch (IOException) when (hasException)
+            {
+                // Do not overshadow the existing exception.
+            }
+        }
+    }
+
     /// <inheritdoc cref="IsMountable(Stream, TOptions?, VfsStorageContext?)"/>
     protected abstract bool IsMountableCore(Stream stream, TOptions? options, VfsStorageContext? context);
+
+    /// <inheritdoc cref="IsMountableAsync(Stream, TOptions?, VfsStorageContext?, CancellationToken)"/>
+    protected virtual Task<bool> IsMountableCoreAsync(Stream stream, TOptions? options, VfsStorageContext? context, CancellationToken cancellationToken)
+    {
+        return TaskBridge.ExecuteAsync(() => IsMountableCore(stream, options, context), cancellationToken);
+    }
 }
