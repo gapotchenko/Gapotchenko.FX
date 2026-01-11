@@ -221,6 +221,21 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// <param name="options">The operation options.</param>
     void MoveDirectory(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options);
 
+    /// <summary>
+    /// Asynchronously moves a specified directory to a new location,
+    /// providing the options to specify a new directory name and
+    /// to overwrite the destination directory if it already exists.
+    /// Additional operation options are controlled by the <paramref name="options"/> parameter.
+    /// </summary>
+    /// <inheritdoc cref="MoveDirectory(string, string, bool, VfsMoveOptions)"/>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous directory move operation.</returns>
+    Task MoveDirectoryAsync(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options, CancellationToken cancellationToken = default);
+
     #endregion
 
     #region Entries

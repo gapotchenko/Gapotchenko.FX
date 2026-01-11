@@ -27,6 +27,19 @@ static class IOHelper
             MoveDirectoryNaive(source, destination, overwrite, options);
     }
 
+    public static Task MoveDirectoryOptimizedAsync(
+        VfsLocation source,
+        VfsLocation destination,
+        bool overwrite,
+        VfsMoveOptions options,
+        CancellationToken cancellationToken)
+    {
+        if (source.View == destination.View)
+            return destination.View.MoveDirectoryAsync(source.Path, destination.Path, overwrite, options, cancellationToken);
+        else
+            return MoveDirectoryNaiveAsync(source, destination, overwrite, options, cancellationToken);
+    }
+
     public static void MoveDirectoryNaive(
         in VfsLocation source,
         in VfsLocation destination,
@@ -119,7 +132,8 @@ static class IOHelper
                 {
                     // Give an opportunity to use a more optimized operation implementation
                     // that exists but does not support overwriting.
-                    // Note: MoveDirectoryAsync doesn't exist yet, so we fall through to naive implementation.
+                    await destinationView.MoveDirectoryAsync(sourcePath, destinationPath, false, options, cancellationToken).ConfigureAwait(false);
+                    return;
                 }
             }
             else
