@@ -10,6 +10,6 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// <summary>
 /// Defines the interface of a mountable read-only virtual file system.
 /// </summary>
-public interface IReadOnlyVirtualFileSystem : IReadOnlyFileSystemView, IDisposable
+public interface IReadOnlyVirtualFileSystem : IReadOnlyFileSystemView, IDisposable, IAsyncDisposable
 {
 }

@@ -694,10 +694,15 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
             return entries;
     }
 
-    public override void Dispose()
+    protected override void Dispose(bool disposing)
     {
-        if (!m_LeaveOpen)
-            m_Archive.Dispose();
+        if (disposing)
+        {
+            if (!m_LeaveOpen)
+                m_Archive.Dispose();
+        }
+
+        base.Dispose(disposing);
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

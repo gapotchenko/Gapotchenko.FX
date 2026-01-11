@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Data.Archives.Zip;
 /// Represents a package of compressed files in the ZIP archive format.
 /// </summary>
 public sealed partial class ZipArchive :
-    FileSystemViewProxyKit<IZipArchiveView<System.IO.Compression.ZipArchive>>,
+    VirtualFileSystemProxyKit<IZipArchive>,
     IZipArchive,
     IStorageMountableDataArchive<IZipArchive, ZipArchiveOptions>
 {
@@ -110,7 +110,4 @@ public sealed partial class ZipArchive :
             throw;
         }
     }
-
-    /// <inheritdoc/>
-    public void Dispose() => BaseView.Dispose();
 }

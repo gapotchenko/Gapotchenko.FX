@@ -16,14 +16,13 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     where T : IFileSystemView
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="FileSystemViewProxyKit{T}"/> class with the specified base stream.
+    /// Initializes a new instance of the <see cref="FileSystemViewProxyKit{T}"/> class with the specified base file system view.
     /// </summary>
     /// <param name="baseView">The base file system view to create the proxy for.</param>
     /// <exception cref="ArgumentNullException"><paramref name="baseView"/> is <see langword="null"/>.</exception>
     protected FileSystemViewProxyKit(T baseView)
     {
-        if (baseView == null)
-            throw new ArgumentNullException(nameof(baseView));
+        ArgumentNullException.ThrowIfNull(baseView);
 
         BaseView = baseView;
     }
