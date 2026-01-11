@@ -301,17 +301,25 @@ partial class FileSystemViewVfsTestKit
         var lastWriteTime = VfsTestContentKit.SpecialUtcTime2;
         var lastAccessTime = VfsTestContentKit.SpecialUtcTime3;
 
-        using var sourceVfs = CreateTemporaryVfs(out string sourceRootPath);
-
-        RunVfsTest(Mutate, Verify);
+        RunStatefulVfsTest(
+            () =>
+            {
+                var sourceVfs = CreateTemporaryVfs(out string sourceRootPath);
+                return (SourceVfs: sourceVfs, SourceRootPath: sourceRootPath);
+            },
+            Mutate,
+            Verify,
+            state => state.SourceVfs.Dispose());
 
         const string sourceFileName = "Source.txt";
         const string destinationFileNameA = "Destination A.txt";
         const string destinationFileNameB = "Destination B.txt";
         const string fileContents = "This is a sample text.";
 
-        void Mutate(IFileSystemView destinationVfs, string destinationRootPath)
+        void Mutate(IFileSystemView destinationVfs, string destinationRootPath, (IVirtualFileSystem, string) state)
         {
+            var (sourceVfs, sourceRootPath) = state;
+
             #region Epilogue
 
             (IFileSystemView sVfs, string sr) = (sourceVfs, sourceRootPath);
@@ -341,8 +349,10 @@ partial class FileSystemViewVfsTestKit
             sVfs.CopyFile(sourceFilePath, new VfsLocation(dVfs, DR(destinationFileNameB)), options: VfsCopyOptions.Archive);
         }
 
-        void Verify(IReadOnlyFileSystemView destinationVfs, string destinationRootPath)
+        void Verify(IReadOnlyFileSystemView destinationVfs, string destinationRootPath, (IVirtualFileSystem, string) state)
         {
+            var (sourceVfs, sourceRootPath) = state;
+
             #region Epilogue
 
             (IReadOnlyFileSystemView sVfs, string sr) = (sourceVfs, sourceRootPath);
@@ -463,16 +473,24 @@ partial class FileSystemViewVfsTestKit
         var lastWriteTime = VfsTestContentKit.SpecialUtcTime2;
         var lastAccessTime = VfsTestContentKit.SpecialUtcTime3;
 
-        using var sourceVfs = CreateTemporaryVfs(out string sourceRootPath);
-
-        RunVfsTest(Mutate, Verify);
+        RunStatefulVfsTest(
+            () =>
+            {
+                var sourceVfs = CreateTemporaryVfs(out string sourceRootPath);
+                return (SourceVfs: sourceVfs, SourceRootPath: sourceRootPath);
+            },
+            Mutate,
+            Verify,
+            state => state.SourceVfs.Dispose());
 
         const string sourceFileName = "Source.txt";
         const string destinationFileName = "Destination.txt";
         const string fileContents = "This is a sample text.";
 
-        void Mutate(IFileSystemView destinationVfs, string destinationRootPath)
+        void Mutate(IFileSystemView destinationVfs, string destinationRootPath, (IVirtualFileSystem, string) state)
         {
+            var (sourceVfs, sourceRootPath) = state;
+
             #region Epilogue
 
             (IFileSystemView sVfs, string sr) = (sourceVfs, sourceRootPath);
@@ -498,8 +516,10 @@ partial class FileSystemViewVfsTestKit
             sVfs.MoveFile(SR(sourceFileName), new VfsLocation(dVfs, DR(destinationFileName)));
         }
 
-        void Verify(IReadOnlyFileSystemView destinationVfs, string destinationRootPath)
+        void Verify(IReadOnlyFileSystemView destinationVfs, string destinationRootPath, (IVirtualFileSystem, string) state)
         {
+            var (sourceVfs, sourceRootPath) = state;
+
             #region Epilogue
 
             (IReadOnlyFileSystemView sVfs, string sr) = (sourceVfs, sourceRootPath);

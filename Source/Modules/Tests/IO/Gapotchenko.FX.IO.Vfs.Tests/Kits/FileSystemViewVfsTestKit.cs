@@ -55,6 +55,8 @@ public abstract partial class FileSystemViewVfsTestKit
         return vfs;
     }
 
+    // ------------------------------------------------------------------------
+
     void RunVfsTest(VfsTest test) =>
         RunVfsTest(test, (VfsTest?)null);
 
@@ -97,6 +99,61 @@ public abstract partial class FileSystemViewVfsTestKit
     delegate void VfsTest(IFileSystemView vfs, string rootPath);
 
     delegate void VfsPhasedTest(IFileSystemView vfs, string rootPath, int phase);
+
+    // ------------------------------------------------------------------------
+
+    void RunStatefulVfsTest<T>(VfsTestInitialize<T> initialize, VfsStatefulTest<T> mutate, VfsStatefulTest<T>? verify, VfsTestCleanup<T>? cleanup)
+    {
+        RunStatefulVfsTest(
+            initialize,
+            mutate,
+            verify is null
+                ? null
+                : (vfs, path, phase, state) => verify(vfs, path, state),
+            cleanup);
+    }
+
+    void RunStatefulVfsTest<T>(VfsTestInitialize<T> initialize, VfsStatefulTest<T> mutate, VfsStatefulPhasedTest<T>? verify, VfsTestCleanup<T>? cleanup)
+    {
+        RunStatefulVfsTest(initialize, mutate, verify, cleanup, Fn.Identity, null);
+    }
+
+    void RunStatefulVfsTest<T>(
+        VfsTestInitialize<T> initialize,
+        VfsStatefulTest<T> mutate,
+        VfsStatefulPhasedTest<T>? verify,
+        VfsTestCleanup<T>? cleanup,
+        Func<IFileSystemView, IFileSystemView> transformVfs,
+        Func<T, T>? transformState)
+    {
+        var state = initialize();
+        try
+        {
+            if (transformState is not null)
+                state = transformState(state);
+
+            RunVfsTest(
+                (vfs, path) => mutate(vfs, path, state),
+                verify is null
+                    ? null
+                    : (vfs, path, phase) => verify(vfs, path, phase, state),
+                transformVfs);
+        }
+        finally
+        {
+            cleanup?.Invoke(state);
+        }
+    }
+
+    delegate T VfsTestInitialize<T>();
+
+    delegate void VfsTestCleanup<T>(T state);
+
+    delegate void VfsStatefulTest<T>(IFileSystemView vfs, string rootPath, T state);
+
+    delegate void VfsStatefulPhasedTest<T>(IFileSystemView vfs, string rootPath, int phase, T state);
+
+    // ------------------------------------------------------------------------
 
     static void DisposeVfs(IFileSystemView? vfs) => (vfs as IDisposable)?.Dispose();
 
