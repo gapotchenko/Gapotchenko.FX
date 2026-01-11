@@ -43,7 +43,7 @@ static class CollectionHelper
 
         int newCapacity = existingCapacity == 0 ? defaultCapacity : existingCapacity * 2;
 
-        int arrayMaxLength = ArrayHelper.ArrayMaxLength;
+        int arrayMaxLength = Array.MaxLength;
         if ((uint)newCapacity > arrayMaxLength)
             newCapacity = arrayMaxLength;
 

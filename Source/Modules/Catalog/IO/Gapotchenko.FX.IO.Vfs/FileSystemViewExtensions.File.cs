@@ -408,7 +408,7 @@ partial class FileSystemViewExtensions
             return [];
         else if (length == -1)
             return ReadAllBytesUnknownLength(stream);
-        else if (length > ArrayHelper.ArrayMaxLength)
+        else if (length > Array.MaxLength)
             throw new IOException(Resources.FileTooLong2GB);
 
         int count = (int)length;
@@ -425,7 +425,7 @@ partial class FileSystemViewExtensions
             return [];
         else if (length == -1)
             return await ReadAllBytesUnknownLengthAsync(stream, cancellationToken).ConfigureAwait(false);
-        else if (length > ArrayHelper.ArrayMaxLength)
+        else if (length > Array.MaxLength)
             throw new IOException(Resources.FileTooLong2GB);
 
         int count = (int)length;
@@ -482,8 +482,9 @@ partial class FileSystemViewExtensions
                 if (bytesRead == buffer.Length)
                 {
                     uint newLength = (uint)buffer.Length * 2;
-                    if (newLength > ArrayHelper.ArrayMaxLength)
-                        newLength = (uint)Math.Max(ArrayHelper.ArrayMaxLength, buffer.Length + 1);
+                    int arrayMaxLength = Array.MaxLength;
+                    if (newLength > arrayMaxLength)
+                        newLength = (uint)Math.Max(arrayMaxLength, buffer.Length + 1);
 
 #if TFF_CER
                     try
@@ -544,8 +545,9 @@ partial class FileSystemViewExtensions
                 if (bytesRead == buffer.Length)
                 {
                     uint newLength = (uint)buffer.Length * 2;
-                    if (newLength > ArrayHelper.ArrayMaxLength)
-                        newLength = (uint)Math.Max(ArrayHelper.ArrayMaxLength, buffer.Length + 1);
+                    int arrayMaxLength = Array.MaxLength;
+                    if (newLength > arrayMaxLength)
+                        newLength = (uint)Math.Max(arrayMaxLength, buffer.Length + 1);
 
 #if TFF_CER
                     try
