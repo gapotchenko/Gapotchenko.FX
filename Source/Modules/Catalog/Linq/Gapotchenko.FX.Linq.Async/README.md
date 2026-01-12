@@ -68,7 +68,7 @@ dotnet package add Gapotchenko.FX.Linq.Async
 ## Related Modules
 
 - [Gapotchenko.FX.Linq](../Gapotchenko.FX.Linq#readme) - Provides synchronous LINQ extensions and primitives
-- [Gapotchenko.FX.Threading](../../Threading/Gapotchenko.FX.Threading#readme) - Provides threading primitives, including bridging between synchronous and asynchronous execution models
+- [Gapotchenko.FX.Threading](../../Gapotchenko.FX.Threading#readme) - Provides threading primitives, including bridging between synchronous and asynchronous execution models
 
 ## Other Modules
 
