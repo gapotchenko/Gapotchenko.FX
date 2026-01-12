@@ -691,7 +691,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     {
         var entries = m_Archive.Entries;
         if (CanWrite)
-            return entries.ToList();
+            return [.. entries];
         else
             return entries;
     }
