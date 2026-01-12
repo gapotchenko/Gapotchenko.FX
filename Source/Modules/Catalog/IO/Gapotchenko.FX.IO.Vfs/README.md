@@ -86,6 +86,71 @@ vfs.CreateDirectory("NewFolder");
 vfs.DeleteDirectory("OldFolder", recursive: true);
 ```
 
+### Asynchronous Operations
+
+The module provides comprehensive support for asynchronous file and directory operations, allowing you to perform I/O operations without blocking threads:
+
+``` C#
+using Gapotchenko.FX.IO.Vfs;
+
+var vfs = FileSystemView.Local;
+
+// Asynchronously read all text from a file
+string content = await vfs.ReadAllFileTextAsync("data.txt");
+
+// Asynchronously write text to a file
+await vfs.WriteAllFileTextAsync("output.txt", "Hello, World!");
+
+// Asynchronously read all bytes
+byte[] data = await vfs.ReadAllFileBytesAsync("binary.dat");
+
+// Asynchronously open a file for reading
+using var stream = await vfs.ReadFileAsync("data.txt");
+
+// Asynchronously open a file with specific mode and access
+await using var writeStream = await vfs.OpenFileAsync(
+    "output.txt", 
+    FileMode.Create, 
+    FileAccess.Write, 
+    FileShare.None);
+
+// Asynchronously copy a file
+await vfs.CopyFileAsync("source.txt", "destination.txt". overwrite: true);
+
+// Asynchronously move a file
+await vfs.MoveFileAsync("old.txt", "new.txt", overwrite: false);
+
+// Asynchronously delete a file
+await vfs.DeleteFileAsync("old.txt");
+
+// Asynchronously create a directory
+await vfs.CreateDirectoryAsync("NewFolder");
+
+// Asynchronously delete a directory
+await vfs.DeleteDirectoryAsync("OldFolder", recursive: true);
+
+// Asynchronously read file lines
+await foreach (string line in vfs.ReadFileLinesAsync("data.txt"))
+{
+    Console.WriteLine(line);
+}
+```
+
+All asynchronous methods support cancellation tokens for cooperative cancellation:
+
+``` C#
+using Gapotchenko.FX.IO.Vfs;
+
+var vfs = FileSystemView.Local;
+var cancellationToken = ...;
+
+// Asynchronously read with cancellation support
+string content = await vfs.ReadAllFileTextAsync("data.txt", cancellationToken);
+
+// Asynchronously write with cancellation support
+await vfs.WriteAllFileTextAsync("output.txt", "Hello, World!", cancellationToken);
+```
+
 ### Capabilities
 
 Virtual file system views expose capabilities that indicate what operations are supported:
@@ -152,13 +217,13 @@ The module is designed to support custom virtual file system implementations. Yo
 
 ### Implementing a Custom File System
 
-To implement a custom virtual file system, you can inherit from `FileSystemViewKit` which provides a base implementation:
+To implement a custom virtual file system, you can inherit from `VirtualFileSystemKit` which provides a base implementation:
 
 ``` C#
 using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
 
-public class MyCustomFileSystem : FileSystemViewKit
+public class MyCustomFileSystem : VirtualFileSystemKit
 {
     public override bool CanRead => true;
     public override bool CanWrite => true;
