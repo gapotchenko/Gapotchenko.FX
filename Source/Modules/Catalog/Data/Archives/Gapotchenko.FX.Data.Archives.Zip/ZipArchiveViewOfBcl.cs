@@ -37,6 +37,8 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     /// </param>
     public ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool leaveOpen)
     {
+        ArgumentNullException.ThrowIfNull(archive);
+
         m_Archive = archive;
         m_LeaveOpen = leaveOpen;
 
