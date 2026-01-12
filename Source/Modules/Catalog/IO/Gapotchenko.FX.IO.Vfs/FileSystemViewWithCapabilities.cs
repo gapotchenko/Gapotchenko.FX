@@ -352,10 +352,10 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
         return base.GetCreationTimeAsync(path, cancellationToken);
     }
 
-    public override void SetCreationTime(string path, DateTime lastWriteTime)
+    public override void SetCreationTime(string path, DateTime creationTime)
     {
         EnsureCanWrite();
-        base.SetCreationTime(path, lastWriteTime);
+        base.SetCreationTime(path, creationTime);
     }
 
     public override Task SetCreationTimeAsync(string path, DateTime creationTime, CancellationToken cancellationToken = default)

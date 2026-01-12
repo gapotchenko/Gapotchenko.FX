@@ -108,7 +108,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
         if ((options & ~supportedOptions) == 0)
         {
             return TaskBridge.ExecuteAsync(
-                () => MoveFileNativeCore(sourcePath, destinationPath, overwrite, cancellationToken),
+                () => MoveFileNativeCore(sourcePath, destinationPath, overwrite),
                 cancellationToken);
         }
         else
@@ -117,7 +117,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
         }
     }
 
-    static void MoveFileNativeCore(string sourcePath, string destinationPath, bool overwrite, CancellationToken cancellationToken = default)
+    static void MoveFileNativeCore(string sourcePath, string destinationPath, bool overwrite)
     {
 #if NETCOREAPP3_0_OR_GREATER
         File.Move(sourcePath, destinationPath, overwrite);
