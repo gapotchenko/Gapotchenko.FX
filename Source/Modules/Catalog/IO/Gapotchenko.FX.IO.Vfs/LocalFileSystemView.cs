@@ -212,7 +212,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override void SetCreationTime(string path, DateTime creationTime)
     {
-        Directory.SetCreationTime(path, ConvertUtcTimeFromVfs(creationTime));
+        Directory.SetCreationTimeUtc(path, ConvertUtcTimeFromVfs(creationTime));
     }
 
     public override DateTime GetLastWriteTime(string path)

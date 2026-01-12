@@ -811,7 +811,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual void SetCreationTime(string path, DateTime creationTime) => throw new NotSupportedException();
 
     /// <inheritdoc/>
-    public Task SetCreationTimeAsync(string path, DateTime creationTime, CancellationToken cancellationToken = default) =>
+    public virtual Task SetCreationTimeAsync(string path, DateTime creationTime, CancellationToken cancellationToken = default) =>
         TaskBridge.ExecuteAsync(() => SetCreationTime(path, creationTime), cancellationToken);
 
     /// <inheritdoc/>
@@ -825,7 +825,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual void SetLastWriteTime(string path, DateTime lastWriteTime) => throw new NotSupportedException();
 
     /// <inheritdoc/>
-    public Task SetLastWriteTimeAsync(string path, DateTime lastWriteTime, CancellationToken cancellationToken = default) =>
+    public virtual Task SetLastWriteTimeAsync(string path, DateTime lastWriteTime, CancellationToken cancellationToken = default) =>
         TaskBridge.ExecuteAsync(() => SetLastWriteTime(path, lastWriteTime), cancellationToken);
 
     /// <inheritdoc/>
@@ -839,7 +839,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual void SetLastAccessTime(string path, DateTime lastAccessTime) => throw new NotSupportedException();
 
     /// <inheritdoc/>
-    public Task SetLastAccessTimeAsync(string path, DateTime lastAccessTime, CancellationToken cancellationToken = default) =>
+    public virtual Task SetLastAccessTimeAsync(string path, DateTime lastAccessTime, CancellationToken cancellationToken = default) =>
         TaskBridge.ExecuteAsync(() => SetLastAccessTime(path, lastAccessTime), cancellationToken);
 
     /// <inheritdoc/>
@@ -853,7 +853,7 @@ public abstract class FileSystemViewKit : IFileSystemView
     public virtual void SetAttributes(string path, FileAttributes attributes) => throw new NotSupportedException();
 
     /// <inheritdoc/>
-    public Task SetAttributesAsync(string path, FileAttributes attributes, CancellationToken cancellationToken = default) =>
+    public virtual Task SetAttributesAsync(string path, FileAttributes attributes, CancellationToken cancellationToken = default) =>
         TaskBridge.ExecuteAsync(() => SetAttributes(path, attributes), cancellationToken);
 
     #endregion

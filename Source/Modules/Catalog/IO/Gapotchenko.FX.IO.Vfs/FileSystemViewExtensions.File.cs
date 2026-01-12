@@ -1198,7 +1198,7 @@ partial class FileSystemViewExtensions
     {
         if (view is LocalFileSystemView)
         {
-            return File.ReadAllLines(path, encoding);
+            return File.ReadLines(path, encoding);
         }
         else
         {
@@ -1472,6 +1472,9 @@ partial class FileSystemViewExtensions
         }
         else
         {
+            ArgumentNullException.ThrowIfNull(view);
+            ArgumentNullException.ThrowIfNull(contents);
+
             using var writer = view.CreateTextFile(path, encoding);
             WriteAllLinesCore(writer, contents);
         }
