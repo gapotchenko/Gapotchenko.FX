@@ -203,11 +203,20 @@ string MakeRelativePath(string path, string basePath)
 
 bool isPreview = PackageVersion.Contains("-");
 
-string branch = isPreview ? "new" : "master";
+if (isPreview)
+{
+    string branch = isPreview ? "new" : "main";
 
-RepositoryUrl =
-    $"{RepositoryUrl}/tree/{branch}/Source/" +
-    MakeRelativePath(ProjectDirectory, SolutionDirectory).Replace(Path.DirectorySeparatorChar, '/');
+    RepositoryUrl =
+        $"{RepositoryUrl}/tree/{branch}/Source/" +
+        MakeRelativePath(ProjectDirectory, SolutionDirectory).Replace(Path.DirectorySeparatorChar, '/');
+}
+else
+{
+    // Use redirection service because unversioned module URLs are not stable in SCM.
+    RepositoryUrl = "https://go.gapotchenko.com/link/gapotchenko.fx/scm/" + Path.GetFileName(ProjectDirectory).ToLowerInvariant();
+}
+
         ]]>
       </Code>
     </Task>
