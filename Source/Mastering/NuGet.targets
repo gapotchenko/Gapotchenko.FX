@@ -126,10 +126,10 @@ var targetFrameworks = new HashSet<string>(TargetFrameworks.Split(';'), StringCo
 
 bool supportsNETStandard20 = targetFrameworks.Contains("netstandard2.0");
 bool supportsNETCore20 = targetFrameworks.Contains("netcoreapp2.0") || supportsNETStandard20;
-bool supportsNET60 = targetFrameworks.Contains("net6.0") || supportsNETCore20;
+bool supportsNET80 = targetFrameworks.Contains("net8.0") || supportsNETCore20;
 
-if (supportsNET60)
-    supportedPlatforms.Add(".NET 6.0+");
+if (supportsNET80)
+    supportedPlatforms.Add(".NET 8.0+");
 if (supportsNETStandard20)
     supportedPlatforms.Add(".NET Standard 2.0+");
 if (targetFrameworks.Contains("net472"))
