@@ -20,7 +20,7 @@ Release date: January 14, 2026
     - Added `System.IO.TextWriter` polyfill methods: `Write(ReadOnlySpan<char>)`, `WriteLine(ReadOnlySpan<char>)`, `WriteAsync(ReadOnlyMemory<char>, CancellationToken)`, and `WriteLineAsync(ReadOnlyMemory<char>, CancellationToken)`
 - Fixed issues:
     - Fixed culture-specific interval formatting
-- Retired support for target .NET Core frameworks older then .NET 8.0
+- Retired support for target .NET Core frameworks older than .NET 8.0
 
 ## 2025
 
