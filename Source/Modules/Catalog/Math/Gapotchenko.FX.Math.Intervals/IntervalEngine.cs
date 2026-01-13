@@ -330,8 +330,20 @@ static class IntervalEngine
             sb.Append('(');
 
         AppendBoundary(sb, interval.From, emptySymbol, infinitySymbol, formatProvider);
+        int delimiterIndex = sb.Length;
         sb.Append(',');
         AppendBoundary(sb, interval.To, emptySymbol, infinitySymbol, formatProvider);
+
+        for (int i = 1, n = sb.Length; i < n; ++i)
+        {
+            if (sb[i] == ',' && i != delimiterIndex)
+            {
+                // One of the interval bounds has ',' character in its string representation.
+                // Change the interval delimiter to ';' to avoid semantic clashing.
+                sb[delimiterIndex] = ';';
+                break;
+            }
+        }
 
         if (interval.To.Kind == IntervalBoundaryKind.Inclusive)
             sb.Append(']');

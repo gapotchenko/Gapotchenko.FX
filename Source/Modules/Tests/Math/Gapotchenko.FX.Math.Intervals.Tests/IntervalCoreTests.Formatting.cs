@@ -35,5 +35,6 @@ partial class IntervalCoreTests
         var interval = NewInterval(ValueInterval.Inclusive(10.5f, 20.3f));
 
         Assert.AreEqual("[10.5,20.3]", interval.ToString(null, CultureInfo.InvariantCulture));
+        Assert.AreEqual("[10,5;20,3]", interval.ToString(null, CultureInfo.GetCultureInfo("de-DE")));
     }
 }
