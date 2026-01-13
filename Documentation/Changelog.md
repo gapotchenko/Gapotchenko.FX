@@ -4,7 +4,7 @@
 
 ### Gapotchenko.FX 2026.1
 
-Release date: not released yet
+Release date: January 14, 2026
 
 - Added asynchronous operations support to `Gapotchenko.FX.IO.Vfs` module
 - Added string parsing functionality for `Interval<T>` and `ValueInterval<T>` types
