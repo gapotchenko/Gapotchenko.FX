@@ -33,6 +33,7 @@ The full list of available modules is presented in the table below.
 - [Gapotchenko.FX.IO](Catalog/IO/Gapotchenko.FX.IO#readme)
   - [Gapotchenko.FX.IO.Vfs](Catalog/IO/Gapotchenko.FX.IO.Vfs#readme)
 - [Gapotchenko.FX.Linq](Catalog/Linq/Gapotchenko.FX.Linq#readme)
+  - [Gapotchenko.FX.Linq.Async](Catalog/Linq/Gapotchenko.FX.Linq.Async#readme)
   - [Gapotchenko.FX.Linq.Expressions](Catalog/Linq/Gapotchenko.FX.Linq.Expressions#readme) ✱
 - [Gapotchenko.FX.Math](Catalog/Math/Gapotchenko.FX.Math#readme)
   - [Gapotchenko.FX.Math.Combinatorics](Catalog/Math/Gapotchenko.FX.Math.Combinatorics#readme)

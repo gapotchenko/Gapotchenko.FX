@@ -55,29 +55,34 @@ public class Base64Tests
     public void Base64_Rfc4648_TV7() => TestVector("foobar", "Zm9vYmFy");
 
     [TestMethod]
-    public void Base64_PadCon() =>
+    public void Base64_PadCon()
+    {
         Assert.IsTrue(
             Base64.GetBytes("SQ==QU0=VEpN")
             .SequenceEqual(Encoding.ASCII.GetBytes("IAMTJM")));
+    }
 
     [TestMethod]
-    public void Base64_PadCon_Invalid_Consume() =>
+    public void Base64_PadCon_Invalid_Consume()
+    {
         Assert.IsTrue(
             Base64.GetBytes("SQ=QU0=VEpN")
             .SequenceEqual(Encoding.ASCII.GetBytes("IAMTJM")));
+    }
 
     [TestMethod]
-    [ExpectedException(typeof(FormatException))]
-    public void Base64_PadCon_Invalid_Check() =>
-        Assert.IsTrue(
-            Base64.GetBytes("SQ=QU0=VEpN", DataEncodingOptions.Padding)
-            .SequenceEqual(Encoding.ASCII.GetBytes("IAMTJM")));
+    public void Base64_PadCon_Invalid_Check()
+    {
+        Assert.ThrowsExactly<FormatException>(() => Base64.GetBytes("SQ=QU0=VEpN", DataEncodingOptions.Padding));
+    }
 
     [TestMethod]
-    public void Base64_PadCon_Relax() =>
+    public void Base64_PadCon_Relax()
+    {
         Assert.IsTrue(
             Base64.GetBytes("SQ=Я=QU0=VEpN", DataEncodingOptions.Padding | DataEncodingOptions.Relax)
             .SequenceEqual(Encoding.ASCII.GetBytes("IAMTJM")));
+    }
 
     [TestMethod]
     [DataRow(DataEncodingOptions.None)]

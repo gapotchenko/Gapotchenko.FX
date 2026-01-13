@@ -18,10 +18,12 @@ public sealed class HammingTests : IStringDistanceAlgorithmTests
     [TestMethod]
     public void StringDistance_Hamming_DifferentLengths()
     {
-        Assert.ThrowsException<ArgumentException>(() => DistanceAlgorithm.Calculate("abra", "abr"));
+        Assert.ThrowsExactly<ArgumentException>(() => DistanceAlgorithm.Calculate("abra", "abr", cancellationToken: TestContext.CancellationToken));
     }
 
     // ----------------------------------------------------------------------
 
     protected override IStringDistanceAlgorithm DistanceAlgorithm => StringMetrics.Distance.Hamming;
+
+    public TestContext TestContext { get; set; }
 }

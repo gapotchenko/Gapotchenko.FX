@@ -4,6 +4,8 @@ using System.Collections;
 using System.Diagnostics;
 using Xunit;
 
+using Assert = Xunit.Assert;
+
 namespace Gapotchenko.FX.Collections.Tests.Generic.AssociativeArray;
 
 public class AssociativeArray_Tests_Values : ICollection_Generic_Tests<string>

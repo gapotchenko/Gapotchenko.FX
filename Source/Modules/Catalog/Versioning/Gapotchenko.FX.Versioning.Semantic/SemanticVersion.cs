@@ -26,6 +26,7 @@ public sealed partial record SemanticVersion
     /// Gets or initializes the value of the major component of the version number for the current <see cref="SemanticVersion"/> object.
     /// </summary>
     /// <value>The major version number.</value>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is negative.</exception>
     public int Major
     {
         get => m_Major;
@@ -43,6 +44,7 @@ public sealed partial record SemanticVersion
     /// Gets or initializes the value of the minor component of the version number for the current <see cref="SemanticVersion"/> object.
     /// </summary>
     /// <value>The minor version number.</value>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is negative.</exception>
     public int Minor
     {
         get => m_Minor;
@@ -60,6 +62,7 @@ public sealed partial record SemanticVersion
     /// Gets or initializes the value of the patch component of the version number for the current <see cref="SemanticVersion"/> object.
     /// </summary>
     /// <value>The patch number.</value>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is negative.</exception>
     public int Patch
     {
         get => m_Patch;

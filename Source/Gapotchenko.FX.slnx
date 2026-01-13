@@ -93,6 +93,9 @@
     <Project Path="Modules/Catalog/Linq/Gapotchenko.FX.Linq/Gapotchenko.FX.Linq.csproj" />
     <Project Path="Modules/Tests/Linq/Gapotchenko.FX.Linq.Tests/Gapotchenko.FX.Linq.Tests.csproj" />
   </Folder>
+  <Folder Name="/01. Modules/Linq/Async/">
+    <Project Path="Modules/Catalog/Linq/Gapotchenko.FX.Linq.Async/Gapotchenko.FX.Linq.Async.csproj" Id="d411e346-503e-46cc-8cf6-b942fa07a1b3" />
+  </Folder>
   <Folder Name="/01. Modules/Linq/Expressions/">
     <Project Path="Modules/Catalog/Linq/Gapotchenko.FX.Linq.Expressions/Gapotchenko.FX.Linq.Expressions.csproj" />
   </Folder>
@@ -165,6 +168,7 @@
     <Project Path="Profiles/Gapotchenko.FX.Profiles.Math/Gapotchenko.FX.Profiles.Math.csproj" />
   </Folder>
   <Folder Name="/03. Misc/">
+    <File Path="../.editorconfig" />
     <File Path="../README.md" />
   </Folder>
   <Folder Name="/03. Misc/Documentation/">

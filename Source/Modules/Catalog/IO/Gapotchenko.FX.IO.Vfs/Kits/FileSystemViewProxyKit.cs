@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.IO.Vfs.Kits;
 public abstract class FileSystemViewProxyKit : FileSystemViewProxyKit<IFileSystemView>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="FileSystemViewProxyKit"/> class with the specified base stream.
+    /// Initializes a new instance of the <see cref="FileSystemViewProxyKit"/> class with the specified base file system view.
     /// </summary>
     /// <inheritdoc/>
     protected FileSystemViewProxyKit(IFileSystemView baseView) :

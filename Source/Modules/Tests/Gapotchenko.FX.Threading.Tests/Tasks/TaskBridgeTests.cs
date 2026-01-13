@@ -6,7 +6,6 @@
 // Year of introduction: 2019
 
 using Gapotchenko.FX.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading.Tests.Tasks;
@@ -37,14 +36,14 @@ public sealed class TaskBridgeTests
             for (int i = 0; i < 10000; i++)
             {
                 int tid = Environment.CurrentManagedThreadId;
-                mapArg[tid] = mapArg.TryGetValue(tid, out var count) ? count + 1 : 1;
+                mapArg[tid] = mapArg.TryGetValue(tid, out int count) ? count + 1 : 1;
                 await Task.Yield();
             }
         }
 
         TaskBridge.Execute(() => Run(map));
 
-        Assert.AreEqual(1, map.Count);
+        Assert.HasCount(1, map);
         Assert.AreEqual(10000, map.Single().Value);
     }
 
@@ -68,7 +67,7 @@ public sealed class TaskBridgeTests
             },
             TaskCreationOptions.LongRunning);
 
-        ev.Wait();
+        ev.Wait(TestContext.CancellationToken);
         cts.Cancel();
 
         Assert.ThrowsExactly<OperationCanceledException>(() => TaskBridge.Execute(task));
@@ -99,7 +98,7 @@ public sealed class TaskBridgeTests
             },
             TaskCreationOptions.LongRunning);
 
-        ev.Wait();
+        ev.Wait(TestContext.CancellationToken);
         cts.Cancel();
 
         Assert.ThrowsExactly<AggregateException>(() => TaskBridge.Execute(task));
@@ -124,24 +123,26 @@ public sealed class TaskBridgeTests
         if (!Environment.UserInteractive)
             Assert.Inconclusive();
 
-        static async Task<string> F(string s)
+        static async Task<string> F(string s, CancellationToken cancellationToken)
         {
             int count = 0;
 
-            await Task.Delay(1);
+            await Task.Delay(1, cancellationToken);
             ++count;
 
-            await Task.Delay(1);
+            await Task.Delay(1, cancellationToken);
             ++count;
 
-            await Task.Delay(1);
+            await Task.Delay(1, cancellationToken);
             ++count;
 
             return s + count;
         }
 
-        Assert.AreEqual("abc3", TaskBridge.Execute(() => F("abc")));
-        Assert.AreEqual("def3", TaskBridge.Execute(F("def")));
+
+        var cancellationToken = TestContext.CancellationToken;
+        Assert.AreEqual("abc3", TaskBridge.Execute(() => F("abc", cancellationToken)));
+        Assert.AreEqual("def3", TaskBridge.Execute(F("def", cancellationToken)));
     }
 
     [TestMethod]
@@ -187,7 +188,7 @@ public sealed class TaskBridgeTests
             try
             {
                 startSemaphore.Release();
-                barrierSemaphore.Wait();
+                barrierSemaphore.Wait(TestContext.CancellationToken);
             }
             catch (Exception e)
             {
@@ -203,11 +204,11 @@ public sealed class TaskBridgeTests
             using var cts = new CancellationTokenSource();
 
             var task = TaskBridge.ExecuteAsync(SyncProcedure, cts.Token);
-            await startSemaphore.WaitAsync();
+            await startSemaphore.WaitAsync(TestContext.CancellationToken);
 
             cts.CancelAfter(TestData_CancellationDelay);
 
-            var cancellationException = await Assert.ThrowsExactlyAsync<TaskCanceledException>(() => task.WaitAsync(TestData_PositiveTimeout));
+            var cancellationException = await Assert.ThrowsExactlyAsync<TaskCanceledException>(() => task.WaitAsync(TestData_PositiveTimeout, TestContext.CancellationToken));
             Assert.AreEqual(task, cancellationException.Task);
         }
         finally
@@ -216,7 +217,7 @@ public sealed class TaskBridgeTests
             barrierSemaphore.Release();
         }
 
-        Assert.IsTrue(await exitSemaphore.WaitAsync(TestData_PositiveTimeout));
+        Assert.IsTrue(await exitSemaphore.WaitAsync(TestData_PositiveTimeout, TestContext.CancellationToken));
 
 #if NETFRAMEWORK
         Assert.IsInstanceOfType<ThreadAbortException>(exitException);
@@ -316,15 +317,19 @@ public sealed class TaskBridgeTests
 
         async Task ControlTask()
         {
+#pragma warning disable MSTEST0049 // Flow TestContext.CancellationToken to async operations
             await flag.WaitAsync();
+#pragma warning restore MSTEST0049
             cts.Cancel();
         }
 
         var controlTask = ControlTask();
+#pragma warning disable MSTEST0049 // Flow TestContext.CancellationToken to async operations
         await Assert.ThrowsExactlyAsync<TaskCanceledException>(
             () => TaskBridge.ExecuteAsync(
                 () => TaskBridge.Execute(RunAsync),
                 cts.Token));
+#pragma warning restore MSTEST0049
 
         await controlTask;
 
@@ -347,7 +352,9 @@ public sealed class TaskBridgeTests
                 await Task.Yield();
                 ++trace;
                 flag1.Set();
+#pragma warning disable MSTEST0049 // Flow TestContext.CancellationToken to async operations
                 await flag2.WaitAsync();
+#pragma warning restore MSTEST0049
                 ++trace;
             }
             finally
@@ -362,7 +369,9 @@ public sealed class TaskBridgeTests
 
         async Task ControlTask()
         {
+#pragma warning disable MSTEST0049 // Flow TestContext.CancellationToken to async operations
             await flag1.WaitAsync();
+#pragma warning restore MSTEST0049
             cts.Cancel();
         }
 
@@ -385,4 +394,6 @@ public sealed class TaskBridgeTests
 
         Assert.AreEqual(203, trace);
     }
+
+    public TestContext TestContext { get; set; }
 }

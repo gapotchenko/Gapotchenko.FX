@@ -100,6 +100,8 @@ partial class MathEx
     public static DateTime Max(DateTime val1, DateTime val2, DateTime val3) => Math.Max(val1, val2, val3);
 
     /// <inheritdoc cref="MathExtensions.Max{T}(T, T)"/>
+    [Obsolete("Use System.Math.Max(val1, val2) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
     public static T? Max<T>(T? val1, T? val2) where T : IComparable<T>
@@ -113,6 +115,8 @@ partial class MathEx
     }
 
     /// <inheritdoc cref="MathExtensions.Max{T}(T, T, IComparer{T}?)"/>
+    [Obsolete("Use System.Math.Max(val1, val2, comparer) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
     public static T? Max<T>(T? val1, T? val2, IComparer<T>? comparer = null)
@@ -126,6 +130,8 @@ partial class MathEx
     }
 
     /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Max(val1, val2, val3) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
     [return: NotNullIfNotNull(nameof(val3))]
@@ -133,6 +139,8 @@ partial class MathEx
         Max(Max(val1, val2), val3);
 
     /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T, IComparer{T}?)"/>
+    [Obsolete("Use System.Math.Max(val1, val2, val3, comparer) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
     [return: NotNullIfNotNull(nameof(val3))]

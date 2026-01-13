@@ -63,6 +63,8 @@ class Program
 
     static void Main(string[] args)
     {
+        //File.AppendAllTextAsync()
+        //FileSystemView.Local.ReadFileLines
         try
         {
             ExecuteOnce a = new(() => Console.WriteLine("Once!"));
@@ -109,9 +111,9 @@ class Program
         }
         Console.WriteLine("------------------------------------------------------------------");
 
-        var res = new[] { 1, 1, 2 }.CrossJoin(new[] { "A", "B" }, ValueTuple.Create).Distinct();
+        var res = new[] { 1, 1, 2 }.CrossJoin(["A", "B"], ValueTuple.Create).Distinct();
 
-        Console.WriteLine("A = {0}", Enumerable.Distinct(Permutations.Of(new[] { 1, 1, 2 })).Count());
+        Console.WriteLine("A = {0}", Enumerable.Distinct(Permutations.Of([1, 1, 2])).Count());
 
         Console.WriteLine("Process: {0}", RuntimeInformation.ProcessArchitecture);
         Console.WriteLine("OS: {0}", RuntimeInformation.OSArchitecture);

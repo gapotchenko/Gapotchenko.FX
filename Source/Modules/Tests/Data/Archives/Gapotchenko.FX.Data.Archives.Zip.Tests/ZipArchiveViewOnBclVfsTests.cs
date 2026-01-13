@@ -15,9 +15,9 @@ public sealed class ZipArchiveViewOnBclVfsTests : FileSystemViewVfsTestKit
         return new ArchiveVfs(new MemoryStream());
     }
 
-    protected override bool TryRoundTripVfs([MaybeNullWhen(false)] ref IFileSystemView vfs)
+    protected override bool TryRoundTripVfs(ref IFileSystemView vfs)
     {
-        var archiveVfs = (ArchiveVfs)vfs;
+        var archiveVfs = (ArchiveVfs)UnwrapVfs(vfs, out object? cookie);
 
         archiveVfs.Dispose();
 
@@ -28,7 +28,7 @@ public sealed class ZipArchiveViewOnBclVfsTests : FileSystemViewVfsTestKit
         oldStream.CopyTo(newStream);
         newStream.Position = 0;
 
-        vfs = new ArchiveVfs(newStream);
+        vfs = WrapVfs(new ArchiveVfs(newStream), cookie);
         return true;
     }
 

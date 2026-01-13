@@ -1,8 +1,30 @@
 # What's New in Gapotchenko.FX
 
+## 2026
+
+### Gapotchenko.FX 2026.1
+
+Release date: January 14, 2026
+
+- Added asynchronous operations support to `Gapotchenko.FX.IO.Vfs` module
+- Added string parsing functionality for `Interval<T>` and `ValueInterval<T>` types
+- Added `SemanticVersion.Parse` and `SemanticVersion.TryParse` method overloads accepting `ReadOnlySpan<char>` parameters
+- Added `AsyncEnumerableBridge` class provided by `Gapotchenko.FX.Linq.Async` module that bridges synchronous and asynchronous enumeration models together
+- Added `ExecuteAsync` methods to `Gapotchenko.FX.Threading.Tasks.TaskBridge` class accepting `TaskCreationOptions` parameters.
+  Existing methods without `TaskCreationOptions` parameters now create thread pool tasks instead of long-running tasks
+  (equivalent of specifying `TaskCreationOptions.None`)
+- Improved `SemanticVersion` type converter
+- Polyfills:
+    - Added `System.Array.MaxLength` polyfill property
+    - Added `System.IO.Stream` polyfill methods: `Read(Span<byte>)`, `ReadAsync(Memory<byte>, CancellationToken)`, `Write(ReadOnlySpan<byte>)`, `WriteAsync(ReadOnlyMemory<byte>, CancellationToken)`
+    - Added `System.IO.TextWriter` polyfill methods: `Write(ReadOnlySpan<char>)`, `WriteLine(ReadOnlySpan<char>)`, `WriteAsync(ReadOnlyMemory<char>, CancellationToken)`, and `WriteLineAsync(ReadOnlyMemory<char>, CancellationToken)`
+- Fixed issues:
+    - Fixed culture-specific interval formatting
+- Retired support for target .NET Core frameworks older then .NET 8.0
+
 ## 2025
 
-### Gapotchenko FX 2025.1
+### Gapotchenko.FX 2025.1
 
 Release date: December 25, 2025
 
@@ -27,14 +49,14 @@ Release date: December 25, 2025
     - Added `Enum.GetValues<TEnum>()` polyfill method
 - Fixed issues:
     - Fixed issue that led to an empty string value returned by `AppInformation.Current.ExecutablePath` property for assemblies loaded from single-file bundles
-    - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly having its own entry point
+    - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly with its own entry point
     - Fixed issue that led to an empty string value returned by `AppInformation.Trademark` property instead of a `null` value
     - Fixed P/Invoke issues that could be potentially targeted by [WorstFit Attack](https://worst.fit/) vulnerability (applies to Windows OS only)
 - Retired support for target frameworks older then .NET 6.0 and .NET Framework 4.7.2
 
 ## 2024
 
-### Gapotchenko FX 2024.2
+### Gapotchenko.FX 2024.2
 
 Release date: December 31, 2024
 
@@ -43,7 +65,7 @@ Release date: December 31, 2024
 - Added `System.Threading.Lock` support to `Gapotchenko.FX.Threading.EvaluateOnce<T>` primitive
 - Added `System.Threading.Lock` support to `Gapotchenko.FX.Threading.ExecuteOnce` primitive
 - `Gapotchenko.FX.Reflection.Loader` module made as lazy as possible to avoid chicken and egg pitfalls
-- Added `Gapotchenko.FX.IOptional` interface for `Gapotchenko.FX.Optional<T>` type to allow an untyped optional value introspection
+- Added `Gapotchenko.FX.IOptional` interface for `Gapotchenko.FX.Optional<T>` type to allow an untyped introspection
 - Implemented memory span-based operations in `Gapotchenko.FX.IO.FragmentedMemoryStream` type
 - Polyfills:
     - Added polyfill for `System.Runtime.CompilerServices.OverloadResolutionPriorityAttribute` type
@@ -52,7 +74,7 @@ Release date: December 31, 2024
     - Fixed issue with nested `Gapotchenko.FX.Optional<T>` values that could occur during implicit value conversion to `Gapotchenko.FX.Optional<object>`
     - Fixed issue in `Gapotchenko.FX.Reflection.Loader` module that was caused by not taking into account a base directory of the assembly that had probing paths specified in its `App.config` file
 
-### Gapotchenko FX 2024.1
+### Gapotchenko.FX 2024.1
 
 Release date: November 10, 2024
 
@@ -110,7 +132,7 @@ Release date: November 10, 2024
 
 ## 2022
 
-### Gapotchenko FX 2022.2
+### Gapotchenko.FX 2022.2
 
 Release date: May 1, 2022
 
@@ -122,7 +144,7 @@ Release date: May 1, 2022
 - Added ability to read the command-line arguments of a running OS process
 - Improved multi-platform support. Reached the functional parity among Linux, macOS, and Windows platforms  
 
-### Gapotchenko FX 2022.1
+### Gapotchenko.FX 2022.1
 
 Release date: April 7, 2022
 
@@ -138,7 +160,7 @@ Release date: April 7, 2022
 
 ## 2021
 
-### Gapotchenko FX 2021.2
+### Gapotchenko.FX 2021.2
 
 Release date: December 31, 2021
 
@@ -154,7 +176,7 @@ Release date: December 31, 2021
 - Improved `AssemblyAutoLoader` which can now work simultaneously with app domains and assembly load contexts
 - String metric functions now take an optional `maxDistance` parameter that limits computational resources required to calculate the distance
 
-### Gapotchenko FX 2021.1
+### Gapotchenko.FX 2021.1
 
 Release date: July 6, 2021
 

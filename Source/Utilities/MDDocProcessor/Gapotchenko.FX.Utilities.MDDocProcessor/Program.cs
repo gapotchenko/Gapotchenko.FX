@@ -51,10 +51,10 @@ Commands:
         switch (command)
         {
             case "generate-toc":
-                GenerateTocCommand.Run(args.Skip(1).ToArray());
+                GenerateTocCommand.Run([.. args.Skip(1)]);
                 break;
             case "generate-package-readme":
-                GeneratePackageReadMeCommand.Run(args.Skip(1).ToArray());
+                GeneratePackageReadMeCommand.Run([.. args.Skip(1)]);
                 break;
             default:
                 throw new Exception(string.Format("Unknown command \"{0}\".", command));

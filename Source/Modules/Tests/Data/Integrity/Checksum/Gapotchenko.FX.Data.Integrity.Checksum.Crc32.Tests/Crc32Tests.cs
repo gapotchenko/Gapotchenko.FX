@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Data.Integrity.Checksum.Tests.Bench;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Data.Integrity.Checksum.Tests;
 
@@ -14,8 +13,8 @@ public class Crc32Tests
     {
         var algorithm = Crc32.Standard;
         var ha = algorithm.CreateHashAlgorithm();
-        var hash = ha.ComputeHash(ChecksumTestBench.TV19);
-        Assert.AreEqual(4, hash.Length);
+        byte[] hash = ha.ComputeHash(ChecksumTestBench.TV19);
+        Assert.HasCount(4, hash);
         Assert.AreEqual(0xcbf43926, LittleEndianBitConverter.ToUInt32(hash));
     }
 
@@ -23,8 +22,8 @@ public class Crc32Tests
     {
         var algorithm = Crc32.Standard;
         var ha = algorithm.CreateHashAlgorithm(bitConverter);
-        var hash = ha.ComputeHash(ChecksumTestBench.TV19);
-        Assert.AreEqual(4, hash.Length);
+        byte[] hash = ha.ComputeHash(ChecksumTestBench.TV19);
+        Assert.HasCount(4, hash);
         Assert.AreEqual(0xcbf43926, bitConverter.ToUInt32(hash));
     }
 

@@ -17,6 +17,7 @@ partial class EnumerableExtensions
     /// <returns>
     /// The only element of the input sequence, or <see langword="default"/> value if the sequence is empty or contains several elements.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
     public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source) => ScalarOrDefault(source, default(TSource));
 
     /// <summary>
@@ -28,6 +29,7 @@ partial class EnumerableExtensions
     /// <returns>
     /// The only element of the input sequence, or <paramref name="defaultValue"/> if the sequence is empty or contains several elements.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
     public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source, TSource defaultValue)
     {
         ArgumentNullException.ThrowIfNull(source);
@@ -62,7 +64,9 @@ partial class EnumerableExtensions
     /// The only element of the input sequence that satisfies a specified condition,
     /// or <see langword="default"/> value when no such element exists or more than one element satisfies the condition.
     /// </returns>
-    public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) => ScalarOrDefault(source, predicate, default!);
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static TSource? ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate) => ScalarOrDefault(source, predicate!, default);
 
     /// <summary>
     /// Returns the only element of a sequence that satisfies a specified condition,
@@ -76,6 +80,8 @@ partial class EnumerableExtensions
     /// The only element of the input sequence that satisfies a specified condition,
     /// or <paramref name="defaultValue"/> when no such element exists or more than one element satisfies the condition.
     /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
     public static TSource ScalarOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate, TSource defaultValue)
     {
         ArgumentNullException.ThrowIfNull(source);

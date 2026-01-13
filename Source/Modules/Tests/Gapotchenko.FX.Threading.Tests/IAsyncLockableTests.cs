@@ -7,7 +7,6 @@
 
 using Gapotchenko.FX.Threading.Tasks;
 using Gapotchenko.FX.Threading.Tests.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Runtime.ExceptionServices;
 
 namespace Gapotchenko.FX.Threading.Tests;

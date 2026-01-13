@@ -12,6 +12,7 @@
 
 #if NET6_0_OR_GREATER
 #define TFF_ARRAY_CLEAR
+#define TFF_ARRAY_MAXLENGTH
 #endif
 
 using System.Runtime.CompilerServices;
@@ -108,5 +109,30 @@ public static class ArrayPolyfills
             Array.Clear(array, 0, array.Length);
 #endif
         }
+
+        /// <summary>
+        /// Gets the maximum number of elements that may be contained in an array.
+        /// </summary>
+        /// <value>
+        /// The maximum count of elements allowed in any array.
+        /// </value>
+        /// <remarks>
+        /// <para></para>
+        /// This property represents a runtime limitation, the maximum number of elements (not bytes) the runtime will allow in an array.
+        /// There is no guarantee that an allocation under this length will succeed, but all attempts to allocate a larger array will fail.
+        /// <para>
+        /// This property only applies to single-dimension, zero-bound (SZ) arrays.
+        /// <see cref="Array.Length"/> property may return larger value than this property for multi-dimensional arrays.
+        /// </para>
+        /// </remarks>
+#if TFF_ARRAY_MAXLENGTH
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+        public static int MaxLength =>
+#if TFF_ARRAY_MAXLENGTH
+            Array.MaxLength;
+#else
+            0x7fffffc7; // the value is hardcoded in .NET BCL
+#endif
     }
 }

@@ -6,7 +6,6 @@
 // Year of introduction: 2023
 
 using Gapotchenko.FX.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 
 namespace Gapotchenko.FX.Threading.Tests;

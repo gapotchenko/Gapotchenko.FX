@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -147,12 +148,20 @@ partial class FileSystemViewVfsTestKit
         string[] copiedHierarchy = ["A.txt", "B.txt", "Dir1/C.txt", "Dir1/Dir2/D.txt", "Dir1/Dir3/", "Dir4/"];
         string[] existingHierarchy = ["Sub1/D.txt"];
 
-        using var destinationVfs = CreateTemporaryVfs(out string destinationRootPath);
+        RunStatefulVfsTest(
+            () =>
+            {
+                var destinationVfs = CreateTemporaryVfs(out string destinationRootPath);
+                return (DestinationVfs: destinationVfs, DestinationRootPath: destinationRootPath);
+            },
+            Mutate,
+            Verify,
+            state => state.DestinationVfs.Dispose());
 
-        RunVfsTest(Mutate, Verify);
-
-        void Mutate(IFileSystemView sourceVfs, string sourceRootPath)
+        void Mutate(IFileSystemView sourceVfs, string sourceRootPath, (IVirtualFileSystem, string) state)
         {
+            var (destinationVfs, destinationRootPath) = state;
+
             #region Epilogue
 
             var (sVfs, sr) = (sourceVfs, sourceRootPath);
@@ -187,8 +196,10 @@ partial class FileSystemViewVfsTestKit
             sVfs.CopyDirectory(SR("A"), new VfsLocation(dVfs, DR("E")), true);
         }
 
-        void Verify(IReadOnlyFileSystemView sourceVfs, string sourceRootPath)
+        void Verify(IReadOnlyFileSystemView sourceVfs, string sourceRootPath, (IVirtualFileSystem, string) state)
         {
+            var (destinationVfs, destinationRootPath) = state;
+
             #region Epilogue
 
             var (sVfs, sr) = (sourceVfs, sourceRootPath);
@@ -269,12 +280,20 @@ partial class FileSystemViewVfsTestKit
         string[] movedHierarchy = ["A.txt", "B.txt", "Dir1/C.txt", "Dir1/Dir2/D.txt", "Dir1/Dir3/", "Dir4/"];
         string[] existingHierarchy = ["Sub1/D.txt"];
 
-        using var destinationVfs = CreateTemporaryVfs(out string destinationRootPath);
+        RunStatefulVfsTest(
+            () =>
+            {
+                var destinationVfs = CreateTemporaryVfs(out string destinationRootPath);
+                return (DestinationVfs: destinationVfs, DestinationRootPath: destinationRootPath);
+            },
+            Mutate,
+            Verify,
+            state => state.DestinationVfs.Dispose());
 
-        RunVfsTest(Mutate, Verify);
-
-        void Mutate(IFileSystemView sourceVfs, string sourceRootPath)
+        void Mutate(IFileSystemView sourceVfs, string sourceRootPath, (IVirtualFileSystem, string) state)
         {
+            var (destinationVfs, destinationRootPath) = state;
+
             #region Epilogue
 
             var (sVfs, sr) = (sourceVfs, sourceRootPath);
@@ -311,8 +330,10 @@ partial class FileSystemViewVfsTestKit
             sVfs.MoveDirectory(SR("E"), new VfsLocation(dVfs, DR("F")), true);
         }
 
-        void Verify(IReadOnlyFileSystemView sourceVfs, string sourceRootPath)
+        void Verify(IReadOnlyFileSystemView sourceVfs, string sourceRootPath, (IVirtualFileSystem, string) state)
         {
+            var (destinationVfs, destinationRootPath) = state;
+
             #region Epilogue
 
             var (sVfs, sr) = (sourceVfs, sourceRootPath);

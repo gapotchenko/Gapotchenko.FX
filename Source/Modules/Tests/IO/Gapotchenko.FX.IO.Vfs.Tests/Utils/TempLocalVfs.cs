@@ -1,12 +1,14 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
 using Gapotchenko.FX.IO.Vfs.Kits;
+using Gapotchenko.FX.Threading.Tasks;
 
-namespace Gapotchenko.FX.IO.Vfs.Tests;
+namespace Gapotchenko.FX.IO.Vfs.Tests.Utils;
 
 sealed class TempLocalVfs : FileSystemViewProxyKit, IVirtualFileSystem
 {
@@ -22,7 +24,6 @@ sealed class TempLocalVfs : FileSystemViewProxyKit, IVirtualFileSystem
 
         Directory.CreateDirectory(rootPath);
         RootPath = rootPath;
-        Location = new(rootPath);
     }
 
     public void Dispose()
@@ -30,7 +31,7 @@ sealed class TempLocalVfs : FileSystemViewProxyKit, IVirtualFileSystem
         Directory.Delete(RootPath, true);
     }
 
-    public string RootPath { get; }
+    public ValueTask DisposeAsync() => new(TaskBridge.ExecuteAsync(Dispose));
 
-    public VfsReadOnlyLocation? Location { get; }
+    public string RootPath { get; }
 }

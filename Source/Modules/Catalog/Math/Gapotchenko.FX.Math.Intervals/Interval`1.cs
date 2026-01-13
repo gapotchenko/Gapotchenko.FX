@@ -16,57 +16,8 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of interval values.</typeparam>
 [DebuggerDisplay("{ToString(),nq}")]
-public sealed record Interval<T> : IConstructibleInterval<T, Interval<T>>
+public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified inclusive left and exclusive right bounds:
-    /// <c>[from,to)</c>.
-    /// </summary>
-    /// <param name="from">
-    /// The left bound of the interval.
-    /// Represents a value the interval starts with.
-    /// The corresponding limit point is included in the interval.
-    /// </param>
-    /// <param name="to">
-    /// The right bound of the interval.
-    /// Represents a value the interval ends with.
-    /// The corresponding limit point is not included in the interval.
-    /// </param>
-    /// <param name="comparer">
-    /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
-    /// or <see langword="null"/> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
-    /// </param>
-    public Interval(T from, T to, IComparer<T>? comparer = null) :
-        this(IntervalBoundary.Inclusive(from), IntervalBoundary.Exclusive(to), comparer)
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified boundaries.
-    /// </summary>
-    /// <param name="from">
-    /// The left boundary of the interval.
-    /// Represents a boundary the interval starts with.
-    /// </param>
-    /// <param name="to">
-    /// The right boundary of the interval.
-    /// Represents a boundary the interval ends with.
-    /// </param>
-    /// <param name="comparer">
-    /// The <see cref="IComparer{T}"/> implementation to use when comparing values in the interval,
-    /// or <see langword="null"/> to use the default <see cref="IComparer{T}"/> implementation for the type <typeparamref name="T"/>.
-    /// </param>
-    /// <exception cref="ArgumentException">If one interval boundary is empty, another should be empty too.</exception>
-    public Interval(IntervalBoundary<T> from, IntervalBoundary<T> to, IComparer<T>? comparer = null)
-    {
-        IntervalEngine.ValidateBoundaries(from, to);
-
-        From = from;
-        To = to;
-
-        Comparer = comparer;
-    }
-
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     internal static Interval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
 
@@ -78,6 +29,10 @@ public sealed record Interval<T> : IConstructibleInterval<T, Interval<T>>
 
     /// <inheritdoc/>
     public IntervalBoundary<T> To { get; init; }
+
+    IIntervalBoundary IIntervalModel.From => From;
+
+    IIntervalBoundary IIntervalModel.To => To;
 
     /// <summary>
     /// Gets or initializes the <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
@@ -123,8 +78,12 @@ public sealed record Interval<T> : IConstructibleInterval<T, Interval<T>>
     /// <inheritdoc/>
     public bool Contains(T value) => IntervalEngine.Contains(this, value, m_Comparer);
 
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY // 2025
     /// <inheritdoc/>
-    public int Zone(T value) => IntervalEngine.Zone(this, value, m_Comparer);
+    [Obsolete("Use a negated value returned by CompareTo(value) method, or one of the relation operators: >, >=, <, <=.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public int Zone(T value) => -CompareTo(value);
+#endif
 
     /// <inheritdoc cref="IIntervalOperations{T}.Interior"/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -174,7 +133,7 @@ public sealed record Interval<T> : IConstructibleInterval<T, Interval<T>>
 
     Interval<T> Construct(in IntervalBoundary<T> from, in IntervalBoundary<T> to) => new(from, to, m_Comparer);
 
-    bool IsThis<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
+    bool IsThis<TOther>(in TOther? other) =>
         !TypeTraits<TOther>.IsValueType &&
         ReferenceEquals(other, this);
 
@@ -229,13 +188,18 @@ public sealed record Interval<T> : IConstructibleInterval<T, Interval<T>>
         IntervalEngine.IsProperSuperintervalOf(this, other, m_Comparer);
 
     /// <inheritdoc/>
-    public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IIntervalOperations<T>>(other);
+    public bool IntervalEquals([NotNullWhen(true)] IInterval? other) =>
+        other is IInterval<T> typed &&
+        IntervalEquals(typed);
+
+    /// <inheritdoc/>
+    public bool IntervalEquals([NotNullWhen(true)] IInterval<T>? other) => IntervalEquals<IIntervalModel<T>>(other);
 
     /// <inheritdoc cref="IntervalEquals(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool IntervalEquals<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IsThis(other ?? throw new ArgumentNullException(nameof(other))) ||
+    public bool IntervalEquals<TOther>([NotNullWhen(true)] in TOther? other) where TOther : IIntervalModel<T> =>
+        IsThis(other) ||
         IntervalEngine.IntervalsEqual(this, other, m_Comparer);
 
     /// <summary>
@@ -256,9 +220,7 @@ public sealed record Interval<T> : IConstructibleInterval<T, Interval<T>>
 
     static bool EqualityOperator(Interval<T>? x, IInterval<T>? y) =>
         ReferenceEquals(x, y) ||
-        x is not null &&
-        y is not null &&
-        x.IntervalEquals(y);
+        x is not null && x.IntervalEquals(y);
 
     /// <inheritdoc/>
     public override string ToString() => IntervalEngine.ToString<Interval<T>, T>(this);

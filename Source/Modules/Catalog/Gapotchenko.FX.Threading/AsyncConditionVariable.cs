@@ -1,10 +1,10 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
-using Gapotchenko.FX.Threading.Utils;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Threading;
@@ -25,7 +25,7 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     /// <exception cref="ArgumentNullException"><paramref name="lockable"/> is <see langword="null"/>.</exception>
     public AsyncConditionVariable(IAsyncLockable lockable)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(lockable);
+        ArgumentNullException.ThrowIfNull(lockable);
 
         m_Lockable = lockable;
     }

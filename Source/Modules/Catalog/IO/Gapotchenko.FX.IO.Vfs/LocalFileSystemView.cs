@@ -8,6 +8,7 @@
 using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Memory;
+using Gapotchenko.FX.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -57,6 +58,13 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share) => File.Open(path, mode, access, share);
 
+    public override Task<Stream> OpenFileAsync(string path, FileMode mode, FileAccess access, FileShare share, CancellationToken cancellationToken)
+    {
+        return TaskBridge.ExecuteAsync(
+            Stream () => new FileStream(path, mode, access, share, 4096, true),
+            cancellationToken);
+    }
+
     public override void DeleteFile(string path) => File.Delete(path);
 
     public override void CopyFile(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)
@@ -72,23 +80,52 @@ sealed class LocalFileSystemView : FileSystemViewKit
         }
     }
 
+    public override Task CopyFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options, CancellationToken cancellationToken = default)
+    {
+        const VfsCopyOptions supportedOptions = VfsCopyOptions.None;
+        if ((options & ~supportedOptions) == 0)
+        {
+            return TaskBridge.ExecuteAsync(() => File.Copy(sourcePath, destinationPath, overwrite), cancellationToken);
+        }
+        else
+        {
+            return base.CopyFileAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
+        }
+    }
+
     public override void MoveFile(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options)
     {
         const VfsMoveOptions supportedOptions = VfsMoveOptions.None;
         if ((options & ~supportedOptions) == 0)
+            MoveFileNativeCore(sourcePath, destinationPath, overwrite);
+        else
+            base.MoveFile(sourcePath, destinationPath, overwrite, options);
+    }
+
+    public override Task MoveFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options, CancellationToken cancellationToken = default)
+    {
+        const VfsMoveOptions supportedOptions = VfsMoveOptions.None;
+        if ((options & ~supportedOptions) == 0)
         {
-#if NETCOREAPP3_0_OR_GREATER
-            File.Move(sourcePath, destinationPath, overwrite);
-#else
-            if (overwrite && File.Exists(destinationPath))
-                File.Delete(destinationPath);
-            File.Move(sourcePath, destinationPath);
-#endif
+            return TaskBridge.ExecuteAsync(
+                () => MoveFileNativeCore(sourcePath, destinationPath, overwrite),
+                cancellationToken);
         }
         else
         {
-            base.MoveFile(sourcePath, destinationPath, overwrite, options);
+            return base.MoveFileAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
         }
+    }
+
+    static void MoveFileNativeCore(string sourcePath, string destinationPath, bool overwrite)
+    {
+#if NETCOREAPP3_0_OR_GREATER
+        File.Move(sourcePath, destinationPath, overwrite);
+#else
+        if (overwrite && File.Exists(destinationPath))
+            File.Delete(destinationPath);
+        File.Move(sourcePath, destinationPath);
+#endif
     }
 
     #endregion
@@ -175,7 +212,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     public override void SetCreationTime(string path, DateTime creationTime)
     {
-        Directory.SetCreationTime(path, ConvertUtcTimeFromVfs(creationTime));
+        Directory.SetCreationTimeUtc(path, ConvertUtcTimeFromVfs(creationTime));
     }
 
     public override DateTime GetLastWriteTime(string path)

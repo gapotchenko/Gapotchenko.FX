@@ -651,7 +651,7 @@ partial class ReadOnlySpanPolyfills
             // which case it'll result in an OOM when calling Rent below.  In the exceedingly rare
             // case where _span.Length is already int.MaxValue (in which case it couldn't be a managed
             // array), just use that same value again and let it OOM in Rent as well.
-            int arrayMaxLength = ArrayHelpers.ArrayMaxLength;
+            int arrayMaxLength = Array.MaxLength;
             if ((uint)nextCapacity > arrayMaxLength)
             {
                 nextCapacity = Math.Max(Math.Max(_span.Length + 1, arrayMaxLength), _span.Length);

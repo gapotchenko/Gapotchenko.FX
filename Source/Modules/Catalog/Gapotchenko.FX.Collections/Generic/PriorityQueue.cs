@@ -601,22 +601,22 @@ public class PriorityQueue<TElement, TPriority>
         const int GrowFactor = 2;
         const int MinimumGrow = 4;
 
-        int newcapacity = GrowFactor * _nodes.Length;
+        int newCapacity = GrowFactor * _nodes.Length;
 
-        int arrayMaxLength = ArrayHelper.ArrayMaxLength;
+        int arrayMaxLength = Array.MaxLength;
 
         // Allow the queue to grow to maximum possible capacity (~2G elements) before encountering overflow.
         // Note that this check works even when _nodes.Length overflowed thanks to the (uint) cast
-        if ((uint)newcapacity > arrayMaxLength) newcapacity = arrayMaxLength;
+        if ((uint)newCapacity > arrayMaxLength) newCapacity = arrayMaxLength;
 
         // Ensure minimum growth is respected.
-        newcapacity = Math.Max(newcapacity, _nodes.Length + MinimumGrow);
+        newCapacity = Math.Max(newCapacity, _nodes.Length + MinimumGrow);
 
         // If the computed capacity is still less than specified, set to the original argument.
         // Capacities exceeding ArrayMaxLength will be surfaced as OutOfMemoryException by Array.Resize.
-        if (newcapacity < minCapacity) newcapacity = minCapacity;
+        if (newCapacity < minCapacity) newCapacity = minCapacity;
 
-        Array.Resize(ref _nodes, newcapacity);
+        Array.Resize(ref _nodes, newCapacity);
     }
 
     /// <summary>

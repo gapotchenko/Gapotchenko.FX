@@ -4,6 +4,8 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using Xunit;
 
+using Assert = Xunit.Assert;
+
 #pragma warning disable IDE0040 // Add accessibility modifiers
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
 #pragma warning disable IDE1006 // Naming Styles
@@ -94,30 +96,23 @@ public abstract partial class IDictionary_Generic_Tests<TKey, TValue> : ICollect
     /// Class to provide an indirection around a Key comparer. Allows us to use a key comparer as a KeyValuePair comparer
     /// by only looking at the key of a KeyValuePair.
     /// </summary>
-    public class KVPComparer : IEqualityComparer<KeyValuePair<TKey, TValue>>, IComparer<KeyValuePair<TKey, TValue>>
+    public class KVPComparer(IComparer<TKey> comparer, IEqualityComparer<TKey> eq) :
+        IEqualityComparer<KeyValuePair<TKey, TValue>>,
+        IComparer<KeyValuePair<TKey, TValue>>
     {
-        private IComparer<TKey> _comparer;
-        private IEqualityComparer<TKey> _equalityComparer;
-
-        public KVPComparer(IComparer<TKey> comparer, IEqualityComparer<TKey> eq)
-        {
-            _comparer = comparer;
-            _equalityComparer = eq;
-        }
-
         public int Compare(KeyValuePair<TKey, TValue> x, KeyValuePair<TKey, TValue> y)
         {
-            return _comparer.Compare(x.Key, y.Key);
+            return comparer.Compare(x.Key, y.Key);
         }
 
         public bool Equals(KeyValuePair<TKey, TValue> x, KeyValuePair<TKey, TValue> y)
         {
-            return _equalityComparer.Equals(x.Key, y.Key);
+            return eq.Equals(x.Key, y.Key);
         }
 
         public int GetHashCode(KeyValuePair<TKey, TValue> obj)
         {
-            return _equalityComparer.GetHashCode(obj.Key);
+            return eq.GetHashCode(obj.Key);
         }
     }
 

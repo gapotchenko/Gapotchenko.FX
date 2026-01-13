@@ -31,6 +31,23 @@ public interface IVfsStorageFormat
     IVirtualFileSystem Create(Stream stream, bool leaveOpen = false, VfsOptions? options = null, VfsStorageContext? context = null);
 
     /// <summary>
+    /// Asynchronously creates a new file system in the specified data stream.
+    /// The existing data in the stream, if any, will be overwritten.
+    /// </summary>
+    /// <inheritdoc cref="Create(Stream, bool, VfsOptions?, VfsStorageContext?)"/>
+    /// <param name="stream"><inheritdoc/></param>
+    /// <param name="leaveOpen"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="context"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<IVirtualFileSystem> CreateAsync(
+        Stream stream,
+        bool leaveOpen = false,
+        VfsOptions? options = null,
+        VfsStorageContext? context = null,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Mounts (opens) an existing file system
     /// using the specified data stream.
     /// </summary>
@@ -59,6 +76,26 @@ public interface IVfsStorageFormat
     IVirtualFileSystem Mount(Stream stream, bool writable = false, bool leaveOpen = false, VfsOptions? options = null, VfsStorageContext? context = null);
 
     /// <summary>
+    /// Asynchronously mounts (opens) an existing file system
+    /// using the specified data stream.
+    /// </summary>
+    /// <inheritdoc cref="Mount(Stream, bool, bool, VfsOptions?, VfsStorageContext?)"/>
+    /// <param name="stream"><inheritdoc/></param>
+    /// <param name="writable"><inheritdoc/></param>
+    /// <param name="leaveOpen"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="context"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous mount operation. The task result contains the <see cref="IVirtualFileSystem"/> instance representing the mounted file system.</returns>
+    Task<IVirtualFileSystem> MountAsync(
+        Stream stream,
+        bool writable = false,
+        bool leaveOpen = false,
+        VfsOptions? options = null,
+        VfsStorageContext? context = null,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Determines whether the specified data stream can be mounted using the current storage format.
     /// </summary>
     /// <param name="stream">The stream.</param>
@@ -71,6 +108,21 @@ public interface IVfsStorageFormat
     /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
     /// <exception cref="NotSupportedException"><paramref name="stream"/> does not support seeking.</exception>
     bool IsMountable(Stream stream, VfsOptions? options = null, VfsStorageContext? context = null);
+
+    /// <summary>
+    /// Asynchronously determines whether the specified data stream can be mounted using the current storage format.
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result is <see langword="true"/> if the <paramref name="stream"/> can be mounted using the current storage format;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <inheritdoc cref="IsMountable(Stream, VfsOptions?, VfsStorageContext?)"/>
+    /// <param name="stream"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="context"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<bool> IsMountableAsync(Stream stream, VfsOptions? options = null, VfsStorageContext? context = null, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -78,7 +130,7 @@ public interface IVfsStorageFormat
 /// </summary>
 /// <typeparam name="TVfs">The type of the virtual file system.</typeparam>
 /// <typeparam name="TOptions">The type of the virtual file system options.</typeparam>
-public interface IVfsStorageFormat<out TVfs, TOptions> : IVfsStorageFormat
+public interface IVfsStorageFormat<TVfs, TOptions> : IVfsStorageFormat
     where TVfs : IVirtualFileSystem
     where TOptions : VfsOptions
 {
@@ -96,6 +148,22 @@ public interface IVfsStorageFormat<out TVfs, TOptions> : IVfsStorageFormat
     /// <returns>The <typeparamref name="TVfs"/> instance for the created storage.</returns>
     /// <inheritdoc cref="IVfsStorageFormat.Create(Stream, bool, VfsOptions?, VfsStorageContext?)"/>
     TVfs Create(Stream stream, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null);
+
+    /// <summary>
+    /// Asynchronously creates a new file system in the specified data stream.
+    /// The existing data in the stream, if any, will be overwritten.
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous creation operation.
+    /// The task result contains the <typeparamref name="TVfs"/> instance representing the created storage.
+    /// </returns>
+    /// <inheritdoc cref="Create(Stream, bool, TOptions?, VfsStorageContext?)"/>
+    /// <param name="stream"><inheritdoc/></param>
+    /// <param name="leaveOpen"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="context"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<TVfs> CreateAsync(Stream stream, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Mounts (opens) an existing <typeparamref name="TVfs"/> storage
@@ -122,6 +190,36 @@ public interface IVfsStorageFormat<out TVfs, TOptions> : IVfsStorageFormat
     /// <inheritdoc cref="IVfsStorageFormat.Mount(Stream, bool, bool, VfsOptions?, VfsStorageContext?)"/>
     TVfs Mount(Stream stream, bool writable = false, bool leaveOpen = false, TOptions? options = null, VfsStorageContext? context = null);
 
+    /// <summary>
+    /// Asynchronously mounts (opens) an existing <typeparamref name="TVfs"/> storage
+    /// using the specified data stream.
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous mount operation.
+    /// The task result contains the <typeparamref name="TVfs"/> instance representing the mounted storage.
+    /// </returns>
+    /// <inheritdoc cref="Mount(Stream, bool, bool, TOptions?, VfsStorageContext?)"/>
+    /// <param name="stream"><inheritdoc/></param>
+    /// <param name="writable"><inheritdoc/></param>
+    /// <param name="leaveOpen"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="context"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<TVfs> MountAsync(
+        Stream stream,
+        bool writable = false,
+        bool leaveOpen = false,
+        TOptions? options = null,
+        VfsStorageContext? context = null,
+        CancellationToken cancellationToken = default);
+
     /// <inheritdoc cref="IVfsStorageFormat.IsMountable(Stream, VfsOptions?, VfsStorageContext?)"/>
     bool IsMountable(Stream stream, TOptions? options = null, VfsStorageContext? context = null);
+
+    /// <inheritdoc cref="IVfsStorageFormat.IsMountableAsync(Stream, VfsOptions?, VfsStorageContext?, CancellationToken)"/>
+    Task<bool> IsMountableAsync(
+        Stream stream,
+        TOptions? options = null,
+        VfsStorageContext? context = null,
+        CancellationToken cancellationToken = default);
 }

@@ -11,7 +11,7 @@ sealed class TocSerializer
 {
     public void SerializeToc(TextWriter textWriter, TocNode rootNode, TocProjectNode? projectNode)
     {
-        m_ProjectCompexitySet?.Clear();
+        m_ProjectComplexitySet?.Clear();
         m_RootNode = rootNode;
         m_ProjectNode = projectNode;
 
@@ -42,7 +42,7 @@ sealed class TocSerializer
                             continue;
                     }
 
-                    if (TocUtil.GetProjectCompexity(node) > project?.Complexity)
+                    if (TocUtil.GetProjectComplexity(node) > project?.Complexity)
                         continue;
                 }
 
@@ -109,7 +109,7 @@ sealed class TocSerializer
                         int starCount = ProjectComplexityVisualizer.GetStarCount(projectComplexity);
                         if (starCount != 0)
                         {
-                            (m_ProjectCompexitySet ??= []).Add(projectComplexity);
+                            (m_ProjectComplexitySet ??= []).Add(projectComplexity);
 
                             textWriter.Write(' ');
                             for (int i = 0; i < starCount; ++i)
@@ -137,11 +137,11 @@ sealed class TocSerializer
     {
         bool complexityLegend = false;
 
-        if (m_ProjectCompexitySet?.Count > 0)
+        if (m_ProjectComplexitySet?.Count > 0)
         {
             bool first = true;
 
-            foreach (var i in m_ProjectCompexitySet.OrderBy(x => x))
+            foreach (var i in m_ProjectComplexitySet.OrderBy(x => x))
             {
                 if (first)
                     first = false;
@@ -175,7 +175,7 @@ sealed class TocSerializer
             {
                 string path =
                     Path.GetRelativePath(basePath, catalog.DirectoryPath)
-                    .PipeOperator(Path.TrimEndingDirectorySeparator)
+                    .PipeTo(Path.TrimEndingDirectorySeparator)
                     .Replace(Path.DirectorySeparatorChar, '/');
 
                 if (complexityLegend)
@@ -186,7 +186,7 @@ sealed class TocSerializer
         }
     }
 
-    HashSet<ProjectComplexity>? m_ProjectCompexitySet;
+    HashSet<ProjectComplexity>? m_ProjectComplexitySet;
     TocNode? m_RootNode;
     TocProjectNode? m_ProjectNode;
 }

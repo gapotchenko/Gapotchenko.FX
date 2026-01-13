@@ -262,7 +262,7 @@ sealed class MemoryBufferStream : Stream, IHasMemory<byte>, IHasReadOnlyMemory<b
 
         uint extent = (uint)existingCapacity * 2; // using uint to avoid overflow
 
-        int arrayMaxLength = ArrayHelpers.ArrayMaxLength;
+        int arrayMaxLength = Array.MaxLength;
         if (extent > arrayMaxLength)
         {
             // The capacity should be <= Array.MaxLength, but the user should be able to override that.

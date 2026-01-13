@@ -12,74 +12,12 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// </summary>
 /// <typeparam name="T">The type of interval values.</typeparam>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public interface IIntervalOperations<T> : IEmptiable
+public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>, IComparable<T>
 {
-    /// <summary>
-    /// Gets the left boundary of the interval.
-    /// Represents a boundary the interval starts with.
-    /// </summary>
-    IntervalBoundary<T> From { get; }
-
-    /// <summary>
-    /// Gets the right boundary of the interval.
-    /// Represents a boundary the interval ends with.
-    /// </summary>
-    IntervalBoundary<T> To { get; }
-
     /// <summary>
     /// Gets the <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
     /// </summary>
     IComparer<T> Comparer { get; }
-
-    /// <summary>
-    /// <para>
-    /// Gets a value indicating whether the interval is bounded.
-    /// </para>
-    /// <para>
-    /// A bounded interval is both left- and right-bounded.
-    /// </para>
-    /// </summary>
-    bool IsBounded { get; }
-
-    /// <summary>
-    /// <para>
-    /// Gets a value indicating whether the interval is half-bounded.
-    /// </para>
-    /// <para>
-    /// A half-bounded interval is either left- or right-bounded.
-    /// </para>
-    /// </summary>
-    bool IsHalfBounded { get; }
-
-    /// <summary>
-    /// <para>
-    /// Gets a value indicating whether the interval is open.
-    /// </para>
-    /// <para>
-    /// An open interval does not include its endpoints.
-    /// </para>
-    /// </summary>
-    bool IsOpen { get; }
-
-    /// <summary>
-    /// <para>
-    /// Gets a value indicating whether the interval is closed.
-    /// </para>
-    /// <para>
-    /// A closed interval includes all its limit points.
-    /// </para>
-    /// </summary>
-    bool IsClosed { get; }
-
-    /// <summary>
-    /// <para>
-    /// Gets a value indicating whether the interval is half-open.
-    /// </para>
-    /// <para>
-    /// A half-open interval includes only one of its endpoints.
-    /// </para>
-    /// </summary>
-    bool IsHalfOpen { get; }
 
     /// <summary>
     /// <para>
@@ -104,21 +42,6 @@ public interface IIntervalOperations<T> : IEmptiable
     IInterval<T> Enclosure { get; }
 
     /// <summary>
-    /// Gets a value indicating whether the interval is infinite.
-    /// </summary>
-    bool IsInfinite { get; }
-
-    /// <summary>
-    /// <para>
-    /// Gets a value indicating whether the interval is a degenerate.
-    /// </para>
-    /// <para>
-    /// A degenerate interval <c>[x,x]</c> represents a set of exactly one element <c>{x}</c>.
-    /// </para>
-    /// </summary>
-    bool IsDegenerate { get; }
-
-    /// <summary>
     /// Determines whether the specified value is contained within the interval.
     /// </summary>
     /// <param name="value">The value to check for containment.</param>
@@ -127,13 +50,15 @@ public interface IIntervalOperations<T> : IEmptiable
     /// otherwise, <see langword="false"/>.</returns>
     bool Contains(T value);
 
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY // 2025
     /// <summary>
-    /// Returns an integer that indicates a zone of the specified value in relation to the interval range.
+    /// Returns an integer that indicates a relative position of the specified value in the interval range.
     /// </summary>
-    /// <param name="value">The value to get a zone for.</param>
+    /// <param name="value">The value to get a relative position in the interval range for.</param>
     /// <returns>
     /// <para>
-    /// An integer number that indicates a zone of the <paramref name="value"/>, as shown in the following table.
+    /// An integer number that indicates a relative position of the <paramref name="value"/>,
+    /// as shown in the following table.
     /// </para>
     /// <para>
     /// <c>0</c> if the interval contains the <paramref name="value"/> or is empty.
@@ -143,7 +68,10 @@ public interface IIntervalOperations<T> : IEmptiable
     /// <c>-1</c> if the <paramref name="value"/> is less than the left boundary of the interval.
     /// </para>
     /// </returns>
+    [Obsolete("Use a negated value returned by CompareTo(value) method, or one of the relation operators: >, >=, <, <=.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     int Zone(T value);
+#endif
 
     /// <summary>
     /// Produces the intersection of the current and specified intervals.
@@ -201,11 +129,6 @@ public interface IIntervalOperations<T> : IEmptiable
     /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
     bool IsProperSuperintervalOf(IInterval<T> other);
 
-    /// <summary>
-    /// Determines whether this and the specified intervals are equal.
-    /// </summary>
-    /// <param name="other">The interval to check for equality.</param>
-    /// <returns><see langword="true"/> if this and <paramref name="other"/> intervals are equal; otherwise, <see langword="false"/>.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
-    bool IntervalEquals(IInterval<T> other);
+    /// <inheritdoc cref="IIntervalOperations.IntervalEquals(IInterval?)"/>
+    bool IntervalEquals([NotNullWhen(true)] IInterval<T>? other);
 }

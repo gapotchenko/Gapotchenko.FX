@@ -7,21 +7,22 @@
 
 namespace Gapotchenko.FX.Math.Intervals.Tests;
 
-public abstract class IntervalCoreTests
+public abstract partial class IntervalCoreTests
 {
-    public abstract IInterval<T> NewInterval<T>(T from, T to) where T : IComparable<T>, IEquatable<T>;
+    protected abstract IInterval<T> NewInterval<T>(T from, T to) where T : IComparable<T>, IEquatable<T>;
 
     /// <summary>
     /// Creates a new interval of the tested type from the specified template.
     /// </summary>
-    public IInterval<T> NewInterval<T>(IInterval<T> interval) where T : IComparable<T>, IEquatable<T> =>
+    protected IInterval<T> NewInterval<T>(IInterval<T> interval) where T : IComparable<T>, IEquatable<T> =>
         NewInterval(interval.From, interval.To);
 
-    public abstract IInterval<T> NewInterval<T>(IntervalBoundary<T> from, IntervalBoundary<T> to) where T : IComparable<T>, IEquatable<T>;
+    protected abstract IInterval<T> NewInterval<T>(IntervalBoundary<T> from, IntervalBoundary<T> to)
+        where T : IComparable<T>, IEquatable<T>;
 
-    public abstract IInterval<T> InfiniteInterval<T>() where T : IComparable<T>, IEquatable<T>;
+    protected abstract IInterval<T> InfiniteInterval<T>() where T : IComparable<T>, IEquatable<T>;
 
-    public abstract IInterval<T> EmptyInterval<T>() where T : IComparable<T>, IEquatable<T>;
+    protected abstract IInterval<T> EmptyInterval<T>() where T : IComparable<T>, IEquatable<T>;
 
     #region Characteristics
 
@@ -589,8 +590,8 @@ public abstract class IntervalCoreTests
         Assert.IsFalse(a.IntervalEquals(b));
         Assert.IsFalse(b.IntervalEquals(a));
 
-        Assert.IsFalse(a == b);
-        Assert.IsFalse(b == a);
+        Assert.AreNotEqual(b, a);
+        Assert.AreNotEqual(a, b);
     }
 
     #endregion
@@ -1060,7 +1061,7 @@ public abstract class IntervalCoreTests
 
         set.IntersectWith(interval);
 
-        Assert.AreEqual(0, set.Count);
+        Assert.IsEmpty(set);
     }
 
     [TestMethod]
@@ -1108,7 +1109,7 @@ public abstract class IntervalCoreTests
 
         set.ExceptWith(interval);
 
-        Assert.AreEqual(0, set.Count);
+        Assert.IsEmpty(set);
     }
 
     #endregion
@@ -1243,83 +1244,6 @@ public abstract class IntervalCoreTests
 
     #endregion
 
-    #region Zone
-
-    [TestMethod]
-    public void Interval_Core_Zone_1()
-    {
-        var interval = NewInterval(ValueInterval.Inclusive(10, 20));
-
-        Assert.AreEqual(-1, interval.Zone(9));
-        Assert.AreEqual(0, interval.Zone(10));
-
-        Assert.AreEqual(0, interval.Zone(15));
-
-        Assert.AreEqual(0, interval.Zone(20));
-        Assert.AreEqual(1, interval.Zone(21));
-    }
-
-    [TestMethod]
-    public void Interval_Core_Zone_2()
-    {
-        var interval = NewInterval(ValueInterval.Exclusive(10, 20));
-
-        Assert.AreEqual(-1, interval.Zone(9));
-        Assert.AreEqual(-1, interval.Zone(10));
-        Assert.AreEqual(0, interval.Zone(11));
-
-        Assert.AreEqual(0, interval.Zone(15));
-
-        Assert.AreEqual(0, interval.Zone(19));
-        Assert.AreEqual(1, interval.Zone(20));
-        Assert.AreEqual(1, interval.Zone(21));
-    }
-
-    [TestMethod]
-    public void Interval_Core_Zone_3()
-    {
-        var interval = InfiniteInterval<int>();
-
-        Assert.AreEqual(0, interval.Zone(int.MinValue));
-        Assert.AreEqual(0, interval.Zone(0));
-        Assert.AreEqual(0, interval.Zone(int.MaxValue));
-    }
-
-    [TestMethod]
-    public void Interval_Core_Zone_4()
-    {
-        var interval = EmptyInterval<int>();
-
-        Assert.AreEqual(0, interval.Zone(int.MinValue));
-        Assert.AreEqual(0, interval.Zone(0));
-        Assert.AreEqual(0, interval.Zone(int.MaxValue));
-    }
-
-    [TestMethod]
-    public void Interval_Core_Zone_5()
-    {
-        var interval = NewInterval(ValueInterval.Exclusive(19, 20));
-
-        Assert.AreEqual(-1, interval.Zone(18));
-        Assert.AreEqual(-1, interval.Zone(19));
-        Assert.AreEqual(1, interval.Zone(20));
-        Assert.AreEqual(1, interval.Zone(21));
-    }
-
-    [TestMethod]
-    public void Interval_Core_Zone_6()
-    {
-        var interval = NewInterval(ValueInterval.Exclusive(19.0, 20.0));
-
-        Assert.AreEqual(-1, interval.Zone(18));
-        Assert.AreEqual(-1, interval.Zone(19));
-        Assert.AreEqual(0, interval.Zone(19.5));
-        Assert.AreEqual(1, interval.Zone(20));
-        Assert.AreEqual(1, interval.Zone(21));
-    }
-
-    #endregion
-
     #region Equality
 
     [TestMethod]
@@ -1336,28 +1260,6 @@ public abstract class IntervalCoreTests
 
         Assert.AreNotEqual(interval, ValueInterval.Inclusive(11, 20), comparer);
         Assert.AreNotEqual(interval, ValueInterval.Inclusive(10, 21), comparer);
-    }
-
-    #endregion
-
-    #region ToString
-
-    [TestMethod]
-    public void Interval_Core_ToString_Inifinite()
-    {
-        var interval = NewInterval(ValueInterval.Infinite<int>());
-
-        Assert.AreEqual("(-inf,inf)", interval.ToString());
-        Assert.AreEqual("(-∞,∞)", interval.ToString("U", null));
-    }
-
-    [TestMethod]
-    public void Interval_Core_ToString_Empty()
-    {
-        var interval = NewInterval(ValueInterval.Empty<int>());
-
-        Assert.AreEqual("{}", interval.ToString());
-        Assert.AreEqual("∅", interval.ToString("U", null));
     }
 
     #endregion

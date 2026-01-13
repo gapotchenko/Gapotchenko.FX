@@ -2,8 +2,7 @@
 
   <!-- Language Configuration -->
   <PropertyGroup>
-    <LangVersion>13.0</LangVersion>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>14.0</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>

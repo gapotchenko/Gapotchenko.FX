@@ -13,12 +13,12 @@ public class LittleEndianBitConverterTests
         LittleEndianBitConverter.FillBytes(true, buffer);
         Assert.AreEqual(1, buffer[0]);
         Assert.IsTrue(LittleEndianBitConverter.GetBytes(true).SequenceEqual(buffer));
-        Assert.AreEqual(true, LittleEndianBitConverter.ToBoolean(buffer));
+        Assert.IsTrue(LittleEndianBitConverter.ToBoolean(buffer));
 
         LittleEndianBitConverter.FillBytes(false, buffer);
         Assert.AreEqual(0, buffer[0]);
         Assert.IsTrue(LittleEndianBitConverter.GetBytes(false).SequenceEqual(buffer));
-        Assert.AreEqual(false, LittleEndianBitConverter.ToBoolean(buffer));
+        Assert.IsFalse(LittleEndianBitConverter.ToBoolean(buffer));
     }
 
     [TestMethod]

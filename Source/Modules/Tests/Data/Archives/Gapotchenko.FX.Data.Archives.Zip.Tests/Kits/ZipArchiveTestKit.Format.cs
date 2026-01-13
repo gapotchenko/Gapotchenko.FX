@@ -21,7 +21,7 @@ partial class ZipArchiveTestKit
             return;
 
         var extensions = format.FileExtensions.ToHashSet();
-        Assert.IsTrue(extensions.Contains(".zip"));
+        Assert.Contains(".zip", extensions);
     }
 
     #endregion
@@ -152,7 +152,7 @@ partial class ZipArchiveTestKit
         format.Create(stream, leaveOpen: true).Dispose();
         Assert.AreNotEqual(0, stream.Length);
         Assert.AreEqual(stream.Length, stream.Position);
-        Assert.IsTrue(stream.Length < originalLength);
+        Assert.IsLessThan(originalLength, stream.Length);
     }
 
     #endregion

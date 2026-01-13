@@ -8,7 +8,6 @@
 
 using Gapotchenko.FX.Math.Combinatorics;
 using Gapotchenko.FX.Threading.Tests.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Threading.Tests;
 

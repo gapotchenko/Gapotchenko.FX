@@ -46,13 +46,9 @@ For scenarios where the input might be invalid, use `TryParse`:
 
 ``` C#
 if (SemanticVersion.TryParse("1.2.3", out var version))
-{
     Console.WriteLine($"Parsed version: {version}");
-}
 else
-{
     Console.WriteLine("Invalid version string");
-}
 ```
 
 ### Version Components
@@ -102,7 +98,7 @@ var prerelease = new SemanticVersion(1, 0, 0, "alpha.1");
 Console.WriteLine(release > prerelease); // True
 ```
 
-### Conversion to System.Version
+### Conversion to `System.Version`
 
 `SemanticVersion` can be implicitly converted to `System.Version`:
 
@@ -118,7 +114,7 @@ Console.WriteLine(version); // "1.2.3"
 
 Note that the conversion is lossy because `System.Version` does not support prerelease or build metadata.
 
-### Conversion from System.Version
+### Conversion from `System.Version`
 
 You can create a `SemanticVersion` from a `System.Version`:
 

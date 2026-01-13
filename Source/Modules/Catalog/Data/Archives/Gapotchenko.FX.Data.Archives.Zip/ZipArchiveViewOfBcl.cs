@@ -37,6 +37,8 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     /// </param>
     public ZipArchiveViewOfBcl(System.IO.Compression.ZipArchive archive, bool leaveOpen)
     {
+        ArgumentNullException.ThrowIfNull(archive);
+
         m_Archive = archive;
         m_LeaveOpen = leaveOpen;
 
@@ -689,15 +691,20 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     {
         var entries = m_Archive.Entries;
         if (CanWrite)
-            return entries.ToList();
+            return [.. entries];
         else
             return entries;
     }
 
-    public override void Dispose()
+    protected override void Dispose(bool disposing)
     {
-        if (!m_LeaveOpen)
-            m_Archive.Dispose();
+        if (disposing)
+        {
+            if (!m_LeaveOpen)
+                m_Archive.Dispose();
+        }
+
+        base.Dispose(disposing);
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

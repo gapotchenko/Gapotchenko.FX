@@ -7,7 +7,6 @@
 // Year of introduction: 2025
 
 using System.Runtime.CompilerServices;
-using System.Security;
 
 namespace Gapotchenko.FX.IO.Vfs;
 
@@ -47,51 +46,134 @@ public interface IReadOnlyFileSystemView
 
     #region Files
 
+    /// <summary>
+    /// Determines whether the specified file exists.
+    /// </summary>
     /// <inheritdoc cref="File.Exists(string?)"/>
     bool FileExists([NotNullWhen(true)] string? path);
 
-    /// <inheritdoc cref="Directory.EnumerateFiles(string)"/>
+    /// <summary>
+    /// Asynchronously determines whether the specified file exists.
+    /// </summary>
+    /// <inheritdoc cref="FileExists(string?)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<bool> FileExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns an enumerable collection of full file names in a specified path.
+    /// </summary>
+    /// <returns>
+    /// An enumerable collection of the full names (including paths) for the files in the directory specified by <paramref name="path"/>.
+    /// </returns>
+    /// <inheritdoc cref="EnumerateEntries(string)"/>
     IEnumerable<string> EnumerateFiles(string path);
 
-    /// <inheritdoc cref="Directory.EnumerateFiles(string, string)"/>
+    /// <inheritdoc cref="EnumerateFiles(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns an enumerable collection of full file names that match a search pattern in a specified path.
+    /// </summary>
+    /// <param name="searchPattern">
+    /// The search string to match against the names of files in <paramref name="path"/>.
+    /// This parameter can contain a combination of valid literal path and wildcard (<c>*</c> and <c>?</c>) characters,
+    /// but it doesn't support regular expressions.
+    /// </param>
+    /// <returns>
+    /// An enumerable collection of the full names (including paths) for the files in the directory specified by <paramref name="path"/>
+    /// and that match the specified search pattern.
+    /// </returns>
+    /// <inheritdoc cref="EnumerateEntries(string, string)"/>
+    /// <param name="path"><inheritdoc/></param>
     IEnumerable<string> EnumerateFiles(string path, string searchPattern);
 
-    /// <inheritdoc cref="Directory.EnumerateFiles(string, string, SearchOption)"/>
+    /// <inheritdoc cref="EnumerateFiles(string, string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        string searchPattern,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns an enumerable collection of full file names that match a search pattern in a specified path,
+    /// and optionally searches subdirectories.
+    /// </summary>
+    /// <param name="searchPattern"><inheritdoc cref="EnumerateFiles(string, string)" path="/param[@name='searchPattern'][1]"/></param>
+    /// <returns>
+    /// An enumerable collection of the full names (including paths) for the files in the directory specified by <paramref name="path"/>
+    /// and that match the specified search pattern and search option.
+    /// </returns>
+    /// <inheritdoc cref="EnumerateEntries(string, string, SearchOption)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchOption"><inheritdoc/></param>
     IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
+
+    /// <inheritdoc cref="EnumerateFiles(string, string, SearchOption)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="searchOption"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Returns an enumerable collection of full file names
     /// that match a search pattern and enumeration options in a specified path,
     /// and optionally searches subdirectories.
     /// </summary>
-    /// <param name="path">
-    /// The relative or absolute path to the directory to search.
-    /// This string is not case-sensitive.
-    /// </param>
-    /// <param name="searchPattern">
-    /// The search string to match against the names of files in path.
-    /// This parameter can contain a combination of valid literal path and wildcard (* and ?) characters,
-    /// but it doesn't support regular expressions.
-    /// </param>
-    /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
+    /// <param name="searchPattern"><inheritdoc cref="EnumerateFiles(string, string)" path="/param[@name='searchPattern'][1]"/></param>
     /// <returns>
     /// An enumerable collection of the full names (including paths) for the files
     /// in the directory specified by <paramref name="path"/>
     /// and that match the specified search pattern and enumeration options.
     /// </returns>
-    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="searchPattern"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
-    /// <exception cref="ArgumentException"><paramref name="searchPattern"/> does not contain a valid pattern.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="enumerationOptions"/> is not a valid <see cref="EnumerationOptions"/> value.</exception>
-    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
-    /// <exception cref="IOException"><paramref name="path"/> is a file name.</exception>
-    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
+    /// <inheritdoc cref="EnumerateEntries(string, string, EnumerationOptions)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="enumerationOptions"><inheritdoc/></param>
     IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);
 
-    /// <inheritdoc cref="File.OpenRead(string)"/>
+    /// <inheritdoc cref="EnumerateFiles(string, string, EnumerationOptions)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="enumerationOptions"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions enumerationOptions,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Opens an existing file for reading.
+    /// </summary>
+    /// <param name="path">The file to be opened for reading.</param>
+    /// <returns>A read-only <see cref="Stream"/> on the specified path.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
+    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
+    /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
+    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
+    /// <exception cref="UnauthorizedAccessException"><paramref name="path"/> is a directory name.</exception>
+    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
     Stream ReadFile(string path);
+
+    /// <summary>
+    /// Asynchronously opens an existing file for reading.
+    /// </summary>
+    /// <inheritdoc cref="ReadFile(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token</param>
+    Task<Stream> ReadFileAsync(string path, CancellationToken cancellationToken = default);
 
     #endregion
 
@@ -103,97 +185,241 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="Directory.Exists(string?)"/>
     bool DirectoryExists([NotNullWhen(true)] string? path);
 
-    /// <inheritdoc cref="Directory.EnumerateDirectories(string)"/>
-    IEnumerable<string> EnumerateDirectories(string path);
-
-    /// <inheritdoc cref="Directory.EnumerateDirectories(string, string)"/>
-    IEnumerable<string> EnumerateDirectories(string path, string searchPattern);
-
-    /// <inheritdoc cref="Directory.EnumerateDirectories(string, string, SearchOption)"/>
-    IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
+    /// <summary>
+    /// Asynchronously determines whether the given path refers to an existing file system directory.
+    /// </summary>
+    /// <inheritdoc cref="DirectoryExists(string?)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<bool> DirectoryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Returns an enumerable collection of the directory full names
-    /// that match a search pattern in a specified path,
-    /// and optionally searches subdirectories.
+    /// Returns an enumerable collection of directory full names in a specified path.
     /// </summary>
-    /// <param name="path">
-    /// The relative or absolute path to the directory to search.
-    /// This string is not case-sensitive.
-    /// </param>
+    /// <returns>
+    /// An enumerable collection of the full names (including paths) for the directories in the directory specified by <paramref name="path"/>.
+    /// </returns>
+    /// <inheritdoc cref="EnumerateEntries(string)"/>
+    IEnumerable<string> EnumerateDirectories(string path);
+
+    /// <inheritdoc cref="EnumerateDirectories(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns an enumerable collection of directory full names that match a search pattern in a specified path.
+    /// </summary>
     /// <param name="searchPattern">
-    /// The search string to match against the names of directories in path.
-    /// This parameter can contain a combination of valid literal path and wildcard (* and ?) characters,
+    /// The search string to match against the names of directories in <paramref name="path"/>.
+    /// This parameter can contain a combination of valid literal path and wildcard (<c>*</c> and <c>?</c>) characters,
     /// but it doesn't support regular expressions.
     /// </param>
-    /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
+    /// <returns>
+    /// An enumerable collection of the full names (including paths) for the directories in the directory specified by <paramref name="path"/>
+    /// and that match the specified search pattern.
+    /// </returns>
+    /// <inheritdoc cref="EnumerateEntries(string, string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    IEnumerable<string> EnumerateDirectories(string path, string searchPattern);
+
+    /// <inheritdoc cref="EnumerateDirectories(string, string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        string searchPattern,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns an enumerable collection of directory full names that match a search pattern in a specified path,
+    /// and optionally searches subdirectories.
+    /// </summary>
+    /// <param name="searchPattern"><inheritdoc cref="EnumerateDirectories(string, string)" path="/param[@name='searchPattern'][1]"/></param>
+    /// <returns>
+    /// An enumerable collection of the full names (including paths) for the directories in the directory specified by <paramref name="path"/>
+    /// and that match the specified search pattern and search option.
+    /// </returns>
+    /// <inheritdoc cref="EnumerateEntries(string, string, SearchOption)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchOption"><inheritdoc/></param>
+    IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
+
+    /// <inheritdoc cref="EnumerateDirectories(string, string, SearchOption)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="searchOption"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns an enumerable collection of directory full names
+    /// that match a search pattern and enumeration options in a specified path,
+    /// and optionally searches subdirectories.
+    /// </summary>
+    /// <param name="searchPattern"><inheritdoc cref="EnumerateDirectories(string, string)" path="/param[@name='searchPattern'][1]"/></param>
     /// <returns>
     /// An enumerable collection of the full names (including paths) for the directories
     /// in the directory specified by <paramref name="path"/>
     /// and that match the specified search pattern and enumeration options.
     /// </returns>
-    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="searchPattern"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
-    /// <exception cref="ArgumentException"><paramref name="searchPattern"/> does not contain a valid pattern.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="enumerationOptions"/> is not a valid <see cref="EnumerationOptions"/> value.</exception>
-    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
-    /// <exception cref="IOException"><paramref name="path"/> is a file name.</exception>
-    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
-    /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
+    /// <inheritdoc cref="EnumerateEntries(string, string, EnumerationOptions)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="enumerationOptions"><inheritdoc/></param>
     IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions);
 
-    /// <summary>
-    /// Determines whether the given path refers to an existing file or directory in the file system.
-    /// </summary>
-    /// <inheritdoc cref="FileSystem.EntryExists(string?)"/>
-    bool EntryExists([NotNullWhen(true)] string? path);
+    /// <inheritdoc cref="EnumerateDirectories(string, string, EnumerationOptions)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="enumerationOptions"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions enumerationOptions,
+        CancellationToken cancellationToken = default);
 
     #endregion
 
     #region Entries
 
-    /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string)"/>
+    /// <summary>
+    /// Determines whether the given path refers to an existing file or directory in the file system.
+    /// </summary>
+    /// <param name="path">The path to test.</param>
+    /// <returns>
+    /// <see langword="true"/> if path refers to an existing file or directory;
+    /// <see langword="false"/> if neither directory nor file exists or an error occurs when trying to determine if the specified file system entry exists.
+    /// </returns>
+    bool EntryExists([NotNullWhen(true)] string? path);
+
+    /// <summary>
+    /// Asynchronously determines whether the given path refers to an existing file or directory in the file system.
+    /// </summary>
+    /// <inheritdoc cref="EntryExists(string?)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<bool> EntryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns an enumerable collection of file names and directory names in a specified path.
+    /// </summary>
+    /// <param name="path">The path to the directory to search.</param>
+    /// <returns>
+    /// An enumerable collection of file-system entries
+    /// in the directory specified by <paramref name="path"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
+    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
+    /// <exception cref="IOException"><paramref name="path"/> is a file name.</exception>
+    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
+    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
     IEnumerable<string> EnumerateEntries(string path);
 
-    /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string, string)"/>
+    /// <inheritdoc cref="EnumerateEntries(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns an enumerable collection of file names and directory names
+    /// that match a search pattern in a specified path.
+    /// </summary>
+    /// <inheritdoc cref="EnumerateEntries(string)" />
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern">
+    /// The search string to match against the names of files and directories in <paramref name="path"/>.
+    /// This parameter can contain a combination of valid literal path and wildcard (<c>*</c> and <c>?</c>) characters,
+    /// but it doesn't support regular expressions.
+    /// </param>
+    /// <returns>
+    /// An enumerable collection of file-system entries
+    /// in the directory specified by <paramref name="path"/>
+    /// that match the specified search pattern.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="searchPattern"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="searchPattern"/> does not contain a valid pattern.</exception>
     IEnumerable<string> EnumerateEntries(string path, string searchPattern);
 
-    /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string, string, SearchOption)"/>
+    /// <inheritdoc cref="EnumerateEntries(string, string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        string searchPattern,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns an enumerable collection of file names and directory names
+    /// that match a search pattern in a specified path,
+    /// and optionally searches subdirectories.
+    /// </summary>
+    /// <inheritdoc cref="EnumerateEntries(string, string)" />
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="searchOption">
+    /// One of the enumeration values that specifies whether the search operation should include only the current directory or should include all subdirectories.
+    /// </param>
+    /// <returns>
+    /// An enumerable collection of file-system entries
+    /// in the directory specified by <paramref name="path"/>
+    /// that match the specified search pattern and search option.
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="searchOption"/> is not a valid <see cref="SearchOption"/> value.</exception>
     IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption);
+
+    /// <inheritdoc cref="EnumerateEntries(string, string, SearchOption)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="searchOption"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Returns an enumerable collection of file names and directory names
     /// that match a search pattern and enumeration options in a specified path.
     /// </summary>
-    /// <param name="path">
-    /// The relative or absolute path to the directory to search.
-    /// This string is not case-sensitive.
-    /// </param>
-    /// <param name="searchPattern">
-    /// The search string to match against the names of files and directories in path.
-    /// This parameter can contain a combination of valid literal path and wildcard (* and ?) characters,
-    /// but it doesn't support regular expressions.
-    /// </param>
+    /// <inheritdoc cref="EnumerateEntries(string, string)" />
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
     /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
     /// <returns>
     /// An enumerable collection of file-system entries
     /// in the directory specified by <paramref name="path"/>
     /// that match the specified search pattern and the specified enumeration options.
     /// </returns>
-    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentNullException"><paramref name="searchPattern"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
-    /// <exception cref="ArgumentException"><paramref name="searchPattern"/> does not contain a valid pattern.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="enumerationOptions"/> is not a valid <see cref="EnumerationOptions"/> value.</exception>
-    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
-    /// <exception cref="IOException"><paramref name="path"/> is a file name.</exception>
-    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
-    /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
-    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="enumerationOptions"/> is <see langword="null"/>.</exception>
     IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions);
 
+    /// <inheritdoc cref="EnumerateEntries(string, string, EnumerationOptions)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="searchPattern"><inheritdoc/></param>
+    /// <param name="enumerationOptions"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions enumerationOptions,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns the last write date and time, in Coordinated Universal Time (UTC), of the specified file or directory.
+    /// </summary>
     /// <remarks>
     /// If the file or directory described in the <paramref name="path"/> parameter does not exist,
     /// this method returns <see cref="DateTime.MinValue"/>.
@@ -201,6 +427,17 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="File.GetLastWriteTimeUtc(string)"/>
     DateTime GetLastWriteTime(string path);
 
+    /// <summary>
+    /// Asynchronously returns the last write date and time, in Coordinated Universal Time (UTC), of the specified file or directory.
+    /// </summary>
+    /// <inheritdoc cref="GetLastWriteTime(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<DateTime> GetLastWriteTimeAsync(string path, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns the creation date and time, in Coordinated Universal Time (UTC), of the specified file or directory.
+    /// </summary>
     /// <remarks>
     /// If the file or directory described in the <paramref name="path"/> parameter does not exist,
     /// this method returns <see cref="DateTime.MinValue"/>.
@@ -208,6 +445,17 @@ public interface IReadOnlyFileSystemView
     /// <inheritdoc cref="File.GetCreationTimeUtc(string)"/>
     DateTime GetCreationTime(string path);
 
+    /// <summary>
+    /// Asynchronously returns the creation date and time, in Coordinated Universal Time (UTC), of the specified file or directory.
+    /// </summary>
+    /// <inheritdoc cref="GetCreationTime(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<DateTime> GetCreationTimeAsync(string path, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns the date and time, in Coordinated Universal Time (UTC), that the specified file or directory was last accessed.
+    /// </summary>
     /// <remarks>
     /// If the file or directory described in the <paramref name="path"/> parameter does not exist,
     /// this method returns <see cref="DateTime.MinValue"/>.
@@ -216,11 +464,27 @@ public interface IReadOnlyFileSystemView
     DateTime GetLastAccessTime(string path);
 
     /// <summary>
+    /// Asynchronously returns the date and time, in Coordinated Universal Time (UTC), that the specified file or directory was last accessed.
+    /// </summary>
+    /// <inheritdoc cref="GetLastAccessTime(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<DateTime> GetLastAccessTimeAsync(string path, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Gets the <see cref="FileAttributes"/> of the specified file or directory.
     /// </summary>
     /// <param name="path">The file or directory for which to obtain attribute information.</param>
     /// <inheritdoc cref="File.GetAttributes(string)"/>
     FileAttributes GetAttributes(string path);
+
+    /// <summary>
+    /// Asynchronously gets the <see cref="FileAttributes"/> of the specified file or directory.
+    /// </summary>
+    /// <inheritdoc cref="GetAttributes(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    Task<FileAttributes> GetAttributesAsync(string path, CancellationToken cancellationToken = default);
 
     #endregion
 

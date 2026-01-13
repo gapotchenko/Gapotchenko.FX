@@ -18,45 +18,6 @@ namespace Gapotchenko.FX.Math.Intervals;
 public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, ValueInterval<T>>, IEquatable<ValueInterval<T>>
     where T : IEquatable<T>?, IComparable<T>?
 {
-    /// <summary>
-    /// Initializes a new <see cref="ValueInterval{T}"/> instance with the specified inclusive left and exclusive right bounds:
-    /// <c>[from,to)</c>.
-    /// </summary>
-    /// <param name="from">
-    /// The left bound of the interval.
-    /// Represents a value the interval starts with.
-    /// The corresponding limit point is included in the interval.
-    /// </param>
-    /// <param name="to">
-    /// The right bound of the interval.
-    /// Represents a value the interval ends with.
-    /// The corresponding limit point is not included in the interval.
-    /// </param>
-    public ValueInterval(T from, T to) :
-        this(IntervalBoundary.Inclusive(from), IntervalBoundary.Exclusive(to))
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new <see cref="ValueInterval{T}"/> instance with the specified boundaries.
-    /// </summary>
-    /// <param name="from">
-    /// The left boundary of the interval.
-    /// Represents a boundary the interval starts with.
-    /// </param>
-    /// <param name="to">
-    /// The right boundary of the interval.
-    /// Represents a boundary the interval ends with.
-    /// </param>
-    /// <exception cref="ArgumentException">If one interval boundary is empty, another should be empty too.</exception>
-    public ValueInterval(IntervalBoundary<T> from, IntervalBoundary<T> to)
-    {
-        IntervalEngine.ValidateBoundaries(from, to);
-
-        From = from;
-        To = to;
-    }
-
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     internal static ValueInterval<T> Empty { get; } = new(IntervalBoundary<T>.Empty, IntervalBoundary<T>.Empty);
 
@@ -68,6 +29,10 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
 
     /// <inheritdoc/>
     public IntervalBoundary<T> To { get; init; }
+
+    IIntervalBoundary IIntervalModel.From => From;
+
+    IIntervalBoundary IIntervalModel.To => To;
 
     IComparer<T> IIntervalOperations<T>.Comparer => Comparer<T>.Default;
 
@@ -98,8 +63,12 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <inheritdoc/>
     public bool Contains(T value) => IntervalEngine.Contains(this, value, Comparer<T>.Default);
 
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY // 2025
     /// <inheritdoc/>
-    public int Zone(T value) => IntervalEngine.Zone(this, value, Comparer<T>.Default);
+    [Obsolete("Use a negated value returned by CompareTo(value) method, or one of the relation operators: >, >=, <, <=.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public int Zone(T value) => -CompareTo(value);
+#endif
 
     /// <inheritdoc cref="IIntervalOperations{T}.Interior"/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -195,12 +164,17 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
         IntervalEngine.IsProperSuperintervalOf(this, other, Comparer<T>.Default);
 
     /// <inheritdoc/>
-    public bool IntervalEquals(IInterval<T> other) => IntervalEquals<IIntervalOperations<T>>(other);
+    public bool IntervalEquals([NotNullWhen(true)] IInterval? other) =>
+        other is IInterval<T> typed &&
+        IntervalEquals(typed);
+
+    /// <inheritdoc/>
+    public bool IntervalEquals([NotNullWhen(true)] IInterval<T>? other) => IntervalEquals<IIntervalModel<T>>(other);
 
     /// <inheritdoc cref="IntervalEquals(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool IntervalEquals<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
+    public bool IntervalEquals<TOther>([NotNullWhen(true)] in TOther? other) where TOther : IIntervalModel<T> =>
         IntervalEngine.IntervalsEqual(this, other, Comparer<T>.Default);
 
     /// <summary>
@@ -209,7 +183,7 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <param name="x">The first interval.</param>
     /// <param name="y">The second interval.</param>
     /// <returns><see langword="true"/> if the specified intervals are equal; otherwise, <see langword="false"/>.</returns>
-    public static bool operator ==(in ValueInterval<T> x, IInterval<T>? y) => EqualityOperator(x, y);
+    public static bool operator ==(in ValueInterval<T> x, IInterval<T>? y) => x.IntervalEquals(y);
 
     /// <summary>
     /// Determines whether the specified intervals are not equal.
@@ -217,20 +191,15 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <param name="x">The first interval.</param>
     /// <param name="y">The second interval.</param>
     /// <returns><see langword="true"/> if the specified intervals are not equal; otherwise, <see langword="false"/>.</returns>
-    public static bool operator !=(in ValueInterval<T> x, IInterval<T>? y) => !EqualityOperator(x, y);
+    public static bool operator !=(in ValueInterval<T> x, IInterval<T>? y) => !x.IntervalEquals(y);
 
     /// <inheritdoc cref="operator ==(in ValueInterval{T}, IInterval{T}?)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static bool operator ==(in ValueInterval<T> x, Interval<T>? y) => EqualityOperator(x, y);
+    public static bool operator ==(in ValueInterval<T> x, Interval<T>? y) => x.IntervalEquals(y);
 
     /// <inheritdoc cref="operator !=(in ValueInterval{T}, IInterval{T}?)"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static bool operator !=(in ValueInterval<T> x, Interval<T>? y) => !EqualityOperator(x, y);
-
-    static bool EqualityOperator<TOther>(in ValueInterval<T> x, TOther? y)
-        where TOther : IIntervalOperations<T> =>
-        y is not null &&
-        x.IntervalEquals(y);
+    public static bool operator !=(in ValueInterval<T> x, Interval<T>? y) => !x.IntervalEquals(y);
 
     /// <inheritdoc/>
     public override bool Equals([NotNullWhen(true)] object? obj) =>

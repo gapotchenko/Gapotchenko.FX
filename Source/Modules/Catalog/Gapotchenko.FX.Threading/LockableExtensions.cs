@@ -4,8 +4,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2024
 
-using Gapotchenko.FX.Threading.Utils;
-
 namespace Gapotchenko.FX.Threading;
 
 /// <summary>
@@ -20,7 +18,7 @@ public static class LockableExtensions
     /// <param name="cancellationToken"><inheritdoc/></param>
     public static LockableScope EnterScope(this ILockable lockable, CancellationToken cancellationToken = default)
     {
-        ExceptionHelper.ThrowIfArgumentIsNull(lockable);
+        ArgumentNullException.ThrowIfNull(lockable);
 
         lockable.Enter(cancellationToken);
         return new LockableScope(lockable);

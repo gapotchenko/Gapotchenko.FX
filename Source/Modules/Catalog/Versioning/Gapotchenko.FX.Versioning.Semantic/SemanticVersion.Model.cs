@@ -12,7 +12,27 @@ namespace Gapotchenko.FX.Versioning;
 partial record SemanticVersion
 {
     /// <summary>
-    /// The object model of a semantic version.
+    /// Creates a new instance of the <see cref="SemanticVersion"/> record using the specified model.
+    /// </summary>
+    /// <param name="model">The model.</param>
+    [return: NotNullIfNotNull(nameof(model))]
+    static SemanticVersion? Create(in Model? model) => model is null ? null : new(model.Value);
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SemanticVersion"/> record using the specified model.
+    /// </summary>
+    /// <param name="model">The model.</param>
+    SemanticVersion(in Model model)
+    {
+        m_Major = model.Major;
+        m_Minor = model.Minor;
+        m_Patch = model.Patch;
+        m_Prerelease = model.Prerelease;
+        m_Build = model.Build;
+    }
+
+    /// <summary>
+    /// The internal object model of a semantic version.
     /// </summary>
     readonly struct Model
     {
@@ -38,25 +58,5 @@ partial record SemanticVersion
         public int Patch { get; init; }
         public string? Prerelease { get; init; }
         public string? Build { get; init; }
-    }
-
-    /// <summary>
-    /// Creates a new instance of the <see cref="SemanticVersion"/> record using the specified model.
-    /// </summary>
-    /// <param name="model">The model.</param>
-    [return: NotNullIfNotNull(nameof(model))]
-    static SemanticVersion? Create(in Model? model) => model is null ? null : new(model.Value);
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SemanticVersion"/> record using the specified model.
-    /// </summary>
-    /// <param name="model">The model.</param>
-    SemanticVersion(in Model model)
-    {
-        m_Major = model.Major;
-        m_Minor = model.Minor;
-        m_Patch = model.Patch;
-        m_Prerelease = model.Prerelease;
-        m_Build = model.Build;
     }
 }

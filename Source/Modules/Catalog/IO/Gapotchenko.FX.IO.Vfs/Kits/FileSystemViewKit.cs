@@ -8,6 +8,9 @@
 
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.IO.Vfs.Utils;
+using Gapotchenko.FX.Linq;
+using Gapotchenko.FX.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using System.Security;
 using System.Text;
 
@@ -79,14 +82,43 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract bool FileExists([NotNullWhen(true)] string? path);
 
     /// <inheritdoc/>
+    public virtual Task<bool> FileExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => FileExists(path), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateFiles(string path) => EnumerateFiles(path, "*");
+
+    /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        CancellationToken cancellationToken = default) =>
+        EnumerateFilesAsync(path, "*", cancellationToken);
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateFiles(string path, string searchPattern) =>
         EnumerateFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        string searchPattern,
+        CancellationToken cancellationToken = default) =>
+        EnumerateFilesAsync(path, searchPattern, SearchOption.TopDirectoryOnly, cancellationToken);
+
+    /// <inheritdoc/>
     public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
+
+    /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        CancellationToken cancellationToken = default)
+    {
+        return AsyncEnumerableBridge.EnumerateAsync(
+            () => EnumerateFiles(path, searchPattern, searchOption),
+            cancellationToken);
+    }
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
@@ -99,14 +131,40 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateFilesAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions enumerationOptions,
+        CancellationToken cancellationToken = default)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+        VfsValidationKit.Arguments.ValidateEnumerationOptions(enumerationOptions);
+
+        return EnumerateEntriesCoreAsync(path, searchPattern, enumerationOptions, true, false, cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public virtual Stream ReadFile(string path) =>
         OpenFile(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+    /// <inheritdoc/>
+    public virtual Task<Stream> ReadFileAsync(string path, CancellationToken cancellationToken) =>
+        OpenFileAsync(path, FileMode.Open, FileAccess.Read, FileShare.Read, cancellationToken);
 
     /// <inheritdoc/>
     public abstract Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share);
 
     /// <inheritdoc/>
+    public virtual Task<Stream> OpenFileAsync(string path, FileMode mode, FileAccess access, FileShare share, CancellationToken cancellationToken) =>
+        TaskBridge.ExecuteAsync(() => OpenFile(path, mode, access, share), cancellationToken);
+
+    /// <inheritdoc/>
     public abstract void DeleteFile(string path);
+
+    /// <inheritdoc/>
+    public virtual Task DeleteFileAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => DeleteFile(path), cancellationToken);
 
     /// <inheritdoc/>
     public virtual void CopyFile(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)
@@ -123,13 +181,47 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
+    public virtual Task CopyFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options, CancellationToken cancellationToken = default)
+    {
+        VfsValidationKit.Arguments.ValidatePath(sourcePath);
+        VfsValidationKit.Arguments.ValidatePath(destinationPath);
+        VfsValidationKit.Arguments.ValidateCopyOptions(options);
+
+        return IOHelper.CopyFileNaiveAsync(
+            new(this, sourcePath),
+            new(this, destinationPath),
+            overwrite,
+            options,
+            cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public virtual void MoveFile(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options)
     {
         VfsValidationKit.Arguments.ValidatePath(sourcePath);
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
         VfsValidationKit.Arguments.ValidateMoveOptions(options);
 
-        IOHelper.MoveFileNaive(new(this, sourcePath), new(this, destinationPath), overwrite, options);
+        IOHelper.MoveFileNaive(
+            new(this, sourcePath),
+            new(this, destinationPath),
+            overwrite,
+            options);
+    }
+
+    /// <inheritdoc/>
+    public virtual Task MoveFileAsync(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options, CancellationToken cancellationToken = default)
+    {
+        VfsValidationKit.Arguments.ValidatePath(sourcePath);
+        VfsValidationKit.Arguments.ValidatePath(destinationPath);
+        VfsValidationKit.Arguments.ValidateMoveOptions(options);
+
+        return IOHelper.MoveFileNaiveAsync(
+            new(this, sourcePath),
+            new(this, destinationPath),
+            overwrite,
+            options,
+            cancellationToken);
     }
 
     #endregion
@@ -140,14 +232,43 @@ public abstract class FileSystemViewKit : IFileSystemView
     public abstract bool DirectoryExists([NotNullWhen(true)] string? path);
 
     /// <inheritdoc/>
+    public virtual Task<bool> DirectoryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => DirectoryExists(path), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateDirectories(string path) => EnumerateDirectories(path, "*");
+
+    /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        CancellationToken cancellationToken = default) =>
+        EnumerateDirectoriesAsync(path, "*", cancellationToken);
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateDirectories(string path, string searchPattern) =>
         EnumerateDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        string searchPattern,
+        CancellationToken cancellationToken = default) =>
+        EnumerateDirectoriesAsync(path, searchPattern, SearchOption.TopDirectoryOnly, cancellationToken);
+
+    /// <inheritdoc/>
     public abstract IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
+
+    /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        CancellationToken cancellationToken = default)
+    {
+        return AsyncEnumerableBridge.EnumerateAsync(
+            () => EnumerateDirectories(path, searchPattern, searchOption),
+            cancellationToken);
+    }
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
@@ -160,10 +281,32 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateDirectoriesAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions enumerationOptions,
+        CancellationToken cancellationToken = default)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+        VfsValidationKit.Arguments.ValidateEnumerationOptions(enumerationOptions);
+
+        return EnumerateEntriesCoreAsync(path, searchPattern, enumerationOptions, false, true, cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public abstract void CreateDirectory(string path);
 
     /// <inheritdoc/>
+    public virtual Task CreateDirectoryAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => CreateDirectory(path), cancellationToken);
+
+    /// <inheritdoc/>
     public abstract void DeleteDirectory(string path, bool recursive);
+
+    /// <inheritdoc/>
+    public virtual Task DeleteDirectoryAsync(string path, bool recursive, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => DeleteDirectory(path, recursive), cancellationToken);
 
     /// <inheritdoc/>
     public virtual void CopyDirectory(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options)
@@ -172,7 +315,26 @@ public abstract class FileSystemViewKit : IFileSystemView
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
         VfsValidationKit.Arguments.ValidateCopyOptions(options);
 
-        IOHelper.CopyDirectoryNaive(new(this, sourcePath), new(this, destinationPath), overwrite, options);
+        IOHelper.CopyDirectoryNaive(
+            new(this, sourcePath),
+            new(this, destinationPath),
+            overwrite,
+            options);
+    }
+
+    /// <inheritdoc/>
+    public virtual Task CopyDirectoryAsync(string sourcePath, string destinationPath, bool overwrite, VfsCopyOptions options, CancellationToken cancellationToken = default)
+    {
+        VfsValidationKit.Arguments.ValidatePath(sourcePath);
+        VfsValidationKit.Arguments.ValidatePath(destinationPath);
+        VfsValidationKit.Arguments.ValidateCopyOptions(options);
+
+        return IOHelper.CopyDirectoryNaiveAsync(
+            new(this, sourcePath),
+            new(this, destinationPath),
+            overwrite,
+            options,
+            cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -182,7 +344,26 @@ public abstract class FileSystemViewKit : IFileSystemView
         VfsValidationKit.Arguments.ValidatePath(destinationPath);
         VfsValidationKit.Arguments.ValidateMoveOptions(options);
 
-        IOHelper.MoveDirectoryNaive(new(this, sourcePath), new(this, destinationPath), overwrite, options);
+        IOHelper.MoveDirectoryNaive(
+            new(this, sourcePath),
+            new(this, destinationPath),
+            overwrite,
+            options);
+    }
+
+    /// <inheritdoc/>
+    public virtual Task MoveDirectoryAsync(string sourcePath, string destinationPath, bool overwrite, VfsMoveOptions options, CancellationToken cancellationToken = default)
+    {
+        VfsValidationKit.Arguments.ValidatePath(sourcePath);
+        VfsValidationKit.Arguments.ValidatePath(destinationPath);
+        VfsValidationKit.Arguments.ValidateMoveOptions(options);
+
+        return IOHelper.MoveDirectoryNaiveAsync(
+            new(this, sourcePath),
+            new(this, destinationPath),
+            overwrite,
+            options,
+            cancellationToken);
     }
 
     #endregion
@@ -195,22 +376,72 @@ public abstract class FileSystemViewKit : IFileSystemView
         DirectoryExists(path);
 
     /// <inheritdoc/>
+    public virtual async Task<bool> EntryExistsAsync([NotNullWhen(true)] string? path, CancellationToken cancellationToken = default) =>
+        await FileExistsAsync(path, cancellationToken).ConfigureAwait(false) ||
+        await DirectoryExistsAsync(path, cancellationToken).ConfigureAwait(false);
+
+    #region Enumeration
+
+    /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path) =>
         EnumerateEntries(path, "*");
+
+    /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        CancellationToken cancellationToken = default) =>
+        EnumerateEntriesAsync(path, "*", cancellationToken);
 
     /// <inheritdoc/>
     public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern) =>
         EnumerateEntries(path, searchPattern, SearchOption.TopDirectoryOnly);
 
     /// <inheritdoc/>
-    public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption) =>
-        EnumerateFiles(path, searchPattern, searchOption)
-        .Concat(EnumerateDirectories(path, searchPattern, searchOption));
+    public virtual IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        string searchPattern,
+        CancellationToken cancellationToken = default) =>
+        EnumerateEntriesAsync(path, searchPattern, SearchOption.TopDirectoryOnly, cancellationToken);
 
     /// <inheritdoc/>
-    public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
-        EnumerateFiles(path, searchPattern, enumerationOptions)
-        .Concat(EnumerateDirectories(path, searchPattern, enumerationOptions));
+    public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, SearchOption searchOption)
+    {
+        return
+            EnumerateFiles(path, searchPattern, searchOption)
+            .Concat(EnumerateDirectories(path, searchPattern, searchOption));
+    }
+
+    /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        CancellationToken cancellationToken = default)
+    {
+        return
+            EnumerateFilesAsync(path, searchPattern, searchOption, cancellationToken)
+            .Concat(EnumerateDirectoriesAsync(path, searchPattern, searchOption, cancellationToken));
+    }
+
+    /// <inheritdoc/>
+    public virtual IEnumerable<string> EnumerateEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        return
+            EnumerateFiles(path, searchPattern, enumerationOptions)
+            .Concat(EnumerateDirectories(path, searchPattern, enumerationOptions));
+    }
+
+    /// <inheritdoc/>
+    public virtual IAsyncEnumerable<string> EnumerateEntriesAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions enumerationOptions,
+        CancellationToken cancellationToken = default)
+    {
+        return
+            EnumerateFilesAsync(path, searchPattern, enumerationOptions, cancellationToken)
+            .Concat(EnumerateDirectoriesAsync(path, searchPattern, enumerationOptions, cancellationToken));
+    }
 
     IEnumerable<string> EnumerateEntriesCore(
         string path,
@@ -254,9 +485,9 @@ public abstract class FileSystemViewKit : IFileSystemView
         // Polyfill implementation that uses more basic but available primitives
         // ----------------------------------------------------------------------
 
-        return EnumerateEntriesPolyfillImpl(path, maxRecursionDepth);
+        return PolyfillImpl(path, maxRecursionDepth);
 
-        IEnumerable<string> EnumerateEntriesPolyfillImpl(string path, int remainingRecursionDepth)
+        IEnumerable<string> PolyfillImpl(string path, int remainingRecursionDepth)
         {
             var searchExpression = new VfsSearchExpression(
                 searchPattern,
@@ -381,29 +612,249 @@ public abstract class FileSystemViewKit : IFileSystemView
         }
     }
 
+    IAsyncEnumerable<string> EnumerateEntriesCoreAsync(
+        string path,
+        string searchPattern,
+        EnumerationOptions options,
+        bool enumerateFiles,
+        bool enumerateDirectories,
+        CancellationToken cancellationToken)
+    {
+        EnsureCanRead();
+
+        // ----------------------------------------------------------------------
+        // Parameters calculation
+        // ----------------------------------------------------------------------
+
+        VfsSearchKit.AdjustPatternPath(this, ref path, ref searchPattern);
+
+        int maxRecursionDepth = VfsSearchKit.GetMaxRecursionDepth(options);
+
+        var attributesToSkip = options.AttributesToSkip;
+        if (attributesToSkip != 0 && !SupportsAttributes)
+            attributesToSkip = 0;
+
+        // ----------------------------------------------------------------------
+        // Short circuit handling
+        // ----------------------------------------------------------------------
+
+        if (options.MatchType == MatchType.Win32 &&
+            VfsSearchKit.IsDefaultMatchCasing(this, options.MatchCasing))
+        {
+            if (maxRecursionDepth is 0 or int.MaxValue &&
+                attributesToSkip == 0 &&
+                !options.ReturnSpecialDirectories &&
+                !options.IgnoreInaccessible)
+            {
+                var searchOption = maxRecursionDepth is 0 ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
+                return EnumerateEntriesMatrixAsync(path, searchPattern, searchOption, enumerateFiles, enumerateDirectories, cancellationToken);
+            }
+        }
+
+        // ----------------------------------------------------------------------
+        // Polyfill implementation that uses more basic but available primitives
+        // ----------------------------------------------------------------------
+
+        return PolyfillImplAsync(path, maxRecursionDepth, cancellationToken);
+
+        async IAsyncEnumerable<string> PolyfillImplAsync(
+            string path,
+            int remainingRecursionDepth,
+            CancellationToken cancellationToken,
+            [EnumeratorCancellation] CancellationToken enumeratorCancellationToken = default)
+        {
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, enumeratorCancellationToken);
+            cancellationToken = cts.Token;
+
+            var searchExpression = new VfsSearchExpression(
+                searchPattern,
+                DirectorySeparatorChar,
+                options.MatchType,
+                VfsSearchKit.GetSearchExpressionOptions(this, options.MatchCasing));
+
+            var pendingHierarchies = new Queue<(string Path, int RemainingRecursionDepth)>();
+
+            for (; ; )
+            {
+                await foreach (string i in EnumerateHierarchyAsync(path, remainingRecursionDepth, cancellationToken).ConfigureAwait(false))
+                    yield return i;
+
+                if (pendingHierarchies.TryDequeue(out var next))
+                {
+                    // Next hierarchy.
+                    path = next.Path;
+                    remainingRecursionDepth = next.RemainingRecursionDepth;
+                }
+                else
+                {
+                    // No hierarchies left.
+                    break;
+                }
+            }
+
+            async IAsyncEnumerable<string> EnumerateHierarchyAsync(
+                string path,
+                int remainingRecursionDepth,
+                CancellationToken cancellationToken,
+                [EnumeratorCancellation] CancellationToken enumeratorCancellationToken = default)
+            {
+                using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, enumeratorCancellationToken);
+                cancellationToken = cts.Token;
+
+                IAsyncEnumerable<string> query;
+
+                try
+                {
+                    query = EnumerateEntriesMatrixAsync(
+                        path,
+                        "*",
+                        SearchOption.TopDirectoryOnly,
+                        enumerateFiles,
+                        enumerateDirectories || remainingRecursionDepth > 0,
+                        cancellationToken);
+                }
+                catch (Exception e) when (options.IgnoreInaccessible && e is UnauthorizedAccessException or SecurityException)
+                {
+                    // Ignore an access error.
+                    yield break;
+                }
+
+                if (enumerateDirectories && options.ReturnSpecialDirectories)
+                {
+                    // Emulate special directories.
+
+                    // The current directory ".".
+                    yield return this.JoinPaths(path, ".");
+
+                    // The parent directory "..".
+                    if (!GetDirectoryName(path.AsSpan()).IsEmpty)
+                    {
+                        string directoryPath = this.JoinPaths(path, "..");
+                        if (!options.IgnoreInaccessible || await DirectoryExistsAsync(directoryPath, cancellationToken).ConfigureAwait(false))
+                            yield return directoryPath;
+                    }
+                }
+
+                await foreach (string entryPath in query.ConfigureAwait(false))
+                {
+                    FileAttributes? entryAttributes = null;
+
+                    if (attributesToSkip != 0)
+                    {
+                        var attributes = await GetAttributesAsync(entryPath, cancellationToken).ConfigureAwait(false);
+                        if ((attributes & attributesToSkip) != 0)
+                            continue;
+                        entryAttributes = attributes;
+                    }
+
+                    bool fileExists = false;
+                    if (enumerateFiles &&
+                        ((entryAttributes.HasValue && (entryAttributes.Value & FileAttributes.Directory) == 0) ||
+                        (fileExists = await FileExistsAsync(entryPath, cancellationToken).ConfigureAwait(false))))
+                    {
+                        if (searchExpression.IsMatch(GetFileName(entryPath.AsSpan())))
+                        {
+                            if (fileExists || !options.IgnoreInaccessible || await FileExistsAsync(entryPath, cancellationToken).ConfigureAwait(false))
+                                yield return entryPath;
+                        }
+                        continue;
+                    }
+
+                    if (options.IgnoreInaccessible && !await DirectoryExistsAsync(entryPath, cancellationToken).ConfigureAwait(false))
+                        continue;
+
+                    if (enumerateDirectories)
+                    {
+                        if (searchExpression.IsMatch(GetFileName(entryPath.AsSpan())))
+                            yield return entryPath;
+                    }
+
+                    if (remainingRecursionDepth > 0)
+                        pendingHierarchies.Enqueue((entryPath, remainingRecursionDepth - 1));
+                }
+            }
+        }
+
+        // ----------------------------------------------------------------------
+        // Helper functions
+        // ----------------------------------------------------------------------
+
+        IAsyncEnumerable<string> EnumerateEntriesMatrixAsync(
+           string path,
+           string searchPattern,
+           SearchOption searchOption,
+           bool enumerateFiles,
+           bool enumerateDirectories,
+           CancellationToken cancellationToken)
+        {
+            return
+                (enumerateFiles, enumerateDirectories) switch
+                {
+                    (true, false) => EnumerateFilesAsync(path, searchPattern, searchOption, cancellationToken),
+                    (false, true) => EnumerateDirectoriesAsync(path, searchPattern, searchOption, cancellationToken),
+                    (true, true) => EnumerateEntriesAsync(path, searchPattern, searchOption, cancellationToken),
+                    (false, false) => AsyncEnumerable.Empty<string>()
+                };
+        }
+    }
+
+    #endregion
+
     /// <inheritdoc/>
     public virtual DateTime GetCreationTime(string path) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public virtual Task<DateTime> GetCreationTimeAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => GetCreationTime(path), cancellationToken);
 
     /// <inheritdoc/>
     public virtual void SetCreationTime(string path, DateTime creationTime) => throw new NotSupportedException();
 
     /// <inheritdoc/>
+    public virtual Task SetCreationTimeAsync(string path, DateTime creationTime, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => SetCreationTime(path, creationTime), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual DateTime GetLastWriteTime(string path) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public virtual Task<DateTime> GetLastWriteTimeAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => GetLastWriteTime(path), cancellationToken);
 
     /// <inheritdoc/>
     public virtual void SetLastWriteTime(string path, DateTime lastWriteTime) => throw new NotSupportedException();
 
     /// <inheritdoc/>
+    public virtual Task SetLastWriteTimeAsync(string path, DateTime lastWriteTime, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => SetLastWriteTime(path, lastWriteTime), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual DateTime GetLastAccessTime(string path) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public virtual Task<DateTime> GetLastAccessTimeAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => GetLastAccessTime(path), cancellationToken);
 
     /// <inheritdoc/>
     public virtual void SetLastAccessTime(string path, DateTime lastAccessTime) => throw new NotSupportedException();
 
     /// <inheritdoc/>
+    public virtual Task SetLastAccessTimeAsync(string path, DateTime lastAccessTime, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => SetLastAccessTime(path, lastAccessTime), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual FileAttributes GetAttributes(string path) => throw new NotSupportedException();
 
     /// <inheritdoc/>
+    public virtual Task<FileAttributes> GetAttributesAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => GetAttributes(path), cancellationToken);
+
+    /// <inheritdoc/>
     public virtual void SetAttributes(string path, FileAttributes attributes) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public virtual Task SetAttributesAsync(string path, FileAttributes attributes, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => SetAttributes(path, attributes), cancellationToken);
 
     #endregion
 

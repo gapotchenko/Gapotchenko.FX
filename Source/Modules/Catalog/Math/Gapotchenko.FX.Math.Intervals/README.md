@@ -191,6 +191,98 @@ This is not an obstacle for most specializing types, but this is a formal restri
 Another scenario where you may prefer `Interval<T>` type better is when you need to pass it as a reference to many places in code.
 This may save some CPU time and memory in cases where `T` type is sufficiently large because passing the interval by reference avoids copying.
 
+## Interval Parsing
+
+Intervals can be parsed from string representations using the standard interval notation.
+The parser supports both Unicode and ASCII representations of intervals.
+
+### Basic Parsing
+
+Use `Interval.Parse<T>` to parse an interval from a string:
+
+``` C#
+// Parse an inclusive interval [10,20]
+var interval = Interval.Parse<int>("[10,20]");
+
+// Parse an exclusive interval (5,15)
+interval = Interval.Parse<int>("(5,15)");
+
+// Parse a mixed interval [10,20)
+interval = Interval.Parse<int>("[10,20)");
+```
+
+The parser supports both comma (`,`) and semicolon (`;`) as separators:
+
+``` C#
+// Both forms are equivalent
+interval = Interval.Parse<int>("[10,20]");
+interval = Interval.Parse<int>("[10;20]");
+```
+
+### Infinity
+
+Infinite boundaries are supported using Unicode or ASCII notation:
+
+``` C#
+// [10,∞) - Unicode infinity symbol
+interval = Interval.Parse<int>("[10,∞)");
+
+// [10,inf) - ASCII infinity notation
+interval = Interval.Parse<int>("[10,inf)");
+
+// (-∞,10] - Negative infinity
+interval = Interval.Parse<int>("(-∞,10]");
+interval = Interval.Parse<int>("(-inf,10]");
+```
+
+### Empty and Degenerate Intervals
+
+Empty intervals can be parsed using the empty set notation:
+
+``` C#
+// Empty interval ∅
+interval = Interval.Parse<int>("∅");
+interval = Interval.Parse<int>("{}");
+```
+
+Degenerate intervals (single point) can be also parsed using set notation:
+
+``` C#
+// Degenerate interval {5} which represents [5,5]
+interval = Interval.Parse<int>("{5}");
+```
+
+### TryParse
+
+For scenarios where parsing might fail, use `TryParse` to avoid exceptions:
+
+``` C#
+if (Interval.TryParse<int>("[10,20]", out var interval))
+    Console.WriteLine($"Parsed interval: {interval}");
+else
+    Console.WriteLine("Failed to parse interval");
+```
+
+### Culture-Specific Parsing
+
+The parser respects culture-specific formatting when converting boundary values:
+
+``` C#
+using System.Globalization;
+
+// Parse with a specific culture
+var culture = new CultureInfo("de-DE");
+var interval = Interval.Parse<float>("[10,5;20,3]", culture);
+```
+
+### ValueInterval Parsing
+
+`ValueInterval<T>` also supports parsing with the same syntax:
+
+``` C#
+var valueInterval = ValueInterval.Parse<int>("[10,20]");
+```
+
 ## Usage
 
 `Gapotchenko.FX.Math.Intervals` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Math.Intervals):

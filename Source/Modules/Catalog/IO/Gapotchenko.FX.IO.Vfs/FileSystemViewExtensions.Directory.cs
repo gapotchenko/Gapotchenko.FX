@@ -15,9 +15,28 @@ partial class FileSystemViewExtensions
     /// <inheritdoc cref="Directory.Delete(string)"/>
     /// <param name="view">The file system view.</param>
     /// <param name="path"><inheritdoc/></param>
-    public static void DeleteDirectory(this IFileSystemView view, string path) =>
-        (view ?? throw new ArgumentNullException(nameof(view)))
-        .DeleteDirectory(path, false);
+    /// <exception cref="ArgumentNullException"><paramref name="view"/> is <see langword="null"/>.</exception>
+    public static void DeleteDirectory(this IFileSystemView view, string path)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        view.DeleteDirectory(path, false);
+    }
+
+    /// <summary>
+    /// Asynchronously deletes the specified directory.
+    /// </summary>
+    /// <inheritdoc cref="DeleteDirectory(IFileSystemView, string)"/>
+    /// <param name="view"><inheritdoc/></param>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous directory deletion operation.</returns>
+    public static Task DeleteDirectoryAsync(this IFileSystemView view, string path, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        return view.DeleteDirectoryAsync(path, false, cancellationToken);
+    }
 
     #region Copy
 
@@ -35,6 +54,22 @@ partial class FileSystemViewExtensions
         string destinationPath) =>
         CopyDirectory(view, sourcePath, destinationPath, false);
 
+    /// <summary>
+    /// Asynchronously copies an existing directory to a new directory.
+    /// Overwriting a directory of the same name is not allowed.
+    /// </summary>
+    /// <inheritdoc cref="IFileSystemView.CopyDirectoryAsync(string, string, bool, VfsCopyOptions, CancellationToken)"/>
+    /// <param name="view">The file system view to copy the directory for.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
+    public static Task CopyDirectoryAsync(
+        this IFileSystemView view,
+        string sourcePath,
+        string destinationPath,
+        CancellationToken cancellationToken = default) =>
+        CopyDirectoryAsync(view, sourcePath, destinationPath, false, cancellationToken: cancellationToken);
+
     /// <inheritdoc cref="IFileSystemView.CopyDirectory(string, string, bool, VfsCopyOptions)"/>
     /// <param name="view">The file system view to copy the directory for.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
@@ -46,9 +81,34 @@ partial class FileSystemViewExtensions
         string sourcePath,
         string destinationPath,
         bool overwrite = false,
-        VfsCopyOptions options = VfsCopyOptions.None) =>
-        (view ?? throw new ArgumentNullException(nameof(view)))
-        .CopyDirectory(sourcePath, destinationPath, overwrite, options);
+        VfsCopyOptions options = VfsCopyOptions.None)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        view.CopyDirectory(sourcePath, destinationPath, overwrite, options);
+    }
+
+    /// <inheritdoc cref="IFileSystemView.CopyDirectoryAsync(string, string, bool, VfsCopyOptions, CancellationToken)"/>
+    /// <param name="view">The file system view to copy the directory for.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken"><inheritdoc/></param>
+    public static Task CopyDirectoryAsync(
+        this IFileSystemView view,
+        string sourcePath,
+        string destinationPath,
+        bool overwrite = false,
+        VfsCopyOptions options = VfsCopyOptions.None,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        return view.CopyDirectoryAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
+    }
+
+    // ------------------------------------------------------------------------
 
     /// <summary>
     /// Copies an existing directory to a new directory in the specified destination location.
@@ -66,6 +126,26 @@ partial class FileSystemViewExtensions
     public static void CopyDirectory(
         this IReadOnlyFileSystemView sourceView, string sourcePath,
         string destination) =>
+        throw new InvalidOperationException();
+
+    /// <summary>
+    /// Asynchronously copies an existing directory to a new directory in the specified destination location.
+    /// Overwriting a directory of the same name is not allowed.
+    /// </summary>
+    /// <inheritdoc cref="CopyDirectoryAsync(IReadOnlyFileSystemView, string, VfsLocation, bool, VfsCopyOptions, CancellationToken)"/>
+    public static Task CopyDirectoryAsync(
+        this IReadOnlyFileSystemView sourceView, string sourcePath,
+        VfsLocation destination,
+        CancellationToken cancellationToken = default) =>
+        CopyDirectoryAsync(sourceView, sourcePath, destination, false, VfsCopyOptions.None, cancellationToken);
+
+    /// <inheritdoc cref="CopyDirectoryAsync(IReadOnlyFileSystemView, string, VfsLocation, CancellationToken)"/>
+    [Obsolete("Use CopyDirectoryAsync(string, VfsLocation, CancellationToken) method instead.", true)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task CopyDirectoryAsync(
+        this IReadOnlyFileSystemView sourceView, string sourcePath,
+        string destinationPath,
+        CancellationToken cancellationToken = default) =>
         throw new InvalidOperationException();
 
     /// <summary>
@@ -98,6 +178,34 @@ partial class FileSystemViewExtensions
             options);
     }
 
+    /// <summary>
+    /// <inheritdoc cref="CopyDirectory(IReadOnlyFileSystemView, string, VfsLocation, bool, VfsCopyOptions)"/>
+    /// </summary>
+    /// <param name="sourceView"><inheritdoc/></param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destination"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous directory copy operation.</returns>
+    public static Task CopyDirectoryAsync(
+        this IReadOnlyFileSystemView sourceView, string sourcePath,
+        VfsLocation destination,
+        bool overwrite = false,
+        VfsCopyOptions options = VfsCopyOptions.None,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(sourceView);
+        VfsValidationKit.Arguments.ValidateCopyOptions(options);
+
+        return IOHelper.CopyDirectoryOptimizedAsync(
+            new(sourceView, sourcePath),
+            destination,
+            overwrite,
+            options,
+            cancellationToken);
+    }
+
     /// <inheritdoc cref="CopyDirectory(IReadOnlyFileSystemView, string, VfsLocation, bool, VfsCopyOptions)"/>
     [Obsolete("Use CopyDirectory(string, VfsLocation, bool, VfsCopyOptions) method instead.", true)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -106,6 +214,17 @@ partial class FileSystemViewExtensions
         string destinationPath,
         bool overwrite = false,
         VfsCopyOptions options = VfsCopyOptions.None) =>
+        throw new InvalidOperationException();
+
+    /// <inheritdoc cref="CopyDirectoryAsync(IReadOnlyFileSystemView, string, VfsLocation, bool, VfsCopyOptions, CancellationToken)"/>
+    [Obsolete("Use CopyDirectoryAsync(string, VfsLocation, bool, VfsCopyOptions, CancellationToken) method instead.", true)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task CopyDirectoryAsync(
+        this IReadOnlyFileSystemView sourceView, string sourcePath,
+        string destinationPath,
+        bool overwrite = false,
+        VfsCopyOptions options = VfsCopyOptions.None,
+        CancellationToken cancellationToken = default) =>
         throw new InvalidOperationException();
 
     #endregion
@@ -126,6 +245,23 @@ partial class FileSystemViewExtensions
         string destinationPath) =>
         MoveDirectory(view, sourcePath, destinationPath, false);
 
+    /// <summary>
+    /// Asynchronously moves a specified directory to a new location,
+    /// providing the option to specify a new directory name.
+    /// </summary>
+    /// <inheritdoc cref="IFileSystemView.MoveDirectoryAsync(string, string, bool, VfsMoveOptions, CancellationToken)"/>
+    /// <param name="view">The file system view to move the directory at.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous directory move operation.</returns>
+    public static Task MoveDirectoryAsync(
+        this IFileSystemView view,
+        string sourcePath,
+        string destinationPath,
+        CancellationToken cancellationToken = default) =>
+        MoveDirectoryAsync(view, sourcePath, destinationPath, false, cancellationToken: cancellationToken);
+
     /// <inheritdoc cref="IFileSystemView.MoveDirectory(string, string, bool, VfsMoveOptions)"/>
     /// <param name="view">The file system view to move the directory at.</param>
     /// <param name="sourcePath"><inheritdoc/></param>
@@ -137,9 +273,35 @@ partial class FileSystemViewExtensions
         string sourcePath,
         string destinationPath,
         bool overwrite = false,
-        VfsMoveOptions options = VfsMoveOptions.None) =>
-        (view ?? throw new ArgumentNullException(nameof(view)))
-        .MoveDirectory(sourcePath, destinationPath, overwrite, options);
+        VfsMoveOptions options = VfsMoveOptions.None)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        view.MoveDirectory(sourcePath, destinationPath, overwrite, options);
+    }
+
+    /// <inheritdoc cref="IFileSystemView.MoveDirectoryAsync(string, string, bool, VfsMoveOptions, CancellationToken)"/>
+    /// <param name="view">The file system view to move the directory at.</param>
+    /// <param name="sourcePath"><inheritdoc/></param>
+    /// <param name="destinationPath"><inheritdoc/></param>
+    /// <param name="overwrite"><inheritdoc/></param>
+    /// <param name="options"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous directory move operation.</returns>
+    public static Task MoveDirectoryAsync(
+        this IFileSystemView view,
+        string sourcePath,
+        string destinationPath,
+        bool overwrite = false,
+        VfsMoveOptions options = VfsMoveOptions.None,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+
+        return view.MoveDirectoryAsync(sourcePath, destinationPath, overwrite, options, cancellationToken);
+    }
+
+    // ------------------------------------------------------------------------
 
     /// <summary>
     /// Moves a specified directory to a new location,
@@ -151,6 +313,18 @@ partial class FileSystemViewExtensions
         string sourcePath,
         VfsLocation destination) =>
         MoveDirectory(sourceView, sourcePath, destination, false, VfsMoveOptions.None);
+
+    /// <summary>
+    /// Asynchronously moves a specified directory to a new location,
+    /// providing the option to specify a new directory name.
+    /// </summary>
+    /// <inheritdoc cref="MoveDirectoryAsync(IFileSystemView, string, VfsLocation, bool, VfsMoveOptions, CancellationToken)"/>
+    public static Task MoveDirectoryAsync(
+        this IFileSystemView sourceView,
+        string sourcePath,
+        VfsLocation destination,
+        CancellationToken cancellationToken = default) =>
+        MoveDirectoryAsync(sourceView, sourcePath, destination, false, VfsMoveOptions.None, cancellationToken);
 
     /// <inheritdoc cref="IFileSystemView.MoveDirectory(string, string, bool, VfsMoveOptions)"/>
     /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> of the directory to move.</param>
@@ -172,6 +346,41 @@ partial class FileSystemViewExtensions
             destination,
             overwrite,
             options);
+    }
+
+    /// <summary>
+    /// Asynchronously moves a specified directory to a new location,
+    /// providing the options to specify a new directory name and
+    /// to overwrite the destination directory if it already exists.
+    /// Additional operation options are controlled by the <paramref name="options"/> parameter.
+    /// </summary>
+    /// <param name="sourceView">The source <see cref="IReadOnlyFileSystemView"/> of the directory to move.</param>
+    /// <param name="sourcePath">The path of the directory to move.</param>
+    /// <param name="destination">The destination <see cref="VfsLocation"/> to move the directory to.</param>
+    /// <param name="overwrite">
+    /// <inheritdoc cref="IFileSystemView.MoveDirectoryAsync(string, string, bool, VfsMoveOptions, CancellationToken)" path="//param[@name='overwrite']"/>
+    /// </param>
+    /// <param name="options">
+    /// <inheritdoc cref="IFileSystemView.MoveDirectoryAsync(string, string, bool, VfsMoveOptions, CancellationToken)" path="//param[@name='options']"/>
+    /// </param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous directory move operation.</returns>
+    public static Task MoveDirectoryAsync(
+        this IFileSystemView sourceView, string sourcePath,
+        VfsLocation destination,
+        bool overwrite = false,
+        VfsMoveOptions options = VfsMoveOptions.None,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(sourceView);
+        VfsValidationKit.Arguments.ValidateMoveOptions(options);
+
+        return IOHelper.MoveDirectoryOptimizedAsync(
+            new(sourceView, sourcePath),
+            destination,
+            overwrite,
+            options,
+            cancellationToken);
     }
 
     #endregion

@@ -14,16 +14,16 @@ public class PermutationTests
         Assert.AreEqual(2, cardinality);
 
         var p = Permutations.Of(source).ReifyCollection();
-        Assert.AreEqual(cardinality, p.Count);
+        Assert.HasCount(cardinality, p);
 
         var s = p
             .Select(x => x.ToArray())
             .ToHashSet(ArrayEqualityComparer<int>.Default);
 
-        Assert.AreEqual(cardinality, s.Count);
+        Assert.HasCount(cardinality, s);
 
-        Assert.IsTrue(s.Contains([1, 2]));
-        Assert.IsTrue(s.Contains([2, 1]));
+        Assert.Contains([1, 2], s);
+        Assert.Contains([2, 1], s);
     }
 
     [TestMethod]
@@ -35,16 +35,16 @@ public class PermutationTests
         Assert.AreEqual(2, cardinality);
 
         var p = Permutations.Of(source).Distinct().ReifyCollection();
-        Assert.AreEqual(cardinality, p.Count);
+        Assert.HasCount(cardinality, p);
 
         var s = p
             .Select(x => x.ToArray())
             .ToHashSet(ArrayEqualityComparer<int>.Default);
 
-        Assert.AreEqual(cardinality, s.Count);
+        Assert.HasCount(cardinality, s);
 
-        Assert.IsTrue(s.Contains([1, 2]));
-        Assert.IsTrue(s.Contains([2, 1]));
+        Assert.Contains([1, 2], s);
+        Assert.Contains([2, 1], s);
     }
 
     [TestMethod]
@@ -69,14 +69,14 @@ public class PermutationTests
         Assert.AreEqual(2, cardinality);
 
         var p = Permutations.Of(source).ReifyCollection();
-        Assert.AreEqual(cardinality, p.Count);
+        Assert.HasCount(cardinality, p);
 
         var s = p
             .Select(x => x.ToArray())
             .ToMultiset(ArrayEqualityComparer<int>.Default);
 
         int distinctCardinality = cardinality / countOfDuplicateElements;
-        Assert.AreEqual(distinctCardinality, s.Count);
+        Assert.HasCount(distinctCardinality, s);
 
         Assert.IsTrue(s.TryGetValue([1, 1], out var count) && count == 2);
     }
@@ -91,15 +91,15 @@ public class PermutationTests
         Assert.AreEqual(1, cardinality);
 
         var p = Permutations.Of(source).Distinct().ReifyCollection();
-        Assert.AreEqual(cardinality, p.Count);
+        Assert.HasCount(cardinality, p);
 
         var s = p
             .Select(x => x.ToArray())
             .ToHashSet(ArrayEqualityComparer<int>.Default);
 
-        Assert.AreEqual(cardinality, s.Count);
+        Assert.HasCount(cardinality, s);
 
-        Assert.IsTrue(s.Contains([1, 1]));
+        Assert.Contains([1, 1], s);
     }
 
     [TestMethod]
@@ -128,20 +128,20 @@ public class PermutationTests
         Assert.AreEqual(6, cardinality);
 
         var p = Permutations.Of(source).ReifyCollection();
-        Assert.AreEqual(cardinality, p.Count);
+        Assert.HasCount(cardinality, p);
 
         var s = p
             .Select(x => x.ToArray())
             .ToHashSet(ArrayEqualityComparer<int>.Default);
 
-        Assert.AreEqual(cardinality, s.Count);
+        Assert.HasCount(cardinality, s);
 
-        Assert.IsTrue(s.Contains([1, 2, 3]));
-        Assert.IsTrue(s.Contains([1, 3, 2]));
-        Assert.IsTrue(s.Contains([2, 1, 3]));
-        Assert.IsTrue(s.Contains([2, 3, 1]));
-        Assert.IsTrue(s.Contains([3, 1, 2]));
-        Assert.IsTrue(s.Contains([3, 2, 1]));
+        Assert.Contains([1, 2, 3], s);
+        Assert.Contains([1, 3, 2], s);
+        Assert.Contains([2, 1, 3], s);
+        Assert.Contains([2, 3, 1], s);
+        Assert.Contains([3, 1, 2], s);
+        Assert.Contains([3, 2, 1], s);
     }
 
     [TestMethod]
@@ -157,20 +157,20 @@ public class PermutationTests
         Assert.AreEqual(6, cardinality);
 
         var p = Permutations.Of(source).Distinct().ReifyCollection();
-        Assert.AreEqual(cardinality, p.Count);
+        Assert.HasCount(cardinality, p);
 
         var s = p
             .Select(x => x.ToArray())
             .ToHashSet(ArrayEqualityComparer<int>.Default);
 
-        Assert.AreEqual(cardinality, s.Count);
+        Assert.HasCount(cardinality, s);
 
-        Assert.IsTrue(s.Contains([1, 2, 3]));
-        Assert.IsTrue(s.Contains([1, 3, 2]));
-        Assert.IsTrue(s.Contains([2, 1, 3]));
-        Assert.IsTrue(s.Contains([2, 3, 1]));
-        Assert.IsTrue(s.Contains([3, 1, 2]));
-        Assert.IsTrue(s.Contains([3, 2, 1]));
+        Assert.Contains([1, 2, 3], s);
+        Assert.Contains([1, 3, 2], s);
+        Assert.Contains([2, 1, 3], s);
+        Assert.Contains([2, 3, 1], s);
+        Assert.Contains([3, 1, 2], s);
+        Assert.Contains([3, 2, 1], s);
     }
 
     [TestMethod]
@@ -201,14 +201,14 @@ public class PermutationTests
         Assert.AreEqual(6, cardinality);
 
         var p = Permutations.Of(source).ReifyList();
-        Assert.AreEqual(cardinality, p.Count);
+        Assert.HasCount(cardinality, p);
 
         var s = p
             .Select(x => x.ToArray())
             .ToMultiset(ArrayEqualityComparer<int>.Default);
 
         int distinctCardinality = cardinality / countOfDuplicateElements;
-        Assert.AreEqual(distinctCardinality, s.Count);
+        Assert.HasCount(distinctCardinality, s);
 
         { Assert.IsTrue(s.TryGetValue([1, 2, 2], out var count) && count == 2); }
         { Assert.IsTrue(s.TryGetValue([2, 1, 2], out var count) && count == 2); }
@@ -227,17 +227,17 @@ public class PermutationTests
         Assert.AreEqual(3, cardinality);
 
         var p = Permutations.Of(source).Distinct().ReifyCollection();
-        Assert.AreEqual(cardinality, p.Count);
+        Assert.HasCount(cardinality, p);
 
         var s = p
             .Select(x => x.ToArray())
             .ToHashSet(ArrayEqualityComparer<int>.Default);
 
-        Assert.AreEqual(cardinality, s.Count);
+        Assert.HasCount(cardinality, s);
 
-        Assert.IsTrue(s.Contains([1, 2, 2]));
-        Assert.IsTrue(s.Contains([2, 1, 2]));
-        Assert.IsTrue(s.Contains([2, 2, 1]));
+        Assert.Contains([1, 2, 2], s);
+        Assert.Contains([2, 1, 2], s);
+        Assert.Contains([2, 2, 1], s);
     }
 
     [TestMethod]
@@ -267,16 +267,16 @@ public class PermutationTests
         Assert.AreEqual(3, cardinality);
 
         var p = Enumerable.Distinct(Permutations.Of(source)).ReifyCollection();
-        Assert.AreEqual(cardinality, p.Count);
+        Assert.HasCount(cardinality, p);
 
         var s = p
             .Select(x => x.ToArray())
             .ToHashSet(ArrayEqualityComparer<int>.Default);
 
-        Assert.AreEqual(cardinality, s.Count);
+        Assert.HasCount(cardinality, s);
 
-        Assert.IsTrue(s.Contains([1, 2, 2]));
-        Assert.IsTrue(s.Contains([2, 1, 2]));
-        Assert.IsTrue(s.Contains([2, 2, 1]));
+        Assert.Contains([1, 2, 2], s);
+        Assert.Contains([2, 1, 2], s);
+        Assert.Contains([2, 2, 1], s);
     }
 }

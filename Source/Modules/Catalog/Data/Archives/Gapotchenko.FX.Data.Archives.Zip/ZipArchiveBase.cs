@@ -16,7 +16,7 @@ namespace Gapotchenko.FX.Data.Archives.Zip;
 /// This is an infrastructure type that should never be used by user code.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
-abstract class ZipArchiveBase : FileSystemViewKit, IZipArchive
+abstract class ZipArchiveBase : VirtualFileSystemKit, IZipArchive
 {
     private protected ZipArchiveBase()
     {
@@ -72,7 +72,4 @@ abstract class ZipArchiveBase : FileSystemViewKit, IZipArchive
             : (VfsPathKit.DirectorySeparatorChar + VfsPathKit.Join(parts));
 
     #endregion
-
-    /// <inheritdoc/>
-    public abstract void Dispose();
 }

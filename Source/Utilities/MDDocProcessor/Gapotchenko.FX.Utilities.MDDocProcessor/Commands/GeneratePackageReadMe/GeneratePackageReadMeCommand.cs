@@ -39,7 +39,7 @@ class GeneratePackageReadMeCommand
         string inputFilePath = args[0];
         string outputDirectoryPath = args[1];
 
-        if (options.Parse(args.Skip(2).ToArray()).Count != 0)
+        if (options.Parse([.. args.Skip(2)]).Count != 0)
             throw new Exception("Malformed command-line arguments.");
 
         var command = new GeneratePackageReadMeCommand(inputFilePath, outputDirectoryPath, commonlyUsedParts);
@@ -69,7 +69,9 @@ class GeneratePackageReadMeCommand
     {
         var md = Markdown.Parse(File.ReadAllText(m_InputFilePath), true);
 
-        var mdProcessor = new MarkdownProcessor(md, new Uri(m_InputFilePath));
+        var repositoryService = new RepositoryService(m_InputFilePath);
+
+        var mdProcessor = new MarkdownProcessor(md, new Uri(m_InputFilePath), repositoryService);
         mdProcessor.Run();
 
         Directory.CreateDirectory(m_OutputDirectoryPath);

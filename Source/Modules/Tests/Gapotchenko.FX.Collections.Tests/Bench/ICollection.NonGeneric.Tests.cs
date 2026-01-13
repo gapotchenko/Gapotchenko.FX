@@ -4,6 +4,8 @@ using System.Collections;
 using System.Text;
 using Xunit;
 
+using Assert = Xunit.Assert;
+
 #pragma warning disable IDE0040 // Add accessibility modifiers
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
 #pragma warning disable IDE1006 // Naming Styles
@@ -42,7 +44,7 @@ public abstract class ICollection_NonGeneric_Tests : IEnumerable_NonGeneric_Test
     protected virtual bool IsReadOnly => false;
     protected virtual bool NullAllowed => true;
     protected virtual bool ExpectedIsSynchronized => false;
-    protected virtual IEnumerable<object> InvalidValues => new object[0];
+    protected virtual IEnumerable<object> InvalidValues => [];
 
     protected abstract void AddToCollection(ICollection collection, int numberOfItemsToAdd);
 
@@ -103,7 +105,7 @@ public abstract class ICollection_NonGeneric_Tests : IEnumerable_NonGeneric_Test
 
     #region IEnumerable Helper Methods
 
-    protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => new List<ModifyEnumerable>();
+    protected override IEnumerable<ModifyEnumerable> GetModifyEnumerables(ModifyOperation operations) => [];
 
     protected override IEnumerable NonGenericIEnumerableFactory(int count) => NonGenericICollectionFactory(count);
 

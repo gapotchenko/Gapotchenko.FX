@@ -18,8 +18,7 @@ partial record SemanticVersion
     /// Converts the string representation of a semantic version to an equivalent <see cref="SemanticVersion"/> object.
     /// </summary>
     /// <param name="input">A string that contains a semantic version to convert.</param>
-    /// <returns>An object that is equivalent to the version string specified in the input parameter.</returns>
-    /// <exception cref="FormatException"><paramref name="input"/> string has an invalid format.</exception>
+    /// <inheritdoc cref="Parse(ReadOnlySpan{char})"/>
     [return: NotNullIfNotNull(nameof(input))]
     public static SemanticVersion? Parse(string? input) =>
         input is null ?
@@ -27,23 +26,46 @@ partial record SemanticVersion
             new(ParseCore(input));
 
     /// <summary>
+    /// Converts the specified read-only span of characters that represents a semantic version to an equivalent <see cref="SemanticVersion"/> object.
+    /// </summary>
+    /// <param name="input">A read-only span of characters that contains a semantic version to convert.</param>
+    /// <returns>An object that is equivalent to the semantic version specified in the <paramref name="input"/> parameter.</returns>
+    /// <exception cref="FormatException"><paramref name="input"/> has an invalid format.</exception>
+    public static SemanticVersion Parse(ReadOnlySpan<char> input) =>
+        new(ParseCore(input));
+
+    // ------------------------------------------------------------------------
+
+    /// <summary>
     /// Tries to convert the string representation of a semantic version to an equivalent <see cref="SemanticVersion"/> object,
     /// and returns a value that indicates whether the conversion succeeded.
     /// </summary>
     /// <param name="input">A string that contains a semantic version to convert.</param>
-    /// <param name="result">
-    /// When this method returns, contains the <see cref="SemanticVersion"/> equivalent of the version string specified in the input, if the conversion succeeded;
-    /// or null if the conversion failed.
-    /// </param>
-    /// <returns><c>true</c> if the input parameter was converted successfully; otherwise, <c>false</c>.</returns>
+    /// <inheritdoc cref="TryParse(ReadOnlySpan{char}, out SemanticVersion?)"/>
+    /// <param name="result"><inheritdoc/></param>
     public static bool TryParse([NotNullWhen(true)] string? input, [NotNullWhen(true)] out SemanticVersion? result) =>
         (result = TryParse(input)) is not null;
+
+    /// <summary>
+    /// Tries to convert the specified read-only span of characters that represents a semantic version to an equivalent <see cref="SemanticVersion"/> object,
+    /// and returns a value that indicates whether the conversion succeeded.
+    /// </summary>
+    /// <param name="input">A read-only span of characters that contains a semantic version to convert.</param>
+    /// <param name="result">
+    /// When this method returns, contains the <see cref="SemanticVersion"/> equivalent of the semantic version that is contained in <paramref name="input"/>, if the conversion succeeded;
+    /// or <see langword="null"/> if the conversion failed.
+    /// </param>
+    /// <returns><see langword="true"/> if the <paramref name="input"/> parameter was converted successfully; otherwise, <see langword="false"/>.</returns>
+    public static bool TryParse(ReadOnlySpan<char> input, [NotNullWhen(true)] out SemanticVersion? result) =>
+        (result = TryParse(input)) is not null;
+
+    // ------------------------------------------------------------------------
 
     /// <summary>
     /// Tries to convert the string representation of a semantic version to an equivalent <see cref="SemanticVersion"/> object.
     /// </summary>
     /// <param name="input">A string that contains a semantic version to convert.</param>
-    /// <returns>An object that is equivalent to the version string specified in the input parameter if conversion was successful; otherwise, null.</returns>
+    /// <inheritdoc cref="TryParse(ReadOnlySpan{char})"/>
     public static SemanticVersion? TryParse(string? input)
     {
         if (string.IsNullOrEmpty(input))
@@ -52,11 +74,24 @@ partial record SemanticVersion
             return Create(TryParseCore(input));
     }
 
-    static Model ParseCore(string input) =>
+    /// <summary>
+    /// Tries to convert the specified read-only span of characters that represents a semantic version to an equivalent <see cref="SemanticVersion"/> object.
+    /// </summary>
+    /// <param name="input">A read-only span of characters that contains a semantic version to convert.</param>
+    /// <returns>
+    /// An object that is equivalent to the semantic version specified in the <paramref name="input"/> parameter if conversion was successful;
+    /// otherwise, <see langword="null"/>.
+    /// </returns>
+    public static SemanticVersion? TryParse(ReadOnlySpan<char> input) =>
+        Create(TryParseCore(input));
+
+    // ------------------------------------------------------------------------
+
+    static Model ParseCore(ReadOnlySpan<char> input) =>
          Parser.TryParseVersion(input) ??
          throw new FormatException(Resources.SemanticVersionHasInvalidFormat);
 
-    static Model? TryParseCore(string input) => Parser.TryParseVersion(input);
+    static Model? TryParseCore(ReadOnlySpan<char> input) => Parser.TryParseVersion(input);
 
     /// <remarks>
     /// The parser implementation is based on regular expressions provided in the specification:
@@ -66,7 +101,7 @@ partial record SemanticVersion
     {
         #region Version
 
-        public static Model? TryParseVersion(string input)
+        public static Model? TryParseVersion(ReadOnlySpan<char> input)
         {
             if (input.Length < 5 /* 0.0.0 */ ||
                 !char.IsDigit(input[0]))
@@ -75,7 +110,7 @@ partial record SemanticVersion
                 return null;
             }
 
-            var match = GetVersionRegex().Match(input);
+            var match = GetVersionRegex().Match(input.ToString());
             if (!match.Success)
                 return null;
 
@@ -119,7 +154,7 @@ partial record SemanticVersion
 
         #endregion
 
-        #region Label component of the version
+        #region Label Component of The Version
 
         public static bool TryParseLabel(string label, out string? prerelease, out string? build)
         {
@@ -158,7 +193,7 @@ partial record SemanticVersion
 
         #endregion
 
-        #region Build metadata component of the label
+        #region Build Metadata Component of The Label
 
         public static bool IsValidBuild(string? value) => value is null || GetBuildRegex().IsMatch(value);
 
@@ -180,7 +215,7 @@ partial record SemanticVersion
 
         #endregion
 
-        #region Prerelease component of the label 
+        #region Prerelease Component of The Label 
 
         public static bool IsValidPrerelease(string? value) => value is null || GetPrereleaseRegex().IsMatch(value);
 
