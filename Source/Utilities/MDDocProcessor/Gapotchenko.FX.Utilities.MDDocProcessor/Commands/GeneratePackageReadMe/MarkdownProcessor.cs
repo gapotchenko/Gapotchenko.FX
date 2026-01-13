@@ -9,7 +9,10 @@ using System.Text.RegularExpressions;
 
 namespace Gapotchenko.FX.Utilities.MDDocProcessor.Commands.GeneratePackageReadMe;
 
-sealed class MarkdownProcessor(MarkdownDocument document, Uri baseUri)
+sealed class MarkdownProcessor(
+    MarkdownDocument document,
+    Uri baseUri,
+    RepositoryService repositoryService)
 {
     public void Run()
     {
@@ -108,7 +111,7 @@ sealed class MarkdownProcessor(MarkdownDocument document, Uri baseUri)
     public Uri? TryMapUri(Uri uri, RepositoryUriUsage usage)
     {
         var absoluteUri = new Uri(baseUri, uri);
-        var newUri = RepositoryService.TryMapUri(absoluteUri, usage);
+        var newUri = repositoryService.TryMapUri(absoluteUri, usage);
         if (newUri != null)
             return newUri;
 

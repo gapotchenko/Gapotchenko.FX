@@ -69,7 +69,9 @@ class GeneratePackageReadMeCommand
     {
         var md = Markdown.Parse(File.ReadAllText(m_InputFilePath), true);
 
-        var mdProcessor = new MarkdownProcessor(md, new Uri(m_InputFilePath));
+        var repositoryService = new RepositoryService(m_InputFilePath);
+
+        var mdProcessor = new MarkdownProcessor(md, new Uri(m_InputFilePath), repositoryService);
         mdProcessor.Run();
 
         Directory.CreateDirectory(m_OutputDirectoryPath);

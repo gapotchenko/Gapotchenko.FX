@@ -1,8 +1,8 @@
 ﻿namespace Gapotchenko.FX.Utilities.MDDocProcessor.Vcs;
 
-static class RepositoryService
+sealed class RepositoryService(string basePath)
 {
-    public static Uri? TryMapUri(Uri uri, RepositoryUriUsage usage)
+    public Uri? TryMapUri(Uri uri, RepositoryUriUsage usage)
     {
         string? localPath = null;
 
@@ -35,7 +35,7 @@ static class RepositoryService
         {
             // GitHub services like Wiki etc.
 
-            var baseUri = new Uri("https://github.com/" + RespositoryUriSuffix + "/tree/branch/");
+            var baseUri = new Uri("https://github.com/" + RepositoryUriSuffix + "/tree/branch/");
             var newUri = new Uri(baseUri, uri);
             return newUri;
         }
@@ -70,32 +70,32 @@ static class RepositoryService
 
             var baseUri = new Uri(
                 raw ?
-                    $"https://raw.githubusercontent.com/{RespositoryUriSuffix}/{Uri.EscapeDataString(OrigHead)}/" :
-                    $"https://github.com/{RespositoryUriSuffix}/{(blob ? "blob" : "tree")}/{Uri.EscapeDataString(OrigHead)}/"
+                    $"https://raw.githubusercontent.com/{RepositoryUriSuffix}/{Uri.EscapeDataString(OrigHead)}/" :
+                    $"https://github.com/{RepositoryUriSuffix}/{(blob ? "blob" : "tree")}/{Uri.EscapeDataString(OrigHead)}/"
                 );
             var newUri = new Uri(baseUri, new Uri(s, UriKind.Relative));
             return newUri;
         }
     }
 
-    const string RespositoryUriSuffix = "gapotchenko/Gapotchenko.FX";
+    const string RepositoryUriSuffix = "gapotchenko/Gapotchenko.FX";
 
-    static string OrigHead => m_CachedOrigHead ??= GetOrigHeadCore();
+    string OrigHead => m_CachedOrigHead ??= GetOrigHeadCore();
 
-    static string? m_CachedOrigHead;
+    string? m_CachedOrigHead;
 
-    static string GetOrigHeadCore() =>
+    string GetOrigHeadCore() =>
         File.ReadAllText(
             Path.Combine(RootPath, ".git", "ORIG_HEAD"))
         .Trim();
 
-    public static string RootPath => m_CachedRootPath ??= GetRootPathCore();
+    public string RootPath => m_CachedRootPath ??= GetRootPathCore();
 
-    static string? m_CachedRootPath;
+    string? m_CachedRootPath;
 
-    static string GetRootPathCore()
+    string GetRootPathCore()
     {
-        string path = typeof(RepositoryService).Assembly.Location;
+        string path = basePath;
 
         for (; ; )
         {

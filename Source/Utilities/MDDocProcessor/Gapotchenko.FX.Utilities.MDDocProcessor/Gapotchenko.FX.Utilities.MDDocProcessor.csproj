@@ -12,6 +12,10 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <NoWarn>$(NoWarn),SYSLIB1045</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Gapotchenko.FX" Version="2025.1.45" />
     <PackageReference Include="Gapotchenko.FX.Math" Version="2025.1.45" />
