@@ -39,7 +39,7 @@ class GeneratePackageReadMeCommand
         string inputFilePath = args[0];
         string outputDirectoryPath = args[1];
 
-        if (options.Parse(args.Skip(2).ToArray()).Count != 0)
+        if (options.Parse([.. args.Skip(2)]).Count != 0)
             throw new Exception("Malformed command-line arguments.");
 
         var command = new GeneratePackageReadMeCommand(inputFilePath, outputDirectoryPath, commonlyUsedParts);
