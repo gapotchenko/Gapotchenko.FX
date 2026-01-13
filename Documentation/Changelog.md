@@ -18,6 +18,8 @@ Release date: January 14, 2026
     - Added `System.Array.MaxLength` polyfill property
     - Added `System.IO.Stream` polyfill methods: `Read(Span<byte>)`, `ReadAsync(Memory<byte>, CancellationToken)`, `Write(ReadOnlySpan<byte>)`, `WriteAsync(ReadOnlyMemory<byte>, CancellationToken)`
     - Added `System.IO.TextWriter` polyfill methods: `Write(ReadOnlySpan<char>)`, `WriteLine(ReadOnlySpan<char>)`, `WriteAsync(ReadOnlyMemory<char>, CancellationToken)`, and `WriteLineAsync(ReadOnlyMemory<char>, CancellationToken)`
+- Fixed issues:
+    - Fixed culture-specific interval formatting
 - Retired support for target .NET Core frameworks older then .NET 8.0
 
 ## 2025

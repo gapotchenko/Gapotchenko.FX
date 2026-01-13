@@ -307,14 +307,14 @@ static class IntervalEngine
         where TInterval : IIntervalOperations<TValue> =>
         format switch
         {
-            "G" or "" or null => ToString<TInterval, TValue>(interval),
+            "G" or "" or null => ToString<TInterval, TValue>(interval, formatProvider),
             "U" => ToStringCore<TInterval, TValue>(interval, "∅", "∞", formatProvider),
             _ => throw new FormatException()
         };
 
-    public static string ToString<TInterval, TValue>(in TInterval interval)
+    public static string ToString<TInterval, TValue>(in TInterval interval, IFormatProvider? formatProvider = null)
         where TInterval : IIntervalOperations<TValue> =>
-        ToStringCore<TInterval, TValue>(interval, "{}", "inf", null);
+        ToStringCore<TInterval, TValue>(interval, "{}", "inf", formatProvider);
 
     static string ToStringCore<TInterval, TValue>(in TInterval interval, string emptySymbol, string infinitySymbol, IFormatProvider? formatProvider)
         where TInterval : IIntervalOperations<TValue>

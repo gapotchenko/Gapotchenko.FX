@@ -5,6 +5,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
+using System.Globalization;
+
 namespace Gapotchenko.FX.Math.Intervals.Tests;
 
 partial class IntervalCoreTests
@@ -25,5 +27,13 @@ partial class IntervalCoreTests
 
         Assert.AreEqual("{}", interval.ToString());
         Assert.AreEqual("∅", interval.ToString("U", null));
+    }
+
+    [TestMethod]
+    public void Interval_Core_ToString_CultureSpecific()
+    {
+        var interval = NewInterval(ValueInterval.Inclusive(10.5f, 20.3f));
+
+        Assert.AreEqual("[10.5,20.3]", interval.ToString(null, CultureInfo.InvariantCulture));
     }
 }
