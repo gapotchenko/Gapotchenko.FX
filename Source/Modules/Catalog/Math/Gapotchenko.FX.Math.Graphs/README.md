@@ -220,7 +220,7 @@ string seq = "ABCDEF";
 static bool df(char a, char b) => (a, b) is ('A', 'B') or ('B', 'D');
 
 var ordering = seq.OrderTopologicallyBy(x => x, df);
-Console.WriteLine(string.Join(", ", ordering));  // <- prints "D, B, A, C, E, F"
+Console.WriteLine(string.Join(", ", ordering));  // "D, B, A, C, E, F"
 ```
 
 Unlike its graph sibling, `IEnumerable<T>.OrderTopologicallyBy` extension method tolerates circular dependencies by ignoring them.
