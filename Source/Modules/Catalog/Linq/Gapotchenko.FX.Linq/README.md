@@ -62,7 +62,7 @@ In practice, `ScalarOrDefault()` semantics is a big win as it allows you to _saf
 
 Returns distinct elements from a sequence by using the default equality comparer on the keys extracted by a specified selector function.
 
-The method is similar to `Distinct()` method provided by the stock `System.Linq` namespace, but allows to specify a selector function in order to differentiate the elements by a specific criteria.
+The method is similar to `Distinct()` method provided in the stock `System.Linq` namespace, but allows to specify a selector function in order to differentiate the elements by a specific criteria.
 
 Let's take a look at example:
 
