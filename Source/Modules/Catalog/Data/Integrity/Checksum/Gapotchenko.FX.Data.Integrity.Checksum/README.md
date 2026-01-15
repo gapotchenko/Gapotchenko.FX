@@ -61,7 +61,7 @@ Console.WriteLine("The checksum is {0}.", checksum);
 ## Checksum Algorithms
 
 `Gapotchenko.FX.Data.Integrity.Checksum` module provides only the framework for checksum algorithm implementations.
-If you want to use a ready-to-use checksum algorithm, Gapotchenko.FX provides quite a few out of the box:
+If you want to use a ready-to-use implementation, Gapotchenko.FX provides quite a few out of the box:
 
 | Algorithm Family    | Module                                                                                                 | Provided Algorithms |
 | ------------------- | ------------------------------------------------------------------------------------------------------ | ------------------- |
