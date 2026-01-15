@@ -219,7 +219,7 @@ string seq = "ABCDEF";
 // 'A' depends on 'B', and 'B' depends on 'D'.
 static bool df(char a, char b) => (a, b) is ('A', 'B') or ('B', 'D');
 
-var ordering = seq.OrderTopologicallyBy(x => x, df);
+var ordering = seq.OrderTopologically(df);
 Console.WriteLine(string.Join(", ", ordering));  // "D, B, A, C, E, F"
 ```
 
