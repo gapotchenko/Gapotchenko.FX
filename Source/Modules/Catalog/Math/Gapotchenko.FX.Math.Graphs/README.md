@@ -223,7 +223,7 @@ var ordering = seq.OrderTopologically(df);
 Console.WriteLine(string.Join(", ", ordering));  // "D, B, A, C, E, F"
 ```
 
-Unlike its graph sibling, `IEnumerable<T>.OrderTopologicallyBy` extension method tolerates circular dependencies by ignoring them.
+Unlike its graph sibling, `IEnumerable<T>.OrderTopologically` method tolerates circular dependencies by ignoring them.
 They are resolved according to the original order of elements in the sequence.
 
 `OrderTopologicallyBy` method allows a subsequent sorting by following the standard `IOrderedEnumerable<T>` LINQ convention:
