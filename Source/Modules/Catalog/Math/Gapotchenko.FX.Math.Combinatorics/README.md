@@ -14,7 +14,7 @@ Let's take a look at the sample code:
 ``` C#
 using Gapotchenko.FX.Math.Combinatorics;
 
-var seq = new[] { "A", "B", "C" };
+string[] seq = ["A", "B", "C"];
 
 foreach (var i in Permutations.Of(seq))
     Console.WriteLine(string.Join(" ", i));
@@ -39,7 +39,7 @@ e.g. if the input sequence contains some duplicates, there will be duplicate per
 Let's see an example of non-unique permutations:
 
 ``` C#
-var seq = new[] { 1, 2, 1 };
+int[] seq = [1, 2, 1];
 
 foreach (var i in Permutations.Of(seq))
     Console.WriteLine(string.Join(" ", i.Select(x => x.ToString())));
@@ -59,7 +59,7 @@ The output contains some duplicates, which is expected:
 But if you want to get the *unique permutations*, there exists a straightforward way (note the `Distinct` operation):
 
 ``` C#
-var seq = new[] { 1, 2, 1 };
+int[] seq = [1, 2, 1];
 
 foreach (var i in Permutations.Of(seq).Distinct())
     Console.WriteLine(string.Join(" ", i.Select(x => x.ToString())));
@@ -111,8 +111,8 @@ Another widespread combinatorial primitive is a Cartesian product:
 ``` C#
 using Gapotchenko.FX.Math.Combinatorics;
 
-var seq1 = new[] { "1", "2" };
-var seq2 = new[] { "A", "B", "C" };
+string[] seq1 = ["1", "2"];
+string[] seq2 = ["A", "B", "C"];
 
 foreach (var i in CartesianProduct.Of(seq1, seq2))
     Console.WriteLine(string.Join(" ", i));
@@ -137,7 +137,7 @@ but the `IEnumerable<T>.CrossJoin(...)` extension method for LINQ is also availa
 ``` C#
 using Gapotchenko.FX.Math.Combinatorics;
 
-foreach (var i in new[] { "1", "2" }.CrossJoin(new[] { "A", "B", "C" }))
+foreach (var i in new[] { "1", "2" }.CrossJoin(["A", "B", "C"]))
     // ...
 ```
 
