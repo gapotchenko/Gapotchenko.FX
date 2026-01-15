@@ -73,7 +73,7 @@ var source = new[]
 {
     new { FirstName = "Alex", LastName = "Cooper" },
     new { FirstName = "John", LastName = "Walker" },
-    new { FirstName = "Pauline", LastName = "Singer" },
+    new { FirstName = "Alex", LastName = "Lememe" },
     new { FirstName = "Jeremy", LastName = "Doer" }
 };
 
@@ -104,7 +104,6 @@ var source = new[]
 {
     new { FirstName = "Alex", LastName = "Cooper", Age = 45 },
     new { FirstName = "John", LastName = "Walker", Age = 17 },
-    new { FirstName = "Alex", LastName = "The Great", Age = 1500 },
     new { FirstName = "Jeremy", LastName = "Doer", Age = 29 }
 };
 
@@ -115,7 +114,7 @@ Console.WriteLine("The youngest person: {0}", source.MinBy(x => x.Age));
 The code produces the following output:
 
 ```
-The oldest person: { FirstName = Alex, LastName = The Great, Age = 1500 }
+The oldest person: { FirstName = Alex, LastName = The Great, Age = 45 }
 The youngest person: { FirstName = John, LastName = Walker, Age = 17 }
 ```
 
