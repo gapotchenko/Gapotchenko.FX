@@ -126,7 +126,7 @@ They all work in the same manner and follow the same mutable/immutable model:
 | **Subgraph** | Produces a vertex-induced or edge-induced subgraph. | `GetSubgraph` | `Subgraph` |
 | **Intersection** | Produces a graph containing vertices and edges that are present in both the current and a specified graphs. | `Intersect` | `IntersectWith` |
 | **Union** | Produces a graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both. | `Union` | `UnionWith` |
-| **Exception** | Produces a  graph containing vertices and edges that are present in the current graph but not in the specified graph. | `Except` | `ExceptWith` |
+| **Exclusion** | Produces a  graph containing vertices and edges that are present in the current graph but not in the specified graph. | `Except` | `ExceptWith` |
 
 ### Topological Sorting
 
