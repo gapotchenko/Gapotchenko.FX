@@ -95,7 +95,7 @@ the algorithm complexity stays at bay thanks to the built-in optimizer that auto
 ### Permutations in LINQ
 
 `Permutations.Of(...)` is an explicit form of producing the permutations,
-but the `IEnumerable<T>.Permute()` extension method for LINQ is also available as a part of `Gapotchenko.FX.Math.Combinatorics` fluent API:
+but the `IEnumerable<T>.Permute()` extension method for LINQ is also available as part of `Gapotchenko.FX.Math.Combinatorics` fluent API:
 
 ``` C#
 using Gapotchenko.FX.Math.Combinatorics;
