@@ -73,7 +73,7 @@ var source = new[]
 {
     new { FirstName = "Alex", LastName = "Cooper" },
     new { FirstName = "John", LastName = "Walker" },
-    new { FirstName = "Paul", LastName = "Singer" },
+    new { FirstName = "Pauline", LastName = "Singer" },
     new { FirstName = "Jeremy", LastName = "Doer" }
 };
 
