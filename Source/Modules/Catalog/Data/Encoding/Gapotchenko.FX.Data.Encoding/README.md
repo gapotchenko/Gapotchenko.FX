@@ -7,12 +7,12 @@ It supports both synchronous and asynchronous data processing models, including 
 
 The module serves as the implementation basis for a variety of popular encodings: [Base16](../Gapotchenko.FX.Data.Encoding.Base16#readme), [Base32](../Gapotchenko.FX.Data.Encoding.Base32#readme), [Base64](../Gapotchenko.FX.Data.Encoding.Base64#readme), and others.
 
-## ITextDataEncoding
+## `ITextDataEncoding`
 
 This is the root interface provided by a binary-to-text data encoding algorithm.
 The interface has several notable methods.
 
-### GetString(ReadOnlySpan&lt;byte&gt; data)
+### `GetString(ReadOnlySpan<byte> data)`
 
 This method encodes all the bytes in the specified span into a string.
 
@@ -50,7 +50,7 @@ The output:
 Note that the output now contains space separators (indentations) between the encoded data values.
 Not all encodings support indentation so `Indent` option flag may be ignored by some of them.
 
-### GetBytes(ReadOnlySpan&lt;char&gt; s)
+### `GetBytes(ReadOnlySpan<char> s)`
 
 The method decodes all the characters in the specified read-only span into a byte array.
 In this way, `GetBytes` method performs a reverse operation to `GetString`.
@@ -74,7 +74,7 @@ producing the following output:
 10
 ```
 
-### CreateEncoder(TextWriter textWriter)
+### `CreateEncoder(TextWriter textWriter)`
 
 The method creates a streaming encoder for the specified binary-to-text data encoding.
 
@@ -112,7 +112,7 @@ The output:
 
 It is worth mentioning that the streaming encoder also supports the asynchronous operations.
 
-### CreateDecoder(TextReader textReader)
+### `CreateDecoder(TextReader textReader)`
 
 The method creates a streaming decoder for the specified binary-to-text data encoding.
 It can be viewed as a reverse operation to `CreateEncoder` and it fully supports the asynchronous operations as well.
