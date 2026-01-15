@@ -24,7 +24,7 @@ iterator.ComputeBlock(...); // block 1
 iterator.ComputeBlock(...); // block N
 
 // Compute the final checksum:
-byte[] checksum = iterator.ComputeFinal();
+var checksum = iterator.ComputeFinal();
 ```
 
 ## Available CRC-32 Algorithms
@@ -46,10 +46,10 @@ The `check` parameter shows what checksum value an algorithm should produce for 
 
 ``` C#
 // Get a byte representation of the string.
-byte[] data = Encoding.ASCII.GetBytes("123456789");
+var data = Encoding.ASCII.GetBytes("123456789");
 
 // Compute a CRC-32 checksum.
-byte[] checksum = Crc32.Standard.ComputeChecksum(data);
+var checksum = Crc32.Standard.ComputeChecksum(data);
 
 // Print out the result ("Checksum=0xcbf43926" for standard CRC-32).
 Console.WriteLine("Checksum=0x{0:x}", checksum);
