@@ -43,7 +43,7 @@ using System.Linq;
 
 new string[0].SingleOrDefault(); // returns null
 new[] { "A" }.SingleOrDefault(); // returns "A"
-new[] { "A", "B" }.SingleOrDefault(); // throws an exception 😞
+new[] { "A", "B" }.SingleOrDefault(); // throws an exception 🚫
 ```
 
 ### *Scalar*OrDefault() Semantics
@@ -53,7 +53,7 @@ using Gapotchenko.FX.Linq;
 
 new string[0].ScalarOrDefault(); // returns null
 new[] { "A" }.ScalarOrDefault(); // returns "A"
-new[] { "A", "B" }.ScalarOrDefault(); // returns null 👍
+new[] { "A", "B" }.ScalarOrDefault(); // returns null ✅
 ```
 
 In practice, `ScalarOrDefault()` semantics is a big win as it allows you to _safely_ determine whether a given query converges to a scalar result.
