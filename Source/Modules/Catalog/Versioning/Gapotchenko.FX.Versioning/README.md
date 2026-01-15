@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Versioning.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Versioning)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Versioning.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Versioning)
 
-The module provides polyfills and extensions for the `System.Version` class.
+The module provides functionality for working with versions.
 
 ## VersionConverter
 
