@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Diagnostics.CommandShell.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Diagnostics.CommandShell)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Diagnostics.CommandShell.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Diagnostics.CommandShell)
 
-The module provides command shell operations for locating executable files in the system.
+The module provides OS command shell functionality.
 
 ## CommandShell
 
