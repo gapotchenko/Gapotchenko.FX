@@ -216,6 +216,7 @@ using Gapotchenko.FX.Math.Graphs;
 string seq = "ABCDEF";
 
 // Dependency function.
+// 'A' depends on 'B', and 'B' depends on 'D'.
 static bool df(char a, char b) => (a, b) is ('A', 'B') or ('B', 'D');
 
 var ordering = seq.OrderTopologicallyBy(x => x, df);
