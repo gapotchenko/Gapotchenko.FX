@@ -5,7 +5,7 @@
 The module provides a quasi-universal framework for cyclic redundancy checking algorithms.
 It supports both synchronous and asynchronous data processing including iterative checksum computation.
 
-## IChecksumAlgorithm&lt;T&gt;
+## `IChecksumAlgorithm<T>`
 
 This is the root interface provided by a checksum algorithm.
 The generic parameter `T` defines the data type of a checksum value.
@@ -13,7 +13,7 @@ For example, `System.UInt32` would be the type `T` for a CRC-32 algorithm.
 
 Checksum algorithm interface provides several notable methods.
 
-### ComputeChecksum(ReadOnlySpan&lt;byte&gt; data)
+### `ComputeChecksum(ReadOnlySpan<byte> data)`
 
 The method allows to compute a checksum value for the specified byte span.
 This is the most widely used operation.
@@ -25,7 +25,7 @@ var checksum = checksumAlgorithm.ComputeChecksum(data);
 Console.WriteLine("The array checksum is {0}.", checksum);
 ```
 
-### ComputeChecksum(Stream stream)
+### `ComputeChecksum(Stream stream)`
 
 The method computes the checksum for the specified `System.IO.Stream` object.
 This operation is useful for computing a checksum for a file or any other data stream in one go.
@@ -37,7 +37,7 @@ var checksum = checksumAlgorithm.ComputeChecksum(file);
 Console.WriteLine("The file checksum is {0}.", checksum);
 ```
 
-### CreateIterator()
+### `CreateIterator()`
 
 Sometimes the checksum computation cannot be performed in one go, and should be performed in chunks.
 That's why every checksum algorithm provides `CreateIterator()` method.
