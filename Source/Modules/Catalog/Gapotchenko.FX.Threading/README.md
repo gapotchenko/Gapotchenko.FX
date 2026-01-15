@@ -6,7 +6,7 @@
 
 The module provides complementary primitives for multithreaded and asynchronous programming in .NET.
 
-## `TaskBridge`
+## TaskBridge
 
 `TaskBridge` class from `Gapotchenko.FX.Threading` module provides seamless interoperability between synchronous and asynchronous code execution models.
 
@@ -154,7 +154,7 @@ If you are interested in gory implementation details, you are welcome to take a 
 
 </details>
 
-### `AsyncLock`
+### AsyncLock
 
 `Gapotchenko.FX.Threading.AsyncLock` represents a **reentrant** synchronization primitive
 that ensures that only one task or thread can access a resource at any given time:
@@ -210,7 +210,7 @@ using (await lockObj.EnterScopeAsync())
 `Gapotchenko.FX.Threading.AsyncLock` is an asynchronous equivalent of [`System.Threading.Lock`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.lock) class.
 The `AsyncLock` class supports both synchronous and asynchronous operations, so it can be used simultaneously by synchronous and asynchronous parts of the code.
 
-### `AsyncCriticalSection`
+### AsyncCriticalSection
 
 `Gapotchenko.FX.Threading.AsyncCriticalSection` represents a **non-reentrant** synchronization primitive
 that ensures that only one task or thread can access a resource at any given time.
@@ -231,7 +231,7 @@ using (await cs.EnterScopeAsync())
 The benefit of using `AsyncCriticalSection` in comparison to `AsyncLock` is that the former uses fewer computational resources because it has no need to track reentrancy.
 So if you know that your algorithm does not require recursive locking, using `AsyncCriticalSection` is more preferable.
 
-### `AsyncManualResetEvent`
+### AsyncManualResetEvent
 
 `Gapotchenko.FX.Threading.AsyncManualResetEvent` represents a synchronization primitive that, when signaled, allows one or more tasks waiting on it to proceed.
 `AsyncManualResetEvent` must be reset manually.
@@ -239,7 +239,7 @@ So if you know that your algorithm does not require recursive locking, using `As
 This is an asynchronous equivalent of [`System.Threading.ManualResetEvent`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.manualresetevent) class.
 The `AsyncManualResetEvent` class supports both synchronous and asynchronous operations.
 
-### `AsyncAutoResetEvent`
+### AsyncAutoResetEvent
 
 `Gapotchenko.FX.Threading.AsyncAutoResetEvent` represents a synchronization primitive that, when signaled, allows one or more tasks waiting on it to proceed.
 `AsyncAutoResetEvent` resets automatically after releasing a single waiting task.
@@ -247,7 +247,7 @@ The `AsyncManualResetEvent` class supports both synchronous and asynchronous ope
 This is an asynchronous equivalent of [`System.Threading.AutoResetEvent`](https://learn.microsoft.com/en-us/dotnet/api/system.threading.autoresetevent) class.
 The `AsyncAutoResetEvent` class supports both synchronous and asynchronous operations.
 
-### `AsyncMonitor`
+### AsyncMonitor
 
 `Gapotchenko.FX.Threading.AsyncMonitor` represents a reentrant concurrency primitive that provides a mechanism that synchronizes access to objects:
 
