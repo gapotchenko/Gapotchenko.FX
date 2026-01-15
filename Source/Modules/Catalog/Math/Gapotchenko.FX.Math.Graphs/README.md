@@ -5,7 +5,7 @@
 
 The module provides data structures and primitives for working with abstract graphs of objects.
 
-## Graph&lt;T&gt;
+## `Graph<T>`
 
 `Graph<T>` class provided by `Gapotchenko.FX.Math.Graphs` represents a strongly-typed graph of objects.
 The objects stored in a graph are called vertices and each of the related pairs of vertices is called an edge.
