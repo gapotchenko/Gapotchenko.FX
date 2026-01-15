@@ -7,11 +7,11 @@ It supports both synchronous and asynchronous data processing including iterativ
 
 ## `IChecksumAlgorithm<T>`
 
-This is the root interface provided by a checksum algorithm.
-The generic parameter `T` defines the data type of a checksum value.
+Defines the root interface of a checksum algorithm.
+The generic parameter `T` specifies the data type of a checksum value.
 For example, `System.UInt32` would be the type `T` for a CRC-32 algorithm.
 
-Checksum algorithm interface provides several notable methods.
+The checksum algorithm interface provides several notable methods presented below.
 
 ### `ComputeChecksum(ReadOnlySpan<byte> data)`
 
