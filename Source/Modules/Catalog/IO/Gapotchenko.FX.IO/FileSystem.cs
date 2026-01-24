@@ -452,10 +452,10 @@ public static class FileSystem
     }
 
     /// <summary>
-    /// Gets the size of a file.
+    /// Gets a size of the specified file.
     /// </summary>
     /// <param name="path">The file path.</param>
-    /// <returns>The size of a file.</returns>
+    /// <returns>A size of the file.</returns>
     public static long GetFileSize(string path)
     {
         // TODO: Use native API to eliminate object allocation.
