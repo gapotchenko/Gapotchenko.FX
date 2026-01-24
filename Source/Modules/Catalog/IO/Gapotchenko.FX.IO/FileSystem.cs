@@ -200,8 +200,8 @@ public static class FileSystem
     /// </remarks>
     /// <param name="path">The path to split.</param>
     /// <returns>
-    /// A sequence of file-system entry names.
-    /// The sequence is empty if <paramref name="path"/> is <see langword="null"/> or empty.
+    /// A sequence of file-system entry names,
+    /// or empty sequence if <paramref name="path"/> is <see langword="null"/> or empty.
     /// </returns>
     public static IEnumerable<string> SplitPath(string? path) =>
         EnumerateSubpaths(path)
