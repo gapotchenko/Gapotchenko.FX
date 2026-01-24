@@ -78,7 +78,16 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
         EnsureCanRead();
 
-        return GetFileArchiveEntry(path).Length;
+        var entry = GetFileArchiveEntry(path);
+        try
+        {
+            return entry.Length;
+        }
+        catch (InvalidOperationException)
+        {
+            using var stream = entry.Open();
+            return stream.Length;
+        }
     }
 
     public override Stream ReadFile(string path)
