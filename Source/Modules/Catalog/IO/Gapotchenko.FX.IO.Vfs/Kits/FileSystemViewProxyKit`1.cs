@@ -1,4 +1,4 @@
-﻿// Gapotchenko.FX
+// Gapotchenko.FX
 //
 // Copyright © Gapotchenko and Contributors
 //
@@ -88,6 +88,13 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     /// <inheritdoc/>
     public virtual IAsyncEnumerable<string> EnumerateFilesAsync(string path, string searchPattern, EnumerationOptions enumerationOptions, CancellationToken cancellationToken = default) =>
         BaseView.EnumerateFilesAsync(path, searchPattern, enumerationOptions, cancellationToken);
+
+    /// <inheritdoc/>
+    public virtual long GetFileSize(string path) => BaseView.GetFileSize(path);
+
+    /// <inheritdoc/>
+    public virtual Task<long> GetFileSizeAsync(string path, CancellationToken cancellationToken = default) =>
+        BaseView.GetFileSizeAsync(path, cancellationToken);
 
     /// <inheritdoc/>
     public virtual Stream ReadFile(string path) => BaseView.ReadFile(path);

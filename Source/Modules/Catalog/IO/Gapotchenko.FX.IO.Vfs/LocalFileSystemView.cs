@@ -1,4 +1,4 @@
-﻿// Gapotchenko.FX
+// Gapotchenko.FX
 //
 // Copyright © Gapotchenko and Contributors
 //
@@ -53,6 +53,8 @@ sealed class LocalFileSystemView : FileSystemViewKit
     public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
         Directory.EnumerateFiles(path, searchPattern, enumerationOptions);
 #endif
+
+    public override long GetFileSize(string path) => FileSystem.GetFileSize(path);
 
     public override Stream ReadFile(string path) => File.OpenRead(path);
 

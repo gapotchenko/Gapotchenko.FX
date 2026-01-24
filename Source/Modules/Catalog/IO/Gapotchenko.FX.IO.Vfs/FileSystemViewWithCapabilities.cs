@@ -1,4 +1,4 @@
-﻿// Gapotchenko.FX
+// Gapotchenko.FX
 //
 // Copyright © Gapotchenko and Contributors
 //
@@ -102,6 +102,18 @@ sealed class FileSystemViewWithCapabilities(IFileSystemView baseView, bool canRe
     {
         EnsureCanRead();
         return base.EnumerateFilesAsync(path, searchPattern, enumerationOptions, cancellationToken);
+    }
+
+    public override long GetFileSize(string path)
+    {
+        EnsureCanRead();
+        return base.GetFileSize(path);
+    }
+
+    public override Task<long> GetFileSizeAsync(string path, CancellationToken cancellationToken = default)
+    {
+        EnsureCanRead();
+        return base.GetFileSizeAsync(path, cancellationToken);
     }
 
     public override Stream ReadFile(string path)

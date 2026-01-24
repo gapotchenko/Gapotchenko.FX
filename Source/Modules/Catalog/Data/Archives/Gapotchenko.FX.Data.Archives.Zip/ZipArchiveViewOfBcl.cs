@@ -60,6 +60,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     public override bool FileExists([NotNullWhen(true)] string? path)
     {
         EnsureCanRead();
+
         return FileExistsCore(path);
     }
 
@@ -71,11 +72,21 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions) =>
         EnumerateEntriesImpl(path, searchPattern, enumerationOptions, true, false);
 
+    public override long GetFileSize(string path)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanRead();
+
+        return GetFileArchiveEntry(path).Length;
+    }
+
     public override Stream ReadFile(string path)
     {
         VfsValidationKit.Arguments.ValidatePath(path);
 
         EnsureCanRead();
+
         return StreamView.WithCapabilities(
             GetFileArchiveEntry(path).Open(),
             true, false, true);
@@ -120,6 +131,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
         VfsValidationKit.Arguments.ValidatePath(path);
 
         EnsureCanWrite();
+
         DeleteFileCore(path);
     }
 
@@ -216,6 +228,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     public override bool DirectoryExists([NotNullWhen(true)] string? path)
     {
         EnsureCanRead();
+
         return DirectoryExistsCore(path);
     }
 
@@ -263,6 +276,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
         VfsValidationKit.Arguments.ValidatePath(path);
 
         EnsureCanWrite();
+
         DeleteDirectoryCore(path, recursive);
     }
 

@@ -1,4 +1,4 @@
-﻿// Gapotchenko.FX
+// Gapotchenko.FX
 //
 // Copyright © Gapotchenko and Contributors
 // Portions © .NET Foundation and its Licensors
@@ -143,6 +143,13 @@ public abstract class FileSystemViewKit : IFileSystemView
 
         return EnumerateEntriesCoreAsync(path, searchPattern, enumerationOptions, true, false, cancellationToken);
     }
+
+    /// <inheritdoc/>
+    public virtual long GetFileSize(string path) => throw new NotSupportedException();
+
+    /// <inheritdoc/>
+    public virtual Task<long> GetFileSizeAsync(string path, CancellationToken cancellationToken = default) =>
+        TaskBridge.ExecuteAsync(() => GetFileSize(path), cancellationToken);
 
     /// <inheritdoc/>
     public virtual Stream ReadFile(string path) =>

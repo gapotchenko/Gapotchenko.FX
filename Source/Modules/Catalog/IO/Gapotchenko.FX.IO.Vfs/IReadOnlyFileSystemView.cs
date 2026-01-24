@@ -1,4 +1,4 @@
-﻿// Gapotchenko.FX
+// Gapotchenko.FX
 //
 // Copyright © Gapotchenko and Contributors
 // Portions © .NET Foundation and its Licensors
@@ -152,6 +152,32 @@ public interface IReadOnlyFileSystemView
         string searchPattern,
         EnumerationOptions enumerationOptions,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets the size, in bytes, of the specified file.
+    /// </summary>
+    /// <param name="path">The file path.</param>
+    /// <returns>The size, in bytes, of the file.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="path"/> does not contain a valid path.</exception>
+    /// <exception cref="FileNotFoundException">The file specified by <paramref name="path"/> does not exist.</exception>
+    /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> is invalid, such as referring to an unmapped drive.</exception>
+    /// <exception cref="IOException">An I/O error occurred while accessing the file.</exception>
+    /// <exception cref="PathTooLongException">The specified path, file name, or combined exceed the file system-defined maximum length.</exception>
+    /// <exception cref="UnauthorizedAccessException">The caller does not have the required permissions.</exception>
+    long GetFileSize(string path);
+
+    /// <summary>
+    /// Asynchronously gets the size, in bytes, of the specified file.
+    /// </summary>
+    /// <inheritdoc cref="GetFileSize(string)"/>
+    /// <param name="path"><inheritdoc/></param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains the size, in bytes, of the file.
+    /// </returns>
+    Task<long> GetFileSizeAsync(string path, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Opens an existing file for reading.
