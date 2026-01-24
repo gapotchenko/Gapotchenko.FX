@@ -24,7 +24,7 @@ sealed class SemanticVersionJsonConverter : JsonConverter<SemanticVersion>
         {
             return SemanticVersion.Parse(value);
         }
-        catch (Exception e) when (!e.IsControlFlowException())
+        catch (FormatException e)
         {
             throw new JsonException($"Invalid semantic version '{value}'.", e);
         }
