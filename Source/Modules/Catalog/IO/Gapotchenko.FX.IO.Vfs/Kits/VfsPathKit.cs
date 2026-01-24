@@ -94,8 +94,8 @@ public static class VfsPathKit
     /// <param name="path">The path to split.</param>
     /// <param name="directorySeparatorChar">The directory separator character.</param>
     /// <returns>
-    /// A sequence of file-system entry names.
-    /// The sequence is empty if <paramref name="path"/> is <see langword="null"/> or empty.
+    /// A sequence of file-system entry names,
+    /// or empty sequence if <paramref name="path"/> is <see langword="null"/> or empty.
     /// </returns>
     public static IEnumerable<string> Decompose(string? path, char directorySeparatorChar) =>
         EnumerateSubpaths(path, directorySeparatorChar)
@@ -103,10 +103,10 @@ public static class VfsPathKit
         .Select(
             subpath =>
             {
-                if (GetFileName(subpath.AsSpan(), directorySeparatorChar) is var part && !part.IsEmpty)
+                if (GetFileName(subpath, directorySeparatorChar) is var part && !part.IsEmpty)
                     return part.ToString();
                 else
-                    return GetDirectoryName(subpath.AsSpan(), directorySeparatorChar) == null ? subpath : subpath[^1..^0];
+                    return GetDirectoryName(subpath, directorySeparatorChar) == null ? subpath : subpath[^1..^0];
             });
 
     /// <summary>
@@ -126,8 +126,8 @@ public static class VfsPathKit
     /// <returns>The sequence of subpaths of the specified path.</returns>
     static IEnumerable<string> EnumerateSubpaths(string? path, char directorySeparatorChar)
     {
-        for (string? i = path; !string.IsNullOrEmpty(i); i = GetDirectoryName(i.AsSpan(), directorySeparatorChar).ToNullableString())
-            yield return i.ToString();
+        for (string? i = path; !string.IsNullOrEmpty(i); i = GetDirectoryName(i, directorySeparatorChar).ToNullableString())
+            yield return i;
     }
 
     /// <summary>
@@ -197,7 +197,10 @@ public static class VfsPathKit
                 ch = directorySeparatorChar;
 
             if (prevChar is { } prev && ch == directorySeparatorChar && ch == prev)
+            {
+                // Skip adjacent directory separators.
                 continue;
+            }
 
             prevChar = ch;
             sb.Append(ch);
@@ -280,7 +283,7 @@ public static class VfsPathKit
         else if (IsDirectorySeparator(path[0], directorySeparatorChar))
             return path[..1];
         else
-            return string.Empty.AsSpan();
+            return string.Empty;
     }
 
     /// <summary>
