@@ -13,7 +13,7 @@ using System.Text.Json.Serialization;
 
 namespace Gapotchenko.FX.Math.Intervals;
 
-sealed class IntervalJsonConverterFactory : BaseIntervalJsonConverterFactory
+sealed class IntervalJsonConverterFactory : IntervalJsonConverterFactoryBase
 {
     public IntervalJsonConverterFactory() :
         base(typeof(Interval<>), typeof(IntervalJsonConverter<>))
@@ -23,11 +23,11 @@ sealed class IntervalJsonConverterFactory : BaseIntervalJsonConverterFactory
     sealed class IntervalJsonConverter<T> : BaseIntervalJsonConverter<Interval<T>>
     {
         [return: NotNullIfNotNull(nameof(value))]
-        protected override Interval<T>? ParseInterval(string? value, IFormatProvider provider) => Interval.Parse<T>(value, provider);
+        protected override Interval<T> ParseInterval(string value, IFormatProvider provider) => Interval.Parse<T>(value, provider);
     }
 }
 
-sealed class ValueIntervalJsonConverterFactory : BaseIntervalJsonConverterFactory
+sealed class ValueIntervalJsonConverterFactory : IntervalJsonConverterFactoryBase
 {
     public ValueIntervalJsonConverterFactory() :
         base(typeof(ValueInterval<>), typeof(ValueIntervalJsonConverter<>))
@@ -38,11 +38,11 @@ sealed class ValueIntervalJsonConverterFactory : BaseIntervalJsonConverterFactor
          where T : IEquatable<T>?, IComparable<T>?
     {
         [return: NotNullIfNotNull(nameof(value))]
-        protected override ValueInterval<T> ParseInterval(string? value, IFormatProvider provider) => ValueInterval.Parse<T>(value, provider);
+        protected override ValueInterval<T> ParseInterval(string value, IFormatProvider provider) => ValueInterval.Parse<T>(value, provider);
     }
 }
 
-abstract class BaseIntervalJsonConverterFactory(Type intervalType, Type intervalConverterType) : JsonConverterFactory
+abstract class IntervalJsonConverterFactoryBase(Type intervalType, Type intervalConverterType) : JsonConverterFactory
 {
     public sealed override bool CanConvert(Type typeToConvert)
     {
@@ -72,7 +72,7 @@ abstract class BaseIntervalJsonConverter<TInterval> : JsonConverter<TInterval>
         if (reader.TokenType != JsonTokenType.String)
             throw new JsonException("Interval must be a string.");
 
-        string? value = reader.GetString();
+        string value = reader.GetString()!;
         try
         {
             return ParseInterval(value, CultureInfo.InvariantCulture);
@@ -84,7 +84,7 @@ abstract class BaseIntervalJsonConverter<TInterval> : JsonConverter<TInterval>
     }
 
     [return: NotNullIfNotNull(nameof(value))]
-    protected abstract TInterval? ParseInterval(string? value, IFormatProvider provider);
+    protected abstract TInterval ParseInterval(string value, IFormatProvider provider);
 }
 
 #endif
