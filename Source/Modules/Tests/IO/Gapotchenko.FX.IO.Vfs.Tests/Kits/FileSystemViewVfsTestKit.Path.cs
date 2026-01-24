@@ -21,7 +21,7 @@ partial class FileSystemViewVfsTestKit
             char ds = vfs.DirectorySeparatorChar;
             char ads = vfs.AltDirectorySeparatorChar;
 
-            Assert.AreEqual("", JoinPaths());
+            Assert.IsEmpty(JoinPaths());
             Assert.AreEqual("a", JoinPaths("a"));
             Assert.AreEqual($"a{ds}b", JoinPaths("a", "b"));
 

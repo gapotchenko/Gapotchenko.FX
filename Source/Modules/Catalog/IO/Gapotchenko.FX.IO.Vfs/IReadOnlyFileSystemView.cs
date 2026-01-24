@@ -578,7 +578,7 @@ public interface IReadOnlyFileSystemView
     /// Canonicalizes a specified path.
     /// </para>
     /// <para>
-    /// The alternative directory separators are replaced with native ones;
+    /// <see cref="AltDirectorySeparatorChar"/> delimiters are replaced with <see cref="DirectorySeparatorChar"/>,
     /// the duplicate adjacent separators are removed.
     /// </para>
     /// </summary>
