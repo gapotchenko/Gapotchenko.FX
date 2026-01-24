@@ -555,6 +555,20 @@ public interface IReadOnlyFileSystemView
     string? GetFullPath(string? path);
 
     /// <summary>
+    /// <para>
+    /// Canonicalizes a specified path.
+    /// </para>
+    /// <para>
+    /// The alternative directory separators are replaced with native ones;
+    /// the duplicate adjacent separators are removed.
+    /// </para>
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>The canonicalized path.</returns>
+    [return: NotNullIfNotNull(nameof(path))]
+    string? CanonicalizePath(string? path);
+
+    /// <summary>
     /// Returns the directory information for the specified path.
     /// </summary>
     /// <param name="path">The path to retrieve the directory information from.</param>

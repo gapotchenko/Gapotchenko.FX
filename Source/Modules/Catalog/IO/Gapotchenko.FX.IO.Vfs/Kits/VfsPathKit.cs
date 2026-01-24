@@ -39,14 +39,14 @@ public static class VfsPathKit
         else
         {
             return
-                Normalize(
-                    SplitPath(path, directorySeparatorChar),
+                Minimize(
+                    Decompose(path, directorySeparatorChar),
                     directorySeparatorChar)
                 ?.ToArray();
         }
     }
 
-    static IEnumerable<string>? Normalize(IEnumerable<string> parts, char directorySeparatorChar)
+    static IEnumerable<string>? Minimize(IEnumerable<string> parts, char directorySeparatorChar)
     {
         ReadOnlySpan<char> directorySeparatorChars = stackalloc char[] { directorySeparatorChar, AltDirectorySeparatorChar };
 
@@ -88,7 +88,7 @@ public static class VfsPathKit
     }
 
     /// <summary>
-    /// Splits a specified path into a sequence of file system entry names.
+    /// Decomposes a specified path into a sequence of file-system entry names.
     /// </summary>
     /// <remarks>
     /// For example, the entry names of the <c>"C:\Users\Tester\Documents"</c> path are:
@@ -101,8 +101,8 @@ public static class VfsPathKit
     /// </remarks>
     /// <param name="path">The path to split.</param>
     /// <param name="directorySeparatorChar">The directory separator character.</param>
-    /// <returns>The sequence of file system entry names.</returns>
-    static IEnumerable<string> SplitPath(string? path, char directorySeparatorChar) =>
+    /// <returns>The sequence of file-system entry names.</returns>
+    public static IEnumerable<string> Decompose(string? path, char directorySeparatorChar) =>
         EnumerateSubpaths(path, directorySeparatorChar)
         .Reverse()
         .Select(
@@ -175,6 +175,39 @@ public static class VfsPathKit
                 sb.Append(directorySeparatorChar);
             sb.Append(part);
         }
+        return sb.ToString();
+    }
+
+    /// <summary>
+    /// <para>
+    /// Canonicalizes a specified path.
+    /// </para>
+    /// <para>
+    /// The alternative directory separators are replaced with native ones;
+    /// the duplicate adjacent separators are removed.
+    /// </para>
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <param name="directorySeparatorChar">The directory separator character.</param>
+    /// <returns>The canonicalized path.</returns>
+    public static string Canonicalize(ReadOnlySpan<char> path, char directorySeparatorChar = DirectorySeparatorChar)
+    {
+        var sb = new StringBuilder(path.Length);
+
+        char? prevChar = null;
+        foreach (char c in path)
+        {
+            char ch = c;
+            if (ch == AltDirectorySeparatorChar)
+                ch = directorySeparatorChar;
+
+            if (prevChar is { } prev && ch == directorySeparatorChar && ch == prev)
+                continue;
+
+            prevChar = ch;
+            sb.Append(ch);
+        }
+
         return sb.ToString();
     }
 

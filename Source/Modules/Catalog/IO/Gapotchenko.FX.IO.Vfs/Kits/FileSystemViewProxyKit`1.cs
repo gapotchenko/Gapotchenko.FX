@@ -331,6 +331,10 @@ public abstract class FileSystemViewProxyKit<T> : IFileSystemView
     public virtual string? GetFullPath(string? path) => BaseView.GetFullPath(path);
 
     /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(path))]
+    public virtual string? CanonicalizePath(string? path) => BaseView.CanonicalizePath(path);
+
+    /// <inheritdoc/>
     public virtual string? GetDirectoryName(string? path) => BaseView.GetDirectoryName(path);
 
     /// <inheritdoc/>

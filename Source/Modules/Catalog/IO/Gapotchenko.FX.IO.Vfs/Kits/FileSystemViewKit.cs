@@ -967,6 +967,22 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(path))]
+    public string? CanonicalizePath(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
+            return path;
+        else
+            return CanonicalizePathCore(path);
+    }
+
+    /// <inheritdoc cref="CanonicalizePath(string?)"/>
+    protected virtual string CanonicalizePathCore(string path)
+    {
+        return VfsPathKit.Canonicalize(path, DirectorySeparatorChar);
+    }
+
+    /// <inheritdoc/>
     public virtual string? GetDirectoryName(string? path)
     {
         if (string.IsNullOrEmpty(path))

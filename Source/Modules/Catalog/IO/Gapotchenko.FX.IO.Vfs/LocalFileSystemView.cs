@@ -357,6 +357,8 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     protected override string GetFullPathCore(string path) => Path.GetFullPath(path);
 
+    protected override string CanonicalizePathCore(string path) => FileSystem.CanonicalizePath(path);
+
     public override string? GetDirectoryName(string? path)
     {
 #if !(NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER)
