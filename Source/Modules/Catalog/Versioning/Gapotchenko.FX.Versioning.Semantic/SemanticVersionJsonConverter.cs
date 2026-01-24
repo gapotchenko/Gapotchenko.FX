@@ -19,7 +19,7 @@ sealed class SemanticVersionJsonConverter : JsonConverter<SemanticVersion>
         if (reader.TokenType != JsonTokenType.String)
             throw new JsonException("SemanticVersion must be a string.");
 
-        string? value = reader.GetString();
+        string value = reader.GetString()!;
         try
         {
             return SemanticVersion.Parse(value);
