@@ -7,6 +7,7 @@
 Release date: not released yet
 
 -  `SemanticVersion` type can be parsed by `System.Text.Json` serializer out of the box (.NET 8.0+)
+-  `Interval<T>` and `ValueInterval<T>` types can be parsed by `System.Text.Json` serializer out of the box (.NET 8.0+)
 
 ### Gapotchenko.FX 2026.1
 

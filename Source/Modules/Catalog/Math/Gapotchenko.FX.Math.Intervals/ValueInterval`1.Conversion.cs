@@ -5,8 +5,15 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
+#if TFF_JSON
+using System.Text.Json.Serialization;
+#endif
+
 namespace Gapotchenko.FX.Math.Intervals;
 
+#if TFF_JSON
+[JsonConverter(typeof(ValueIntervalJsonConverterFactory))]
+#endif
 partial struct ValueInterval<T>
 {
     /// <summary>
