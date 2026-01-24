@@ -355,6 +355,8 @@ sealed class LocalFileSystemView : FileSystemViewKit
         }
     }
 
+    public override IEnumerable<string> SplitPath(string? path) => FileSystem.SplitPath(path);
+
     protected override string GetFullPathCore(string path) => Path.GetFullPath(path);
 
     protected override string CanonicalizePathCore(string path) => FileSystem.CanonicalizePath(path);

@@ -550,6 +550,25 @@ public interface IReadOnlyFileSystemView
     [OverloadResolutionPriority(1)]
     string CombinePaths(params ReadOnlySpan<string?> paths);
 
+    /// <summary>
+    /// Splits the specified path into a sequence of file-system entry names.
+    /// </summary>
+    /// <remarks>
+    /// For example, the entry names of the <c>"C:\Users\Tester\Documents"</c> path are:
+    /// <list type="bullet">
+    /// <item><c>C:\</c></item>
+    /// <item><c>Users</c></item>
+    /// <item><c>Tester</c></item>
+    /// <item><c>Documents</c></item>
+    /// </list>
+    /// </remarks>
+    /// <param name="path">The path to split.</param>
+    /// <returns>
+    /// A sequence of file system-entry names.
+    /// The sequence is empty if <paramref name="path"/> is <see langword="null"/> or empty.
+    /// </returns>
+    IEnumerable<string> SplitPath(string? path);
+
     /// <inheritdoc cref="Path.GetFullPath(string)"/>
     [return: NotNullIfNotNull(nameof(path))]
     string? GetFullPath(string? path);

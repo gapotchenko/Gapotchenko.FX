@@ -925,6 +925,12 @@ public abstract class FileSystemViewKit : IFileSystemView
     }
 
     /// <inheritdoc/>
+    public virtual IEnumerable<string> SplitPath(string? path)
+    {
+        return VfsPathKit.Decompose(path, DirectorySeparatorChar);
+    }
+
+    /// <inheritdoc/>
     [return: NotNullIfNotNull(nameof(path))]
     public string? GetFullPath(string? path)
     {

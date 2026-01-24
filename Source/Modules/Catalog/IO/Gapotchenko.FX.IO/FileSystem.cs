@@ -187,7 +187,7 @@ public static class FileSystem
     }
 
     /// <summary>
-    /// Splits a specified path into a sequence of file system entry names.
+    /// Splits the specified path into a sequence of file-system entry names.
     /// </summary>
     /// <remarks>
     /// For example, the entry names of the <c>"C:\Users\Tester\Documents"</c> path are:
@@ -199,7 +199,10 @@ public static class FileSystem
     /// </list>
     /// </remarks>
     /// <param name="path">The path to split.</param>
-    /// <returns>The sequence of file system entry names.</returns>
+    /// <returns>
+    /// A sequence of file-system entry names.
+    /// The sequence is empty if <paramref name="path"/> is <see langword="null"/> or empty.
+    /// </returns>
     public static IEnumerable<string> SplitPath(string? path) =>
         EnumerateSubpaths(path)
         .Reverse()

@@ -33,17 +33,9 @@ public static class VfsPathKit
     public static string[]? Split(string? path, char directorySeparatorChar = DirectorySeparatorChar)
     {
         if (string.IsNullOrEmpty(path))
-        {
             return null;
-        }
         else
-        {
-            return
-                Minimize(
-                    Decompose(path, directorySeparatorChar),
-                    directorySeparatorChar)
-                ?.ToArray();
-        }
+            return Minimize(Decompose(path, directorySeparatorChar), directorySeparatorChar)?.ToArray();
     }
 
     static IEnumerable<string>? Minimize(IEnumerable<string> parts, char directorySeparatorChar)
@@ -88,7 +80,7 @@ public static class VfsPathKit
     }
 
     /// <summary>
-    /// Decomposes a specified path into a sequence of file-system entry names.
+    /// Decomposes the specified path into a sequence of file-system entry names.
     /// </summary>
     /// <remarks>
     /// For example, the entry names of the <c>"C:\Users\Tester\Documents"</c> path are:
@@ -101,7 +93,10 @@ public static class VfsPathKit
     /// </remarks>
     /// <param name="path">The path to split.</param>
     /// <param name="directorySeparatorChar">The directory separator character.</param>
-    /// <returns>The sequence of file-system entry names.</returns>
+    /// <returns>
+    /// A sequence of file-system entry names.
+    /// The sequence is empty if <paramref name="path"/> is <see langword="null"/> or empty.
+    /// </returns>
     public static IEnumerable<string> Decompose(string? path, char directorySeparatorChar) =>
         EnumerateSubpaths(path, directorySeparatorChar)
         .Reverse()

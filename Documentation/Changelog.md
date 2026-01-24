@@ -7,7 +7,7 @@
 Release date: not released yet
 
 - `Unit` type now implements `IEquatable<Unit>` and `IComparable<Unit>` interfaces
-- Added `GetFileSize(string)` and `CanonicalizePath(string)` methods to `IReadOnlyFileSystemView` VFS interface
+- Added `GetFileSize(string)`, `SplitPath(string)`, and `CanonicalizePath(string)` methods to `IReadOnlyFileSystemView` VFS interface
 - `SemanticVersion` type can be parsed by `System.Text.Json` serializer out of the box (.NET 8.0+)
 - `Interval<T>` and `ValueInterval<T>` types can be parsed by `System.Text.Json` serializer out of the box (.NET 8.0+)
 - Added type converters for `Interval<T>` and `ValueInterval<T>` types
