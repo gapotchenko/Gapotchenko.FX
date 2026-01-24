@@ -81,24 +81,9 @@ public sealed partial class ZipArchive :
     /// <inheritdoc/>
     public VfsReadOnlyLocation? Location { get; }
 
-    static IZipArchiveView<System.IO.Compression.ZipArchive> CreateViewOnBclImpl(
-        Stream stream,
-        bool writable,
-        bool leaveOpen)
+    static IZipArchiveView<System.IO.Compression.ZipArchive> CreateViewOnBclImpl(Stream stream, bool writable, bool leaveOpen)
     {
-        ZipArchiveMode mode;
-        if (writable)
-        {
-            if (!stream.CanSeek)
-                mode = ZipArchiveMode.Create;
-            else
-                mode = ZipArchiveMode.Update;
-        }
-        else
-        {
-            mode = ZipArchiveMode.Read;
-        }
-
+        var mode = GetZipArchiveMode(stream, writable);
         try
         {
             return CreateView(new System.IO.Compression.ZipArchive(stream, mode, leaveOpen));
@@ -108,6 +93,21 @@ public sealed partial class ZipArchive :
             if (!leaveOpen)
                 stream.Dispose();
             throw;
+        }
+    }
+
+    static ZipArchiveMode GetZipArchiveMode(Stream stream, bool writable)
+    {
+        if (writable)
+        {
+            if (!stream.CanSeek)
+                return ZipArchiveMode.Create;
+            else
+                return ZipArchiveMode.Update;
+        }
+        else
+        {
+            return ZipArchiveMode.Read;
         }
     }
 }
