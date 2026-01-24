@@ -156,14 +156,14 @@ public abstract class FileSystemViewKit : IFileSystemView
         OpenFile(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 
     /// <inheritdoc/>
-    public virtual Task<Stream> ReadFileAsync(string path, CancellationToken cancellationToken) =>
+    public virtual Task<Stream> ReadFileAsync(string path, CancellationToken cancellationToken = default) =>
         OpenFileAsync(path, FileMode.Open, FileAccess.Read, FileShare.Read, cancellationToken);
 
     /// <inheritdoc/>
     public abstract Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share);
 
     /// <inheritdoc/>
-    public virtual Task<Stream> OpenFileAsync(string path, FileMode mode, FileAccess access, FileShare share, CancellationToken cancellationToken) =>
+    public virtual Task<Stream> OpenFileAsync(string path, FileMode mode, FileAccess access, FileShare share, CancellationToken cancellationToken = default) =>
         TaskBridge.ExecuteAsync(() => OpenFile(path, mode, access, share), cancellationToken);
 
     /// <inheritdoc/>
