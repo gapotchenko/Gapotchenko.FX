@@ -157,7 +157,7 @@ Console.WriteLine(version.ToString()); // "1.2.3-alpha.1+20240101"
 
 ### Type Converter
 
-`SemanticVersion` includes a `TypeConverter` that enables integration with various .NET frameworks and UI components:
+`SemanticVersion` includes a `TypeConverter` that enables integration with various .NET components:
 
 ``` C#
 using Gapotchenko.FX.Versioning;

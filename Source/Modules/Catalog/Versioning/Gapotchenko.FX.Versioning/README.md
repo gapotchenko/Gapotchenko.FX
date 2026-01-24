@@ -8,7 +8,7 @@ The module provides polyfills and extensions for the `System.Version` class.
 
 ## VersionTypeConverter
 
-`VersionTypeConverter` class provides a type converter for `System.Version` that enables conversion to and from string representations and integration with various .NET frameworks and UI components.
+`VersionTypeConverter` class provides a type converter for `System.Version` that enables conversion to and from string representations and integration with various .NET components.
 
 #### Using `VersionTypeConverter`
 
