@@ -65,22 +65,22 @@ public class SemanticVersionTypeConverter : TypeConverter
 
             if (destinationType == typeof(InstanceDescriptor))
             {
-                Type[] arguments;
-                object?[] parameters;
+                Type[] parameters;
+                object?[] arguments;
                 if (semanticVersion.Prerelease is null && semanticVersion.Build is null)
                 {
-                    arguments = [typeof(int), typeof(int), typeof(int)];
-                    parameters = [semanticVersion.Major, semanticVersion.Minor, semanticVersion.Patch];
+                    parameters = [typeof(int), typeof(int), typeof(int)];
+                    arguments = [semanticVersion.Major, semanticVersion.Minor, semanticVersion.Patch];
                 }
                 else
                 {
-                    arguments = [typeof(int), typeof(int), typeof(int), typeof(string), typeof(string)];
-                    parameters = [semanticVersion.Major, semanticVersion.Minor, semanticVersion.Patch, semanticVersion.Prerelease, semanticVersion.Build];
+                    parameters = [typeof(int), typeof(int), typeof(int), typeof(string), typeof(string)];
+                    arguments = [semanticVersion.Major, semanticVersion.Minor, semanticVersion.Patch, semanticVersion.Prerelease, semanticVersion.Build];
                 }
 
-                var ctor = typeof(SemanticVersion).GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, arguments, null);
+                var ctor = typeof(SemanticVersion).GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, parameters, null);
                 Debug.Assert(ctor != null);
-                return new InstanceDescriptor(ctor, parameters);
+                return new InstanceDescriptor(ctor, arguments);
             }
         }
 
