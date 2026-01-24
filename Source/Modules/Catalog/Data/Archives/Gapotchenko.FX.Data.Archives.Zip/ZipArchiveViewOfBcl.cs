@@ -14,6 +14,7 @@ using Gapotchenko.FX.Memory;
 using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Threading;
 using System.Diagnostics;
+using System.IO;
 using System.IO.Compression;
 using System.Runtime.CompilerServices;
 
@@ -90,14 +91,56 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
         }
     }
 
+#if NET10_0_OR_GREATER
+
+    public override async Task<long> GetFileSizeAsync(string path, CancellationToken cancellationToken = default)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanRead();
+
+        var entry = GetFileArchiveEntry(path);
+        try
+        {
+            return entry.Length;
+        }
+        catch (InvalidOperationException)
+        {
+            await using var stream = await entry.OpenAsync(cancellationToken).ConfigureAwait(false);
+            return stream.Length;
+        }
+    }
+
+#endif
+
     public override Stream ReadFile(string path)
     {
         VfsValidationKit.Arguments.ValidatePath(path);
 
         EnsureCanRead();
 
+        var entry = GetFileArchiveEntry(path);
+        return ReadFileCore(entry.Open());
+    }
+
+#if NET10_0_OR_GREATER
+
+    public override async Task<Stream> ReadFileAsync(string path, CancellationToken cancellationToken = default)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanRead();
+
+        var entry = GetFileArchiveEntry(path);
+        return ReadFileCore(await entry.OpenAsync(cancellationToken).ConfigureAwait(false));
+    }
+
+#endif
+
+    static Stream ReadFileCore(Stream stream)
+    {
         return StreamView.WithCapabilities(
-            GetFileArchiveEntry(path).Open(),
+            stream,
             true, false, true);
     }
 
@@ -114,25 +157,56 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
         var stream = entry.Open();
         try
         {
-            if (!isNew)
-            {
-                if (mode is FileMode.Create or FileMode.Truncate)
-                    stream.SetLength(0);
-                else if (mode is FileMode.Append)
-                    stream.Seek(0, SeekOrigin.End);
-            }
-
-            return StreamView.WithCapabilities(
-                stream,
-                (access & FileAccess.Read) != 0 && CanRead,
-                (access & FileAccess.Write) != 0 && CanWrite,
-                true);
+            return OpenFileCore(stream, isNew, mode, access);
         }
         catch
         {
             stream.Dispose();
             throw;
         }
+    }
+
+#if NET10_0_OR_GREATER
+
+    public override async Task<Stream> OpenFileAsync(string path, FileMode mode, FileAccess access, FileShare share, CancellationToken cancellationToken = default)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateFileMode(mode);
+        VfsValidationKit.Arguments.ValidateFileAccess(access);
+        VfsValidationKit.Arguments.ValidateFileShare(share);
+
+        EnsureCanOpenFile(mode, access);
+
+        var (entry, isNew) = GetFileArchiveEntry(path, mode);
+        var stream = await entry.OpenAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            return OpenFileCore(stream, isNew, mode, access);
+        }
+        catch
+        {
+            await stream.DisposeAsync().ConfigureAwait(false);
+            throw;
+        }
+    }
+
+#endif
+
+    Stream OpenFileCore(Stream stream, bool isNew, FileMode mode, FileAccess access)
+    {
+        if (!isNew)
+        {
+            if (mode is FileMode.Create or FileMode.Truncate)
+                stream.SetLength(0);
+            else if (mode is FileMode.Append)
+                stream.Seek(0, SeekOrigin.End);
+        }
+
+        return StreamView.WithCapabilities(
+            stream,
+            (access & FileAccess.Read) != 0 && CanRead,
+            (access & FileAccess.Write) != 0 && CanWrite,
+            true);
     }
 
     public override void DeleteFile(string path)
