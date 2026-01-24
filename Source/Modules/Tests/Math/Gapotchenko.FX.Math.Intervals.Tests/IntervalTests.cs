@@ -5,6 +5,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
+#if TFF_JSON
+using System.Text.Json;
+#endif
 
 namespace Gapotchenko.FX.Math.Intervals.Tests;
 
@@ -49,7 +52,7 @@ public sealed class IntervalTests : IntervalCoreTests
 
     #endregion
 
-    static Interval<T>? ToInterval<T>(IInterval<T>? interval) => (Interval<T>?)interval;
+    #region Equality
 
     [TestMethod]
     public void Interval_Equality()
@@ -66,4 +69,25 @@ public sealed class IntervalTests : IntervalCoreTests
         Assert.AreNotEqual(interval, Interval.Inclusive(11, 20), comparer);
         Assert.AreNotEqual(interval, Interval.Inclusive(10, 21), comparer);
     }
+
+    #endregion
+
+    #region Serialization
+
+#if TFF_JSON
+
+    [TestMethod]
+    [DataRow("\"[10,20)\"", "[10,20)")]
+    [DataRow("null", null)]
+    public void Interval_Serialization_Json(string json, string? interval)
+    {
+        var obj = JsonSerializer.Deserialize<Interval<int>>(json);
+        Assert.AreEqual(Interval.Parse<int>(interval), obj);
+    }
+
+#endif
+
+    #endregion
+
+    static Interval<T>? ToInterval<T>(IInterval<T>? interval) => (Interval<T>?)interval;
 }

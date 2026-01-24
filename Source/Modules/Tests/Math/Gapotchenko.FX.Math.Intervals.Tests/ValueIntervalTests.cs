@@ -5,6 +5,10 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
+#if TFF_JSON
+using System.Text.Json;
+#endif
+
 namespace Gapotchenko.FX.Math.Intervals.Tests;
 
 [TestClass]
@@ -48,9 +52,6 @@ public sealed class ValueIntervalTests : IntervalCoreTests
 
     #endregion
 
-    static ValueInterval<T> ToInterval<T>(IInterval<T>? interval) where T : IComparable<T>, IEquatable<T> =>
-        (ValueInterval<T>?)interval ?? default;
-
     [TestMethod]
     public void ValueInterval_Default()
     {
@@ -59,6 +60,8 @@ public sealed class ValueIntervalTests : IntervalCoreTests
         Assert.IsTrue(interval.IsEmpty);
         Assert.IsFalse(interval.Contains(default));
     }
+
+    #region Equality
 
     [TestMethod]
     public void ValueInterval_Equality()
@@ -74,4 +77,25 @@ public sealed class ValueIntervalTests : IntervalCoreTests
         Assert.AreNotEqual(interval, ValueInterval.Inclusive(11, 20));
         Assert.AreNotEqual(interval, ValueInterval.Inclusive(10, 21));
     }
+
+    #endregion
+
+    #region Serialization
+
+#if TFF_JSON
+
+    [TestMethod]
+    [DataRow("\"[10,20)\"", "[10,20)")]
+    public void ValueInterval_Serialization_Json(string json, string? interval)
+    {
+        var obj = JsonSerializer.Deserialize<ValueInterval<int>>(json);
+        Assert.AreEqual(ValueInterval.Parse<int>(interval), obj);
+    }
+
+#endif
+
+    #endregion
+
+    static ValueInterval<T> ToInterval<T>(IInterval<T>? interval) where T : IComparable<T>, IEquatable<T> =>
+        (ValueInterval<T>?)interval ?? default;
 }
