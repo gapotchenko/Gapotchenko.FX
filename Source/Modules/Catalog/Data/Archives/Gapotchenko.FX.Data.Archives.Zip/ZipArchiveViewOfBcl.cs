@@ -803,6 +803,18 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
         base.Dispose(disposing);
     }
 
+#if NET10_0_OR_GREATER
+
+#pragma warning disable CA2215 // Dispose methods should call base class dispose
+    protected override async ValueTask DisposeCoreAsync()
+#pragma warning restore CA2215
+    {
+        if (!m_LeaveOpen)
+            await m_Archive.DisposeAsync().ConfigureAwait(false);
+    }
+
+#endif
+
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly bool m_LeaveOpen;
 

@@ -25,7 +25,7 @@ public abstract class VirtualFileSystemKit : FileSystemViewKit, IVirtualFileSyst
     /// <inheritdoc/>
     public async ValueTask DisposeAsync()
     {
-        await DisposeAsyncCore().ConfigureAwait(false);
+        await DisposeCoreAsync().ConfigureAwait(false);
         GC.SuppressFinalize(this);
     }
 
@@ -40,11 +40,8 @@ public abstract class VirtualFileSystemKit : FileSystemViewKit, IVirtualFileSyst
     {
     }
 
-    /// <summary>
-    /// Asynchronously releases the unmanaged and managed resources.
-    /// </summary>
-    /// <returns></returns>
-    protected virtual ValueTask DisposeAsyncCore()
+    /// <inheritdoc cref="DisposeAsync"/>
+    protected virtual ValueTask DisposeCoreAsync()
     {
         return new(TaskBridge.ExecuteAsync(() => Dispose(true)));
     }
