@@ -18,8 +18,13 @@ public abstract record StorageMountableVfsOptions : VfsOptions
     /// a virtual file system's location in the parent storage.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// The value of this property affects the presence of <see cref="IStorageMountableVfs.Location"/> value
     /// in a mounted file system.
+    /// </para>
+    /// <para>
+    /// The default value is <see langword="true"/>.
+    /// </para>
     /// </remarks>
     public bool TrackLocation { get; init; } = true;
 }
