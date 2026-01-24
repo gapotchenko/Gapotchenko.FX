@@ -6,6 +6,8 @@
 
 Release date: not released yet
 
+-  `SemanticVersion` type can be parsed by `System.Text.Json` serializer out of the box (.NET 8.0+)
+
 ### Gapotchenko.FX 2026.1
 
 Release date: January 14, 2026

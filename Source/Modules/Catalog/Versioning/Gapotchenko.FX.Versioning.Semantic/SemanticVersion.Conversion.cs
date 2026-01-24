@@ -5,9 +5,16 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+#if TFF_JSON
+using System.Text.Json.Serialization;
+#endif
+
 namespace Gapotchenko.FX.Versioning;
 
 [TypeConverter(typeof(SemanticVersionConverter))]
+#if TFF_JSON
+[JsonConverter(typeof(SemanticVersionJsonConverter))]
+#endif
 partial record SemanticVersion
 {
     /// <summary>
