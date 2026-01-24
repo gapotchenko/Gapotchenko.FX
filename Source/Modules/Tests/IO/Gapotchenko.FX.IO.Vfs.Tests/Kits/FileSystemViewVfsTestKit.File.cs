@@ -30,6 +30,8 @@ partial class FileSystemViewVfsTestKit
         {
             string filePath = vfs.CombinePaths(rootPath, fileName);
             Assert.IsTrue(vfs.FileExists(filePath));
+
+            Assert.AreEqual(0, vfs.GetFileSize(filePath));
         }
     }
 

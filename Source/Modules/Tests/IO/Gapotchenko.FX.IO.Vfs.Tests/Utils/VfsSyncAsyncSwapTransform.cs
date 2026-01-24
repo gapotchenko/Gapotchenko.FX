@@ -27,6 +27,8 @@ sealed class VfsSyncAsyncSwapTransform(IFileSystemView baseView) : FileSystemVie
 
     // ------------------------------------------------------------------------
 
+    #region Files
+
     public override bool FileExists([NotNullWhen(true)] string? path)
     {
         return TaskBridge.Execute(cancellationToken => base.FileExistsAsync(path, cancellationToken));
@@ -75,6 +77,16 @@ sealed class VfsSyncAsyncSwapTransform(IFileSystemView baseView) : FileSystemVie
     public override IAsyncEnumerable<string> EnumerateFilesAsync(string path, string searchPattern, EnumerationOptions enumerationOptions, CancellationToken cancellationToken = default)
     {
         return AsyncEnumerableBridge.EnumerateAsync(() => base.EnumerateFiles(path, searchPattern, enumerationOptions), cancellationToken);
+    }
+
+    public override long GetFileSize(string path)
+    {
+        return TaskBridge.Execute(cancellationToken => base.GetFileSizeAsync(path, cancellationToken));
+    }
+
+    public override Task<long> GetFileSizeAsync(string path, CancellationToken cancellationToken = default)
+    {
+        return TaskBridge.ExecuteAsync(() => base.GetFileSize(path), cancellationToken);
     }
 
     public override Stream ReadFile(string path)
@@ -126,6 +138,10 @@ sealed class VfsSyncAsyncSwapTransform(IFileSystemView baseView) : FileSystemVie
     {
         return TaskBridge.ExecuteAsync(() => base.MoveFile(sourcePath, destinationPath, overwrite, options), cancellationToken);
     }
+
+    #endregion
+
+    #region Directories
 
     public override bool DirectoryExists([NotNullWhen(true)] string? path)
     {
@@ -216,6 +232,10 @@ sealed class VfsSyncAsyncSwapTransform(IFileSystemView baseView) : FileSystemVie
     {
         return TaskBridge.ExecuteAsync(() => base.MoveDirectory(sourcePath, destinationPath, overwrite, options), cancellationToken);
     }
+
+    #endregion
+
+    #region Entries
 
     public override bool EntryExists([NotNullWhen(true)] string? path)
     {
@@ -346,4 +366,6 @@ sealed class VfsSyncAsyncSwapTransform(IFileSystemView baseView) : FileSystemVie
     {
         return TaskBridge.ExecuteAsync(() => base.SetAttributes(path, attributes), cancellationToken);
     }
+
+    #endregion
 }
