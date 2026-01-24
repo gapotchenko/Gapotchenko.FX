@@ -11,7 +11,7 @@ using System.Text.Json.Serialization;
 
 namespace Gapotchenko.FX.Versioning;
 
-[TypeConverter(typeof(SemanticVersionConverter))]
+[TypeConverter(typeof(SemanticVersionTypeConverter))]
 #if TFF_JSON
 [JsonConverter(typeof(SemanticVersionJsonConverter))]
 #endif

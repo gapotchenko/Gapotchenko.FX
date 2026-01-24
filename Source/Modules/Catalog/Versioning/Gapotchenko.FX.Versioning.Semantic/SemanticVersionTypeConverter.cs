@@ -15,7 +15,7 @@ namespace Gapotchenko.FX.Versioning;
 /// <summary>
 /// Provides a type converter to convert <see cref="SemanticVersion"/> objects to and from other representations.
 /// </summary>
-public class SemanticVersionConverter : TypeConverter
+public class SemanticVersionTypeConverter : TypeConverter
 {
     /// <inheritdoc/>
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
@@ -81,3 +81,13 @@ public class SemanticVersionConverter : TypeConverter
         return base.ConvertTo(context, culture, value, destinationType);
     }
 }
+
+#if BINARY_COMPATIBILITY || SOURCE_COMPATIBILITY // 2026
+
+/// <inheritdoc/>
+[Obsolete("Use SemanticVersionTypeConverter instead.")]
+public class SemanticVersionConverter : SemanticVersionTypeConverter
+{
+}
+
+#endif
