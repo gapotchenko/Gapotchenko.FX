@@ -1242,7 +1242,7 @@ partial class FileSystemViewExtensions
     {
         using var reader = new StreamReader(view.ReadFile(path), encoding);
 
-        while (reader.ReadLine() is not null and var line)
+        while (reader.ReadLine() is { } line)
             yield return line;
     }
 
@@ -1369,7 +1369,7 @@ partial class FileSystemViewExtensions
         using var reader = new StreamReader(view.ReadFile(path), encoding);
 
         var lines = new List<string>();
-        while (reader.ReadLine() is not null and var line)
+        while (reader.ReadLine() is { } line)
             lines.Add(line);
 
         return [.. lines];

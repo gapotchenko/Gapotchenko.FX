@@ -180,7 +180,7 @@ public readonly struct IntervalBoundary<T> : IIntervalBoundary, IEquatable<Inter
     {
         var hc = new HashCode();
         hc.Add(Kind.GetHashCode());
-        if (HasValue && m_Value is not null and var value)
+        if (HasValue && m_Value is { } value)
             hc.Add(comparer != null ? comparer.GetHashCode(value) : value.GetHashCode());
         return hc.ToHashCode();
     }

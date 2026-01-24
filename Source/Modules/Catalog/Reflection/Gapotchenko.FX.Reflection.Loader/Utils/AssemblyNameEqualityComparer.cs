@@ -37,11 +37,11 @@ sealed class AssemblyNameEqualityComparer : IEqualityComparer<AssemblyName>
     public int GetHashCode(AssemblyName obj)
     {
         int h = obj.Version?.GetHashCode() ?? 0;
-        if (obj.Name is not null and var name)
+        if (obj.Name is { } name)
             h ^= StringComparer.OrdinalIgnoreCase.GetHashCode(name);
-        if (obj.GetPublicKeyToken() is not null and var publicKeyToken)
+        if (obj.GetPublicKeyToken() is { } publicKeyToken)
             h ^= ArrayEqualityComparer.GetHashCode(publicKeyToken);
-        if (obj.CultureInfo is not null and var cultureInfo)
+        if (obj.CultureInfo is { } cultureInfo)
             h ^= cultureInfo.GetHashCode();
         return h;
     }

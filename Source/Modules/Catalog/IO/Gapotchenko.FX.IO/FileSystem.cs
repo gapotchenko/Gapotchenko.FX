@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -61,7 +62,7 @@ public static class FileSystem
 
     static bool IsCaseSensitiveCore()
     {
-        if (PalServices.Adapter is not null and var pal)
+        if (PalServices.Adapter is { } pal)
         {
             return pal.IsCaseSensitive;
         }
@@ -156,7 +157,7 @@ public static class FileSystem
     {
         if (string.IsNullOrEmpty(path))
             return path;
-        else if (PalServices.Adapter is not null and var pal)
+        else if (PalServices.Adapter is { } pal)
             return pal.GetShortPath(path);
         else
             return path;
@@ -491,7 +492,7 @@ public static class FileSystem
         {
             throw new ArgumentException(Resources.PathIsEmpty, nameof(path));
         }
-        else if (PalServices.Adapter is not null and var pal)
+        else if (PalServices.Adapter is { } pal)
         {
             return pal.GetRealPath(path);
         }

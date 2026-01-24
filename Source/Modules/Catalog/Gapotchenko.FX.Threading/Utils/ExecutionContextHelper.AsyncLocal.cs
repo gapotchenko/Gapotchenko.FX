@@ -124,7 +124,7 @@ partial class ExecutionContextHelper
             // This would lead to a worse memory reclamation, however.
 
             if (args.ThreadContextChanged &&
-                args.CurrentValue is not null and var flowState)
+                args.CurrentValue is { } flowState)
             {
                 // The flow state is managed by a finite state machine (FSM).
                 UpdateFsm(flowState);
@@ -136,7 +136,7 @@ partial class ExecutionContextHelper
         /// </summary>
         void UpdateOperationFsm()
         {
-            if (m_CurrentFlowState.Value is not null and var flowState &&
+            if (m_CurrentFlowState.Value is { } flowState &&
                 flowState.Operation == this)
             {
                 UpdateFsm(flowState);
@@ -148,7 +148,7 @@ partial class ExecutionContextHelper
             // Updating the current FSM to complete any pending activities
             // creates an ordered relation between AsyncLocal<T> operations
             // that were issued before and after the barrier.
-            if (m_CurrentFlowState.Value is not null and var flowState)
+            if (m_CurrentFlowState.Value is { } flowState)
                 UpdateFsm(flowState);
         }
 

@@ -14,7 +14,6 @@ using Gapotchenko.FX.Memory;
 using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Threading;
 using System.Diagnostics;
-using System.IO;
 using System.IO.Compression;
 using System.Runtime.CompilerServices;
 
@@ -396,7 +395,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
     ZipArchiveEntry? TryGetDirectoryArchiveEntry(in StructuredPath path)
     {
-        if (VfsPathKit.Join(path.Parts.Span) is not null and var entryPath)
+        if (VfsPathKit.Join(path.Parts.Span) is { } entryPath)
             return GetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar);
         else
             return null;
@@ -769,13 +768,13 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
         if (considerDirectories)
         {
-            if (GetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar) is not null and var directoryEntry)
+            if (GetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar) is { } directoryEntry)
                 return directoryEntry;
         }
 
         if (considerFiles)
         {
-            if (GetArchiveEntry(entryPath) is not null and var fileEntry)
+            if (GetArchiveEntry(entryPath) is { } fileEntry)
                 return fileEntry;
         }
 

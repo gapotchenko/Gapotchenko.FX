@@ -353,7 +353,7 @@ sealed class KeyedEqualityComparer<TSource, TKey>(
         m_Comparer.Equals(selector(x), selector(y));
 
     public int GetHashCode(TSource obj) =>
-        selector(obj) is not null and var key ?
+        selector(obj) is { } key ?
             m_Comparer.GetHashCode(key) :
             0;
 

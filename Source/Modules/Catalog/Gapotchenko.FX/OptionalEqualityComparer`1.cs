@@ -94,7 +94,7 @@ sealed class OptionalEqualityComparer<T>(IEqualityComparer<T>? valueComparer) : 
     {
         if (!obj.HasValue)
             return 0;
-        else if (obj.Value is not null and var value)
+        else if (obj.Value is { } value)
             return valueComparer.GetHashCode(value);
         else
             return 0;

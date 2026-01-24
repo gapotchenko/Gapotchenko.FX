@@ -29,10 +29,10 @@ partial record SemanticVersion
             .Append('.').Append(m_Minor)
             .Append('.').Append(m_Patch);
 
-        if (m_Prerelease is not null and var prerelease)
+        if (m_Prerelease is { } prerelease)
             builder.Append('-').Append(prerelease);
 
-        if (m_Build is not null and var build)
+        if (m_Build is { } build)
             builder.Append('+').Append(build);
 
         return builder.ToString();

@@ -475,7 +475,7 @@ public class AppInformation : IAppInformation
 
         if (useProcess || entryAssembly == Assembly.GetEntryAssembly())
         {
-            if (GetProcessPath() is not null and var processPath)
+            if (GetProcessPath() is { } processPath)
                 return processPath;
         }
 

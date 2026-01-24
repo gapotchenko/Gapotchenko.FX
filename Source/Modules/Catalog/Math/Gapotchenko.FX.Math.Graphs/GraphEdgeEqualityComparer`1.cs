@@ -19,8 +19,8 @@ static class GraphEdgeEqualityComparer
 
         public int GetHashCode([DisallowNull] GraphEdge<TVertex> obj) =>
             HashCode.Combine(
-                obj.From is not null and var from ? m_VertexComparer.GetHashCode(from) : 0,
-                obj.To is not null and var to ? m_VertexComparer.GetHashCode(to) : 0);
+                obj.From is { } from ? m_VertexComparer.GetHashCode(from) : 0,
+                obj.To is { } to ? m_VertexComparer.GetHashCode(to) : 0);
 
         public override bool Equals(object? obj) =>
             obj is Directed<TVertex> other &&
@@ -45,8 +45,8 @@ static class GraphEdgeEqualityComparer
         public int GetHashCode([DisallowNull] GraphEdge<TVertex> obj) =>
             // An associative combining operation should be used here
             // because From and To values can be reversed.
-            (obj.From is not null and var from ? m_VertexComparer.GetHashCode(from) : 0) ^
-            (obj.To is not null and var to ? m_VertexComparer.GetHashCode(to) : 0);
+            (obj.From is { } from ? m_VertexComparer.GetHashCode(from) : 0) ^
+            (obj.To is { } to ? m_VertexComparer.GetHashCode(to) : 0);
 
         public override bool Equals(object? obj) =>
             obj is Undirected<TVertex> other &&

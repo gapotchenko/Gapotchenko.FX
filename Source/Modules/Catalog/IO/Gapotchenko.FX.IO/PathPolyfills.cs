@@ -330,7 +330,7 @@ public static partial class PathPolyfills
 
         static int GetRootPathLength(ReadOnlySpan<char> path)
         {
-            if (PalServices.Adapter is not null and var pal)
+            if (PalServices.Adapter is { } pal)
             {
                 return pal.GetRootPathLength(path);
             }

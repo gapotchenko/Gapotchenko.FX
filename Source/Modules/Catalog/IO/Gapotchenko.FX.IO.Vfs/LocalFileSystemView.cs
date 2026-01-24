@@ -307,7 +307,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
             for (int si = startIndex, di = index; si < n; ++si)
             {
-                if (arr[si] is not null and var path)
+                if (arr[si] is { } path)
                     effectivePaths[di++] = path;
             }
 
@@ -339,7 +339,7 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
             for (int si = startIndex, di = index; si < n; ++si)
             {
-                if (paths[si] is not null and var path)
+                if (paths[si] is { } path)
                     effectivePaths[di++] = path;
             }
 
