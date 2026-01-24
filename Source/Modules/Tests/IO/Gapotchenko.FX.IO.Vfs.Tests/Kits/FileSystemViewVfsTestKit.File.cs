@@ -138,14 +138,17 @@ partial class FileSystemViewVfsTestKit
         static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
         {
             string filePath = vfs.CombinePaths(rootPath, fileName);
-            using var stream = vfs.ReadFile(filePath);
+            byte[] expectedContents = VfsTestContentKit.GetDefaultFileContents(vfs, filePath);
 
-            Assert.IsTrue(stream.CanRead);
-            Assert.IsFalse(stream.CanWrite);
+            using (var stream = vfs.ReadFile(filePath))
+            {
+                Assert.IsTrue(stream.CanRead);
+                Assert.IsFalse(stream.CanWrite);
 
-            Assert.IsTrue(
-                VfsTestContentKit.GetDefaultFileContents(vfs, filePath)
-                .SequenceEqual(stream.AsEnumerable()));
+                Assert.IsTrue(expectedContents.SequenceEqual(stream.AsEnumerable()));
+            }
+
+            Assert.AreEqual(expectedContents.Length, vfs.GetFileSize(filePath));
         }
     }
 
