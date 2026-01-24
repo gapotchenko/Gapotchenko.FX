@@ -7,7 +7,7 @@
 
 namespace Gapotchenko.FX.Math.Intervals;
 
-partial record Interval<T>
+partial record Interval<T> : ICloneable<Interval<T>>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Interval{T}"/> class with the specified inclusive left and exclusive right bounds:
@@ -83,4 +83,14 @@ partial record Interval<T>
 
         Comparer = comparer;
     }
+
+    #region Cloning
+
+    Interval<T> ICloneable<Interval<T>>.Clone() => CloneCore();
+
+    object ICloneable.Clone() => CloneCore();
+
+    Interval<T> CloneCore() => this with { };
+
+    #endregion
 }
