@@ -20,7 +20,7 @@ namespace Gapotchenko.FX.Versioning;
 /// <summary>
 /// Provides a type converter to convert <see cref="Version"/> objects to and from other representations.
 /// </summary>
-public class VersionConverter :
+public class VersionTypeConverter :
 #if TFF_VERSIONCONVERTER
     System.ComponentModel.VersionConverter
 #else
@@ -105,7 +105,7 @@ public class VersionConverter :
         {
             var type = typeof(Version);
             if (TypeDescriptor.GetConverter(type).GetType() == typeof(TypeConverter)) // if no other converter is installed for the type,
-                TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(typeof(VersionConverter))); // install this converter.
+                TypeDescriptor.AddAttributes(type, new TypeConverterAttribute(typeof(VersionTypeConverter))); // install this converter.
         }
 
         public static void Activate()
@@ -115,3 +115,13 @@ public class VersionConverter :
 
 #endif
 }
+
+#if BINARY_COMPATIBILITY || SOURCE_COMPATIBILITY // 2026
+
+/// <inheritdoc/>
+[Obsolete("Use VersionTypeConverter instead.")]
+public class VersionConverter : VersionTypeConverter
+{
+}
+
+#endif

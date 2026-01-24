@@ -6,13 +6,13 @@
 
 The module provides polyfills and extensions for the `System.Version` class.
 
-## VersionConverter
+## VersionTypeConverter
 
-`VersionConverter` class provides a type converter for `System.Version` that enables conversion to and from string representations and integration with various .NET frameworks and UI components.
+`VersionTypeConverter` class provides a type converter for `System.Version` that enables conversion to and from string representations and integration with various .NET frameworks and UI components.
 
-#### Using `VersionConverter`
+#### Using `VersionTypeConverter`
 
-The `VersionConverter` can be used with `TypeDescriptor` to convert between `Version` and string:
+The `VersionTypeConverter` can be used with `TypeDescriptor` to convert between `Version` and string:
 
 ``` C#
 using Gapotchenko.FX.Versioning;
@@ -23,14 +23,14 @@ var version = (Version)converter.ConvertFrom("1.2.3.4");
 Console.WriteLine(version); // "1.2.3.4"
 ```
 
-#### Registering `VersionConverter`
+#### Registering `VersionTypeConverter`
 
-To ensure that `VersionConverter` is used as the default converter for `Version` type, you can register it:
+To ensure that `VersionTypeConverter` is used as the default converter for `Version` type, you can register it:
 
 ``` C#
 using Gapotchenko.FX.Versioning;
 
-VersionConverter.Register();
+VersionTypeConverter.Register();
 ```
 
 After registration, the converter will be automatically used by frameworks that rely on `TypeDescriptor` for type conversion, such as Windows Forms, WPF, and ASP.NET Core.
