@@ -15,6 +15,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// Represents a continuous interval.
 /// </summary>
 /// <typeparam name="T">The type of interval values.</typeparam>
+[ImmutableObject(true)]
 [DebuggerDisplay("{ToString(),nq}")]
 public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>>
 {

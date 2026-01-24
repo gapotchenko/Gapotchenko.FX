@@ -7,7 +7,7 @@
 
 namespace Gapotchenko.FX.Math.Intervals;
 
-partial struct ValueInterval<T>
+partial struct ValueInterval<T> : ICloneableInterval
 {
     /// <summary>
     /// Initializes a new <see cref="ValueInterval{T}"/> instance with the specified inclusive left and exclusive right bounds:
@@ -56,4 +56,6 @@ partial struct ValueInterval<T>
         From = model.From;
         To = model.To;
     }
+
+    IInterval ICloneableInterval.CloneInterval() => this;
 }

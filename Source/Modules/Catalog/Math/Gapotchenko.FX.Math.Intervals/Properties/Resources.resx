@@ -123,4 +123,7 @@
   <data name="OneEmptyBoundaryRequiresAnother" xml:space="preserve">
     <value>If one interval boundary is empty, another should be empty too.</value>
   </data>
+  <data name="UnsupportedBoundaryKindCombination" xml:space="preserve">
+    <value>Unsupported interval boundary kind combination.</value>
+  </data>
 </root>

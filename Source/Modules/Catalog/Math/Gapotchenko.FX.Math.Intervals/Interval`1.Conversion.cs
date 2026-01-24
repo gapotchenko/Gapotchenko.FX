@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 
 namespace Gapotchenko.FX.Math.Intervals;
 
+[TypeConverter(typeof(IntervalTypeConverter))]
 #if TFF_JSON
 [JsonConverter(typeof(IntervalJsonConverterFactory))]
 #endif

@@ -77,5 +77,14 @@ namespace Gapotchenko.FX.Math.Intervals.Properties {
                 return ResourceManager.GetString("OneEmptyBoundaryRequiresAnother", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported interval boundary kind combination..
+        /// </summary>
+        internal static string UnsupportedBoundaryKindCombination {
+            get {
+                return ResourceManager.GetString("UnsupportedBoundaryKindCombination", resourceCulture);
+            }
+        }
     }
 }

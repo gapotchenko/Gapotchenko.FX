@@ -5,10 +5,18 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using System.Runtime.CompilerServices;
+
 namespace Gapotchenko.FX.Math.Intervals;
 
 partial class ValueInterval
 {
+    internal static ValueInterval<T> Parse<T>(string input, IFormatProvider? provider = null)
+        where T : IEquatable<T>?, IComparable<T>?
+    {
+        return Parse<T>(input.AsSpan(), provider);
+    }
+
     /// <summary>
     /// Converts the specified read-only span of characters that represents an interval to an equivalent <see cref="ValueInterval{T}"/> object.
     /// </summary>
@@ -22,7 +30,6 @@ partial class ValueInterval
     public static ValueInterval<T> Parse<T>(ReadOnlySpan<char> input, IFormatProvider? provider = null)
         where T : IEquatable<T>?, IComparable<T>? =>
         new(IntervalParser.Parse<T>(input, provider));
-
     // ------------------------------------------------------------------------
 
     /// <summary>
