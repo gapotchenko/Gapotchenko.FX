@@ -118,6 +118,43 @@ partial class FileSystemViewVfsTestKit
     }
 
     [TestMethod]
+    public void FileSystemView_Vfs_Path_CanonicalizePath()
+    {
+        RunVfsTest(Test);
+
+        static void Test(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            Assert.IsNull(CanonicalizePath(null));
+            Assert.IsEmpty(CanonicalizePath(string.Empty));
+
+            char ds = vfs.DirectorySeparatorChar;
+            char ads = vfs.AltDirectorySeparatorChar;
+
+            Assert.AreEqual($"abc{ds}def", CanonicalizePath($"abc{ds}def"));
+            Assert.AreEqual($"abc{ds}def", CanonicalizePath($"abc{ads}def"));
+
+            Assert.AreEqual($"abc{ds}def", CanonicalizePath($"abc{ds}{ds}def"));
+            Assert.AreEqual($"abc{ds}def", CanonicalizePath($"abc{ds}{ads}def"));
+            Assert.AreEqual($"abc{ds}def", CanonicalizePath($"abc{ads}{ds}def"));
+            Assert.AreEqual($"abc{ds}def", CanonicalizePath($"abc{ads}{ads}def"));
+
+            Assert.AreEqual($"abc{ds}def{ds}", CanonicalizePath($"abc{ds}def{ds}"));
+            Assert.AreEqual($"abc{ds}def{ds}", CanonicalizePath($"abc{ads}def{ads}"));
+
+            Assert.AreEqual($"abc{ds}def{ds}", CanonicalizePath($"abc{ds}{ds}def{ds}{ds}"));
+            Assert.AreEqual($"abc{ds}def{ds}", CanonicalizePath($"abc{ads}{ads}def{ads}{ads}"));
+
+            [return: NotNullIfNotNull(nameof(path))]
+            string? CanonicalizePath(string? path)
+            {
+                string? result = vfs.CanonicalizePath(path);
+                Assert.AreEqual(path is null, result is null);
+                return result;
+            }
+        }
+    }
+
+    [TestMethod]
     public void FileSystemView_Vfs_Path_GetDirectoryName()
     {
         RunVfsTest(Test);
