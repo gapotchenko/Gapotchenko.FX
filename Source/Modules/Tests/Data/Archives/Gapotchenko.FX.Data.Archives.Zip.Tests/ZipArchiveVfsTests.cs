@@ -9,7 +9,16 @@ public sealed class ZipArchiveVfsTests : FileSystemViewVfsTestKit
 {
     protected override VfsLocation CreateVfs()
     {
-        return new VfsLocation(new ArchiveVfs(new MemoryStream()), "/");
+        var stream = new MemoryStream();
+        return new VfsLocation(new ArchiveVfs(stream), "/");
+    }
+
+    protected override async Task<VfsLocation> CreateVfsAsync(CancellationToken cancellationToken)
+    {
+        var stream = new MemoryStream();
+        return new VfsLocation(
+            await ArchiveVfs.CreateAsync(stream, cancellationToken).ConfigureAwait(false),
+            "/");
     }
 
     protected override bool TryRoundTripVfs(ref IFileSystemView vfs)

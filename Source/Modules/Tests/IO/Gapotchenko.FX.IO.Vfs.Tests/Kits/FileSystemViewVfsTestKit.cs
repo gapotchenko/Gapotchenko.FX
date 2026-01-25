@@ -6,6 +6,7 @@
 // Year of introduction: 2025
 
 using Gapotchenko.FX.IO.Vfs.Tests.Utils;
+using Gapotchenko.FX.Threading.Tasks;
 
 namespace Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
@@ -35,6 +36,15 @@ public abstract partial class FileSystemViewVfsTestKit
     /// </summary>
     /// <returns>A VFS location where the testing should be performed.</returns>
     protected abstract VfsLocation CreateVfs();
+
+    /// <summary>
+    /// Asynchronously creates an empty virtual file system view.
+    /// </summary>
+    /// <returns>A VFS location where the testing should be performed.</returns>
+    protected virtual Task<VfsLocation> CreateVfsAsync(CancellationToken cancellationToken)
+    {
+        return TaskBridge.ExecuteAsync(CreateVfs, cancellationToken);
+    }
 
     /// <summary>
     /// Round-trips the specified virtual file system by unmounting, disposing, copying, and remounting it.
@@ -101,16 +111,17 @@ public abstract partial class FileSystemViewVfsTestKit
 
     void RunVfsTest(VfsTest mutate, VfsPhasedTest? verify)
     {
-        RunVfsTest(mutate, verify, Fn.Identity);
-        RunVfsTest(mutate, verify, x => new VfsSyncAsyncSwapTransform(x));
+        RunVfsTest(mutate, verify, CreateVfs(), Fn.Identity);
+        RunVfsTest(mutate, verify, TaskBridge.Execute(CreateVfsAsync), x => new VfsSyncAsyncSwapTransform(x));
     }
 
     void RunVfsTest(
         VfsTest mutate,
         VfsPhasedTest? verify,
+        VfsLocation location,
         Func<IFileSystemView, IFileSystemView> transformVfs)
     {
-        var (vfs, rootPath) = CreateVfs();
+        var (vfs, rootPath) = location;
         try
         {
             vfs = transformVfs(vfs);
@@ -150,8 +161,8 @@ public abstract partial class FileSystemViewVfsTestKit
 
     void RunStatefulVfsTest<T>(VfsTestInitialize<T> initialize, VfsStatefulTest<T> mutate, VfsStatefulPhasedTest<T>? verify, VfsTestCleanup<T>? cleanup)
     {
-        RunStatefulVfsTest(initialize, mutate, verify, cleanup, Fn.Identity, null);
-        RunStatefulVfsTest(initialize, mutate, verify, cleanup, x => new VfsSyncAsyncSwapTransform(x), null);
+        RunStatefulVfsTest(initialize, mutate, verify, cleanup, CreateVfs(), Fn.Identity, null);
+        RunStatefulVfsTest(initialize, mutate, verify, cleanup, TaskBridge.Execute(CreateVfsAsync), x => new VfsSyncAsyncSwapTransform(x), null);
     }
 
     void RunStatefulVfsTest<T>(
@@ -159,6 +170,7 @@ public abstract partial class FileSystemViewVfsTestKit
         VfsStatefulTest<T> mutate,
         VfsStatefulPhasedTest<T>? verify,
         VfsTestCleanup<T>? cleanup,
+        VfsLocation location,
         Func<IFileSystemView, IFileSystemView> transformVfs,
         Func<T, T>? transformState)
     {
@@ -173,6 +185,7 @@ public abstract partial class FileSystemViewVfsTestKit
                 verify is null
                     ? null
                     : (vfs, path, phase) => verify(vfs, path, phase, state),
+                location,
                 transformVfs);
         }
         finally
