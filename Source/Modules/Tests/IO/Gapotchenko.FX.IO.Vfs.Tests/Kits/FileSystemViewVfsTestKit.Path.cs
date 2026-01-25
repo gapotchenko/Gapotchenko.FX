@@ -97,6 +97,37 @@ partial class FileSystemViewVfsTestKit
     }
 
     [TestMethod]
+    public void FileSystemView_Vfs_Path_SplitPath()
+    {
+        RunVfsTest(Test);
+
+        static void Test(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            Assert.IsEmpty(vfs.SplitPath(null));
+            Assert.IsEmpty(vfs.SplitPath(string.Empty));
+
+            Assert.IsTrue(vfs.SplitPath("abc").SequenceEqual(["abc"]));
+
+            TestLevel1(vfs.DirectorySeparatorChar);
+            TestLevel1(vfs.AltDirectorySeparatorChar);
+
+            void TestLevel1(char ds)
+            {
+                Assert.IsTrue(vfs.SplitPath($"abc{ds}def").SequenceEqual(["abc", "def"]));
+                Assert.IsTrue(vfs.SplitPath($"abc{ds}def{ds}").SequenceEqual(["abc", "def", $"{ds}"]));
+            }
+
+            TestLevel2(vfs.DirectorySeparatorChar);
+
+            void TestLevel2(char ds)
+            {
+                Assert.IsTrue(vfs.SplitPath($"{ds}abc{ds}def").SequenceEqual([$"{ds}", "abc", "def"]));
+                Assert.IsTrue(vfs.SplitPath($"{ds}abc{ds}def{ds}").SequenceEqual([$"{ds}", "abc", "def", $"{ds}"]));
+            }
+        }
+    }
+
+    [TestMethod]
     public void FileSystemView_Vfs_Path_GetFullPath()
     {
         RunVfsTest(Test);
