@@ -6,6 +6,7 @@
 
 Release date: not released yet
 
+- Added ability to specify entry name encoding option for ZIP archives
 - `Unit` type now implements `IEquatable<Unit>` and `IComparable<Unit>` interfaces
 - Added `GetFileSize(string)`, `SplitPath(string)`, and `CanonicalizePath(string)` methods to `IReadOnlyFileSystemView` VFS interface
 - `SemanticVersion` type can be parsed by `System.Text.Json` serializer out of the box (.NET 8.0+)
