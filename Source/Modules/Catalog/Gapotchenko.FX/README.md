@@ -324,13 +324,6 @@ Gapotchenko.FX brings RAD back to the people 💪")
     <a href="../../../../../../wiki/RAD" title="Learn more about Rapid Application Development and why it matters">More on RAD</a>
 </div>
 
-## Supported Target Frameworks
-
-- .NET 5.0+
-- .NET Core 2.0+
-- .NET Standard 2.0+
-- .NET Framework 4.6.1+
-
 ## Usage
 
 The main Gapotchenko.FX module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX):

@@ -43,7 +43,7 @@ using System.Linq;
 
 new string[0].SingleOrDefault(); // returns null
 new[] { "A" }.SingleOrDefault(); // returns "A"
-new[] { "A", "B" }.SingleOrDefault(); // throws an exception 😞
+new[] { "A", "B" }.SingleOrDefault(); // throws an exception 🚫
 ```
 
 ### *Scalar*OrDefault() Semantics
@@ -53,7 +53,7 @@ using Gapotchenko.FX.Linq;
 
 new string[0].ScalarOrDefault(); // returns null
 new[] { "A" }.ScalarOrDefault(); // returns "A"
-new[] { "A", "B" }.ScalarOrDefault(); // returns null 👍
+new[] { "A", "B" }.ScalarOrDefault(); // returns null ✅
 ```
 
 In practice, `ScalarOrDefault()` semantics is a big win as it allows you to _safely_ determine whether a given query converges to a scalar result.
@@ -62,7 +62,7 @@ In practice, `ScalarOrDefault()` semantics is a big win as it allows you to _saf
 
 Returns distinct elements from a sequence by using the default equality comparer on the keys extracted by a specified selector function.
 
-The method is similar to `Distinct()` method provided by the stock `System.Linq` namespace, but allows to specify a selector function in order to differentiate the elements by a specific criteria.
+The method is similar to `Distinct()` method provided in the stock `System.Linq` namespace, but allows to specify a selector function in order to differentiate the elements by a specific criteria.
 
 Let's take a look at example:
 
@@ -73,7 +73,7 @@ var source = new[]
 {
     new { FirstName = "Alex", LastName = "Cooper" },
     new { FirstName = "John", LastName = "Walker" },
-    new { FirstName = "Alex", LastName = "The Great" },
+    new { FirstName = "Alex", LastName = "Lememe" },
     new { FirstName = "Jeremy", LastName = "Doer" }
 };
 
@@ -104,7 +104,6 @@ var source = new[]
 {
     new { FirstName = "Alex", LastName = "Cooper", Age = 45 },
     new { FirstName = "John", LastName = "Walker", Age = 17 },
-    new { FirstName = "Alex", LastName = "The Great", Age = 1500 },
     new { FirstName = "Jeremy", LastName = "Doer", Age = 29 }
 };
 
@@ -115,7 +114,7 @@ Console.WriteLine("The youngest person: {0}", source.MinBy(x => x.Age));
 The code produces the following output:
 
 ```
-The oldest person: { FirstName = Alex, LastName = The Great, Age = 1500 }
+The oldest person: { FirstName = Alex, LastName = The Great, Age = 45 }
 The youngest person: { FirstName = John, LastName = Walker, Age = 17 }
 ```
 

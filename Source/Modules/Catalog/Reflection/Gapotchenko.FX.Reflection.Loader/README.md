@@ -173,6 +173,7 @@ static class AssemblyLoader
 {
     public static void Activate()
     {
+        // TODO
     }
 }
 ```
@@ -222,6 +223,7 @@ static class AssemblyLoader
 
     public static void Activate()
     {
+        // When this method is called, static class constructor above is executed exactly once on the first call.
     }
 }
 ```

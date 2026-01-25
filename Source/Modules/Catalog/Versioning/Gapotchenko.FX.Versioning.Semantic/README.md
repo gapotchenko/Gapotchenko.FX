@@ -6,7 +6,7 @@
 
 The module provides semantic versioning functionality that follows the [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html) specification.
 
-## SemanticVersion
+## `SemanticVersion`
 
 `SemanticVersion` record from `Gapotchenko.FX.Versioning.Semantic` module represents a semantic version with support for major, minor, patch, prerelease, and build metadata components.
 

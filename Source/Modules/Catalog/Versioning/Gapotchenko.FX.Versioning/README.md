@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.Versioning.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Versioning)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Gapotchenko.FX.Versioning.svg)](https://www.nuget.org/packages/Gapotchenko.FX.Versioning)
 
-The module provides polyfills and extensions for the `System.Version` class.
+The module provides functionality for working with versions.
 
 ## VersionTypeConverter
 
@@ -40,7 +40,7 @@ After registration, the converter will be automatically used by frameworks that 
 
 The module provides extension methods that enable deconstruction of `Version` objects, allowing you to easily extract version components using pattern matching syntax.
 
-### Deconstructing to Major and Minor
+### Deconstructing to `Major` and `Minor`
 
 ``` C#
 using Gapotchenko.FX.Versioning;
@@ -52,7 +52,7 @@ var (major, minor) = version;
 Console.WriteLine($"Major: {major}, Minor: {minor}"); // "Major: 1, Minor: 2"
 ```
 
-### Deconstructing to Major, Minor, and Build
+### Deconstructing to `Major`, `Minor`, and `Build`
 
 ``` C#
 using Gapotchenko.FX.Versioning;

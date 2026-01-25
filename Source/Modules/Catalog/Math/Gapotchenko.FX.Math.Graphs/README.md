@@ -5,7 +5,7 @@
 
 The module provides data structures and primitives for working with abstract graphs of objects.
 
-## Graph&lt;T&gt;
+## `Graph<T>`
 
 `Graph<T>` class provided by `Gapotchenko.FX.Math.Graphs` represents a strongly-typed graph of objects.
 The objects stored in a graph are called vertices and each of the related pairs of vertices is called an edge.
@@ -120,13 +120,13 @@ They all work in the same manner and follow the same mutable/immutable model:
 
 | Operation | Description | Immutable Function | In-Place Method |
 | --- | --- | --- | --- |
-| Transposition | Reverses the direction of all edges in the graph. | `GetTransposition` | `Transpose` |
-| Transitive reduction | Prunes the transitive relations that have shorter paths. | `GetTransitiveReduction` | `ReduceTransitions` |
-| Reflexive reduction | Removes the loops (also called self-loops or buckles). | `GetReflexiveReduction` | `ReduceReflexes` |
-| Subgraph | Produces a vertex-induced or edge-induced subgraph. | `GetSubgraph` | `Subgraph` |
-| Intersection | Produces a graph containing vertices and edges that are present in both the current and a specified graphs. | `Intersect` | `IntersectWith` |
-| Union | Produces a graph containing all vertices and edges that are present in the current graph, in the specified graph, or in both. | `Union` | `UnionWith` |
-| Exception | Produces a  graph containing vertices and edges that are present in the current graph but not in the specified graph. | `Except` | `ExceptWith` |
+| **Transposition** | Reverses the direction of all edges in the graph. | `GetTransposition` | `Transpose` |
+| **Transitive reduction** | Prunes the transitive relations that have shorter paths. | `GetTransitiveReduction` | `ReduceTransitions` |
+| **Reflexive reduction** | Removes the loops (also called self-loops or buckles). | `GetReflexiveReduction` | `ReduceReflexes` |
+| **Subgraph** | Produces a vertex-induced or edge-induced subgraph. | `GetSubgraph` | `Subgraph` |
+| **Intersection** | Produces a graph containing vertices and edges that are present in both the current and the argument-specified graphs. | `Intersect` | `IntersectWith` |
+| **Union** | Produces a graph containing all vertices and edges that are present in the current graph, in the argument-specified graph, or in both. | `Union` | `UnionWith` |
+| **Exclusion** | Produces a  graph containing vertices and edges that are present in the current graph but not in the argument-specified graph. | `Except` | `ExceptWith` |
 
 ### Topological Sorting
 
@@ -216,19 +216,14 @@ using Gapotchenko.FX.Math.Graphs;
 string seq = "ABCDEF";
 
 // Dependency function.
-static bool df(char a, char b) =>
-    (a + " depends on " + b) switch
-    {
-        "A depends on B" or
-        "B depends on D" => true,
-        _ => false
-    };
+// 'A' depends on 'B', and 'B' depends on 'D'.
+static bool df(char a, char b) => (a, b) is ('A', 'B') or ('B', 'D');
 
-var ordering = seq.OrderTopologicallyBy(x => x, df);
-Console.WriteLine(string.Join(", ", ordering));  // <- prints "D, B, A, C, E, F"
+var ordering = seq.OrderTopologically(df);
+Console.WriteLine(string.Join(", ", ordering));  // "D, B, A, C, E, F"
 ```
 
-Unlike its graph sibling, `IEnumerable<T>.OrderTopologicallyBy` extension method tolerates circular dependencies by ignoring them.
+Unlike its graph sibling, `IEnumerable<T>.OrderTopologically` method tolerates circular dependencies by ignoring them.
 They are resolved according to the original order of elements in the sequence.
 
 `OrderTopologicallyBy` method allows a subsequent sorting by following the standard `IOrderedEnumerable<T>` LINQ convention:

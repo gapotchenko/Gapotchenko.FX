@@ -84,7 +84,7 @@ In that case, you can instantiate a custom checksum algorithm with the desired p
 var checksumAlgorithm = new CustomCrc16(poly, init, refin, refout, xorout);
 ```
 
-If you want to formalize the custom algorithm even further, you may opt into creating a separate class with a convenient accessor property:
+If you want to formalize the custom algorithm implementation even further, you may opt into creating a separate class with a convenient accessor property:
 
 ``` C#
 /// <summary>
