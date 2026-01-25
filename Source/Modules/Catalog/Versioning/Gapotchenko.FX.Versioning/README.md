@@ -6,7 +6,7 @@
 
 The module provides functionality for working with versions.
 
-## VersionTypeConverter
+## `VersionTypeConverter`
 
 `VersionTypeConverter` class provides a type converter for `System.Version` that enables conversion to and from string representations and integration with various .NET components.
 
