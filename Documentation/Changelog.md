@@ -2,9 +2,9 @@
 
 ## 2026
 
-### Gapotchenko.FX 2026.2 Beta
+### Gapotchenko.FX 2026.2
 
-Release date: not released yet
+Release date: January 25, 2026
 
 - Asynchronous operations support for ZIP archives (.NET 10.0+)
 - Ability to specify entry name encoding option for ZIP archives
@@ -13,7 +13,7 @@ Release date: not released yet
 - `SemanticVersion` type can be parsed by `System.Text.Json` serializer out of the box (.NET 8.0+)
 - `Interval<T>` and `ValueInterval<T>` types can be parsed by `System.Text.Json` serializer out of the box (.NET 8.0+)
 - Added type converters for `Interval<T>` and `ValueInterval<T>` types
-- More tidy `SemanticVersion` instance construction by its type converter
+- More efficient `SemanticVersion` instance construction by its type converter
 
 ### Gapotchenko.FX 2026.1
 
