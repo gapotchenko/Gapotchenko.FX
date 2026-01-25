@@ -123,7 +123,7 @@ public static class VfsPathKit
     /// </remarks>
     /// <param name="path">The path to enumerate subpaths for.</param>
     /// <param name="directorySeparatorChar">The directory separator character.</param>
-    /// <returns>The sequence of subpaths of the specified path.</returns>
+    /// <returns>A sequence of subpaths of the specified path.</returns>
     static IEnumerable<string> EnumerateSubpaths(string? path, char directorySeparatorChar)
     {
         for (string? i = path; !string.IsNullOrEmpty(i); i = GetDirectoryName(i, directorySeparatorChar).ToNullableString())

@@ -176,7 +176,7 @@ public static class FileSystem
     /// </list>
     /// </remarks>
     /// <param name="path">The path to enumerate subpaths for.</param>
-    /// <returns>The sequence of subpaths of the specified path.</returns>
+    /// <returns>A sequence of subpaths of the specified path.</returns>
     public static IEnumerable<string> EnumerateSubpaths(string? path)
     {
         for (string? i = path; !string.IsNullOrEmpty(i); i = Path.GetDirectoryName(i))
