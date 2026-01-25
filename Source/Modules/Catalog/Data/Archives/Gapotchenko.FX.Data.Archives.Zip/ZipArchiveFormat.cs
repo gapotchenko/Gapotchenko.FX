@@ -23,9 +23,24 @@ sealed class ZipArchiveFormat : DataArchiveFormatKit<IZipArchive, ZipArchiveOpti
         return new ZipArchive(stream, true, leaveOpen, options, context);
     }
 
+    protected override async Task<IZipArchive> CreateCoreAsync(Stream stream, bool leaveOpen, ZipArchiveOptions? options, VfsStorageContext? context, CancellationToken cancellationToken)
+    {
+        stream.SetLength(0);
+        return await
+            ZipArchive.CreateAsync(stream, true, leaveOpen, options, context, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     protected override IZipArchive MountCore(Stream stream, bool writable, bool leaveOpen, ZipArchiveOptions? options, VfsStorageContext? context)
     {
         return new ZipArchive(stream, writable, leaveOpen, options, context);
+    }
+
+    protected override async Task<IZipArchive> MountCoreAsync(Stream stream, bool writable, bool leaveOpen, ZipArchiveOptions? options, VfsStorageContext? context, CancellationToken cancellationToken)
+    {
+        return await
+            ZipArchive.CreateAsync(stream, writable, leaveOpen, options, context, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     protected override bool IsMountableCore(Stream stream, ZipArchiveOptions? options, VfsStorageContext? context)
