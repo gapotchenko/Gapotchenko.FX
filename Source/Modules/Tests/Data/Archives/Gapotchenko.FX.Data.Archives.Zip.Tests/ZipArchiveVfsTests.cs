@@ -7,10 +7,9 @@ namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
 [TestClass]
 public sealed class ZipArchiveVfsTests : FileSystemViewVfsTestKit
 {
-    protected override IFileSystemView CreateVfs(out string rootPath)
+    protected override VfsLocation CreateVfs()
     {
-        rootPath = "/";
-        return new ArchiveVfs(new MemoryStream());
+        return new VfsLocation(new ArchiveVfs(new MemoryStream()), "/");
     }
 
     protected override bool TryRoundTripVfs(ref IFileSystemView vfs)
@@ -30,11 +29,33 @@ public sealed class ZipArchiveVfsTests : FileSystemViewVfsTestKit
         return true;
     }
 
-    sealed class ArchiveVfs(Stream stream) :
-        FileSystemViewProxyKit<ZipArchive>(new ZipArchive(stream, true, stream.CanWrite)),
+    sealed class ArchiveVfs :
+        FileSystemViewProxyKit<ZipArchive>,
         IDisposable
     {
-        public Stream Stream => stream;
+        public ArchiveVfs(Stream stream) :
+            this(
+                new ZipArchive(stream, stream.CanWrite, true),
+                stream)
+        {
+        }
+
+        ArchiveVfs(ZipArchive baseView, Stream stream) :
+            base(baseView)
+        {
+            Stream = stream;
+        }
+
+        public static async Task<ArchiveVfs> CreateAsync(Stream stream, CancellationToken cancellationToken = default)
+        {
+            return new ArchiveVfs(
+                await
+                    ZipArchive.CreateAsync(stream, stream.CanWrite, true, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false),
+                stream);
+        }
+
+        public Stream Stream { get; }
 
         public void Dispose() => BaseView.Dispose();
     }

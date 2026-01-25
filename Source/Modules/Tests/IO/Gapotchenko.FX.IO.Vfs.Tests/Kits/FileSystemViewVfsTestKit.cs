@@ -33,9 +33,8 @@ public abstract partial class FileSystemViewVfsTestKit
     /// <summary>
     /// Creates an empty virtual file system view.
     /// </summary>
-    /// <param name="rootPath">The root path to use for tests.</param>
-    /// <returns>The <see cref="IFileSystemView"/> instance for the created virtual file system.</returns>
-    protected abstract IFileSystemView CreateVfs(out string rootPath);
+    /// <returns>A VFS location where the testing should be performed.</returns>
+    protected abstract VfsLocation CreateVfs();
 
     /// <summary>
     /// Round-trips the specified virtual file system by unmounting, disposing, copying, and remounting it.
@@ -111,9 +110,11 @@ public abstract partial class FileSystemViewVfsTestKit
         VfsPhasedTest? verify,
         Func<IFileSystemView, IFileSystemView> transformVfs)
     {
-        var vfs = transformVfs(CreateVfs(out string rootPath));
+        var (vfs, rootPath) = CreateVfs();
         try
         {
+            vfs = transformVfs(vfs);
+
             mutate(vfs, rootPath);
 
             if (verify is not null)
