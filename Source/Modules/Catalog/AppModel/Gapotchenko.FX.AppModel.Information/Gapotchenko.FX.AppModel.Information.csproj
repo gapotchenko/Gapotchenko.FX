@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Diagnostics\Gapotchenko.FX.Diagnostics.Process\Gapotchenko.FX.Diagnostics.Process.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
     <ProjectReference Include="..\..\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
   </ItemGroup>
