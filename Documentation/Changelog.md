@@ -7,6 +7,7 @@
 Release date: not released yet
 
 - Added `GetRelativePath(string, string)` method to `IReadOnlyFileSystemView` VFS interface
+- Added `System.Environment.ProcessPath` polyfill property
 - Fixed MSB3277 warning about `System.ValueTuple` assembly that occurred for .NET Framework target frameworks (caused by `Microsoft.Bcl.Memory` package)
 
 ### Gapotchenko.FX 2026.2
