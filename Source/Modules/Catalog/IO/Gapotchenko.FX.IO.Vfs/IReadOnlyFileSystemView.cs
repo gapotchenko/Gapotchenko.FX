@@ -574,6 +574,21 @@ public interface IReadOnlyFileSystemView
     string? GetFullPath(string? path);
 
     /// <summary>
+    /// Returns a relative path from one path to another.
+    /// </summary>
+    /// <param name="relativeTo">
+    /// The source path the result should be relative to.
+    /// This path is always considered to be a directory.
+    /// </param>
+    /// <param name="path">The destination path.</param>
+    /// <returns>The relative path, or <paramref name="path"/> if the paths don't share the same root.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="relativeTo"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="relativeTo"/> is effectively empty.</exception>
+    /// <exception cref="ArgumentException"><paramref name="path"/> is effectively empty.</exception>
+    string GetRelativePath(string relativeTo, string path);
+
+    /// <summary>
     /// <para>
     /// Canonicalizes a specified path.
     /// </para>

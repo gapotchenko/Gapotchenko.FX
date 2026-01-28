@@ -359,6 +359,8 @@ sealed class LocalFileSystemView : FileSystemViewKit
 
     protected override string GetFullPathCore(string path) => Path.GetFullPath(path);
 
+    public override string GetRelativePath(string relativeTo, string path) => Path.GetRelativePath(relativeTo, path);
+
     protected override string CanonicalizePathCore(string path) => FileSystem.CanonicalizePath(path);
 
     public override string? GetDirectoryName(string? path)

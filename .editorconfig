@@ -10,6 +10,7 @@ dotnet_style_require_accessibility_modifiers=omit_if_default:warning
 dotnet_diagnostic.IDE0005.severity = warning
 dotnet_diagnostic.IDE0008.severity = suggestion
 dotnet_diagnostic.IDE0010.severity = none
+dotnet_diagnostic.IDE0011.severity = suggestion
 dotnet_diagnostic.IDE0022.severity = none
 dotnet_diagnostic.IDE0023.severity = suggestion
 dotnet_diagnostic.IDE0024.severity = suggestion

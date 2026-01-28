@@ -960,6 +960,55 @@ public abstract class FileSystemViewKit : IFileSystemView
         }
     }
 
+    /// <inheritdoc/>
+    public virtual string GetRelativePath(string relativeTo, string path)
+    {
+        VfsValidationKit.Arguments.ValidatePath(relativeTo);
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        path = GetFullPath(path);
+        relativeTo = GetFullPath(relativeTo);
+
+        char directorySeparatorChar = DirectorySeparatorChar;
+        char[] separators = [directorySeparatorChar, AltDirectorySeparatorChar];
+        IReadOnlyList<string> p1 = path.Split(separators);
+        IReadOnlyList<string> p2 = relativeTo.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+        var sc = FileSystem.PathComparison;
+
+        int i;
+        int n = Math.Min(p1.Count, p2.Count);
+        for (i = 0; i < n; i++)
+        {
+            if (!string.Equals(p1[i], p2[i], sc))
+                break;
+        }
+
+        if (i == 0)
+        {
+            // Cannot make a relative path, for example if the path resides on another drive.
+            return path;
+        }
+
+        p1 = [.. p1.Skip(i).Take(p1.Count - i)];
+
+        if (p1.Count == 1 && p1[0].Length == 0)
+            p1 = [];
+
+        string relativePath = string.Join(
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+            directorySeparatorChar,
+#else
+            new string(directorySeparatorChar, 1),
+#endif
+            Enumerable.Repeat("..", p2.Count - i).Concat(p1));
+
+        if (relativePath.Length == 0)
+            relativePath = ".";
+
+        return relativePath;
+    }
+
     /// <inheritdoc cref="GetFullPath(string?)"/>
     protected virtual string GetFullPathCore(string path)
     {
