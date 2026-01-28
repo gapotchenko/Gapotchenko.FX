@@ -235,10 +235,10 @@ public class AppInformation : IAppInformation
             if (!string.IsNullOrEmpty(ns))
             {
                 int j = ns.LastIndexOf('.');
-                if (j != -1 && j < ns.Length - 1)
-                    productName = ns[(j + 1)..];
-                else
-                    productName = ns;
+                productName =
+                    j != -1 && j < ns.Length - 1
+                        ? ns[(j + 1)..]
+                        : ns;
             }
             else
             {
