@@ -89,7 +89,10 @@ static partial class ProcessEnvironment
             {
                 // Empty environment may indicate that a process environment block has not been initialized yet.
                 if (RetryPolicy())
+                {
+                    Thread.Sleep(0); // yield
                     goto Again;
+                }
             }
 
             return env;
@@ -98,9 +101,14 @@ static partial class ProcessEnvironment
         {
             // There may be a race condition in environment block initialization of a recently started process.
             if (RetryPolicy())
+            {
+                Thread.Sleep(0); // yield
                 goto Again;
+            }
             else
+            {
                 throw;
+            }
         }
     }
 
