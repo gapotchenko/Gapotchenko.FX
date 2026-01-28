@@ -1,4 +1,11 @@
-﻿namespace Gapotchenko.FX.Diagnostics.Pal;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+namespace Gapotchenko.FX.Diagnostics.Pal;
 
 /// <summary>
 /// Provides low-level access to the process memory.

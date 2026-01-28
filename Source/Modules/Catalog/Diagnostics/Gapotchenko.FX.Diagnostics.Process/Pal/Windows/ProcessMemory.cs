@@ -1,4 +1,11 @@
-﻿#if !HAS_TARGET_PLATFORM || WINDOWS
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+#if !HAS_TARGET_PLATFORM || WINDOWS
 
 using System.Runtime.InteropServices;
 
@@ -15,9 +22,10 @@ static class ProcessMemory
         {
             if (!NativeMethods.IsWow64Process(hProcess, out bool wow64))
                 return 32;
-            if (wow64)
+            else if (wow64)
                 return 32;
-            return 64;
+            else
+                return 64;
         }
         else
         {
@@ -27,7 +35,7 @@ static class ProcessMemory
 
     static unsafe bool ReadProcessMemory(IntPtr hProcess, UniPtr from, void* to, nint length, out nint actualLength)
     {
-        if (from.CanBeRepresentedByNativePointer)
+        if (from.ActualSize <= IntPtr.Size)
         {
             actualLength = 0;
             return NativeMethods.ReadProcessMemory(hProcess, from, to, length, ref actualLength);
@@ -133,7 +141,7 @@ static class ProcessMemory
         try
         {
             // Align to 64 bits.
-            var hMemInfoAligned = new IntPtr(hMemInfo.ToInt64() & ~(memInfoAlign - 1L));
+            IntPtr hMemInfoAligned = new(hMemInfo.ToInt64() & ~(memInfoAlign - 1L));
 
             result = NativeMethods.NtWow64QueryVirtualMemory64(
                 hProcess,

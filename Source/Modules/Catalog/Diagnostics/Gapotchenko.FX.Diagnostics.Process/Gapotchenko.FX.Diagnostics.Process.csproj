@@ -16,6 +16,8 @@
     <PackageTag Include="environment" />
   </ItemGroup>
 
+  <Import Project="Targeting.props" />
+  
   <ItemGroup>
     <ProjectReference Include="..\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
     <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />

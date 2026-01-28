@@ -1,14 +1,17 @@
-﻿using System.Text;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Text;
 
 namespace Gapotchenko.FX.Diagnostics.Pal;
 
-sealed class ProcessBinaryReader : BinaryReader
+sealed class ProcessBinaryReader(Stream input, Encoding encoding) :
+    BinaryReader(input, encoding)
 {
-    public ProcessBinaryReader(Stream input, Encoding encoding) :
-        base(input, encoding)
-    {
-    }
-
     public string ReadCString()
     {
         var sb = new StringBuilder();

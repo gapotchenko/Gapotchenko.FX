@@ -1,0 +1,8 @@
+<Project>
+
+  <!-- .NET 6.0 -->
+  <ItemGroup Condition=" '$(MasteringFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionGreaterThanOrEquals($(MasteringFrameworkVersion), '6.0')) ">
+    <MasteringFrameworkFeature Include="TFF_ENVIRONMENT_PROCESSPATH" />
+  </ItemGroup>
+
+</Project>

@@ -1,4 +1,11 @@
-﻿#if !HAS_TARGET_PLATFORM || WINDOWS
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+#if !HAS_TARGET_PLATFORM || WINDOWS
 
 using System.Runtime.InteropServices;
 using System.Text;
@@ -32,7 +39,7 @@ static class NativeMethods
     [DllImport("kernel32.dll", ExactSpelling = true)]
     public static extern void GetNativeSystemInfo(out SYSTEM_INFO lpSystemInfo);
 
-    // -------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct PROCESS_BASIC_INFORMATION
@@ -148,7 +155,7 @@ static class NativeMethods
     [DllImport("kernel32.dll")]
     public static extern bool IsWow64Process(IntPtr hProcess, out bool wow64Process);
 
-    // -------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
     public const int ERROR_ACCESS_DENIED = 5;
     public const int ERROR_INVALID_HANDLE = 6;
@@ -171,7 +178,7 @@ static class NativeMethods
     [DllImport("kernel32.dll", ExactSpelling = true, SetLastError = true)]
     public static extern bool SetConsoleCtrlHandler(HANDLER_ROUTINE? HandlerRoutine, bool Add);
 
-    // -------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
     public const int MAX_PATH = 260;
 
@@ -179,6 +186,15 @@ static class NativeMethods
 
     [DllImport("kernel32.dll", SetLastError = true)]
     public static extern bool QueryFullProcessImageName(IntPtr hProcess, uint dwFlags, StringBuilder lpExeName, ref uint lpdwSize);
+
+    // ------------------------------------------------------------------------
+
+#if !TFF_ENVIRONMENT_PROCESSPATH
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    public static extern int GetModuleFileName(HandleRef hModule, StringBuilder buffer, int length);
+
+#endif
 }
 
 #endif

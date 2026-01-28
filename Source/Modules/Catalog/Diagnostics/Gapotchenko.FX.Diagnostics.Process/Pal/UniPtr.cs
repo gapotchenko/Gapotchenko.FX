@@ -1,4 +1,11 @@
-﻿namespace Gapotchenko.FX.Diagnostics.Pal;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+namespace Gapotchenko.FX.Diagnostics.Pal;
 
 /// <summary>
 /// Universal pointer that can hold both 32-bit and 64-bit values.
@@ -37,27 +44,32 @@ readonly struct UniPtr : IEquatable<UniPtr>
     readonly long m_Value;
     readonly byte m_Size; // in bytes
 
+    /// <summary>
+    /// Gets the size of the pointer, in bytes.
+    /// </summary>
     public int Size => m_Size;
 
     public readonly long ToInt64() => m_Value;
 
     public readonly ulong ToUInt64() => (ulong)m_Value;
 
-    public readonly bool FitsInNativePointer => m_Size <= IntPtr.Size;
-
-    public readonly bool CanBeRepresentedByNativePointer
+    /// <summary>
+    /// Gets the actual size of the pointer, in bytes.
+    /// </summary>
+    /// <remarks>
+    /// If the upper 32 bits of the 64-bit pointer are zero, its actual size is 32 bits (and it can be represented by a 32-bit pointer).
+    /// </remarks>
+    public readonly int ActualSize
     {
         get
         {
-            int actualSize = m_Size;
-
-            if (actualSize == 8)
+            int size = m_Size;
+            if (size == 8)
             {
                 if (m_Value >> 32 == 0)
-                    actualSize = 4;
+                    size = 4;
             }
-
-            return actualSize <= IntPtr.Size;
+            return size;
         }
     }
 

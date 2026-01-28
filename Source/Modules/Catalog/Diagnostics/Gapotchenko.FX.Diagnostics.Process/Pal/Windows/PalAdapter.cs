@@ -1,4 +1,12 @@
-﻿#if !HAS_TARGET_PLATFORM || WINDOWS
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+#if !HAS_TARGET_PLATFORM || WINDOWS
 
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -150,6 +158,33 @@ sealed class PalAdapter : IPalAdapter
             }
         }
     }
+
+#if !TFF_ENVIRONMENT_PROCESSPATH
+
+    public string? GetProcessPath()
+    {
+        return Path.GetFullPath(GetModuleFileName(default));
+    }
+
+    static string GetModuleFileName(HandleRef hModule)
+    {
+        var buffer = new StringBuilder(NativeMethods.MAX_PATH);
+
+        int length;
+        for (; ; )
+        {
+            length = NativeMethods.GetModuleFileName(hModule, buffer, buffer.Capacity);
+            if (length < 0x7fff && length == buffer.Capacity && Marshal.GetLastWin32Error() == 0x7a)
+                buffer.EnsureCapacity(buffer.Capacity * 2);
+            else
+                break;
+        }
+        buffer.Length = length;
+
+        return buffer.ToString();
+    }
+
+#endif
 }
 
 #endif

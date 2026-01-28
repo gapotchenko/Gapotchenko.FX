@@ -1,7 +1,13 @@
-﻿#if !HAS_TARGET_PLATFORM || LINUX
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+#if !HAS_TARGET_PLATFORM || LINUX
 
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Linux;
 

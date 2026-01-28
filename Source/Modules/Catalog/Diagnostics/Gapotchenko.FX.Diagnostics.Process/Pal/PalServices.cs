@@ -1,9 +1,20 @@
-﻿using System.Runtime.InteropServices;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Diagnostics.Pal;
 
 static class PalServices
 {
+    public static IPalAdapter Adapter => AdapterOrDefault ?? throw new PlatformNotSupportedException();
+
+    public static IPalAdapter? AdapterOrDefault => AdapterFactory.Instance;
+
     static class AdapterFactory
     {
         public static IPalAdapter? Instance { get; } = CreateInstance();
@@ -32,8 +43,4 @@ static class PalServices
 #endif
         }
     }
-
-    public static IPalAdapter? AdapterOrDefault => AdapterFactory.Instance;
-
-    public static IPalAdapter Adapter => AdapterOrDefault ?? throw new PlatformNotSupportedException();
 }

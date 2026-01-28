@@ -1,14 +1,15 @@
-﻿#if !HAS_TARGET_PLATFORM || LINUX
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
 
-using System;
-using System.Collections.Generic;
+#if !HAS_TARGET_PLATFORM || LINUX
+
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Runtime.Versioning;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Gapotchenko.FX.Diagnostics.Pal.Linux;
 
@@ -128,6 +129,10 @@ sealed class PalAdapter : IPalAdapter
 
         return false;
     }
+
+#if !TFF_ENVIRONMENT_PROCESSPATH
+    public string? GetProcessPath() => null;
+#endif
 }
 
 #endif

@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -45,8 +46,6 @@ sealed class ProcessMemoryStream : Stream
         }
     }
 
-    long m_Position;
-
     public override long Position
     {
         get => m_Position;
@@ -57,6 +56,8 @@ sealed class ProcessMemoryStream : Stream
             m_Position = value;
         }
     }
+
+    long m_Position;
 
     public override void Flush()
     {

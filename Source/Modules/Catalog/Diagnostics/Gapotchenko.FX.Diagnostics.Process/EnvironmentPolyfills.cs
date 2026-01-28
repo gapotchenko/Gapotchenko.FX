@@ -6,10 +6,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
-#if NET6_0_OR_GREATER
-#define TFF_ENVIRONMENT_PROCESSPATH
-#endif
-
+using Gapotchenko.FX.Diagnostics.Pal;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Diagnostics;
@@ -52,6 +49,13 @@ public static class EnvironmentPolyfills
     static string? m_CachedProcessPath;
 
     static string? GetProcessPathCore()
+    {
+        return
+            PalServices.AdapterOrDefault?.GetProcessPath() ??
+            GetProcessPathFallback();
+    }
+
+    static string? GetProcessPathFallback()
     {
         var currentProcess = Process.GetCurrentProcess();
 

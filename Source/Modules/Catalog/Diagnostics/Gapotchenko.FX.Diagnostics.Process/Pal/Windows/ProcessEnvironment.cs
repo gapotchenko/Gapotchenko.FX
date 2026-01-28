@@ -1,4 +1,11 @@
-﻿#if !HAS_TARGET_PLATFORM || WINDOWS
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+#if !HAS_TARGET_PLATFORM || WINDOWS
 
 using System.Runtime.InteropServices;
 using System.Text;
@@ -18,7 +25,7 @@ static partial class ProcessEnvironment
         {
             // Accessing a 64-bit process.
 
-            var pPeb = _GetPeb64(hProcess);
+            var pPeb = GetPeb64(hProcess);
 
             if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x20, out var pProcessParameters))
                 throw new Exception("Unable to read PEB.");
@@ -39,11 +46,11 @@ static partial class ProcessEnvironment
 
             return br.ReadCString();
         }
-        else
+        else if (processBitness == 32)
         {
             // Accessing a 32-bit process.
 
-            var pPeb = _GetPeb32(hProcess);
+            var pPeb = GetPeb32(hProcess);
 
             if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x10, out var pProcessParameters))
                 throw new Exception("Unable to read PEB.");
@@ -60,6 +67,10 @@ static partial class ProcessEnvironment
 
             return br.ReadCString();
         }
+        else
+        {
+            throw new PlatformNotSupportedException();
+        }
     }
 
     public static IReadOnlyDictionary<string, string> ReadVariables(IntPtr hProcess)
@@ -70,9 +81,9 @@ static partial class ProcessEnvironment
     Again:
         try
         {
-            var stream = _GetEnvStream(hProcess);
+            var stream = GetEnvStream(hProcess);
             var reader = new ProcessBinaryReader(new BufferedStream(stream), Encoding.Unicode);
-            var env = _ReadEnv(reader);
+            var env = ReadEnv(reader);
 
             if (env.Count == 0)
             {
@@ -93,13 +104,12 @@ static partial class ProcessEnvironment
         }
     }
 
-    static Stream _GetEnvStream(IntPtr hProcess)
+    static Stream GetEnvStream(IntPtr hProcess)
     {
-        var pEnv = _GetPEnv(hProcess);
-        if (pEnv.CanBeRepresentedByNativePointer)
+        var pEnv = GetPEnv(hProcess);
+        if (pEnv.ActualSize <= IntPtr.Size)
         {
-            int dataSize;
-            if (!ProcessMemory.HasReadAccess(hProcess, pEnv, out dataSize))
+            if (!ProcessMemory.HasReadAccess(hProcess, pEnv, out int dataSize))
                 throw new Exception("Unable to read process environment block.");
 
             var provider = new ProcessMemoryAccessor(hProcess);
@@ -130,7 +140,7 @@ static partial class ProcessEnvironment
         }
     }
 
-    static IReadOnlyDictionary<string, string> _ReadEnv(ProcessBinaryReader br)
+    static IReadOnlyDictionary<string, string> ReadEnv(ProcessBinaryReader br)
     {
         var env = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
@@ -156,7 +166,7 @@ static partial class ProcessEnvironment
         return env;
     }
 
-    static UniPtr _GetPEnv(IntPtr hProcess)
+    static UniPtr GetPEnv(IntPtr hProcess)
     {
         int processBitness = ProcessMemory.GetBitness(hProcess);
 
@@ -164,7 +174,7 @@ static partial class ProcessEnvironment
         {
             // Accessing a 64-bit process.
 
-            var pPeb = _GetPeb64(hProcess);
+            var pPeb = GetPeb64(hProcess);
 
             if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x20, out var pProcessParameters))
                 throw new Exception("Unable to read PEB.");
@@ -178,7 +188,7 @@ static partial class ProcessEnvironment
         {
             // Accessing a 32-bit process.
 
-            var pPeb = _GetPeb32(hProcess);
+            var pPeb = GetPeb32(hProcess);
 
             if (!ProcessMemory.TryReadIntPtr(hProcess, pPeb + 0x10, out var pProcessParameters))
                 throw new Exception("Unable to read PEB.");
@@ -195,7 +205,7 @@ static partial class ProcessEnvironment
     /// </summary>
     /// <param name="hProcess">The process handle.</param>
     /// <returns>The PEB base address.</returns>
-    static UniPtr _GetPeb32(IntPtr hProcess)
+    static UniPtr GetPeb32(IntPtr hProcess)
     {
         if (Environment.Is64BitProcess)
         {
@@ -221,7 +231,7 @@ static partial class ProcessEnvironment
         {
             // Getting PEB of a 32-bit process from the 32-bit host.
 
-            return _GetPebNative(hProcess);
+            return GetPebNative(hProcess);
         }
     }
 
@@ -230,13 +240,13 @@ static partial class ProcessEnvironment
     /// </summary>
     /// <param name="hProcess">The process handle.</param>
     /// <returns>The PEB base address.</returns>
-    static UniPtr _GetPeb64(IntPtr hProcess)
+    static UniPtr GetPeb64(IntPtr hProcess)
     {
         if (Environment.Is64BitProcess)
         {
             // Getting PEB of a 64-bit process from the 64-bit host.
 
-            return _GetPebNative(hProcess);
+            return GetPebNative(hProcess);
         }
         else
         {
@@ -260,7 +270,7 @@ static partial class ProcessEnvironment
         }
     }
 
-    static IntPtr _GetPebNative(IntPtr hProcess)
+    static IntPtr GetPebNative(IntPtr hProcess)
     {
         // Getting PEB of a x-bit process from the y-bit host, where x = y.
 

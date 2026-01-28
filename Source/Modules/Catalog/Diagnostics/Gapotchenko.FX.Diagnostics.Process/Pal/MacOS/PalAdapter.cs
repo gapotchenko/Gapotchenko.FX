@@ -1,6 +1,12 @@
-﻿#if !HAS_TARGET_PLATFORM || MACOS
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
 
-using System;
+#if !HAS_TARGET_PLATFORM || MACOS
+
 using System.Diagnostics;
 using System.Text;
 
@@ -163,6 +169,10 @@ sealed class PalAdapter : IPalAdapter
 
         return false;
     }
+
+#if !TFF_ENVIRONMENT_PROCESSPATH
+    public string? GetProcessPath() => null;
+#endif
 }
 
 #endif
