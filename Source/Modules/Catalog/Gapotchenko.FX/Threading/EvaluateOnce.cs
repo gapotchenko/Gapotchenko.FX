@@ -61,5 +61,14 @@ public static class EvaluateOnce
     /// with <see cref="EvaluateOnce{T}.IsValueCreated"/> property set to <see langword="true"/>
     /// and with <see cref="EvaluateOnce{T}.Value"/> property set to <paramref name="value"/>.
     /// </returns>
-    public static EvaluateOnce<T> Value<T>(T value) => new(value);
+    public static EvaluateOnce<T> Create<T>(T value) => new(value);
+
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY // 2026
+
+    /// <inheritdoc cref="Create{T}()"/>
+    [Obsolete("Use Create<T>(T) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static EvaluateOnce<T> Value<T>(T value) => Create(value);
+
+#endif
 }

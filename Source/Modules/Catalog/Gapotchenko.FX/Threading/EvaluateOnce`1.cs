@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -37,7 +38,7 @@ public struct EvaluateOnce<T>
     /// </summary>
     /// <param name="valueFactory">The value factory that is invoked to produce a lazily evaluated value when it is needed.</param>
     public EvaluateOnce(Func<T> valueFactory) :
-        this(valueFactory, null)
+        this(valueFactory, (object?)null)
     {
     }
 
@@ -75,7 +76,9 @@ public struct EvaluateOnce<T>
     /// Initializes a new instance of the <see cref="EvaluateOnce{T}"/> structure with the specified value of type <typeparamref name="T"/>.
     /// </summary>
     /// <remarks>
-    /// After using this constructor, <see cref="IsValueCreated"/> property is set to <see langword="true"/>.
+    /// After using this constructor,
+    /// <see cref="IsValueCreated"/> property is set to <see langword="true"/> and
+    /// <see cref="Value"/> property is set to <paramref name="value"/>.
     /// </remarks>
     /// <param name="value">The preinitialized value to be used.</param>
     public EvaluateOnce(T value)
@@ -99,7 +102,7 @@ public struct EvaluateOnce<T>
     /// <summary>
     /// Gets a value that indicates whether a value has been created for this <see cref="EvaluateOnce{T}"/> instance.
     /// </summary>
-    public bool IsValueCreated
+    public readonly bool IsValueCreated
     {
         get
         {

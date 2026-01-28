@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -24,7 +25,7 @@ public struct ExecuteOnce
     /// </summary>
     /// <param name="action">The action.</param>
     public ExecuteOnce(Action action) :
-        this(action, null)
+        this(action, (object?)null)
     {
     }
 
@@ -73,9 +74,16 @@ public struct ExecuteOnce
     /// <summary>
     /// Gets a value indicating whether the action was executed.
     /// </summary>
-    public bool IsExecuted =>
-        Volatile.Read(ref m_Action) is null &&
-        m_SyncLock is not null; // a check for m_SyncLock is needed to cover the uninitialized struct scenario
+    public readonly bool IsExecuted
+    {
+        get
+        {
+            Thread.MemoryBarrier();
+            return
+                m_Action is null &&
+                m_SyncLock is not null; // a check for m_SyncLock is needed to cover the uninitialized struct scenario
+        }
+    }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     object? m_SyncLock;
