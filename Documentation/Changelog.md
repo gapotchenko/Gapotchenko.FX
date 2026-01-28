@@ -6,6 +6,8 @@
 
 Release date: not released yet
 
+- Fixed MSB3277 warning about `System.ValueTuple` assembly that occurred for .NET Framework target frameworks (caused by `Microsoft.Bcl.Memory` package)
+
 ### Gapotchenko.FX 2026.2
 
 Release date: January 25, 2026
