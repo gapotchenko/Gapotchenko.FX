@@ -2,9 +2,9 @@
 
 ## 2026
 
-### Gapotchenko.FX 2026.3 (Beta)
+### Gapotchenko.FX 2026.3
 
-Release date: not released yet
+Release date: January 29, 2026
 
 - Improved API of `ExecuteOnce<T>` primitive
 - Improved API of `EvaluateOnce<T>` primitive
