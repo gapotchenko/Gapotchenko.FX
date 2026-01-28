@@ -1,11 +1,12 @@
 ﻿// Gapotchenko.FX
-// Copyright © Gapotchenko and Contributors
 //
+// Copyright © Gapotchenko and Contributors
 // Portions © .NET Foundation and its Licensors
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2020
 
+using Gapotchenko.FX.Diagnostics;
 using Gapotchenko.FX.Linq.Operators;
 using Gapotchenko.FX.Threading;
 using System.Diagnostics;
@@ -475,7 +476,7 @@ public class AppInformation : IAppInformation
 
         if (useProcess || entryAssembly == Assembly.GetEntryAssembly())
         {
-            if (GetProcessPath() is { } processPath)
+            if (Environment.ProcessPath is { } processPath)
                 return processPath;
         }
 
@@ -503,17 +504,5 @@ public class AppInformation : IAppInformation
 #endif
 
         return localPath;
-    }
-
-    static string? GetProcessPath()
-    {
-#if NET6_0_OR_GREATER
-        return Environment.ProcessPath;
-#else
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            return Path.GetFullPath(NativeMethods.GetModuleFileName(default));
-        else
-            return Process.GetCurrentProcess().MainModule?.FileName;
-#endif
     }
 }
