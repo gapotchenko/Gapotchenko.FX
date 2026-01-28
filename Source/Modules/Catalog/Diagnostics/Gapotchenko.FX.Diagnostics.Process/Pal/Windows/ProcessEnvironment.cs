@@ -165,8 +165,8 @@ static partial class ProcessEnvironment
             if (j <= 0)
                 continue;
 
-            string name = s.Substring(0, j);
-            string value = s.Substring(j + 1);
+            string name = s[..j];
+            string value = s[(j + 1)..];
 
             env[name] = value;
         }
@@ -219,7 +219,7 @@ static partial class ProcessEnvironment
         {
             // Getting PEB of a 32-bit process from the 64-bit host.
 
-            var ptr = IntPtr.Zero;
+            IntPtr ptr = IntPtr.Zero;
             int pbiSize = IntPtr.Size;
             int res_len = 0;
 
@@ -280,7 +280,7 @@ static partial class ProcessEnvironment
 
     static IntPtr GetPebNative(IntPtr hProcess)
     {
-        // Getting PEB of a x-bit process from the y-bit host, where x = y.
+        // Getting PEB of a X-bit process from the Y-bit host, where X = Y.
 
         var pbi = new NativeMethods.PROCESS_BASIC_INFORMATION();
         int pbiSize = Marshal.SizeOf(pbi);

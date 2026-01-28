@@ -184,6 +184,7 @@
   <Folder Name="/03. Misc/Legacy/Modules/" />
   <Folder Name="/03. Misc/Mastering/">
     <File Path="Mastering/Analysis.props" />
+    <File Path="Mastering/Exclusion.dic" />
     <File Path="Mastering/Language.props" />
     <File Path="Mastering/NuGet.targets" />
     <File Path="Mastering/TargetFrameworkFeatures.props" />

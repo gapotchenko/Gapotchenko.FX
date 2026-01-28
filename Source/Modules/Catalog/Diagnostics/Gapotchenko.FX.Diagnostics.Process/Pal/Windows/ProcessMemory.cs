@@ -77,7 +77,7 @@ static class ProcessMemory
         }
         else
         {
-            throw new NotSupportedException("Unsupported UniPtr size.");
+            throw new PlatformNotSupportedException();
         }
     }
 
