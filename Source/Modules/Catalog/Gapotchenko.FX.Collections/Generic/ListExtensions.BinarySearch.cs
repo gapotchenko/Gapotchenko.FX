@@ -12,10 +12,10 @@ namespace Gapotchenko.FX.Collections.Generic;
 partial class ListExtensions
 {
     /// <summary>
-    /// Searches a sorted <see cref="IReadOnlyList{T}"/> for a specific element using the specified value selector and comparer.
+    /// Searches the entire sorted <see cref="IReadOnlyList{T}"/> for an element using the specified value selector and comparer.
     /// </summary>
     /// <returns>
-    /// The index of a matching element, or a negative number equal to the bitwise complement of the insertion index if no element is found.
+    /// The zero-based index of a matching element, or a negative number equal to the bitwise complement of the insertion index if no element is found.
     /// </returns>
     /// <param name="list">The list of elements.</param>
     /// <param name="value">The element value to find.</param>
@@ -34,33 +34,11 @@ partial class ListExtensions
         ArgumentNullException.ThrowIfNull(list);
         ArgumentNullException.ThrowIfNull(valueSelector);
 
-        comparer ??= Comparer<TValue>.Default;
-
-        int lo = 0;
-        int hi = list.Count - 1;
-
-        while (lo <= hi)
-        {
-            // Avoid overflow: same technique used in BCL implementations
-            int mid = lo + ((hi - lo) >> 1);
-
-            var midValue = valueSelector(list[mid]);
-
-            int cmp = comparer.Compare(midValue, value);
-            if (cmp == 0)
-                return mid;
-            else if (cmp < 0)
-                lo = mid + 1;
-            else
-                hi = mid - 1;
-        }
-
-        // Not found; lo is the insertion index
-        return ~lo;
+        return BinarySearchByCore(list, 0, list.Count, value, valueSelector, comparer);
     }
 
     /// <summary>
-    /// Searches a sorted <see cref="IList{T}"/> for a specific element using the specified value selector and comparer.
+    /// Searches the entire sorted <see cref="IList{T}"/> for an element using the specified value selector and comparer.
     /// </summary>
     /// <inheritdoc cref="BinarySearchBy{TElement, TValue}(IReadOnlyList{TElement}, TValue, Func{TElement, TValue}, IComparer{TValue}?)"/>
     [OverloadResolutionPriority(-1)]
@@ -73,15 +51,69 @@ partial class ListExtensions
         ArgumentNullException.ThrowIfNull(list);
         ArgumentNullException.ThrowIfNull(valueSelector);
 
+        return BinarySearchByCore(list, 0, list.Count, value, valueSelector, comparer);
+    }
+
+    /// <summary>
+    /// Searches a range of elements in the sorted <see cref="IReadOnlyList{T}"/> for an element using the specified value selector and comparer.
+    /// </summary>
+    /// <inheritdoc cref="BinarySearchByCore{TElement, TValue}(IReadOnlyList{TElement}, int, int, TValue, Func{TElement, TValue}, IComparer{TValue}?)"/>
+    /// <param name="list"><inheritdoc/></param>
+    /// <param name="range">The range to search.</param>
+    /// <param name="value"><inheritdoc/>The range to search</param>
+    /// <param name="valueSelector"><inheritdoc/></param>
+    /// <param name="comparer"><inheritdoc/></param>
+    public static int BinarySearchBy<TElement, TValue>(
+        this IReadOnlyList<TElement> list,
+        Range range,
+        TValue value,
+        Func<TElement, TValue> valueSelector,
+        IComparer<TValue>? comparer = null)
+    {
+        ArgumentNullException.ThrowIfNull(list);
+        ArgumentNullException.ThrowIfNull(valueSelector);
+
+        var (offset, count) = range.GetOffsetAndLength(list.Count);
+        return BinarySearchByCore(list, offset, offset + count, value, valueSelector, comparer);
+    }
+
+    /// <summary>
+    /// Searches a range of elements in the sorted <see cref="IList{T}"/> for an element using the specified value selector and comparer.
+    /// </summary>
+    /// <inheritdoc cref="BinarySearchBy{TElement, TValue}(IReadOnlyList{TElement}, Range, TValue, Func{TElement, TValue}, IComparer{TValue}?)"/>
+    [OverloadResolutionPriority(-1)]
+    public static int BinarySearchBy<TElement, TValue>(
+        this IList<TElement> list,
+        Range range,
+        TValue value,
+        Func<TElement, TValue> valueSelector,
+        IComparer<TValue>? comparer = null)
+    {
+        ArgumentNullException.ThrowIfNull(list);
+        ArgumentNullException.ThrowIfNull(valueSelector);
+
+        var (offset, count) = range.GetOffsetAndLength(list.Count);
+        return BinarySearchByCore(list, offset, offset + count, value, valueSelector, comparer);
+    }
+
+    // ------------------------------------------------------------------------
+
+    static int BinarySearchByCore<TElement, TValue>(
+        IReadOnlyList<TElement> list,
+        int start, // the inclusive start index
+        int end, // the exclusive end index
+        TValue value,
+        Func<TElement, TValue> valueSelector,
+        IComparer<TValue>? comparer)
+    {
         comparer ??= Comparer<TValue>.Default;
 
-        int lo = 0;
-        int hi = list.Count - 1;
+        int lo = start;
+        int hi = end - 1;
 
         while (lo <= hi)
         {
-            // Avoid overflow: same technique used in BCL implementations
-            int mid = lo + ((hi - lo) >> 1);
+            int mid = GetMid(lo, hi);
 
             var midValue = valueSelector(list[mid]);
 
@@ -97,4 +129,40 @@ partial class ListExtensions
         // Not found; lo is the insertion index
         return ~lo;
     }
+
+    static int BinarySearchByCore<TElement, TValue>(
+        IList<TElement> list,
+        int start, // the inclusive start index
+        int end, // the exclusive end index
+        TValue value,
+        Func<TElement, TValue> valueSelector,
+        IComparer<TValue>? comparer)
+    {
+        comparer ??= Comparer<TValue>.Default;
+
+        int lo = start;
+        int hi = end - 1;
+
+        while (lo <= hi)
+        {
+            int mid = GetMid(lo, hi);
+
+            var midValue = valueSelector(list[mid]);
+
+            int cmp = comparer.Compare(midValue, value);
+            if (cmp == 0)
+                return mid;
+            else if (cmp < 0)
+                lo = mid + 1;
+            else
+                hi = mid - 1;
+        }
+
+        // Not found; lo is the insertion index
+        return ~lo;
+    }
+
+    static int GetMid(int lo, int hi) =>
+        // Avoid overflow: same technique used in BCL implementations
+        lo + ((hi - lo) >> 1);
 }
