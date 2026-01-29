@@ -102,7 +102,7 @@ class Program
         Console.WriteLine("Parent process ID: {0}", parentProcess.Id);
         Console.WriteLine("Parent process command line: {0}", parentProcess.ReadArguments());
         Console.WriteLine("------------------------------------------------------------------");
-        foreach (var i in parentProcess.ReadArgumentList())
+        foreach (string i in parentProcess.ReadArgumentList())
             Console.WriteLine(i);
         Console.WriteLine("------------------------------------------------------------------");
         foreach (DictionaryEntry i in parentProcess.ReadEnvironmentVariables())
@@ -127,8 +127,8 @@ class Program
             Console.WriteLine(env["PATH"]);
         }
 
-        var seq1 = new[] { "1", "2" };
-        var seq2 = new[] { "A", "B", "C" };
+        string[] seq1 = ["1", "2"];
+        string[] seq2 = ["A", "B", "C"];
 
         foreach (var i in CartesianProduct.Of(seq1, seq2))
             Console.WriteLine(string.Join(" ", i));
@@ -139,7 +139,7 @@ class Program
 
         //g.Vertices.Remove(2);
 
-        foreach (var i in g.Vertices)
+        foreach (int i in g.Vertices)
         {
             Console.WriteLine(i);
         }
@@ -176,7 +176,7 @@ class Program
 
         var ha = Crc16.Attested.Ccitt.CreateHashAlgorithm();
 
-        var checksum = Crc8.Standard.ComputeChecksum(Encoding.ASCII.GetBytes("123456789"));
+        byte checksum = Crc8.Standard.ComputeChecksum(Encoding.ASCII.GetBytes("123456789"));
         Console.WriteLine("Checksum = 0x{0:x}", checksum);
     }
 
@@ -255,7 +255,7 @@ class Program
 
             if (i % 1000 == 0)
             {
-                var t = sw.ElapsedMilliseconds;
+                long t = sw.ElapsedMilliseconds;
                 await Console.Out.WriteLineAsync(string.Format("{0} ms per 1000.", t));
                 sw.Restart();
             }
