@@ -6,6 +6,8 @@
 
 Release date: not released yet
 
+- Added ability to get a `System.Version` based on the given version with the specified number of components set using `System.Version.WithComponents(int)` extension method
+
 ### Gapotchenko.FX 2026.3
 
 Release date: January 29, 2026
