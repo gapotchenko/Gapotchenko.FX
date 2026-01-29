@@ -7,6 +7,7 @@
 Release date: not released yet
 
 - Added ability to get a `System.Version` based on the given version with the specified number of components set using `System.Version.WithComponents(int)` extension method
+- Added ability to search a sorted `IReadOnlyList<T>` for a specific element using binary search algorithm implemented by `IReadOnlyList<T>.BinarySearchBy` extension method
 
 ### Gapotchenko.FX 2026.3
 

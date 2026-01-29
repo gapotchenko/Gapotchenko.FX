@@ -1,10 +1,17 @@
-﻿namespace Gapotchenko.FX.Collections.Generic;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+namespace Gapotchenko.FX.Collections.Generic;
 
 /// <summary>
-/// Provides extension methods for <see cref="List{T}"/> class.
+/// Provides extension methods for <see cref="IReadOnlyList{T}"/>, <see cref="IList{T}"/>, and <see cref="List{T}"/> types.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public static class ListExtensions
+public static partial class ListExtensions
 {
     /// <summary>
     /// Sorts the elements in the entire <see cref="List{T}"/>
@@ -45,5 +52,5 @@ public static class ListExtensions
     /// <typeparam name="T">The type of elements in the <see cref="List{T}"/>.</typeparam>
     /// <param name="list">The <see cref="List{T}"/>.</param>
     /// <returns>A cloned <see cref="List{T}"/>.</returns>
-    public static List<T> Clone<T>(this List<T> list) => new(list ?? throw new ArgumentNullException(nameof(list)));
+    public static List<T> Clone<T>(this List<T> list) => [.. list ?? throw new ArgumentNullException(nameof(list))];
 }
