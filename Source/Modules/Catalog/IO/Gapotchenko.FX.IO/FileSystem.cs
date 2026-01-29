@@ -267,30 +267,9 @@ public static class FileSystem
         ArgumentNullException.ThrowIfNull(path);
 
         var parts = SplitPath(path).ToList();
-
-        var (offset, length) =
-#if NETFRAMEWORK
-            GetOffsetAndLengthWorkaround(range, parts.Count);
-#else
-            range.GetOffsetAndLength(parts.Count);
-#endif
-
+        var (offset, length) = range.GetOffsetAndLength(parts.Count);
         return Path.Join(parts.Skip(offset).Take(length));
     }
-
-#if NETFRAMEWORK
-    // This helps to avoid MSB3277 warning that is caused by Microsoft.Bcl.Memory package reference 
-    static (int Offset, int Length) GetOffsetAndLengthWorkaround(Range range, int length)
-    {
-        int start = range.Start.GetOffset(length);
-        int end = range.End.GetOffset(length);
-
-        if ((uint)end > (uint)length || (uint)start > (uint)end)
-            throw new ArgumentOutOfRangeException(nameof(length));
-
-        return (start, end - start);
-    }
-#endif
 
 #if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
 
