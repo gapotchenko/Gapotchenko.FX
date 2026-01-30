@@ -1,5 +1,17 @@
-﻿#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2023
+
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
 #define TFF_STRING_OPS_COMPARISON
+#endif
+
+#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#define TFF_STRING_JOIN_CHAR_ENUMERABLE
 #endif
 
 namespace Gapotchenko.FX.Text;
@@ -8,8 +20,39 @@ namespace Gapotchenko.FX.Text;
 /// Provides polyfill methods for <see cref="string"/> type.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public static class StringPolyfills
+public static partial class StringPolyfills
 {
+    /// <summary>
+    /// Provides static polyfill methods for <see cref="string"/> type.
+    /// </summary>
+    extension(string)
+    {
+        /// <summary>
+        /// Concatenates the members of a collection, using the specified separator between each member.
+        /// </summary>
+        /// <typeparam name="T">The type of the members of <paramref name="values"/>.</typeparam>
+        /// <param name="separator">
+        /// The character to use as a separator.
+        /// <paramref name="separator"/> is included in the returned string only if values has more than one element.
+        /// </param>
+        /// <param name="values">A collection that contains the objects to concatenate.</param>
+        /// <returns>
+        /// A string that consists of the members of <paramref name="values"/> delimited by the <paramref name="separator"/> character;
+        /// or an empty string if <paramref name="values"/> has no elements.
+        /// </returns>
+#if TFF_STRING_JOIN_CHAR_ENUMERABLE
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+        public static string Join<T>(char separator, IEnumerable<T> values)
+        {
+#if TFF_STRING_JOIN_CHAR_ENUMERABLE
+            return string.Join(separator, values);
+#else
+            return string.Join(new string(separator, 1), values);
+#endif
+        }
+    }
+
     /// <summary>
     /// <para>
     /// Returns a value indicating whether a specified character occurs within this string,
