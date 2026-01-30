@@ -25,6 +25,7 @@
 #endregion
 
 using Gapotchenko.FX.IO.Pal;
+using Gapotchenko.FX.Text;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -86,13 +87,13 @@ public static partial class PathPolyfills
             IReadOnlyList<string> p1 = path.Split(separators);
             IReadOnlyList<string> p2 = relativeTo.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
-            var sc = FileSystem.PathComparison;
+            var sc = FileSystem.PathComparer;
 
             int i;
             int n = Math.Min(p1.Count, p2.Count);
             for (i = 0; i < n; i++)
             {
-                if (!string.Equals(p1[i], p2[i], sc))
+                if (!sc.Equals(p1[i], p2[i]))
                     break;
             }
 
@@ -108,7 +109,7 @@ public static partial class PathPolyfills
                 p1 = [];
 
             string relativePath = string.Join(
-                new string(Path.DirectorySeparatorChar, 1),
+                Path.DirectorySeparatorChar,
                 Enumerable.Repeat("..", p2.Count - i).Concat(p1));
 
             if (relativePath.Length == 0)
