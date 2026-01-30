@@ -994,9 +994,7 @@ public abstract class FileSystemViewKit : IFileSystemView
         if (p1.Count == 1 && p1[0].Length == 0)
             p1 = [];
 
-        string relativePath = string.Join(
-            DirectorySeparatorChar,
-            Enumerable.Repeat("..", p2.Count - i).Concat(p1));
+        string relativePath = this.JoinPaths(Enumerable.Repeat("..", p2.Count - i).Concat(p1));
 
         if (relativePath.Length == 0)
             relativePath = ".";
