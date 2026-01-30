@@ -6,9 +6,10 @@
 
 Release date: not released yet
 
-- Added ability to get a `System.Version` based on the given version with the specified number of components set using `System.Version.WithComponents(int)` extension method
-- Added ability to search a sorted `IReadOnlyList<T>` for an element using binary search algorithm implemented by `IReadOnlyList<T>.BinarySearchBy` extension method
-- Added `string.Join<T>(char, IEnumerable<T>)` polyfill method
+- Added ability to get a `System.Version` based on the given version with the specified number of components set using `System.Version.WithComponents(int)` extension method provided by `Gapotchenko.FX.Versioning` module
+- Added ability to search a sorted `IReadOnlyList<T>` for an element using binary search algorithm implemented by `IReadOnlyList<T>.BinarySearchBy` extension method in `Gapotchenko.FX.Collections` module
+- Added `string.Join<T>(char, IEnumerable<T>)` polyfill method provided by `Gapotchenko.FX.Text` module
+- Fixed issue with root `/` path handling in `FileSystemViewKit.GetRelativePath(string, string)` method of `Gapotchenko.IO.Vfs` module
 
 ### Gapotchenko.FX 2026.3
 

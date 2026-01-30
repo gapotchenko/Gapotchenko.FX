@@ -9,6 +9,7 @@
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.IO.Vfs.Utils;
 using Gapotchenko.FX.Linq;
+using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using System.Security;
@@ -969,18 +970,16 @@ public abstract class FileSystemViewKit : IFileSystemView
         path = GetFullPath(path);
         relativeTo = GetFullPath(relativeTo);
 
-        char directorySeparatorChar = DirectorySeparatorChar;
-        char[] separators = [directorySeparatorChar, AltDirectorySeparatorChar];
-        IReadOnlyList<string> p1 = path.Split(separators);
-        IReadOnlyList<string> p2 = relativeTo.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+        IReadOnlyList<string> p1 = [.. SplitPath(path)];
+        IReadOnlyList<string> p2 = [.. SplitPath(relativeTo)];
 
-        var sc = FileSystem.PathComparison;
+        var sc = PathComparer;
 
         int i;
         int n = Math.Min(p1.Count, p2.Count);
         for (i = 0; i < n; i++)
         {
-            if (!string.Equals(p1[i], p2[i], sc))
+            if (!sc.Equals(p1[i], p2[i]))
                 break;
         }
 
@@ -996,11 +995,7 @@ public abstract class FileSystemViewKit : IFileSystemView
             p1 = [];
 
         string relativePath = string.Join(
-#if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
-            directorySeparatorChar,
-#else
-            new string(directorySeparatorChar, 1),
-#endif
+            DirectorySeparatorChar,
             Enumerable.Repeat("..", p2.Count - i).Concat(p1));
 
         if (relativePath.Length == 0)
