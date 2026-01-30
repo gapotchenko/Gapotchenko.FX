@@ -76,10 +76,8 @@ public static partial class PathPolyfills
 #if !TFF_PATH_GETRELATIVEPATH
         static string GetRelativePathCore(string relativeTo, string path)
         {
-            if (relativeTo == null)
-                throw new ArgumentNullException(nameof(relativeTo));
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
+            ArgumentNullException.ThrowIfNull(relativeTo);
+            ArgumentNullException.ThrowIfNull(path);
 
             path = Path.GetFullPath(path);
             relativeTo = Path.GetFullPath(relativeTo);
@@ -93,8 +91,10 @@ public static partial class PathPolyfills
             int i;
             int n = Math.Min(p1.Count, p2.Count);
             for (i = 0; i < n; i++)
+            {
                 if (!string.Equals(p1[i], p2[i], sc))
                     break;
+            }
 
             if (i == 0)
             {
