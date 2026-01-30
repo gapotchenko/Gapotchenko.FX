@@ -348,7 +348,27 @@ partial class FileSystemViewVfsTestKit
         }
     }
 
+    [TestMethod]
+    [DataRow("/", "/bin/script.sh", "bin/script.sh")]
+    public void FileSystemView_Vfs_Path_GetRelativePath(string relativeTo, string path, string expected)
+    {
+        RunVfsTest(Test);
+
+        void Test(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            string vfsRelativeTo = ConvertToVfsPath(vfs, relativeTo);
+            string vfsPath = ConvertToVfsPath(vfs, path);
+            string vfsExpected = ConvertToVfsPath(vfs, expected);
+
+            string actual = vfs.GetRelativePath(vfsRelativeTo, vfsPath);
+            Assert.AreEqual(vfsExpected, actual);
+        }
+    }
+
     #region Helpers
+
+    [return: NotNullIfNotNull(nameof(path))]
+    static string? ConvertToVfsPath(IReadOnlyFileSystemView vfs, string? path) => path?.Replace('/', vfs.DirectorySeparatorChar);
 
     static IEnumerable<T[]> PermuteValueInsertions<T>(T[] source, T[] insertionValues, int maxInsertionLength)
         where T : class?
