@@ -73,7 +73,7 @@ partial class ListExtensions
     /// <summary>
     /// Searches a range of elements in the sorted <see cref="IReadOnlyList{T}"/> for an element using the specified key selector and comparer.
     /// </summary>
-    /// <inheritdoc cref="BinarySearchByCore{TElement, TValue}(IReadOnlyList{TElement}, int, int, TValue, Func{TElement, TValue}, IComparer{TValue}?)"/>
+    /// <inheritdoc cref="BinarySearchBy{TElement, TValue}(IReadOnlyList{TElement}, TValue, Func{TElement, TValue}, IComparer{TValue}?)"/>
     /// <param name="list"><inheritdoc/></param>
     /// <param name="range">The range to search.</param>
     /// <param name="value"><inheritdoc/>The range to search</param>
