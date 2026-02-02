@@ -154,9 +154,9 @@ static class IntervalParser
         CultureInfo? culture,
         bool throwOnError)
     {
-        if (s.Length is >= 1 and <= 4)
+        if (s.Length is > 0 and <= 4 and var length)
         {
-            Span<char> ns = stackalloc char[4];
+            Span<char> ns = stackalloc char[length];
             int j = s.ToLowerInvariant(ns);
             if (j != -1)
             {
