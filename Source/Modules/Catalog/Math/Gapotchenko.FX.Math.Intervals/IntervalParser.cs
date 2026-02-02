@@ -103,7 +103,7 @@ static class IntervalParser
             // Generic interval form
             case [('[' or '(') and var lbt, .. var token, (']' or ')') and var rbt]:
                 {
-                    // Trim the token to reduce the number of characters to work on.
+                    // Trim the token to reduce the total number of characters to work on.
                     token = token.Trim();
 
                     // Separator
@@ -112,12 +112,7 @@ static class IntervalParser
                     {
                         j = token.IndexOf(',');
                         if (j == -1)
-                        {
-                            if (throwOnError)
-                                throw new FormatException("Interval separator not found.");
-                            else
-                                return null;
-                        }
+                            return throwOnError ? throw new FormatException("Interval separator not found.") : null;
                     }
 
                     // Left boundary
@@ -184,16 +179,8 @@ static class IntervalParser
                 static bool ValidateInfiniteBoundary(IntervalBoundaryKind kind, bool throwOnError)
                 {
                     if (kind != IntervalBoundaryKind.Exclusive)
-                    {
-                        if (throwOnError)
-                            throw new FormatException("An infinite interval boundary must be exclusive.");
-                        else
-                            return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
+                        return throwOnError ? throw new FormatException("An infinite interval boundary must be exclusive.") : false;
+                    return true;
                 }
             }
         }
@@ -218,10 +205,7 @@ static class IntervalParser
         }
         catch (Exception e) when (!e.IsControlFlowException())
         {
-            if (throwOnError)
-                throw new FormatException("Invalid interval boundary value.", e);
-            else
-                return default;
+            return throwOnError ? throw new FormatException("Invalid interval boundary value.", e) : default;
         }
     }
 
@@ -229,12 +213,7 @@ static class IntervalParser
     {
         var (message, _) = IntervalEngine.VerifyBoundaries(model.From, model.To, throwOnError, null, null);
         if (message != null)
-        {
-            if (throwOnError)
-                throw new FormatException(message);
-            else
-                return false;
-        }
+            return throwOnError ? throw new FormatException(message) : false;
 
         return true;
     }
