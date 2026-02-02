@@ -10,6 +10,7 @@ Release date: not released yet
 - Added ability to search a sorted `IReadOnlyList<T>` for an element using binary search algorithm implemented by `IReadOnlyList<T>.BinarySearchBy` extension method in `Gapotchenko.FX.Collections` module
 - Added `string.Join<T>(char, IEnumerable<T>)` polyfill method provided by `Gapotchenko.FX.Text` module
 - Fixed issue with root `/` path handling in `FileSystemViewKit.GetRelativePath(string, string)` method of `Gapotchenko.IO.Vfs` module
+- Fixed issue with empty interval comparison in `IntervalEqualityComparer<T>`
 
 ### Gapotchenko.FX 2026.3
 

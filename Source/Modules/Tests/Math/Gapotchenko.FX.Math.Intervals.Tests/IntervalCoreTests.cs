@@ -125,6 +125,7 @@ public abstract partial class IntervalCoreTests
         var b = EmptyInterval<int>();
 
         Assert.IsTrue(a.IntervalEquals(b));
+        Assert.AreEqual(a, b, IntervalEqualityComparer.Default<int>());
     }
 
     #endregion
