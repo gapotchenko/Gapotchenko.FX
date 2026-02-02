@@ -48,33 +48,50 @@ static class IntervalEngine
         return (null, null);
     }
 
-    public static bool DoesEmptyBoundaryMatchAnother<T>(in IntervalBoundary<T> from, in IntervalBoundary<T> to) =>
-        from.Kind is IntervalBoundaryKind.Empty == to.Kind is IntervalBoundaryKind.Empty;
+    public static bool DoesEmptyBoundaryMatchAnother<T>(in IntervalBoundary<T> from, in IntervalBoundary<T> to)
+    {
+        return from.Kind is IntervalBoundaryKind.Empty == to.Kind is IntervalBoundaryKind.Empty;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsBounded<TInterval, TValue>(in TInterval interval) where TInterval : IIntervalModel<TValue> =>
-        !interval.From.IsInfinity &&
-        !interval.To.IsInfinity;
+    public static bool IsBounded<TInterval, TValue>(in TInterval interval) where TInterval : IIntervalModel<TValue>
+    {
+        return
+            !interval.From.IsInfinity &&
+            !interval.To.IsInfinity;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsHalfBounded<TInterval, TValue>(in TInterval interval) where TInterval : IIntervalModel<TValue> =>
-        interval.From.IsInfinity ^
-        interval.To.IsInfinity;
+    public static bool IsHalfBounded<TInterval, TValue>(in TInterval interval) where TInterval : IIntervalModel<TValue>
+    {
+        return
+            interval.From.IsInfinity ^
+            interval.To.IsInfinity;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsOpen<TInterval, TValue>(in TInterval interval) where TInterval : IIntervalModel<TValue> =>
-        interval.From.Kind == IntervalBoundaryKind.Exclusive &&
-        interval.To.Kind == IntervalBoundaryKind.Exclusive;
+    public static bool IsOpen<TInterval, TValue>(in TInterval interval) where TInterval : IIntervalModel<TValue>
+    {
+        return
+            interval.From.Kind == IntervalBoundaryKind.Exclusive &&
+            interval.To.Kind == IntervalBoundaryKind.Exclusive;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsClosed<TInterval, TValue>(in TInterval interval) where TInterval : IIntervalModel<TValue> =>
-        interval.From.Kind != IntervalBoundaryKind.Exclusive &&
-        interval.To.Kind != IntervalBoundaryKind.Exclusive;
+    public static bool IsClosed<TInterval, TValue>(in TInterval interval) where TInterval : IIntervalModel<TValue>
+    {
+        return
+            interval.From.Kind != IntervalBoundaryKind.Exclusive &&
+            interval.To.Kind != IntervalBoundaryKind.Exclusive;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsHalfOpen<TInterval, TValue>(in TInterval interval) where TInterval : IIntervalModel<TValue> =>
-        interval.From.Kind == IntervalBoundaryKind.Exclusive ^
-        interval.To.Kind == IntervalBoundaryKind.Exclusive;
+    public static bool IsHalfOpen<TInterval, TValue>(in TInterval interval) where TInterval : IIntervalModel<TValue>
+    {
+        return
+            interval.From.Kind == IntervalBoundaryKind.Exclusive ^
+            interval.To.Kind == IntervalBoundaryKind.Exclusive;
+    }
 
     public delegate TInterval Constructor<out TInterval, TValue>(
         in IntervalBoundary<TValue> from,
@@ -83,17 +100,21 @@ static class IntervalEngine
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TInterval Interior<TInterval, TValue>(in TInterval interval, Constructor<TInterval, TValue> constructor)
-        where TInterval : IIntervalModel<TValue> =>
-        IsOpen<TInterval, TValue>(interval) ?
+        where TInterval : IIntervalModel<TValue>
+    {
+        return IsOpen<TInterval, TValue>(interval) ?
             interval :
             WithInclusivity(interval, false, constructor);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TInterval Enclosure<TInterval, TValue>(in TInterval interval, Constructor<TInterval, TValue> constructor)
-        where TInterval : IIntervalModel<TValue> =>
-        IsClosed<TInterval, TValue>(interval) ?
+        where TInterval : IIntervalModel<TValue>
+    {
+        return IsClosed<TInterval, TValue>(interval) ?
             interval :
             WithInclusivity(interval, true, constructor);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     static TInterval WithInclusivity<TInterval, TValue>(
@@ -119,34 +140,45 @@ static class IntervalEngine
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsEmpty<TInterval, TValue>(in TInterval interval, IComparer<TValue> comparer)
-        where TInterval : IIntervalModel<TValue> =>
-        CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.To, interval.To, comparer) > 0;
+        where TInterval : IIntervalModel<TValue>
+    {
+        return CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.To, interval.To, comparer) > 0;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsInfinite<TInterval, TValue>(in TInterval interval)
-        where TInterval : IIntervalModel<TValue> =>
-        interval.From.Kind == IntervalBoundaryKind.NegativeInfinity &&
-        interval.To.Kind == IntervalBoundaryKind.PositiveInfinity;
+        where TInterval : IIntervalModel<TValue>
+    {
+        return
+            interval.From.Kind == IntervalBoundaryKind.NegativeInfinity &&
+            interval.To.Kind == IntervalBoundaryKind.PositiveInfinity;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDegenerate<TInterval, TValue>(in TInterval interval, IComparer<TValue> comparer)
-        where TInterval : IIntervalModel<TValue> =>
-        interval.From.Kind == IntervalBoundaryKind.Inclusive &&
-        interval.To.Kind == IntervalBoundaryKind.Inclusive &&
-        comparer.Compare(interval.From.Value, interval.To.Value) == 0;
+        where TInterval : IIntervalModel<TValue>
+    {
+        return
+            interval.From.Kind == IntervalBoundaryKind.Inclusive &&
+            interval.To.Kind == IntervalBoundaryKind.Inclusive &&
+            comparer.Compare(interval.From.Value, interval.To.Value) == 0;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Contains<TInterval, TValue>(in TInterval interval, TValue value, IComparer<TValue> comparer)
-        where TInterval : IIntervalModel<TValue> =>
-        CompareBoundaries(BoundaryDirection.From, interval.From, value, comparer) <= 0 &&
-        CompareBoundaries(BoundaryDirection.To, interval.To, value, comparer) >= 0;
+        where TInterval : IIntervalModel<TValue>
+    {
+        return
+            CompareBoundaries(BoundaryDirection.From, interval.From, value, comparer) <= 0 &&
+            CompareBoundaries(BoundaryDirection.To, interval.To, value, comparer) >= 0;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int CompareTo<TInterval, TValue>(in TInterval interval, TValue? value, IComparer<TValue> comparer)
         where TInterval : IIntervalModel<TValue>
     {
         if (IsEmpty(interval, comparer))
-            return 0; // convention, zone is undefined
+            return 0; // undefined relation, result by convention
         else if (CompareBoundaries(BoundaryDirection.From, interval.From, value, comparer) > 0)
             return 1; // before the left interval boundary
         else if (CompareBoundaries(BoundaryDirection.To, interval.To, value, comparer) < 0)
@@ -158,29 +190,38 @@ static class IntervalEngine
     static int CompareBoundaries<TValue>(
         BoundaryDirection direction,
         in IntervalBoundary<TValue> x, TValue? y,
-        IComparer<TValue> comparer) =>
-        (direction, x.Kind) switch
-        {
-            (_, IntervalBoundaryKind.NegativeInfinity or IntervalBoundaryKind.Empty) => -1,
-            (_, IntervalBoundaryKind.Inclusive) => comparer.Compare(x.Value, y),
-            (BoundaryDirection.From, IntervalBoundaryKind.Exclusive) => comparer.Compare(x.Value, y) >= 0 ? 1 : -1,
-            (BoundaryDirection.To, IntervalBoundaryKind.Exclusive) => comparer.Compare(x.Value, y) <= 0 ? -1 : 1,
-            (_, IntervalBoundaryKind.PositiveInfinity) => 1
-        };
+        IComparer<TValue> comparer)
+    {
+        return
+            (direction, x.Kind) switch
+            {
+                (_, IntervalBoundaryKind.NegativeInfinity or IntervalBoundaryKind.Empty) => -1,
+                (_, IntervalBoundaryKind.Inclusive) => comparer.Compare(x.Value, y),
+                (BoundaryDirection.From, IntervalBoundaryKind.Exclusive) => comparer.Compare(x.Value, y) >= 0 ? 1 : -1,
+                (BoundaryDirection.To, IntervalBoundaryKind.Exclusive) => comparer.Compare(x.Value, y) <= 0 ? -1 : 1,
+                (_, IntervalBoundaryKind.PositiveInfinity) => 1
+            };
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Overlaps<TInterval, TOther, TValue>(in TInterval interval, in TOther other, IComparer<TValue> comparer)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue> =>
-        CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.To, other.To, comparer) <= 0 &&
-        CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.From, other.From, comparer) >= 0;
+        where TOther : IIntervalModel<TValue>
+    {
+        return
+            CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.To, other.To, comparer) <= 0 &&
+            CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.From, other.From, comparer) >= 0;
+    }
 
     public static bool IntervalsEqual<TInterval, TOther, TValue>(in TInterval x, in TOther? y, IComparer<TValue> comparer)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue> =>
-        y is not null &&
-        (IsEmpty(x, comparer) && IsEmpty(y, comparer) ||
-        x.From.Equals(y.From, comparer) && x.To.Equals(y.To, comparer));
+        where TOther : IIntervalModel<TValue>
+    {
+        return
+            y is not null &&
+            (IsEmpty(x, comparer) && IsEmpty(y, comparer) ||
+            x.From.Equals(y.From, comparer) && x.To.Equals(y.To, comparer));
+    }
 
     static int CompareBoundaries<TValue>(
         BoundaryDirection directionX, in IntervalBoundary<TValue> boundaryX,
@@ -209,10 +250,12 @@ static class IntervalEngine
         IComparer<TValue> comparer,
         Constructor<TInterval, TValue> constructor)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue> =>
-        constructor(
+        where TOther : IIntervalModel<TValue>
+    {
+        return constructor(
             CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) >= 0 ? interval.From : other.From,
             CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) <= 0 ? interval.To : other.To);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TInterval Union<TInterval, TOther, TValue>(
@@ -221,24 +264,32 @@ static class IntervalEngine
         IComparer<TValue> comparer,
         Constructor<TInterval, TValue> constructor)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue> =>
-        constructor(
+        where TOther : IIntervalModel<TValue>
+    {
+        return constructor(
             CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) <= 0 ? interval.From : other.From,
             CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) >= 0 ? interval.To : other.To);
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsSubintervalOf<TInterval, TOther, TValue>(in TInterval interval, in TOther other, IComparer<TValue> comparer)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue> =>
-        CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) >= 0 &&
-        CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) <= 0;
+        where TOther : IIntervalModel<TValue>
+    {
+        return
+            CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) >= 0 &&
+            CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) <= 0;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsSuperintervalOf<TInterval, TOther, TValue>(in TInterval interval, in TOther other, IComparer<TValue> comparer)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue> =>
-        CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) <= 0 &&
-        CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) >= 0;
+        where TOther : IIntervalModel<TValue>
+    {
+        return
+            CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) <= 0 &&
+            CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) >= 0;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsProperSubintervalOf<TInterval, TOther, TValue>(in TInterval interval, in TOther other, IComparer<TValue> comparer)
@@ -272,18 +323,21 @@ static class IntervalEngine
         return cFrom != 0 || cTo != 0;
     }
 
-    static OrderedBoundaryKind GetOrderedBoundaryKind(BoundaryDirection direction, IntervalBoundaryKind kind) =>
-        (direction, kind) switch
-        {
-            (BoundaryDirection.To, IntervalBoundaryKind.Empty) => OrderedBoundaryKind.ToEmpty,
-            (_, IntervalBoundaryKind.NegativeInfinity) => OrderedBoundaryKind.NegativeInfinity,
-            (BoundaryDirection.To, IntervalBoundaryKind.Exclusive) => OrderedBoundaryKind.ToExclusive,
-            (BoundaryDirection.From, IntervalBoundaryKind.Inclusive) => OrderedBoundaryKind.FromInclusive,
-            (BoundaryDirection.To, IntervalBoundaryKind.Inclusive) => OrderedBoundaryKind.ToInclusive,
-            (BoundaryDirection.From, IntervalBoundaryKind.Exclusive) => OrderedBoundaryKind.FromExclusive,
-            (_, IntervalBoundaryKind.PositiveInfinity) => OrderedBoundaryKind.PositiveInfinity,
-            (BoundaryDirection.From, IntervalBoundaryKind.Empty) => OrderedBoundaryKind.FromEmpty
-        };
+    static OrderedBoundaryKind GetOrderedBoundaryKind(BoundaryDirection direction, IntervalBoundaryKind kind)
+    {
+        return
+            (direction, kind) switch
+            {
+                (BoundaryDirection.To, IntervalBoundaryKind.Empty) => OrderedBoundaryKind.ToEmpty,
+                (_, IntervalBoundaryKind.NegativeInfinity) => OrderedBoundaryKind.NegativeInfinity,
+                (BoundaryDirection.To, IntervalBoundaryKind.Exclusive) => OrderedBoundaryKind.ToExclusive,
+                (BoundaryDirection.From, IntervalBoundaryKind.Inclusive) => OrderedBoundaryKind.FromInclusive,
+                (BoundaryDirection.To, IntervalBoundaryKind.Inclusive) => OrderedBoundaryKind.ToInclusive,
+                (BoundaryDirection.From, IntervalBoundaryKind.Exclusive) => OrderedBoundaryKind.FromExclusive,
+                (_, IntervalBoundaryKind.PositiveInfinity) => OrderedBoundaryKind.PositiveInfinity,
+                (BoundaryDirection.From, IntervalBoundaryKind.Empty) => OrderedBoundaryKind.FromEmpty
+            };
+    }
 
     enum BoundaryDirection
     {
@@ -304,17 +358,22 @@ static class IntervalEngine
     }
 
     public static string ToString<TInterval, TValue>(in TInterval interval, string? format, IFormatProvider? formatProvider)
-        where TInterval : IIntervalOperations<TValue> =>
-        format switch
-        {
-            "G" or "" or null => ToString<TInterval, TValue>(interval, formatProvider),
-            "U" => ToStringCore<TInterval, TValue>(interval, "∅", "∞", formatProvider),
-            _ => throw new FormatException()
-        };
+        where TInterval : IIntervalOperations<TValue>
+    {
+        return
+            format switch
+            {
+                "G" or "" or null => ToString<TInterval, TValue>(interval, formatProvider),
+                "U" => ToStringCore<TInterval, TValue>(interval, "∅", "∞", formatProvider),
+                _ => throw new FormatException()
+            };
+    }
 
     public static string ToString<TInterval, TValue>(in TInterval interval, IFormatProvider? formatProvider = null)
-        where TInterval : IIntervalOperations<TValue> =>
-        ToStringCore<TInterval, TValue>(interval, "{}", "inf", formatProvider);
+        where TInterval : IIntervalOperations<TValue>
+    {
+        return ToStringCore<TInterval, TValue>(interval, "{}", "inf", formatProvider);
+    }
 
     static string ToStringCore<TInterval, TValue>(in TInterval interval, string emptySymbol, string infinitySymbol, IFormatProvider? formatProvider)
         where TInterval : IIntervalOperations<TValue>
@@ -353,13 +412,16 @@ static class IntervalEngine
         return sb.ToString();
     }
 
-    public static string ToString<T>(in IntervalBoundary<T> boundary, string? format, IFormatProvider? formatProvider) =>
-        format switch
-        {
-            "G" or "" or null => ToStringCore(boundary, "{}", "inf", formatProvider),
-            "U" => ToStringCore(boundary, "∅", "∞", formatProvider),
-            _ => throw new FormatException()
-        };
+    public static string ToString<T>(in IntervalBoundary<T> boundary, string? format, IFormatProvider? formatProvider)
+    {
+        return
+            format switch
+            {
+                "G" or "" or null => ToStringCore(boundary, "{}", "inf", formatProvider),
+                "U" => ToStringCore(boundary, "∅", "∞", formatProvider),
+                _ => throw new FormatException()
+            };
+    }
 
     static string ToStringCore<T>(in IntervalBoundary<T> boundary, string emptySymbol, string infinitySymbol, IFormatProvider? formatProvider)
     {
