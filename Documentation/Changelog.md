@@ -7,8 +7,8 @@
 Release date: not released yet
 
 - Added support for European regional formats in interval parsing
-- Added ability to derive a `System.Version` with a specified number of components via the `System.Version.WithComponents(int)` extension method provided by `Gapotchenko.FX.Versioning` module
 - Added support for binary search on sorted `IReadOnlyList<T>` collections via the `IReadOnlyList<T>.BinarySearchBy` extension method provided by `Gapotchenko.FX.Collections` module
+- Added ability to derive a `System.Version` with a specified number of components via the `System.Version.WithComponents(int)` extension method provided by `Gapotchenko.FX.Versioning` module
 - Added polyfill for `string.Join<T>(char, IEnumerable<T>)` method
 - Fixed issue with root (`/`) path handling in `FileSystemViewKit.GetRelativePath(string, string)` method of `Gapotchenko.IO.Vfs` module
 - Fixed issue in `IntervalEqualityComparer<T>` when comparing empty intervals
