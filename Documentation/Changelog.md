@@ -4,7 +4,7 @@
 
 ### Gapotchenko.FX 2026.4 (Beta)
 
-Release date: not released yet
+Release date: February 4, 2026
 
 - Added support for European regional formats in interval parsing
 - Added support for binary search on sorted `IReadOnlyList<T>` collections via the `IReadOnlyList<T>.BinarySearchBy` extension method provided by `Gapotchenko.FX.Collections` module
