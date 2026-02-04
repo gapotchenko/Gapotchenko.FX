@@ -102,49 +102,62 @@ static class IntervalParser
 
             // Generic interval form
             case [('[' or '(') and var lbt, .. var token, (']' or ')') and var rbt]:
-                {
-                    // Trim the token to reduce the total number of characters to work on.
-                    token = token.Trim();
+                return ParseIntervalForm<T>(lbt, ref token, rbt, typeConverter, culture, throwOnError);
 
-                    // Separator
-                    int j = token.IndexOf(';');
-                    if (j == -1)
-                    {
-                        j = token.IndexOf(',');
-                        if (j == -1)
-                            return throwOnError ? throw new FormatException("Interval separator not found.") : null;
-                    }
-
-                    // Left boundary
-                    var leftToken = token[..j].TrimEnd();
-                    var leftKind = ParseBoundaryKind(lbt);
-                    var left = ParseBoundary<T>(leftToken, leftKind, typeConverter, culture, throwOnError);
-                    if (!left.HasValue)
-                        return null;
-
-                    // Right boundary
-                    var rightToken = token[(j + 1)..].TrimStart();
-                    var rightKind = ParseBoundaryKind(rbt);
-                    var right = ParseBoundary<T>(rightToken, rightKind, typeConverter, culture, throwOnError);
-                    if (!right.HasValue)
-                        return null;
-
-                    return new(left.Value, right.Value);
-                }
+            // European regional form
+            case [('[' or ']') and var lbt, .. var token, (']' or '[') and var rbt]:
+                return ParseIntervalForm<T>(lbt, ref token, rbt, typeConverter, culture, throwOnError);
 
             default:
                 return null;
         }
     }
 
-    static IntervalBoundaryKind ParseBoundaryKind(char c)
+    static IntervalModel<T>? ParseIntervalForm<T>(char lbt, ref ReadOnlySpan<char> token, char rbt, TypeConverter typeConverter, CultureInfo? culture, bool throwOnError)
     {
-        return c switch
+        // Trim the token to reduce the total number of characters to work on.
+        token = token.Trim();
+
+        // Separator
+        int j = token.IndexOf(';');
+        if (j == -1)
         {
-            '[' or ']' => IntervalBoundaryKind.Inclusive,
-            '(' or ')' => IntervalBoundaryKind.Exclusive,
-            _ => throw new SwitchExpressionException(c)
-        };
+            j = token.IndexOf(',');
+            if (j == -1)
+                return throwOnError ? throw new FormatException("Interval separator not found.") : null;
+        }
+
+        // Left boundary
+        var leftToken = token[..j].TrimEnd();
+        var leftKind = ParseBoundaryKind(lbt, false);
+        var left = ParseBoundary<T>(leftToken, leftKind, typeConverter, culture, throwOnError);
+        if (!left.HasValue)
+            return null;
+
+        // Right boundary
+        var rightToken = token[(j + 1)..].TrimStart();
+        var rightKind = ParseBoundaryKind(rbt, true);
+        var right = ParseBoundary<T>(rightToken, rightKind, typeConverter, culture, throwOnError);
+        if (!right.HasValue)
+            return null;
+
+        return new(left.Value, right.Value);
+    }
+
+    static IntervalBoundaryKind ParseBoundaryKind(char c, bool end)
+    {
+        return
+            (c, end) switch
+            {
+                // Generic interval form
+                ('[', false) or (']', true) => IntervalBoundaryKind.Inclusive,
+                ('(' or ')', _) => IntervalBoundaryKind.Exclusive,
+
+                // European regional format
+                (']', false) or ('[', true) => IntervalBoundaryKind.Exclusive,
+
+                _ => throw new SwitchExpressionException()
+            };
     }
 
     static IntervalBoundary<T>? ParseBoundary<T>(

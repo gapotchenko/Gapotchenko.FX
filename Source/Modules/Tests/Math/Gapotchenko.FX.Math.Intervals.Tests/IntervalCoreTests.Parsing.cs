@@ -174,6 +174,9 @@ partial class IntervalCoreTests
             // Character intervals with whitespace
             yield return ("[ A , Z ]", Interval.Inclusive('A', 'Z'), null);
             yield return ("( A ; Z )", Interval.Exclusive('A', 'Z'), null);
+
+            // European regional format
+            yield return ("]-inf,inf[", Interval.Infinite<int>(), null);
         }
     }
 
