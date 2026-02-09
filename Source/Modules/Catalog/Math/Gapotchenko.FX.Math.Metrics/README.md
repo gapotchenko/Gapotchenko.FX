@@ -68,7 +68,7 @@ int distance = StringMetrics.Distance.Hamming.Calculate("ABC", "BAC");
 Console.WriteLine("Distance is {0}.", distance);  // distance = 2
 ```
 
-Please note that the Hamming distance can only be calculated between two string of an equal length.
+Please note that the Hamming distance can only be calculated between two strings of an equal length.
 
 ### Damerau-Levenshtein Distance
 

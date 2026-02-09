@@ -25,7 +25,7 @@ Release date: January 29, 2026
 - Improved API of `EvaluateOnce<T>` primitive
 - Added `GetRelativePath(string, string)` method to `IReadOnlyFileSystemView` VFS interface
 - Added `System.Environment.ProcessPath` polyfill property
-- Fixed MSB3277 warning about `System.ValueTuple` assembly that occurred for .NET Framework target frameworks (caused by `Microsoft.Bcl.Memory` package)
+- Fixed MSB3277 warning about `System.ValueTuple` assembly that occurred for .NET Framework target frameworks (indirectly caused by a reference to `Microsoft.Bcl.Memory` package, underlying problem is discussed [here](https://github.com/dotnet/maintenance-packages/issues/243))
 
 ### Gapotchenko.FX 2026.2
 
@@ -90,7 +90,7 @@ Release date: December 25, 2025
     - Fixed issue that led to an incorrect value of `IAppInformation.ExecutablePath` property when the app information was requested for an assembly with its own entry point
     - Fixed issue that led to an empty string value returned by `AppInformation.Trademark` property instead of a `null` value
     - Fixed P/Invoke issues that could be potentially targeted by [WorstFit Attack](https://worst.fit/) vulnerability (applies to Windows OS only)
-- Retired support for target frameworks older then .NET 6.0 and .NET Framework 4.7.2
+- Retired support for target frameworks older than .NET 6.0 and .NET Framework 4.7.2
 
 ## 2024
 
