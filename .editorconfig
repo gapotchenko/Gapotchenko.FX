@@ -37,6 +37,10 @@ csharp_style_expression_bodied_local_functions = when_on_single_line # IDE0061
 csharp_style_expression_bodied_methods = when_on_single_line # IDE0022
 csharp_style_expression_bodied_operators = when_on_single_line # IDE0023, IDE0024
 
+[[shell]]
+indent_style = space
+indent_size = 4
+
 # =============================================================================
 # Naming
 # =============================================================================
