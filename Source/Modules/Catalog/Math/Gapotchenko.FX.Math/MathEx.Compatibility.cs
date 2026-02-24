@@ -80,6 +80,28 @@ partial class MathEx
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static DateTime Min(DateTime val1, DateTime val2, DateTime val3) => Math.Min(val1, val2, val3);
 
+    /// <inheritdoc cref="MathExtensions.Min{T}(T, T)"/>
+    [Obsolete("Use System.Math.Min(val1, val2) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    public static Version? Min(Version? val1, Version? val2)
+    {
+        if (val1 is null)
+            return val2;
+        if (val2 is null)
+            return val1;
+        return val1 <= val2 ? val1 : val2;
+    }
+
+    /// <inheritdoc cref="MathExtensions.Min{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Min(val1, val2, val3) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    [return: NotNullIfNotNull(nameof(val3))]
+    public static Version? Min(Version? val1, Version? val2, Version? val3) => Min(Min(val1, val2), val3);
+
     #endregion
 
     #region Max
@@ -146,6 +168,28 @@ partial class MathEx
     [Obsolete("Use System.Math.Max(val1, val2, val3) method instead.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static DateTime Max(DateTime val1, DateTime val2, DateTime val3) => Math.Max(val1, val2, val3);
+
+    /// <inheritdoc cref="MathExtensions.Max{T}(T, T)"/>
+    [Obsolete("Use System.Math.Max(val1, val2) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    public static Version? Max(Version? val1, Version? val2)
+    {
+        if (val1 is null)
+            return val2;
+        if (val2 is null)
+            return val1;
+        return val1 >= val2 ? val1 : val2;
+    }
+
+    /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Max(val1, val2, val3) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [return: NotNullIfNotNull(nameof(val1))]
+    [return: NotNullIfNotNull(nameof(val2))]
+    [return: NotNullIfNotNull(nameof(val3))]
+    public static Version? Max(Version? val1, Version? val2, Version? val3) => Max(Max(val1, val2), val3);
 
     #endregion
 
