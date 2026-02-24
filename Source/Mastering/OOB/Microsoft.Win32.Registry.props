@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TFF_WIN32_REGISTRY_OOB)' == 'true' ">
-    <PackageReference Include="Microsoft.Win32.Registry" Version="4.5.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <MasteringFrameworkFeature Include="TFF_WIN32_REGISTRY;TFF_WIN32_REGISTRY_OOB" />
   </ItemGroup>
 

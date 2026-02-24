@@ -16,5 +16,9 @@
     <ProjectReference Include="..\..\..\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Data.Archives\Gapotchenko.FX.Data.Archives.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.103" />
+  </ItemGroup>
 
 </Project>

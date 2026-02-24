@@ -7,6 +7,7 @@
 Release date: not released yet
 
 - Fixed binary compatibility regression in `Gapotchenko.FX.Math.MathEx` class
+- Updated referenced packages
 
 ### Gapotchenko.FX 2026.4
 

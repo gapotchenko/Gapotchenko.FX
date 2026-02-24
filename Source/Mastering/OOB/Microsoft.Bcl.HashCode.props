@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TFF_HASHCODE_OOB)' == 'true' ">
-    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
     <MasteringFrameworkFeature Include="TFF_HASHCODE;TFF_HASHCODE_OOB" />
   </ItemGroup>
 

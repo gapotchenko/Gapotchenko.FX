@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TFF_ASYNC_ENUMERABLE_OOB)' == 'true' OR '$(TFF_ASYNC_LINQ_OOB)' == 'true' ">
-    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.2" />
+    <PackageReference Include="System.Linq.AsyncEnumerable" Version="10.0.3" />
     <MasteringFrameworkFeature Condition=" '$(TFF_ASYNC_ENUMERABLE_OOB)' == 'true' " Include="TFF_ASYNC_ENUMERABLE;TFF_ASYNC_ENUMERABLE_OOB" />
     <MasteringFrameworkFeature Condition=" '$(TFF_ASYNC_LINQ_OOB)' == 'true' " Include="TFF_ASYNC_LINQ;TFF_ASYNC_LINQ_OOB" />
   </ItemGroup>

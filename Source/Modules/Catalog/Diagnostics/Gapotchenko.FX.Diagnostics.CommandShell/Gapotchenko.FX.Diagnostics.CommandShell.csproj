@@ -13,4 +13,8 @@
     <ProjectReference Include="..\..\IO\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.103" />
+  </ItemGroup>
+
 </Project>

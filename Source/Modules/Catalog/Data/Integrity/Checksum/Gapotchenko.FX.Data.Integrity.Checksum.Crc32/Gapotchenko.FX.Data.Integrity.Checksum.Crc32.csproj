@@ -18,6 +18,10 @@
     <ProjectReference Include="..\Gapotchenko.FX.Data.Integrity.Checksum\Gapotchenko.FX.Data.Integrity.Checksum.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.103" />
+  </ItemGroup>
+
   <Import Project="$(MasteringDir)\OOB\System.ValueTuple.props" />
 
 </Project>

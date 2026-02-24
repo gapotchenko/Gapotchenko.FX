@@ -2,10 +2,14 @@
 
   <PropertyGroup>
     <TFF_VALUETUPLE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionLessThan($(MasteringFrameworkVersion), '4.7')) ">true</TFF_VALUETUPLE_OOB>
+
+    <!-- Workaround for issue https://github.com/dotnet/maintenance-packages/issues/243
+         until System.ValueTuple 4.6.2+ package is propagated by Microsoft.Bcl.* shims -->
+    <TFF_VALUETUPLE_OOB Condition=" '$(MasteringFrameworkIdentifier)' == '.NETFramework' ">true</TFF_VALUETUPLE_OOB>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TFF_VALUETUPLE_OOB)' == 'true' ">
-    <PackageReference Include="System.ValueTuple" Version="4.6.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.6.2" />
     <MasteringFrameworkFeature Include="TFF_VALUETUPLE;TFF_VALUETUPLE_OOB" />
   </ItemGroup>
 

@@ -11,6 +11,10 @@
     <ProjectReference Include="..\..\Linq\Gapotchenko.FX.Linq\Gapotchenko.FX.Linq.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Math\Gapotchenko.FX.Math.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.103" />
+  </ItemGroup>
 
   <Import Project="$(MasteringDir)\OOB\System.ValueTuple.props" />
 

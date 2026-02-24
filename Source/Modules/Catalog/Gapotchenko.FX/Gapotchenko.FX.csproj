@@ -37,6 +37,10 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.103" />
+  </ItemGroup>
+
   <Import Project="$(MasteringDir)\OOB\Microsoft.Bcl.HashCode.props" />
   <Import Project="$(MasteringDir)/OOB/Microsoft.Bcl.Memory.props" />
   <Import Project="$(MasteringDir)\OOB\System.Memory.props" />
