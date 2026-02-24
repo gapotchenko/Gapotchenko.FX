@@ -177,6 +177,9 @@
     <File Path="../Documentation/README.md" />
     <File Path="../LICENSE" />
   </Folder>
+  <Folder Name="/03. Misc/Documentation/Diagnostics/">
+    <File Path="../Documentation/Diagnostics/Errors.txt" />
+  </Folder>
   <Folder Name="/03. Misc/Harness/">
     <Project Path="Harness/Gapotchenko.FX.Harness.Console/Gapotchenko.FX.Harness.Console.csproj" />
   </Folder>

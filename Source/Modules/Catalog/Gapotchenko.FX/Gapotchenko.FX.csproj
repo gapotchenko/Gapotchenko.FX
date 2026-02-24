@@ -11,7 +11,7 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.EvaluateOnce&lt;T&gt;" />
     <CommonlyUsedPart Include="Gapotchenko.FX.UriQueryBuilder" />
   </ItemGroup>
-
+  
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -21,6 +21,10 @@
          but the polyfills are not available at this stage due to chicken and egg dilemma. -->
     <NoWarn>$(NoWarn),CA1865,CA2249</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Build/**/*" Pack="true" PackagePath="build" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
@@ -41,11 +45,11 @@
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.103" />
   </ItemGroup>
 
-  <Import Project="$(MasteringDir)\OOB\Microsoft.Bcl.HashCode.props" />
+  <Import Project="$(MasteringDir)/OOB/Microsoft.Bcl.HashCode.props" />
   <Import Project="$(MasteringDir)/OOB/Microsoft.Bcl.Memory.props" />
-  <Import Project="$(MasteringDir)\OOB\System.Memory.props" />
-  <Import Project="$(MasteringDir)\OOB\System.Runtime.CompilerServices.Unsafe.props " />
-  <Import Project="$(MasteringDir)\OOB\System.Runtime.InteropServices.RuntimeInformation.props" />
-  <Import Project="$(MasteringDir)\OOB\System.ValueTuple.props" />
+  <Import Project="$(MasteringDir)/OOB/System.Memory.props" />
+  <Import Project="$(MasteringDir)/OOB/System.Runtime.CompilerServices.Unsafe.props " />
+  <Import Project="$(MasteringDir)/OOB/System.Runtime.InteropServices.RuntimeInformation.props" />
+  <Import Project="$(MasteringDir)/OOB/System.ValueTuple.props" />
 
 </Project>

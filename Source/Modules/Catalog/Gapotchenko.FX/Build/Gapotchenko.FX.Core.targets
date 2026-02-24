@@ -1,0 +1,22 @@
+<!--
+*******************************************************************************
+Gapotchenko.FX.Core.targets
+
+WARNING:  DO NOT MODIFY this file. Incorrect changes to this file will make it
+          impossible to load or build your Gapotchenko.FX projects from the
+          command line or IDE.
+
+Copyright © Gapotchenko and Contributors
+*******************************************************************************
+-->
+
+<Project>
+
+  <Target Name="GPFXValidateTargetFramework" BeforeTargets="CoreCompile">
+    <Error
+      Condition=" ('$(TargetFrameworkIdentifier)' == '.NETCoreApp' AND $([MSBuild]::VersionLessThan($(TargetFrameworkVersion), '8.0'))) OR ('$(TargetFrameworkIdentifier)' == '.NETStandard' AND $([MSBuild]::VersionLessThan($(TargetFrameworkVersion), '2.0'))) OR ('$(TargetFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionLessThan($(TargetFrameworkVersion), '4.7.2'))) "
+      Code="GPFX0002"
+      Text="Gapotchenko.FX supports only net8.0+, netstandard2.0+, and net472+ target frameworks. The current target framework $(TargetFramework) is not supported." />
+  </Target>
+
+</Project>

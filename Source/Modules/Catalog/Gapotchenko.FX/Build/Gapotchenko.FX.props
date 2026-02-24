@@ -1,0 +1,23 @@
+<!--
+*******************************************************************************
+Gapotchenko.FX.props
+
+WARNING:  DO NOT MODIFY this file. Incorrect changes to this file will make it
+          impossible to load or build your Gapotchenko.FX projects from the
+          command line or IDE.
+
+Copyright © Gapotchenko and Contributors
+*******************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <GPFXMSBuildMinVersion>16.5</GPFXMSBuildMinVersion>
+    <GPFXMSBuildVersionIsOK>false</GPFXMSBuildVersionIsOK>
+    <GPFXMSBuildVersionIsOK Condition=" '$(MSBuildVersion)' &gt;= '$(GPFXMSBuildMinVersion)' " >true</GPFXMSBuildVersionIsOK>
+  </PropertyGroup>
+
+  <Import Project="Gapotchenko.FX.Core.props" Condition=" '$(GPFXMSBuildVersionIsOK)' == 'true' " />
+
+</Project>

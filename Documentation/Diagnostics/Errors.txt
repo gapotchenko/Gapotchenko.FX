@@ -1,0 +1,4 @@
+Error code    Description
+-------------------------------------------------------------------------------
+GPFX0001      Gapotchenko.FX requires MSBuild version {0} or newer.
+GPFX0002      Gapotchenko.FX supports only {0} target frameworks. The current target framework {1} is not supported.

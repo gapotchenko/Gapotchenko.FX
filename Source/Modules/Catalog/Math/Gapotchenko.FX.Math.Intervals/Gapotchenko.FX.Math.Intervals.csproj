@@ -10,10 +10,6 @@
     <CommonlyUsedPart Include="Gapotchenko.FX.Math.Intervals.ValueInterval&lt;T&gt;" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <NoWarn>$(NoWarn),GPFX0001</NoWarn>
-  </PropertyGroup>
-
   <ItemGroup>
     <Using Include="System.Numerics" />
   </ItemGroup>

@@ -6,8 +6,9 @@
 
 Release date: not released yet
 
-- Updated referenced packages to reflect the current set of supported target frameworks
-- Definitive workaround for MSB3277 warning caused by the [underlying issue](https://github.com/dotnet/maintenance-packages/issues/243) in `System.ValueTuple` package
+- Updated referenced packages to align with the current set of supported target frameworks
+- Projects targeting frameworks unsupported by Gapotchenko.FX now produce `GPFX0002` error during compilation. This prevents confusing polyfill-related error messages
+- Implemented a definitive workaround for `MSB3277` warning caused by an [underlying issue](https://github.com/dotnet/maintenance-packages/issues/243) in `System.ValueTuple` package
 - Fixed binary compatibility regression in `Gapotchenko.FX.Math.MathEx` class
 
 ### Gapotchenko.FX 2026.4
@@ -29,7 +30,7 @@ Release date: January 29, 2026
 - Improved API of `EvaluateOnce<T>` primitive
 - Added `GetRelativePath(string, string)` method to `IReadOnlyFileSystemView` VFS interface
 - Added `System.Environment.ProcessPath` polyfill property
-- Fixed MSB3277 warning about `System.ValueTuple` assembly that occurred for .NET Framework target frameworks (indirectly caused by a reference to `Microsoft.Bcl.Memory` package, underlying problem is discussed [here](https://github.com/dotnet/maintenance-packages/issues/243))
+- Fixed `MSB3277` warning about `System.ValueTuple` assembly that occurred for .NET Framework target frameworks (indirectly caused by a reference to `Microsoft.Bcl.Memory` package, underlying problem is discussed [here](https://github.com/dotnet/maintenance-packages/issues/243))
 
 ### Gapotchenko.FX 2026.2
 
