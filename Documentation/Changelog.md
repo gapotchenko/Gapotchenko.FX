@@ -6,6 +6,7 @@
 
 Release date: not released yet
 
+- Added polyfill for `ConcurrentDictionary<TKey, TValue>.GetOrAdd<TArg>(TKey, Func<TKey, TArg, TValue>, TArg)` method
 - Updated referenced packages to align with the current set of supported target frameworks
 - Projects targeting frameworks unsupported by Gapotchenko.FX now produce `GPFX0002` error during compilation. This prevents confusing polyfill-related error messages
 - Implemented a definitive workaround for `MSB3277` warning caused by an [underlying issue](https://github.com/dotnet/maintenance-packages/issues/243) in `System.ValueTuple` package
