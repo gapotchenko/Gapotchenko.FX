@@ -2,9 +2,9 @@
 
 ## 2026
 
-### Gapotchenko.FX 2026.5 (Beta)
+### Gapotchenko.FX 2026.5
 
-Release date: not released yet
+Release date: February 24, 2026
 
 - Added polyfill for `ConcurrentDictionary<TKey, TValue>.GetOrAdd<TArg>(TKey, Func<TKey, TArg, TValue>, TArg)` method
 - Updated referenced packages to align with the current set of supported target frameworks
