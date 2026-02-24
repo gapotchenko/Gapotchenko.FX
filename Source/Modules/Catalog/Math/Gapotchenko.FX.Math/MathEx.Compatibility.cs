@@ -13,24 +13,9 @@ using Math = System.Math;
 
 partial class MathEx
 {
-#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY // 2025
 
     #region Min
-
-    /// <inheritdoc cref="MathExtensions.Min{T}(T, T, T)"/>
-    [Obsolete("Use System.Math.Min(val1, val2, val3) method instead.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static int Min(int val1, int val2, int val3) => Math.Min(val1, val2, val3);
-
-    /// <inheritdoc cref="MathExtensions.Min{T}(T, T)"/>
-    [Obsolete("Use System.Math.Min(val1, val2) method instead.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static DateTime Min(DateTime val1, DateTime val2) => Math.Min(val1, val2);
-
-    /// <inheritdoc cref="MathExtensions.Min{T}(T, T, T)"/>
-    [Obsolete("Use System.Math.Min(val1, val2, val3) method instead.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static DateTime Min(DateTime val1, DateTime val2, DateTime val3) => Math.Min(val1, val2, val3);
 
     /// <inheritdoc cref="MathExtensions.Min{T}(T, T)"/>
     [Obsolete("Use System.Math.Min(val1, val2) method instead (may change semantics for null arguments).")]
@@ -80,24 +65,24 @@ partial class MathEx
     public static T? Min<T>(T? val1, T? val2, T? val3, IComparer<T>? comparer = null) =>
         Min(Min(val1, val2, comparer), val3, comparer);
 
+    /// <inheritdoc cref="MathExtensions.Min{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Min(val1, val2, val3) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static int Min(int val1, int val2, int val3) => Math.Min(val1, val2, val3);
+
+    /// <inheritdoc cref="MathExtensions.Min{T}(T, T)"/>
+    [Obsolete("Use System.Math.Min(val1, val2) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static DateTime Min(DateTime val1, DateTime val2) => Math.Min(val1, val2);
+
+    /// <inheritdoc cref="MathExtensions.Min{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Min(val1, val2, val3) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static DateTime Min(DateTime val1, DateTime val2, DateTime val3) => Math.Min(val1, val2, val3);
+
     #endregion
 
     #region Max
-
-    /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T)"/>
-    [Obsolete("Use System.Math.Max(val1, val2, val3) method instead.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static int Max(int val1, int val2, int val3) => Math.Max(val1, val2, val3);
-
-    /// <inheritdoc cref="MathExtensions.Max{T}(T, T)"/>
-    [Obsolete("Use System.Math.Max(val1, val2) method instead.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static DateTime Max(DateTime val1, DateTime val2) => Math.Max(val1, val2);
-
-    /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T)"/>
-    [Obsolete("Use System.Math.Max(val1, val2, val3) method instead.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static DateTime Max(DateTime val1, DateTime val2, DateTime val3) => Math.Max(val1, val2, val3);
 
     /// <inheritdoc cref="MathExtensions.Max{T}(T, T)"/>
     [Obsolete("Use System.Math.Max(val1, val2) method instead (may change semantics for null arguments).")]
@@ -147,9 +132,72 @@ partial class MathEx
     public static T? Max<T>(T? val1, T? val2, T? val3, IComparer<T>? comparer = null) =>
         Max(Max(val1, val2, comparer), val3, comparer);
 
+    /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Max(val1, val2, val3) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static int Max(int val1, int val2, int val3) => Math.Max(val1, val2, val3);
+
+    /// <inheritdoc cref="MathExtensions.Max{T}(T, T)"/>
+    [Obsolete("Use System.Math.Max(val1, val2) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static DateTime Max(DateTime val1, DateTime val2) => Math.Max(val1, val2);
+
+    /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Max(val1, val2, val3) method instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static DateTime Max(DateTime val1, DateTime val2, DateTime val3) => Math.Max(val1, val2, val3);
+
     #endregion
 
     #region Clamp
+
+    /// <inheritdoc cref="MathExtensions.Clamp{T}(T, T, T)"/>
+    [Obsolete("Use System.Math.Clamp(value, min, max) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [return: NotNullIfNotNull(nameof(value))]
+    public static T? Clamp<T>(T? value, T? min, T? max) where T : IComparable<T>?
+    {
+        if (min is null && max is null)
+            return value;
+
+        if (min is not null && max is not null && min.CompareTo(max) > 0)
+            ThrowHelper.ThrowMinCannotBeGreaterThanMaxException(min, max);
+
+        if (value is null)
+            return value;
+
+        if (min is not null && value.CompareTo(min) < 0)
+            return min;
+        else if (max is not null && value.CompareTo(max) > 0)
+            return max;
+
+        return value;
+    }
+
+    /// <inheritdoc cref="MathExtensions.Clamp{T}(T, T, T, IComparer{T}?)"/>
+    [Obsolete("Use System.Math.Clamp(value, min, max, comparer) method instead (may change semantics for null arguments).")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [return: NotNullIfNotNull(nameof(value))]
+    public static T? Clamp<T>(T? value, T? min, T? max, IComparer<T>? comparer)
+    {
+        if (min is null && max is null)
+            return value;
+
+        comparer ??= Comparer<T>.Default;
+
+        if (min is not null && max is not null && comparer.Compare(min, max) > 0)
+            ThrowHelper.ThrowMinCannotBeGreaterThanMaxException(min, max);
+
+        if (value is null)
+            return value;
+
+        if (min is not null && comparer.Compare(value, min) < 0)
+            return min;
+        else if (max is not null && comparer.Compare(value, max) > 0)
+            return max;
+
+        return value;
+    }
 
     /// <inheritdoc cref="MathPolyfills.Clamp(byte, byte, byte)"/>
     [Obsolete("Use System.Math.Clamp(System.Byte, System.Byte, System.Byte) method instead.")]
@@ -221,54 +269,6 @@ partial class MathEx
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double Clamp(double value, double min, double max) => Math.Clamp(value, min, max);
 
-    /// <inheritdoc cref="MathExtensions.Clamp{T}(T, T, T)"/>
-    [Obsolete("Use System.Math.Clamp(value, min, max) method instead (may change semantics for null arguments).")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [return: NotNullIfNotNull(nameof(value))]
-    public static T? Clamp<T>(T? value, T? min, T? max) where T : IComparable<T>?
-    {
-        if (min is null && max is null)
-            return value;
-
-        if (min is not null && max is not null && min.CompareTo(max) > 0)
-            ThrowHelper.ThrowMinCannotBeGreaterThanMaxException(min, max);
-
-        if (value is null)
-            return value;
-
-        if (min is not null && value.CompareTo(min) < 0)
-            return min;
-        else if (max is not null && value.CompareTo(max) > 0)
-            return max;
-
-        return value;
-    }
-
-    /// <inheritdoc cref="MathExtensions.Clamp{T}(T, T, T, IComparer{T}?)"/>
-    [Obsolete("Use System.Math.Clamp(value, min, max, comparer) method instead (may change semantics for null arguments).")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [return: NotNullIfNotNull(nameof(value))]
-    public static T? Clamp<T>(T? value, T? min, T? max, IComparer<T>? comparer)
-    {
-        if (min is null && max is null)
-            return value;
-
-        comparer ??= Comparer<T>.Default;
-
-        if (min is not null && max is not null && comparer.Compare(min, max) > 0)
-            ThrowHelper.ThrowMinCannotBeGreaterThanMaxException(min, max);
-
-        if (value is null)
-            return value;
-
-        if (min is not null && comparer.Compare(value, min) < 0)
-            return min;
-        else if (max is not null && comparer.Compare(value, max) > 0)
-            return max;
-
-        return value;
-    }
-
     #endregion
 
     #region BitIncrement/BitDecrement
@@ -303,7 +303,7 @@ partial class MathEx
     /// <typeparam name="T">The type of values to swap.</typeparam>
     /// <param name="val1">The first of two values to swap.</param>
     /// <param name="val2">The second of two values to swap.</param>
-    [Obsolete("Use tuple to swap values.")]
+    [Obsolete("Use tuple syntax to swap values: (a, b) = (b, a).")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Swap<T>(ref T val1, ref T val2)
