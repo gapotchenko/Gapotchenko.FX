@@ -6,8 +6,9 @@
 
 Release date: not released yet
 
+- Updated referenced packages to reflect the current set of supported target frameworks
+- Definitive workaround for MSB3277 warning caused by the [underlying issue](https://github.com/dotnet/maintenance-packages/issues/243) in `System.ValueTuple` package
 - Fixed binary compatibility regression in `Gapotchenko.FX.Math.MathEx` class
-- Updated referenced packages
 
 ### Gapotchenko.FX 2026.4
 
