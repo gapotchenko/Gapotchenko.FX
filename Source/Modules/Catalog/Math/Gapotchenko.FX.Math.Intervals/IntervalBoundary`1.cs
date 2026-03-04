@@ -44,14 +44,15 @@ public readonly struct IntervalBoundary<T> : IIntervalBoundary, IEquatable<Inter
     /// Gets the value of a bound limit point, or the <see langword="default"/> value of the underlying type <typeparamref name="T"/> when the boundary is unbounded.
     /// </summary>
     /// <returns>The value of a bound limit point, or the <see langword="default"/> value of the underlying type <typeparamref name="T"/> when the boundary is unbounded.</returns>
-    public T GetValueOrDefault() => GetValueOrDefault(default!);
+    public T? GetValueOrDefault() => GetValueOrDefault(default);
 
     /// <summary>
     /// Gets the value of a bound limit point, or the specified default value when the boundary is unbounded.
     /// </summary>
     /// <param name="defaultValue">A value to return if the boundary is infinite.</param>
     /// <returns>The value of a bound limit point, or the specified default value when the boundary is unbounded.</returns>
-    public T GetValueOrDefault(T defaultValue) => HasValue ? m_Value : defaultValue;
+    [return: NotNullIfNotNull(nameof(defaultValue))]
+    public T? GetValueOrDefault(T? defaultValue) => HasValue ? m_Value : defaultValue;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly T m_Value;
