@@ -10,8 +10,11 @@ partial class Base16
 {
     static class FastDecoder
     {
-        public static bool SupportsOptions(DataEncodingOptions options) =>
-            (options & (DataEncodingOptions.Pure | DataEncodingOptions.Indent | DataEncodingOptions.Relax)) == DataEncodingOptions.Pure;
+        public static bool SupportsOptions(DataEncodingOptions options)
+        {
+            const DataEncodingOptions strictnessMask = DataEncodingOptions.Strict | DataEncodingOptions.Indent | DataEncodingOptions.Relax;
+            return (options & strictnessMask) == DataEncodingOptions.Strict;
+        }
 
         public static byte[]? GetBytes(ReadOnlySpan<char> input, bool throwOnError)
         {
@@ -23,7 +26,7 @@ partial class Base16
                 return null;
             }
 
-            var result = new byte[length >> 1];
+            byte[] result = new byte[length >> 1];
 
             for (int i = 0, si = 0; i < result.Length; i++)
             {

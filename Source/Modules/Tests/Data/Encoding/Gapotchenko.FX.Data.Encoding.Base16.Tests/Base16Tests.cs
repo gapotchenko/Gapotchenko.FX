@@ -20,7 +20,7 @@ public class Base16Tests
         var actualDecoded = Base16.GetBytes(actualEncoded);
         Assert.IsTrue(rawBytes.SequenceEqual(actualDecoded));
 
-        actualDecoded = Base16.GetBytes(actualEncoded, DataEncodingOptions.Pure);
+        actualDecoded = Base16.GetBytes(actualEncoded, DataEncodingOptions.Strict);
         Assert.IsTrue(rawBytes.SequenceEqual(actualDecoded));
 
         // -----------------------------------------------------------------

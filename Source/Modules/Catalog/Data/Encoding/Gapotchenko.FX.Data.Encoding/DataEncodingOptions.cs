@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -21,13 +22,6 @@ public enum DataEncodingOptions
     /// Inhibit generation of a padding during the encoding operation.
     /// </summary>
     NoPadding = 1 << 0,
-
-#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
-    /// <inheritdoc cref="NoPadding"/>
-    [Obsolete($"Use {nameof(NoPadding)} instead.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    Unpad = NoPadding,
-#endif
 
     /// <summary>
     /// Validate the padding in decoding operation or enforce its generation in encoding operation.
@@ -126,5 +120,17 @@ public enum DataEncodingOptions
     /// When this option is specified, the text data encoding prohibits non-significant characters such as white spaces during decoding operation by treating them as invalid characters.
     /// </para>
     /// </summary>
-    Pure = 1 << 10
+    Strict = 1 << 10,
+
+#if SOURCE_COMPATIBILITY || BINARY_COMPATIBILITY
+    /// <inheritdoc cref="NoPadding"/>
+    [Obsolete($"Use {nameof(NoPadding)} instead.")]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    Unpad = NoPadding,
+
+    /// <inheritdoc cref="Strict"/>
+    [Obsolete($"Use {nameof(Strict)} instead.")] // 2026
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    Pure = Strict
+#endif
 }

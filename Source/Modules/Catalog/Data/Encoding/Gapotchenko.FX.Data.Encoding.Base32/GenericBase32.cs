@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -158,7 +159,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
 
             if ((m_Options & DataEncodingOptions.NoPadding) == 0)
             {
-                var paddingChar = Capitalize(m_Encoding.PaddingChar);
+                char paddingChar = Capitalize(m_Encoding.PaddingChar);
 
                 while (i < SymbolsPerEncodedBlock)
                     m_Buffer[i++] = paddingChar;
@@ -203,7 +204,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
 
             var alphabet = m_Alphabet;
 
-            foreach (var b in input)
+            foreach (byte b in input)
             {
                 // Accumulate data bits.
                 m_Bits = (m_Bits << 8) | b;
@@ -257,11 +258,11 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
 
             var alphabet = m_Alphabet;
             bool isCaseSensitive = alphabet.IsCaseSensitive;
-            var paddingChar = m_Encoding.PaddingChar;
+            char paddingChar = m_Encoding.PaddingChar;
             bool relax = (options & DataEncodingOptions.Relax) != 0;
-            bool pure = (m_Options & DataEncodingOptions.Pure) != 0;
+            bool strict = (options & DataEncodingOptions.Strict) != 0;
 
-            foreach (var c in input)
+            foreach (char c in input)
             {
                 if (CharEqual(c, paddingChar, isCaseSensitive))
                 {
@@ -283,7 +284,7 @@ public abstract class GenericBase32 : TextDataEncoding, IBase32
                     if (!relax)
                     {
                         bool ok =
-                            !pure &&
+                            !strict &&
                             (char.IsWhiteSpace(c) ||
                             c == Separator);
 

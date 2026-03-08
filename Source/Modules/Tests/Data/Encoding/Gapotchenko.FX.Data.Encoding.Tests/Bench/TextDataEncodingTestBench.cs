@@ -234,8 +234,8 @@ public static class TextDataEncodingTestBench
 
         RoundTrip(encoding, raw, options);
 
-        if ((options & (DataEncodingOptions.Pure | DataEncodingOptions.Indent | DataEncodingOptions.Relax)) == 0)
-            RoundTrip(encoding, raw, options | DataEncodingOptions.Pure);
+        if ((options & (DataEncodingOptions.Strict | DataEncodingOptions.Indent | DataEncodingOptions.Relax)) == 0)
+            RoundTrip(encoding, raw, options | DataEncodingOptions.Strict);
     }
 
     public static void RoundTrip(ITextDataEncoding encoding, string s, DataEncodingOptions options = default)
