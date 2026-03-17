@@ -100,6 +100,8 @@ partial class ZipArchive
     }
 
     // ------------------------------------------------------------------------
+    // Asynchronous Creation Operations
+    // ------------------------------------------------------------------------
 
     /// <summary>
     /// Asynchronously creates an instance of the <see cref="ZipArchive"/> class on the given stream
