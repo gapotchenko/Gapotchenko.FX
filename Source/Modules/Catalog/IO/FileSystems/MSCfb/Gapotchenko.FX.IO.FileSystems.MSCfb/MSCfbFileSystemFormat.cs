@@ -19,10 +19,10 @@ sealed class MSCfbFileSystemFormat : FileSystemFormatKit<IMSCfbFileSystem, MSCfb
     protected override IReadOnlyList<string> GetFileExtensionsCore() => [];
 
     protected override IMSCfbFileSystem CreateCore(Stream stream, bool leaveOpen, MSCfbFileSystemOptions? options, VfsStorageContext? context) =>
-        new MSCfbFileSystem(stream, leaveOpen, options, context, create: true);
+        new MSCfbFileSystem(stream, false, leaveOpen, options, context, create: true);
 
     protected override IMSCfbFileSystem MountCore(Stream stream, bool writable, bool leaveOpen, MSCfbFileSystemOptions? options, VfsStorageContext? context) =>
-        new MSCfbFileSystem(stream, leaveOpen, options, context, writable);
+        new MSCfbFileSystem(stream, writable, leaveOpen, options, context);
 
     protected override bool IsMountableCore(Stream stream, MSCfbFileSystemOptions? options, VfsStorageContext? context)
     {
