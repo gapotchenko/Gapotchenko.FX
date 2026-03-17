@@ -424,7 +424,7 @@ sealed class CfbContext : IDisposable
     /// Uses the binary search tree structure for efficient lookup.
     /// Returns <see langword="null"/> if not found.
     /// </summary>
-    public CfbDirectoryEntry? FindChild(CfbDirectoryEntry parent, string name)
+    public CfbDirectoryEntry? TryFindChild(CfbDirectoryEntry parent, string name)
     {
         if (parent.ChildId == CfbConstants.NoStream)
             return null;
@@ -639,6 +639,8 @@ sealed class CfbContext : IDisposable
     // -------------------------------------------------------------------------
     // Write support — flush
     // -------------------------------------------------------------------------
+
+    public void MarkDirty() => m_Dirty = true;
 
     /// <summary>
     /// Writes all pending changes to the underlying stream.
