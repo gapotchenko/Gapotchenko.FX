@@ -277,7 +277,7 @@ public sealed partial class MSCfbFileSystem :
         DeleteEntryRecursive(parent, entry);
     }
 
-    void DeleteEntryRecursive(CfbDirectoryEntry parent, CfbDirectoryEntry entry)
+    void DeleteEntryRecursive(CfbEntry parent, CfbEntry entry)
     {
         foreach (var child in EnumerateChildrenSnapshot(entry))
             DeleteEntryRecursive(entry, child);
@@ -358,7 +358,7 @@ public sealed partial class MSCfbFileSystem :
     }
 
     IEnumerable<ReadOnlyMemory<string>> EnumerateChildrenCore(
-        CfbDirectoryEntry storage,
+        CfbEntry storage,
         string[] storageParts,
         VfsSearchExpression searchExpression,
         int maxRecursionDepth,
@@ -390,7 +390,7 @@ public sealed partial class MSCfbFileSystem :
         }
     }
 
-    IEnumerable<CfbDirectoryEntry> EnumerateChildrenSnapshot(CfbDirectoryEntry parent)
+    IEnumerable<CfbEntry> EnumerateChildrenSnapshot(CfbEntry parent)
     {
         var query = m_Context.EnumerateChildren(parent);
         if (m_Writable)
@@ -402,7 +402,7 @@ public sealed partial class MSCfbFileSystem :
         return query;
     }
 
-    static bool EntryExists(StructuredPath structuredPath, [NotNullWhen(true)] CfbDirectoryEntry? entry)
+    static bool EntryExists(StructuredPath structuredPath, [NotNullWhen(true)] CfbEntry? entry)
     {
         // A trailing directory separator means the caller is treating the path as a directory.
         // Since a file is not a directory, the lookup should behave as if no entry was found there,
@@ -413,7 +413,7 @@ public sealed partial class MSCfbFileSystem :
             !(entry.Type is CfbEntryType.Stream && structuredPath.IsDirectory);
     }
 
-    CfbDirectoryEntry? TryNavigateToStorage(ReadOnlySpan<string> parts)
+    CfbEntry? TryNavigateToStorage(ReadOnlySpan<string> parts)
     {
         var entry = m_Context.GetRootEntry();
         foreach (string part in parts)
@@ -426,7 +426,7 @@ public sealed partial class MSCfbFileSystem :
         return entry;
     }
 
-    CfbDirectoryEntry? TryFindEntry(ReadOnlySpan<string> parts)
+    CfbEntry? TryFindEntry(ReadOnlySpan<string> parts)
     {
         if (parts.IsEmpty)
             return m_Context.GetRootEntry();
@@ -510,7 +510,7 @@ public sealed partial class MSCfbFileSystem :
         }
     }
 
-    CfbDirectoryEntry FindEntryForSet(string path)
+    CfbEntry FindEntryForSet(string path)
     {
         var structuredPath = new StructuredPath(path);
         var parts = structuredPath.Parts.Span;

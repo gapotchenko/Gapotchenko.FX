@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.IO.FileSystems.MSCfb.Impl;
 /// Provides a seekable read-only stream over an MS-CFB entry's data.
 /// Supports both regular FAT-chained streams and mini-streams.
 /// </summary>
-sealed class CfbEntryStream : Stream
+sealed class CfbFileStream : Stream
 {
     readonly CfbContext m_Context;
     readonly long m_Size;
@@ -20,7 +20,7 @@ sealed class CfbEntryStream : Stream
 
     long m_Position;
 
-    public CfbEntryStream(CfbContext context, CfbDirectoryEntry entry)
+    public CfbFileStream(CfbContext context, CfbEntry entry)
     {
         m_Context = context;
         m_Size = entry.Size;

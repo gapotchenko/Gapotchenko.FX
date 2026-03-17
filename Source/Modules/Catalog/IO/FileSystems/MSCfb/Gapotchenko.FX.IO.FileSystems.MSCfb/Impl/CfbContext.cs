@@ -24,7 +24,7 @@ sealed class CfbContext : IDisposable
 
     uint[] m_Fat = [];
     uint[] m_MiniFat = [];
-    List<CfbDirectoryEntry> m_Entries = [];
+    List<CfbEntry> m_Entries = [];
 
     /// <summary>
     /// Sector size in bytes (512 for V3, 4096 for V4).
@@ -71,7 +71,7 @@ sealed class CfbContext : IDisposable
         SectorSize = 512; // V3
         m_Entries =
         [
-            new CfbDirectoryEntry
+            new CfbEntry
             {
                 Id = CfbConstants.RootEntryId,
                 Name = "Root Entry",
@@ -211,19 +211,19 @@ sealed class CfbContext : IDisposable
 
     // ---- Directory ----
 
-    List<CfbDirectoryEntry> ReadDirectoryEntries(in HeaderInfo h)
+    List<CfbEntry> ReadDirectoryEntries(in HeaderInfo h)
     {
         byte[] dirBytes = ReadChain(h.FirstDirectorySectorId);
         int entryCount = dirBytes.Length / CfbConstants.DirectoryEntrySize;
-        var entries = new List<CfbDirectoryEntry>(entryCount);
+        var entries = new List<CfbEntry>(entryCount);
         for (int i = 0; i < entryCount; i++)
             entries.Add(ParseDirectoryEntry(dirBytes, i * CfbConstants.DirectoryEntrySize, (uint)i));
         return entries;
     }
 
-    static CfbDirectoryEntry ParseDirectoryEntry(byte[] data, int offset, uint id)
+    static CfbEntry ParseDirectoryEntry(byte[] data, int offset, uint id)
     {
-        var entry = new CfbDirectoryEntry { Id = id };
+        var entry = new CfbEntry { Id = id };
 
         // Name: UTF-16LE, nameLength includes null terminator (in bytes).
         ushort nameLength = BinaryPrimitives.ReadUInt16LittleEndian(data.AsSpan(offset + 64));
@@ -372,14 +372,14 @@ sealed class CfbContext : IDisposable
     // Directory access
     // -------------------------------------------------------------------------
 
-    public CfbDirectoryEntry GetRootEntry()
+    public CfbEntry GetRootEntry()
     {
         if (m_Entries.Count == 0)
             throw new InvalidDataException("MS-CFB compound file has no directory entries.");
         return m_Entries[(int)CfbConstants.RootEntryId];
     }
 
-    CfbDirectoryEntry? GetEntry(uint id)
+    CfbEntry? GetEntry(uint id)
     {
         if (id == CfbConstants.NoStream || id >= (uint)m_Entries.Count)
             return null;
@@ -391,7 +391,7 @@ sealed class CfbContext : IDisposable
     /// Enumerates all direct children (streams and sub-storages) of a storage entry
     /// via an in-order traversal of its sibling red-black tree.
     /// </summary>
-    public IEnumerable<CfbDirectoryEntry> EnumerateChildren(CfbDirectoryEntry parent)
+    public IEnumerable<CfbEntry> EnumerateChildren(CfbEntry parent)
     {
         if (parent.ChildId == CfbConstants.NoStream)
             yield break;
@@ -400,7 +400,7 @@ sealed class CfbContext : IDisposable
             yield return entry;
     }
 
-    IEnumerable<CfbDirectoryEntry> WalkSiblingSubtree(uint id)
+    IEnumerable<CfbEntry> WalkSiblingSubtree(uint id)
     {
         if (id == CfbConstants.NoStream)
             yield break;
@@ -424,7 +424,7 @@ sealed class CfbContext : IDisposable
     /// Uses the binary search tree structure for efficient lookup.
     /// Returns <see langword="null"/> if not found.
     /// </summary>
-    public CfbDirectoryEntry? TryFindChild(CfbDirectoryEntry parent, string name)
+    public CfbEntry? TryFindChild(CfbEntry parent, string name)
     {
         if (parent.ChildId == CfbConstants.NoStream)
             return null;
@@ -432,7 +432,7 @@ sealed class CfbContext : IDisposable
         return SearchSiblingSubtree(parent.ChildId, name);
     }
 
-    CfbDirectoryEntry? SearchSiblingSubtree(uint id, string name)
+    CfbEntry? SearchSiblingSubtree(uint id, string name)
     {
         if (id == CfbConstants.NoStream)
             return null;
@@ -441,7 +441,7 @@ sealed class CfbContext : IDisposable
         if (entry is null)
             return null;
 
-        int cmp = CfbDirectoryEntry.CompareName(name.AsSpan(), entry.Name.AsSpan());
+        int cmp = CfbEntry.CompareName(name.AsSpan(), entry.Name.AsSpan());
 
         if (cmp == 0)
             return entry;
@@ -458,7 +458,7 @@ sealed class CfbContext : IDisposable
     /// <summary>
     /// Opens a read-only, seekable stream for the data of <paramref name="entry"/>.
     /// </summary>
-    public Stream OpenReadStream(CfbDirectoryEntry entry)
+    public Stream OpenReadStream(CfbEntry entry)
     {
         if (entry.Type != CfbEntryType.Stream)
             throw new InvalidOperationException("Entry is not a stream.");
@@ -467,7 +467,7 @@ sealed class CfbContext : IDisposable
         if (entry.PendingData != null)
             return new MemoryStream(entry.PendingData, writable: false);
 
-        return new CfbEntryStream(this, entry);
+        return new CfbFileStream(this, entry);
     }
 
     // -------------------------------------------------------------------------
@@ -477,7 +477,7 @@ sealed class CfbContext : IDisposable
     /// <summary>
     /// Adds a new child entry under <paramref name="parent"/> with the given name and type.
     /// </summary>
-    public CfbDirectoryEntry AddChild(CfbDirectoryEntry parent, string name, CfbEntryType type)
+    public CfbEntry AddChild(CfbEntry parent, string name, CfbEntryType type)
     {
         // Find a free slot, or extend the list.
         uint newId = (uint)m_Entries.Count;
@@ -490,7 +490,7 @@ sealed class CfbContext : IDisposable
             }
         }
 
-        var entry = new CfbDirectoryEntry
+        var entry = new CfbEntry
         {
             Id = newId,
             Name = name,
@@ -519,7 +519,7 @@ sealed class CfbContext : IDisposable
     /// Removes <paramref name="entry"/> from <paramref name="parent"/>'s child tree and marks it as unallocated.
     /// Does not recursively remove children — callers must do that beforehand.
     /// </summary>
-    public void RemoveChild(CfbDirectoryEntry parent, CfbDirectoryEntry entry)
+    public void RemoveChild(CfbEntry parent, CfbEntry entry)
     {
         // Rebuild the parent's child BST without this entry.
         var childIds = EnumerateChildren(parent).Select(e => e.Id).Where(id => id != entry.Id).ToList();
@@ -546,7 +546,7 @@ sealed class CfbContext : IDisposable
         if (ids.Count == 0)
             return CfbConstants.NoStream;
 
-        ids.Sort((a, b) => CfbDirectoryEntry.CompareName(
+        ids.Sort((a, b) => CfbEntry.CompareName(
             m_Entries[(int)a].Name.AsSpan(),
             m_Entries[(int)b].Name.AsSpan()));
 
@@ -573,9 +573,9 @@ sealed class CfbContext : IDisposable
 
     /// <summary>
     /// Opens a writable, seekable, readable stream for <paramref name="entry"/>.
-    /// The data is buffered in memory and committed to <see cref="CfbDirectoryEntry.PendingData"/> on stream disposal.
+    /// The data is buffered in memory and committed to <see cref="CfbEntry.PendingData"/> on stream disposal.
     /// </summary>
-    public Stream OpenWriteStream(CfbDirectoryEntry entry, FileMode mode, FileAccess access, bool create)
+    public Stream OpenWriteStream(CfbEntry entry, FileMode mode, FileAccess access, bool create)
     {
         MemoryStream ms;
 
@@ -596,7 +596,7 @@ sealed class CfbContext : IDisposable
         return new CfbWriteStream(entry, ms, access);
     }
 
-    byte[] ReadEntryData(CfbDirectoryEntry entry)
+    byte[] ReadEntryData(CfbEntry entry)
     {
         if (entry.Size <= 0)
             return [];
@@ -931,7 +931,7 @@ sealed class CfbContext : IDisposable
         m_Stream.Write(buf, 0, buf.Length);
     }
 
-    static void SerializeDirectoryEntry(byte[] buf, int offset, CfbDirectoryEntry entry)
+    static void SerializeDirectoryEntry(byte[] buf, int offset, CfbEntry entry)
     {
         // Buffer is already zeroed.
         if (entry.Type == CfbEntryType.Unallocated)

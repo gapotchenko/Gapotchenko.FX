@@ -9,16 +9,16 @@ namespace Gapotchenko.FX.IO.FileSystems.MSCfb.Impl;
 
 /// <summary>
 /// Provides a writable, seekable, readable in-memory stream for an MS-CFB stream entry.
-/// On dispose, the buffered data is committed to the entry's <see cref="CfbDirectoryEntry.PendingData"/>.
+/// On dispose, the buffered data is committed to the entry's <see cref="CfbEntry.PendingData"/>.
 /// </summary>
 sealed class CfbWriteStream : Stream
 {
-    readonly CfbDirectoryEntry m_Entry;
+    readonly CfbEntry m_Entry;
     readonly MemoryStream m_Inner;
     readonly FileAccess m_Access;
     bool m_Disposed;
 
-    public CfbWriteStream(CfbDirectoryEntry entry, MemoryStream inner, FileAccess access)
+    public CfbWriteStream(CfbEntry entry, MemoryStream inner, FileAccess access)
     {
         m_Entry = entry;
         m_Inner = inner;

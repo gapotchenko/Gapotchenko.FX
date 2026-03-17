@@ -19,9 +19,9 @@ enum CfbEntryType : byte
 }
 
 /// <summary>
-/// Represents a directory entry (either a file or a subdirectory) in an MS-CFB compound file.
+/// Represents a file-system entry (either a file or a directory) in an MS-CFB compound file.
 /// </summary>
-sealed class CfbDirectoryEntry
+sealed class CfbEntry
 {
     /// <summary>
     /// The index of this entry within the directory entry array.
