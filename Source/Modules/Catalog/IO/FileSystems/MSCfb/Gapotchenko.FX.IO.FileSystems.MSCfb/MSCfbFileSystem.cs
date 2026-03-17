@@ -319,7 +319,7 @@ public sealed partial class MSCfbFileSystem :
     }
 
     IEnumerable<ReadOnlyMemory<string>> EnumerateEntriesCore(
-        StructuredPath path,
+        in StructuredPath path,
         string searchPattern,
         MatchType matchType,
         MatchCasing matchCasing,
@@ -333,7 +333,14 @@ public sealed partial class MSCfbFileSystem :
 
         var storage = TryNavigateToStorage(pathParts);
         if (storage is null)
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
+        {
+            // Distinguish "path is a file" (IOException) from "path does not exist" (DirectoryNotFoundException).
+            var entry = TryFindEntry(pathParts);
+            if (entry?.Type == CfbEntryType.Stream)
+                throw new IOException(VfsResourceKit.InvalidDirectoryName(path.ToString()));
+            else
+                throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
+        }
 
         var searchExpression = new VfsSearchExpression(
             searchPattern,
@@ -399,7 +406,7 @@ public sealed partial class MSCfbFileSystem :
         foreach (string part in parts)
         {
             var child = m_Context.TryFindChild(entry, part);
-            if (child is null || child.Type == CfbEntryType.Stream)
+            if (child is null || child.Type is CfbEntryType.Stream)
                 return null;
             entry = child;
         }
