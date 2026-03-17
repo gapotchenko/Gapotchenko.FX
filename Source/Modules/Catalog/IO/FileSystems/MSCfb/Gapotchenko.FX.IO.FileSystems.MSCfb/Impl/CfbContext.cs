@@ -41,10 +41,21 @@ sealed class CfbContext : IDisposable
     // Factory
     // -------------------------------------------------------------------------
 
-    public static CfbContext Open(Stream stream, bool leaveOpen, bool writable = false)
+    public static CfbContext Open(Stream stream, bool leaveOpen, bool writable)
     {
         var ctx = new CfbContext(stream, leaveOpen) { m_Writable = writable };
-        ctx.ReadCompoundFile();
+
+        if (writable && stream.CanSeek && stream.Length == 0)
+        {
+            // Writable context on an empty stream: initialize as a new empty compound file.
+            ctx.InitEmpty();
+            ctx.m_Dirty = true;
+        }
+        else
+        {
+            ctx.ReadCompoundFile();
+        }
+
         return ctx;
     }
 

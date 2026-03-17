@@ -10,22 +10,25 @@ public sealed class MSCfbVfsTests : FileSystemViewVfsTestKit
     protected override VfsLocation CreateVfs()
     {
         var stream = new MemoryStream();
-        return new VfsLocation(new MSCfbFileSystem(stream), "/");
+        var vfs = new TestableVfs(stream);
+        return new VfsLocation(vfs, $"{vfs.DirectorySeparatorChar}");
     }
 
     protected override bool TryRoundTripVfs(ref IFileSystemView vfs)
     {
         var testableVfs = (TestableVfs)UnwrapVfs(vfs, out object? cookie);
 
+        // Unmount the existing file system.
         testableVfs.Dispose();
 
+        // Copy the existing file system image to a new storage.
         var oldStream = testableVfs.Stream;
         oldStream.Position = 0;
-
         var newStream = new MemoryStream();
         oldStream.CopyTo(newStream);
         newStream.Position = 0;
 
+        // Mount a new file system on the new storage using the copied image.
         vfs = WrapVfs(new TestableVfs(newStream), cookie);
         return true;
     }
@@ -36,7 +39,7 @@ public sealed class MSCfbVfsTests : FileSystemViewVfsTestKit
     {
         public TestableVfs(Stream stream) :
             this(
-                new MSCfbFileSystem(stream, true),
+                new MSCfbFileSystem(stream, stream.CanWrite, true),
                 stream)
         {
         }
