@@ -471,22 +471,30 @@ public sealed partial class MSCfbFileSystem :
     public override void SetCreationTime(string path, DateTime creationTime)
     {
         VfsValidationKit.Arguments.ValidatePath(path);
+
         EnsureCanWrite();
 
         var entry = FindEntryForSet(path);
-        entry.CreationTime = creationTime;
-        m_Context.MarkDirty();
+        if (entry.CreationTime != creationTime)
+        {
+            entry.CreationTime = creationTime;
+            m_Context.MarkDirty();
+        }
     }
 
     /// <inheritdoc/>
     public override void SetLastWriteTime(string path, DateTime lastWriteTime)
     {
         VfsValidationKit.Arguments.ValidatePath(path);
+
         EnsureCanWrite();
 
         var entry = FindEntryForSet(path);
-        entry.ModificationTime = lastWriteTime;
-        m_Context.MarkDirty();
+        if (entry.ModificationTime != lastWriteTime)
+        {
+            entry.ModificationTime = lastWriteTime;
+            m_Context.MarkDirty();
+        }
     }
 
     CfbDirectoryEntry FindEntryForSet(string path)
