@@ -105,6 +105,6 @@ partial class EnumerableExtensions
             }
         }
 
-        return result.GetValueOrDefault(defaultValue);
+        return result.GetValueOrDefault(defaultValue)!;
     }
 }

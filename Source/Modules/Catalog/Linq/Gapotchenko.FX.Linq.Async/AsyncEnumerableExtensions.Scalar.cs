@@ -123,6 +123,6 @@ partial class AsyncEnumerableExtensions
             }
         }
 
-        return result.GetValueOrDefault(defaultValue);
+        return result.GetValueOrDefault(defaultValue)!;
     }
 }
