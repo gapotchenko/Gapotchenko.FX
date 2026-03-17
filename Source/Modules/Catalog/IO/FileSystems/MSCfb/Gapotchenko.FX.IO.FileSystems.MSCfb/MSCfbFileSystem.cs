@@ -130,7 +130,7 @@ public sealed partial class MSCfbFileSystem :
         EnsureCanOpenFile(mode, access);
 
         var parts = new StructuredPath(path).Parts.Span;
-        if (parts == null || parts.IsEmpty)
+        if (parts.IsEmpty)
             ThrowFileNotFound(path);
 
         var parent = TryNavigateToStorage(parts[..^1]);
@@ -138,7 +138,7 @@ public sealed partial class MSCfbFileSystem :
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
 
         var entry = m_Context.TryFindChild(parent, parts[^1]);
-        bool forWrite = (access & FileAccess.Write) != 0;
+        bool writeable = (access & FileAccess.Write) != 0;
 
         if (entry is not null)
         {
@@ -148,8 +148,8 @@ public sealed partial class MSCfbFileSystem :
             if (mode == FileMode.CreateNew)
                 throw new IOException(VfsResourceKit.FileAlreadyExists(path));
 
-            if (forWrite)
-                return m_Context.OpenWriteStream(entry, mode, access, isNew: false);
+            if (writeable)
+                return m_Context.OpenWriteStream(entry, mode, access, false);
             else
                 return m_Context.OpenReadStream(entry);
         }
@@ -158,12 +158,12 @@ public sealed partial class MSCfbFileSystem :
             if (mode is FileMode.Open or FileMode.Truncate)
                 ThrowFileNotFound(path);
 
-            if (!forWrite)
+            if (!writeable)
                 ThrowFileNotFound(path);
 
             // Create the stream entry and return a write stream.
             entry = m_Context.AddChild(parent, parts[^1], CfbEntryType.Stream);
-            return m_Context.OpenWriteStream(entry, mode, access, isNew: true);
+            return m_Context.OpenWriteStream(entry, mode, access, true);
         }
     }
 
