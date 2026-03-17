@@ -149,7 +149,7 @@ public sealed partial class MSCfbFileSystem :
                 throw new IOException(VfsResourceKit.FileAlreadyExists(path));
 
             if (forWrite)
-                return m_Context.OpenWriteStream(entry, mode, isNew: false);
+                return m_Context.OpenWriteStream(entry, mode, access, isNew: false);
             else
                 return m_Context.OpenReadStream(entry);
         }
@@ -163,7 +163,7 @@ public sealed partial class MSCfbFileSystem :
 
             // Create the stream entry and return a write stream.
             entry = m_Context.AddChild(parent, parts[^1], CfbEntryType.Stream);
-            return m_Context.OpenWriteStream(entry, mode, isNew: true);
+            return m_Context.OpenWriteStream(entry, mode, access, isNew: true);
         }
     }
 

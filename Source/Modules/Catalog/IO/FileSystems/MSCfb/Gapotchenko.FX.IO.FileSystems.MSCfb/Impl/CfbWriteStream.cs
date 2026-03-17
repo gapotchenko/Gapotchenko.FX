@@ -15,16 +15,18 @@ sealed class CfbWriteStream : Stream
 {
     readonly CfbDirectoryEntry m_Entry;
     readonly MemoryStream m_Inner;
+    readonly FileAccess m_Access;
     bool m_Disposed;
 
-    public CfbWriteStream(CfbDirectoryEntry entry, MemoryStream inner)
+    public CfbWriteStream(CfbDirectoryEntry entry, MemoryStream inner, FileAccess access)
     {
         m_Entry = entry;
         m_Inner = inner;
+        m_Access = access;
     }
 
-    public override bool CanRead => !m_Disposed;
-    public override bool CanWrite => !m_Disposed;
+    public override bool CanRead => !m_Disposed && (m_Access & FileAccess.Read) != 0;
+    public override bool CanWrite => !m_Disposed && (m_Access & FileAccess.Write) != 0;
     public override bool CanSeek => !m_Disposed;
 
     public override long Length => m_Inner.Length;

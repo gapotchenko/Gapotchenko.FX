@@ -575,7 +575,7 @@ sealed class CfbContext : IDisposable
     /// Opens a writable, seekable, readable stream for <paramref name="entry"/>.
     /// The data is buffered in memory and committed to <see cref="CfbDirectoryEntry.PendingData"/> on stream disposal.
     /// </summary>
-    public Stream OpenWriteStream(CfbDirectoryEntry entry, FileMode mode, bool isNew)
+    public Stream OpenWriteStream(CfbDirectoryEntry entry, FileMode mode, FileAccess access, bool isNew)
     {
         MemoryStream ms;
 
@@ -593,7 +593,7 @@ sealed class CfbContext : IDisposable
         }
 
         m_Dirty = true;
-        return new CfbWriteStream(entry, ms);
+        return new CfbWriteStream(entry, ms, access);
     }
 
     byte[] ReadEntryData(CfbDirectoryEntry entry)
