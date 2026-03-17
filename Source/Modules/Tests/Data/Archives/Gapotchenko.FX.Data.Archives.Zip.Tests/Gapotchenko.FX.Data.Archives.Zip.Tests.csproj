@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' AND $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '4.7.2')) " Include="System.IO.Compression" />
   </ItemGroup>
 

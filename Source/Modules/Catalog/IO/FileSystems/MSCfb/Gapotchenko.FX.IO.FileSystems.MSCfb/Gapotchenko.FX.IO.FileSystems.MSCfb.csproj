@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageTag Include="vfs;ms-cfb;cfbf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Gapotchenko.FX.IO.FileSystems\Gapotchenko.FX.IO.FileSystems.csproj" />
+  </ItemGroup>
+
+  <Import Project="$(MasteringDir)/OOB/System.Memory.props" />
+
+</Project>
