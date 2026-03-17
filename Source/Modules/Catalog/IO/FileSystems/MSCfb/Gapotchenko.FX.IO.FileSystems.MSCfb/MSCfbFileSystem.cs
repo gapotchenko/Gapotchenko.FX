@@ -279,8 +279,7 @@ public sealed partial class MSCfbFileSystem :
 
     void DeleteEntryRecursive(CfbDirectoryEntry parent, CfbDirectoryEntry entry)
     {
-        var children = m_Context.EnumerateChildren(entry).ToList();
-        foreach (var child in children)
+        foreach (var child in EnumerateChildrenSnapshot(entry))
             DeleteEntryRecursive(entry, child);
 
         m_Context.RemoveChild(parent, entry);
@@ -367,7 +366,9 @@ public sealed partial class MSCfbFileSystem :
         bool enumerateFiles,
         bool enumerateDirectories)
     {
-        foreach (var child in m_Context.EnumerateChildren(storage))
+        // Snapshot children before iterating: the caller may remove entries from the tree
+        // (e.g. during a directory move) and RemoveChild rebuilds the BST, invalidating live pointers.
+        foreach (var child in EnumerateChildrenSnapshot(storage))
         {
             if (child.Type == CfbEntryType.Stream)
             {
@@ -387,6 +388,18 @@ public sealed partial class MSCfbFileSystem :
                 }
             }
         }
+    }
+
+    IEnumerable<CfbDirectoryEntry> EnumerateChildrenSnapshot(CfbDirectoryEntry parent)
+    {
+        var query = m_Context.EnumerateChildren(parent);
+        if (m_Writable)
+        {
+            // Snapshot children before iterating: the caller may remove entries from the tree
+            // (e.g. during a directory move) rebuilding the BST and invalidating live pointers.
+            query = [.. query];
+        }
+        return query;
     }
 
     static bool EntryExists(StructuredPath structuredPath, [NotNullWhen(true)] CfbDirectoryEntry? entry)
