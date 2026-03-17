@@ -85,6 +85,9 @@
   <Folder Name="/01. Modules/IO/">
     <Project Path="Modules/Catalog/IO/Gapotchenko.FX.IO/Gapotchenko.FX.IO.csproj" />
   </Folder>
+  <Folder Name="/01. Modules/IO/FileSystems/">
+    <Project Path="Modules/Catalog/IO/FileSystems/Gapotchenko.FX.IO.FileSystems/Gapotchenko.FX.IO.FileSystems.csproj" Id="741b48a0-cd14-4df8-81c1-b29464f8aee5" />
+  </Folder>
   <Folder Name="/01. Modules/IO/Vfs/">
     <Project Path="Modules/Catalog/IO/Gapotchenko.FX.IO.Vfs/Gapotchenko.FX.IO.Vfs.csproj" />
     <Project Path="Modules/Tests/IO/Gapotchenko.FX.IO.Vfs.Tests/Gapotchenko.FX.IO.Vfs.Tests.csproj" />
