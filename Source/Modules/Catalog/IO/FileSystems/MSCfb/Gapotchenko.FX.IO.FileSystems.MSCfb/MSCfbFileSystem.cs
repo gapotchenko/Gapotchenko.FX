@@ -127,8 +127,8 @@ public sealed partial class MSCfbFileSystem :
         if (parts.IsEmpty)
             ThrowFileNotFound(path);
 
-        var parent = TryNavigateToStorage(parts[..^1]);
-        if (parent is null)
+        var parent =
+            TryGetCfbDirectoryEntry(parts[..^1]) ??
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
 
         var entry = m_Context.TryFindChild(parent, parts[^1]);
@@ -173,7 +173,7 @@ public sealed partial class MSCfbFileSystem :
             ThrowFileNotFound(path);
 
         var parent =
-            TryNavigateToStorage(parts[..^1]) ??
+            TryGetCfbDirectoryEntry(parts[..^1]) ??
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
 
         var entry = m_Context.TryFindChild(parent, parts[^1]);
@@ -255,7 +255,7 @@ public sealed partial class MSCfbFileSystem :
         if (!recursive && m_Context.EnumerateChildren(entry).Any())
             throw new IOException(VfsResourceKit.DirectoryIsNotEmpty(path));
 
-        var parent = TryNavigateToStorage(parts[..^1]);
+        var parent = TryGetCfbDirectoryEntry(parts[..^1]);
         if (parent is null)
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
 
@@ -345,7 +345,7 @@ public sealed partial class MSCfbFileSystem :
         if (pathParts == null)
             throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
 
-        var storage = TryNavigateToStorage(pathParts);
+        var storage = TryGetCfbDirectoryEntry(pathParts);
         if (storage is null)
         {
             // Distinguish "path is a file" (IOException) from "path does not exist" (DirectoryNotFoundException).
@@ -428,12 +428,14 @@ public sealed partial class MSCfbFileSystem :
 
         if (considerFiles && path.IsDirectory)
         {
-            // Making sure that if the path ends in a trailing slash, it's truly a directory.
+            // Since a file is not a directory, the lookup should not consider files.
             considerFiles = false;
+
+            if (!considerDirectories)
+                return null;
         }
 
-        if ((considerDirectories || considerFiles) &&
-            TryFindEntry(pathParts) is { } entry)
+        if (TryFindEntry(pathParts) is { } entry)
         {
             if (considerDirectories && entry.Type is CfbEntryType.Root or CfbEntryType.Storage ||
                 considerFiles && entry.Type is CfbEntryType.Stream)
@@ -445,24 +447,13 @@ public sealed partial class MSCfbFileSystem :
         return null;
     }
 
-    static bool EntryExists(StructuredPath structuredPath, [NotNullWhen(true)] CfbEntry? entry)
-    {
-        // A trailing directory separator means the caller is treating the path as a directory.
-        // Since a file is not a directory, the lookup should behave as if no entry was found there,
-        // which is consistent with how the rest of the API treats paths with trailing separators.
-        return
-            entry is not null &&
-            entry.Type is not CfbEntryType.Unallocated &&
-            !(entry.Type is CfbEntryType.Stream && structuredPath.IsDirectory);
-    }
-
-    CfbEntry? TryNavigateToStorage(ReadOnlySpan<string> pathParts)
+    CfbEntry? TryGetCfbDirectoryEntry(ReadOnlySpan<string> pathParts)
     {
         var entry = m_Context.GetRootEntry();
         foreach (string part in pathParts)
         {
             var child = m_Context.TryFindChild(entry, part);
-            if (child is null || child.Type is CfbEntryType.Stream)
+            if (child is null || child.Type is CfbEntryType.Stream or CfbEntryType.Unallocated)
                 return null;
             entry = child;
         }
@@ -474,7 +465,7 @@ public sealed partial class MSCfbFileSystem :
         if (pathParts.IsEmpty)
             return m_Context.GetRootEntry();
 
-        var parent = TryNavigateToStorage(pathParts[..^1]);
+        var parent = TryGetCfbDirectoryEntry(pathParts[..^1]);
         if (parent is null)
             return null;
 
@@ -504,7 +495,7 @@ public sealed partial class MSCfbFileSystem :
 
         EnsureCanWrite();
 
-        var entry = FindEntryForSet(path);
+        var entry = GetExplicitCfbEntry(path);
         if (entry.ModificationTime != lastWriteTime)
         {
             entry.ModificationTime = lastWriteTime;
@@ -531,7 +522,7 @@ public sealed partial class MSCfbFileSystem :
 
         EnsureCanWrite();
 
-        var entry = FindEntryForSet(path);
+        var entry = GetExplicitCfbEntry(path);
         if (entry.CreationTime != creationTime)
         {
             entry.CreationTime = creationTime;
@@ -539,28 +530,49 @@ public sealed partial class MSCfbFileSystem :
         }
     }
 
-    CfbEntry FindEntryForSet(string path)
+    CfbEntry GetExplicitCfbEntry(in StructuredPath path)
     {
-        var structuredPath = new StructuredPath(path);
-        var parts = structuredPath.Parts.Span;
-        bool isDirectory = structuredPath.IsDirectory;
+        //var entry = TryGetCfbEntry(path, true, true);
+        //if (entry != null)
+        //{
+        //    return entry;
+        //}
+        //else if (path.IsDirectory && FileExistsCore(path.Parts))
+        //{
+        //    // The path represents a directory but points to a file.
+        //    throw new IOException(VfsResourceKit.InvalidDirectoryName(path.ToString()));
+        //}
+        //else
+        //{
+        //    // The path points to a non-existing entry.
+        //    string? displayPath = path.ToString();
+        //    if (path.Parts is var parts && (parts.Length < 2 || DirectoryExistsCore(parts[..^1])))
+        //        throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
+        //    else
+        //        throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(displayPath));
+        //}
+
+        var parts = path.Parts.Span;
 
         if (parts == null)
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
 
         if (parts.IsEmpty)
             return m_Context.GetRootEntry();
 
         var parent =
-            TryNavigateToStorage(parts[..^1]) ??
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+            TryGetCfbDirectoryEntry(parts[..^1]) ??
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
 
         var entry = m_Context.TryFindChild(parent, parts[^1]);
-        if (entry is null)
-            ThrowFileNotFound(path);
+        if (entry is null || entry.Type is CfbEntryType.Unallocated)
+        {
+            string? displayPath = path.ToString();
+            throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
+        }
 
-        if (isDirectory && entry.Type == CfbEntryType.Stream)
-            throw new IOException(VfsResourceKit.InvalidDirectoryName(path));
+        if (path.IsDirectory && entry.Type == CfbEntryType.Stream)
+            throw new IOException(VfsResourceKit.InvalidDirectoryName(path.ToString()));
 
         return entry;
     }
