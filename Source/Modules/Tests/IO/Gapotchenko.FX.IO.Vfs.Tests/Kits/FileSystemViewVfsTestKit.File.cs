@@ -31,7 +31,11 @@ partial class FileSystemViewVfsTestKit
             string filePath = vfs.CombinePaths(rootPath, fileName);
             Assert.IsTrue(vfs.FileExists(filePath));
 
+            IReadOnlyList<char> dscs = [.. new[] { vfs.DirectorySeparatorChar, vfs.AltDirectorySeparatorChar }.Distinct()];
+
             Assert.AreEqual(0, vfs.GetFileSize(filePath));
+            foreach (char dsc in dscs)
+                Assert.ThrowsExactly<IOException>(() => vfs.GetFileSize(filePath + dsc));
         }
     }
 
