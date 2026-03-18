@@ -756,7 +756,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
         bool considerDirectories)
     {
         var pathParts = path.Parts.Span;
-        if (pathParts.IsEmpty)
+        if (pathParts == null)
             return null;
 
         if (considerFiles && path.IsDirectory)
