@@ -717,13 +717,13 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
         EnsureCanWrite();
 
-        var entry = GetExplicitArchiveEntry(path, true);
+        var entry = GetExplicitArchiveEntry(path);
         entry.LastWriteTime = lastWriteTime.ToLocalTime();
     }
 
-    ZipArchiveEntry GetExplicitArchiveEntry(in StructuredPath path, bool considerFiles)
+    ZipArchiveEntry GetExplicitArchiveEntry(in StructuredPath path)
     {
-        var entry = TryGetArchiveEntry(path, considerFiles, true);
+        var entry = TryGetArchiveEntry(path, true, true);
         if (entry != null)
         {
             return entry;
@@ -761,7 +761,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
         if (considerFiles && path.IsDirectory)
         {
-            // Making sure that if the path ends in a trailing slash, it's truly a directory.
+            // Since a file is not a directory, the lookup should not consider files.
             considerFiles = false;
 
             if (!considerDirectories)
