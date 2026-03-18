@@ -245,7 +245,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
         else
         {
             entryName = VfsPathKit.Join(filePathParts);
-            var entry = GetArchiveEntry(entryName);
+            var entry = TryGetArchiveEntry(entryName);
             if (entry != null)
             {
                 // File exists.
@@ -273,7 +273,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
             directoryExists = filePathParts.Length == 1;
             if (!directoryExists)
-                directoryExists = GetArchiveEntry(VfsPathKit.Join(filePathParts[..^1]) + VfsPathKit.DirectorySeparatorChar) != null;
+                directoryExists = TryGetArchiveEntry(VfsPathKit.Join(filePathParts[..^1]) + VfsPathKit.DirectorySeparatorChar) != null;
         }
 
         if (!directoryExists)
@@ -399,7 +399,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     ZipArchiveEntry? TryGetDirectoryArchiveEntry(in StructuredPath path)
     {
         if (VfsPathKit.Join(path.Parts.Span) is { } entryPath)
-            return GetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar);
+            return TryGetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar);
         else
             return null;
     }
@@ -413,6 +413,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     public override bool EntryExists([NotNullWhen(true)] string? path)
     {
         EnsureCanRead();
+
         return EntryExistsCore(path, true, true);
     }
 
@@ -760,7 +761,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
         if (considerFiles && path.IsDirectory)
         {
-            // Make sure that if the path ends in a trailing slash, it's truly a directory.
+            // Making sure that if the path ends in a trailing slash, it's truly a directory.
             considerFiles = false;
 
             if (!considerDirectories)
@@ -771,13 +772,13 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
         if (considerDirectories)
         {
-            if (GetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar) is { } directoryEntry)
+            if (TryGetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar) is { } directoryEntry)
                 return directoryEntry;
         }
 
         if (considerFiles)
         {
-            if (GetArchiveEntry(entryPath) is { } fileEntry)
+            if (TryGetArchiveEntry(entryPath) is { } fileEntry)
                 return fileEntry;
         }
 
@@ -828,7 +829,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     // Quirks layer virtualizes archive operations by providing workarounds 
     // for known ZIP quirks.
 
-    ZipArchiveEntry? GetArchiveEntry(string entryName)
+    ZipArchiveEntry? TryGetArchiveEntry(string entryName)
     {
         if (m_NormalizedArchiveEntries.Value is { } entries)
             return entries.GetValueOrDefault(entryName);
