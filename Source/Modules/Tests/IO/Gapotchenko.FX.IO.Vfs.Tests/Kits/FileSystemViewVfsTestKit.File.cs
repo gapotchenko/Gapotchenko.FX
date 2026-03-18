@@ -564,4 +564,35 @@ partial class FileSystemViewVfsTestKit
     }
 
     #endregion
+
+    #region Delete
+
+    [TestMethod]
+    public void FileSystemView_Vfs_File_Delete()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string fileName = "File.txt";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            vfs.CreateFile(filePath).Dispose();
+
+            IReadOnlyList<char> dscs = [.. new[] { vfs.DirectorySeparatorChar, vfs.AltDirectorySeparatorChar }.Distinct()];
+
+            foreach (char dsc in dscs)
+                Assert.ThrowsExactly<IOException>(() => vfs.DeleteFile(filePath + dsc));
+
+            vfs.DeleteFile(filePath);
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            Assert.IsFalse(vfs.FileExists(filePath));
+        }
+    }
+
+    #endregion
 }

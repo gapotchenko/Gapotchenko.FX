@@ -227,6 +227,9 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
     (ZipArchiveEntry Value, bool IsNew) GetFileArchiveEntry(in StructuredPath path, FileMode mode)
     {
+        if (path.IsDirectory)
+            throw new IOException(VfsResourceKit.InvalidFileName(path.ToString()));
+
         bool directoryExists;
         string? entryName = null;
 

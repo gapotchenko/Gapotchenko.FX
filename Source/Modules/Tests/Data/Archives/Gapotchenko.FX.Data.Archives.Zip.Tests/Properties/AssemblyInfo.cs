@@ -1,4 +1,6 @@
-﻿[assembly: TestCategory("archives")]
+﻿[assembly: TestCategory("io")]
+[assembly: TestCategory("vfs")]
+[assembly: TestCategory("archives")]
 [assembly: TestCategory("zip")]
 
 [assembly: Parallelize(Workers = 0, Scope = ExecutionScope.MethodLevel)]
