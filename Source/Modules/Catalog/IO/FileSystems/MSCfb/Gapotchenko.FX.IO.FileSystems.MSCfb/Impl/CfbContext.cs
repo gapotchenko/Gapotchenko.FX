@@ -605,7 +605,7 @@ sealed class CfbContext : IDisposable
         byte[] data = new byte[size];
         int bytesRead = 0;
 
-        bool isMini = entry.Size < CfbConstants.MiniStreamCutoffSize;
+        bool isMini = entry.Size < CfbConstants.MiniStreamCutOffSize;
         if (isMini)
         {
             uint[] chain = GetMiniSectorChain(entry.StartSectorId);
@@ -678,13 +678,13 @@ sealed class CfbContext : IDisposable
         var miniStreamEntries = m_Entries
             .Where(e => e.Type == CfbEntryType.Stream &&
                         streamData.TryGetValue(e.Id, out byte[]? d) && d.Length > 0 &&
-                        d.Length < CfbConstants.MiniStreamCutoffSize)
+                        d.Length < CfbConstants.MiniStreamCutOffSize)
             .ToList();
 
         var regularStreamEntries = m_Entries
             .Where(e => e.Type == CfbEntryType.Stream &&
                         streamData.TryGetValue(e.Id, out byte[]? d) &&
-                        d.Length >= CfbConstants.MiniStreamCutoffSize)
+                        d.Length >= CfbConstants.MiniStreamCutOffSize)
             .ToList();
 
         // Update empty stream entries.
@@ -887,7 +887,7 @@ sealed class CfbContext : IDisposable
         BinaryPrimitives.WriteUInt32LittleEndian(h.AsSpan(44), (uint)fatSectorCount);
         BinaryPrimitives.WriteUInt32LittleEndian(h.AsSpan(48), firstDirSector);
         // Bytes 52–55: transaction signature (0).
-        BinaryPrimitives.WriteUInt32LittleEndian(h.AsSpan(56), (uint)CfbConstants.MiniStreamCutoffSize);
+        BinaryPrimitives.WriteUInt32LittleEndian(h.AsSpan(56), (uint)CfbConstants.MiniStreamCutOffSize);
         BinaryPrimitives.WriteUInt32LittleEndian(h.AsSpan(60), firstMiniFatSector);
         BinaryPrimitives.WriteUInt32LittleEndian(h.AsSpan(64), numMiniFatSectors);
         BinaryPrimitives.WriteUInt32LittleEndian(h.AsSpan(68), difatSectorCount > 0 ? firstDifatSector : CfbConstants.EndOfChainSectorId);

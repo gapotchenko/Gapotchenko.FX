@@ -27,7 +27,7 @@ static class CfbConstants
     /// Maximum size of a stream stored in the mini-stream.
     /// Streams smaller than this threshold use the mini-FAT chain.
     /// </summary>
-    public const int MiniStreamCutoffSize = 4096;
+    public const int MiniStreamCutOffSize = 4096;
 
     /// <summary>
     /// Size of a mini-sector, in bytes.

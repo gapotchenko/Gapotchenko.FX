@@ -26,7 +26,7 @@ sealed class CfbFileStream : Stream
         m_Size = entry.Size;
         m_IsMiniStream =
             entry.Type == CfbEntryType.Stream &&
-            entry.Size < CfbConstants.MiniStreamCutoffSize;
+            entry.Size < CfbConstants.MiniStreamCutOffSize;
 
         m_SectorChain = m_IsMiniStream
             ? context.GetMiniSectorChain(entry.StartSectorId)
