@@ -341,20 +341,13 @@ public sealed partial class MSCfbFileSystem :
         bool enumerateFiles,
         bool enumerateDirectories)
     {
-        var pathParts = path.Parts.Span;
-        if (pathParts == null)
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
+        var entry = TryGetCfbEntry(path, true, true);
 
-        var storage = TryGetCfbDirectoryEntry(pathParts);
-        if (storage is null)
-        {
-            // Distinguish "path is a file" (IOException) from "path does not exist" (DirectoryNotFoundException).
-            var entry = TryFindEntry(pathParts);
-            if (entry?.Type == CfbEntryType.Stream)
-                throw new IOException(VfsResourceKit.InvalidDirectoryName(path.ToString()));
-            else
-                throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
-        }
+        // Distinguish "path is a file" (IOException) from "path does not exist" (DirectoryNotFoundException).
+        if (entry is null)
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
+        else if (entry.Type == CfbEntryType.Stream)
+            throw new IOException(VfsResourceKit.InvalidDirectoryName(path.ToString()));
 
         var searchExpression = new VfsSearchExpression(
             searchPattern,
@@ -363,8 +356,8 @@ public sealed partial class MSCfbFileSystem :
             VfsSearchKit.GetSearchExpressionOptions(this, matchCasing));
 
         return EnumerateChildrenCore(
-            storage,
-            pathParts.ToArray(),
+            entry,
+            path.Parts.ToArray(),
             searchExpression,
             maxRecursionDepth,
             0,
@@ -423,7 +416,7 @@ public sealed partial class MSCfbFileSystem :
         bool considerDirectories)
     {
         var pathParts = path.Parts.Span;
-        if (pathParts.IsEmpty)
+        if (pathParts == null)
             return null;
 
         if (considerFiles && path.IsDirectory)
@@ -532,26 +525,6 @@ public sealed partial class MSCfbFileSystem :
 
     CfbEntry GetExplicitCfbEntry(in StructuredPath path)
     {
-        //var entry = TryGetCfbEntry(path, true, true);
-        //if (entry != null)
-        //{
-        //    return entry;
-        //}
-        //else if (path.IsDirectory && FileExistsCore(path.Parts))
-        //{
-        //    // The path represents a directory but points to a file.
-        //    throw new IOException(VfsResourceKit.InvalidDirectoryName(path.ToString()));
-        //}
-        //else
-        //{
-        //    // The path points to a non-existing entry.
-        //    string? displayPath = path.ToString();
-        //    if (path.Parts is var parts && (parts.Length < 2 || DirectoryExistsCore(parts[..^1])))
-        //        throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
-        //    else
-        //        throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(displayPath));
-        //}
-
         var parts = path.Parts.Span;
 
         if (parts == null)
