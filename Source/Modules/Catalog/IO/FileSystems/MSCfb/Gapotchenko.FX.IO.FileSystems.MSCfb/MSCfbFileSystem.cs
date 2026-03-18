@@ -86,16 +86,10 @@ public sealed partial class MSCfbFileSystem :
     {
         EnsureCanRead();
 
-        var structuredPath = new StructuredPath(path);
-        var parts = structuredPath.Parts.Span;
-        if (parts.IsEmpty)
-            return false;
-
-        var entry = TryFindEntry(parts);
-        return
-            EntryExists(structuredPath, entry) &&
-            entry.Type == CfbEntryType.Stream;
+        return FileExistsCore(path);
     }
+
+    bool FileExistsCore(in StructuredPath path) => EntryExistsCore(path, true, false);
 
     /// <inheritdoc/>
     public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) =>
@@ -202,19 +196,10 @@ public sealed partial class MSCfbFileSystem :
     {
         EnsureCanRead();
 
-        var structuredPath = new StructuredPath(path);
-
-        var parts = structuredPath.Parts.Span;
-        if (parts == null)
-            return false;
-        if (parts.IsEmpty)
-            return true;
-
-        var entry = TryFindEntry(parts);
-        return
-            EntryExists(structuredPath, entry) &&
-            entry.Type is CfbEntryType.Root or CfbEntryType.Storage;
+        return DirectoryExistsCore(path);
     }
+
+    bool DirectoryExistsCore(in StructuredPath path) => EntryExistsCore(path, false, true);
 
     /// <inheritdoc/>
     public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
@@ -288,6 +273,36 @@ public sealed partial class MSCfbFileSystem :
     #endregion
 
     #region Entries
+
+    /// <inheritdoc/>
+    public override bool EntryExists([NotNullWhen(true)] string? path)
+    {
+        EnsureCanRead();
+
+        return EntryExistsCore(path, true, true);
+    }
+
+    bool EntryExistsCore(
+        in StructuredPath path,
+        bool considerFiles,
+        bool considerDirectories)
+    {
+        var pathParts = path.Parts.Span;
+        if (pathParts == null)
+            return false;
+
+        if (pathParts.Length == 0)
+        {
+            // The root directory always exists.
+            // A root file never exists.
+            return considerDirectories;
+        }
+
+        if (TryGetCfbEntry(path, considerFiles, considerDirectories) != null)
+            return true;
+
+        return false;
+    }
 
     IEnumerable<string> EnumerateEntriesImpl(
         string path,
@@ -402,6 +417,34 @@ public sealed partial class MSCfbFileSystem :
         return query;
     }
 
+    CfbEntry? TryGetCfbEntry(
+        in StructuredPath path,
+        bool considerFiles,
+        bool considerDirectories)
+    {
+        var pathParts = path.Parts.Span;
+        if (pathParts.IsEmpty)
+            return null;
+
+        if (considerFiles && path.IsDirectory)
+        {
+            // Making sure that if the path ends in a trailing slash, it's truly a directory.
+            considerFiles = false;
+        }
+
+        if ((considerDirectories || considerFiles) &&
+            TryFindEntry(pathParts) is { } entry)
+        {
+            if (considerDirectories && entry.Type is CfbEntryType.Root or CfbEntryType.Storage ||
+                considerFiles && entry.Type is CfbEntryType.Stream)
+            {
+                return entry;
+            }
+        }
+
+        return null;
+    }
+
     static bool EntryExists(StructuredPath structuredPath, [NotNullWhen(true)] CfbEntry? entry)
     {
         // A trailing directory separator means the caller is treating the path as a directory.
@@ -413,10 +456,10 @@ public sealed partial class MSCfbFileSystem :
             !(entry.Type is CfbEntryType.Stream && structuredPath.IsDirectory);
     }
 
-    CfbEntry? TryNavigateToStorage(ReadOnlySpan<string> parts)
+    CfbEntry? TryNavigateToStorage(ReadOnlySpan<string> pathParts)
     {
         var entry = m_Context.GetRootEntry();
-        foreach (string part in parts)
+        foreach (string part in pathParts)
         {
             var child = m_Context.TryFindChild(entry, part);
             if (child is null || child.Type is CfbEntryType.Stream)
@@ -426,16 +469,16 @@ public sealed partial class MSCfbFileSystem :
         return entry;
     }
 
-    CfbEntry? TryFindEntry(ReadOnlySpan<string> parts)
+    CfbEntry? TryFindEntry(ReadOnlySpan<string> pathParts)
     {
-        if (parts.IsEmpty)
+        if (pathParts.IsEmpty)
             return m_Context.GetRootEntry();
 
-        var parent = TryNavigateToStorage(parts[..^1]);
+        var parent = TryNavigateToStorage(pathParts[..^1]);
         if (parent is null)
             return null;
 
-        return m_Context.TryFindChild(parent, parts[^1]);
+        return m_Context.TryFindChild(parent, pathParts[^1]);
     }
 
     #endregion
@@ -449,50 +492,9 @@ public sealed partial class MSCfbFileSystem :
 
         EnsureCanRead();
 
-        var structuredPath = new StructuredPath(path);
-        var parts = structuredPath.Parts.Span;
-        if (parts == null)
-            return DateTime.MinValue;
-
-        var entry = TryFindEntry(parts);
-        if (EntryExists(structuredPath, entry))
-            return entry.ModificationTime;
-        else
-            return DateTime.MinValue;
-    }
-
-    /// <inheritdoc/>
-    public override DateTime GetCreationTime(string path)
-    {
-        VfsValidationKit.Arguments.ValidatePath(path);
-
-        EnsureCanRead();
-
-        var structuredPath = new StructuredPath(path);
-        var parts = structuredPath.Parts.Span;
-        if (parts == null)
-            return DateTime.MinValue;
-
-        var entry = TryFindEntry(parts);
-        if (EntryExists(structuredPath, entry))
-            return entry.CreationTime;
-        else
-            return DateTime.MinValue;
-    }
-
-    /// <inheritdoc/>
-    public override void SetCreationTime(string path, DateTime creationTime)
-    {
-        VfsValidationKit.Arguments.ValidatePath(path);
-
-        EnsureCanWrite();
-
-        var entry = FindEntryForSet(path);
-        if (entry.CreationTime != creationTime)
-        {
-            entry.CreationTime = creationTime;
-            m_Context.MarkDirty();
-        }
+        return
+            TryGetCfbEntry(path, true, true)?.ModificationTime ??
+            DateTime.MinValue;
     }
 
     /// <inheritdoc/>
@@ -506,6 +508,33 @@ public sealed partial class MSCfbFileSystem :
         if (entry.ModificationTime != lastWriteTime)
         {
             entry.ModificationTime = lastWriteTime;
+            m_Context.MarkDirty();
+        }
+    }
+
+    /// <inheritdoc/>
+    public override DateTime GetCreationTime(string path)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanRead();
+
+        return
+            TryGetCfbEntry(path, true, true)?.CreationTime ??
+            DateTime.MinValue;
+    }
+
+    /// <inheritdoc/>
+    public override void SetCreationTime(string path, DateTime creationTime)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanWrite();
+
+        var entry = FindEntryForSet(path);
+        if (entry.CreationTime != creationTime)
+        {
+            entry.CreationTime = creationTime;
             m_Context.MarkDirty();
         }
     }
