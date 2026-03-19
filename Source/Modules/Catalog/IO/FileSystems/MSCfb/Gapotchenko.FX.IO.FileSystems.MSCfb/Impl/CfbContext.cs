@@ -295,7 +295,7 @@ sealed class CfbContext : IDisposable
     public IEnumerable<uint> GetSectorChain(uint firstSectorId)
     {
         uint id = firstSectorId;
-        while (id != CfbConstants.EndOfChainSectorId && id < CfbConstants.DifatSectorId)
+        while (id < CfbConstants.DifatSectorId)
         {
             yield return id;
             if (id >= (uint)m_Fat.Length)
@@ -303,6 +303,13 @@ sealed class CfbContext : IDisposable
             id = m_Fat[id];
         }
     }
+
+    /// <summary>
+    /// Returns the sector that follows <paramref name="sectorId"/> in the FAT chain,
+    /// or <see cref="CfbConstants.EndOfChainSectorId"/> if it is the last sector.
+    /// </summary>
+    public uint GetNextSector(uint sectorId) =>
+        sectorId < (uint)m_Fat.Length ? m_Fat[sectorId] : CfbConstants.EndOfChainSectorId;
 
     byte[] ReadChain(uint firstSectorId)
     {
@@ -323,7 +330,7 @@ sealed class CfbContext : IDisposable
     public IEnumerable<uint> GetMiniSectorChain(uint firstMiniSectorId)
     {
         uint id = firstMiniSectorId;
-        while (id != CfbConstants.EndOfChainSectorId && id < CfbConstants.DifatSectorId)
+        while (id < CfbConstants.DifatSectorId)
         {
             yield return id;
             if (id >= (uint)m_MiniFat.Length)
@@ -331,6 +338,13 @@ sealed class CfbContext : IDisposable
             id = m_MiniFat[id];
         }
     }
+
+    /// <summary>
+    /// Returns the mini-sector that follows <paramref name="miniSectorId"/> in the mini-FAT chain,
+    /// or <see cref="CfbConstants.EndOfChainSectorId"/> if it is the last mini-sector.
+    /// </summary>
+    public uint GetNextMiniSector(uint miniSectorId) =>
+        miniSectorId < (uint)m_MiniFat.Length ? m_MiniFat[miniSectorId] : CfbConstants.EndOfChainSectorId;
 
     uint[]? m_RootSectorChain;
 

@@ -15,8 +15,12 @@ sealed class CfbFileStream : Stream
 {
     readonly CfbContext m_Context;
     readonly long m_Size;
-    readonly uint[] m_SectorChain;
     readonly bool m_IsMiniStream;
+
+    // Sector navigation state.
+    readonly uint m_StartSectorId;
+    uint m_SectorId;
+    int m_SectorIndex;
 
     long m_Position;
 
@@ -28,9 +32,8 @@ sealed class CfbFileStream : Stream
             entry.Type == CfbEntryType.Stream &&
             entry.Size < CfbConstants.MiniStreamCutOffSize;
 
-        m_SectorChain = [.. m_IsMiniStream
-            ? context.GetMiniSectorChain(entry.StartSectorId)
-            : context.GetSectorChain(entry.StartSectorId)];
+        m_StartSectorId = entry.StartSectorId;
+        m_SectorId = m_StartSectorId;
     }
 
     public override bool CanRead => true;
@@ -67,12 +70,14 @@ sealed class CfbFileStream : Stream
             int sectorIndex = (int)(m_Position / sectorSize);
             int sectorOffset = (int)(m_Position % sectorSize);
 
-            if (sectorIndex >= m_SectorChain.Length)
+            NavigateToSector(sectorIndex);
+
+            if (m_SectorId >= CfbConstants.DifatSectorId)
                 break;
 
             ReadOnlySpan<byte> sectorData = m_IsMiniStream
-                ? m_Context.ReadMiniSector(m_SectorChain[sectorIndex])
-                : m_Context.ReadFatSector(m_SectorChain[sectorIndex]);
+                ? m_Context.ReadMiniSector(m_SectorId)
+                : m_Context.ReadFatSector(m_SectorId);
 
             int available = sectorSize - sectorOffset;
             int toCopy = Math.Min(available, toRead - bytesRead);
@@ -83,6 +88,30 @@ sealed class CfbFileStream : Stream
         }
 
         return bytesRead;
+    }
+
+    /// <summary>
+    /// Advances the internal sector cursor to the sector at <paramref name="targetIndex"/>.
+    /// For backward seeks, resets to the start of the chain first.
+    /// For forward seeks (including the common sequential case), follows FAT links one step at a time.
+    /// </summary>
+    void NavigateToSector(int targetIndex)
+    {
+        // If seeking backward, restart from the beginning of the chain.
+        if (targetIndex < m_SectorIndex)
+        {
+            m_SectorIndex = 0;
+            m_SectorId = m_StartSectorId;
+        }
+
+        // Walk forward to the target sector, one FAT link per step.
+        while (m_SectorIndex < targetIndex && m_SectorId < CfbConstants.DifatSectorId)
+        {
+            m_SectorId = m_IsMiniStream
+                ? m_Context.GetNextMiniSector(m_SectorId)
+                : m_Context.GetNextSector(m_SectorId);
+            m_SectorIndex++;
+        }
     }
 
     public override long Seek(long offset, SeekOrigin origin)
