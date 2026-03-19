@@ -286,7 +286,13 @@ sealed class CfbContext : IDisposable
     /// <summary>
     /// Reads a sector's bytes for use in a stream (may be cached in the future).
     /// </summary>
-    public byte[] ReadFatSector(uint sectorId) => ReadSectorBytes(sectorId);
+    public int ReadFatSector(uint sectorId, Span<byte> buffer)
+    {
+        int count = Math.Min(buffer.Length, SectorSize);
+        m_Stream.Position = GetSectorOffset(sectorId);
+        m_Stream.ReadExactly(buffer[..count]);
+        return count;
+    }
 
     // -------------------------------------------------------------------------
     // FAT chain traversal
@@ -361,7 +367,7 @@ sealed class CfbContext : IDisposable
     /// <summary>
     /// Reads the bytes of mini-sector <paramref name="miniSectorId"/> from the root entry's stream.
     /// </summary>
-    public byte[] ReadMiniSector(uint miniSectorId)
+    public int ReadMiniSector(uint miniSectorId, Span<byte> buffer)
     {
         long offset = (long)miniSectorId * CfbConstants.MiniSectorSize;
         int containerSectorIndex = (int)(offset / SectorSize);
@@ -371,10 +377,10 @@ sealed class CfbContext : IDisposable
         if (containerSectorIndex >= rootChain.Length)
             throw new InvalidDataException("Mini-sector index is out of range of the mini-stream container.");
 
-        byte[] containerSector = ReadSectorBytes(rootChain[containerSectorIndex]);
-        byte[] miniSectorData = new byte[CfbConstants.MiniSectorSize];
-        Array.Copy(containerSector, containerSectorOffset, miniSectorData, 0, CfbConstants.MiniSectorSize);
-        return miniSectorData;
+        int count = Math.Min(CfbConstants.MiniSectorSize, buffer.Length);
+        m_Stream.Position = GetSectorOffset(rootChain[containerSectorIndex]) + containerSectorOffset;
+        m_Stream.ReadExactly(buffer[..count]);
+        return count;
     }
 
     // -------------------------------------------------------------------------
@@ -617,11 +623,12 @@ sealed class CfbContext : IDisposable
         bool isMini = entry.Size < CfbConstants.MiniStreamCutOffSize;
         if (isMini)
         {
+            Span<byte> miniSectorBuffer = stackalloc byte[CfbConstants.MiniSectorSize];
             foreach (uint id in GetMiniSectorChain(entry.StartSectorId))
             {
-                ReadOnlySpan<byte> miniSector = ReadMiniSector(id);
+                ReadMiniSector(id, miniSectorBuffer);
                 int toCopy = Math.Min(CfbConstants.MiniSectorSize, size - bytesRead);
-                miniSector[..toCopy].CopyTo(data.AsSpan(bytesRead));
+                miniSectorBuffer[..toCopy].CopyTo(data.AsSpan(bytesRead));
                 bytesRead += toCopy;
                 if (bytesRead >= size)
                     break;

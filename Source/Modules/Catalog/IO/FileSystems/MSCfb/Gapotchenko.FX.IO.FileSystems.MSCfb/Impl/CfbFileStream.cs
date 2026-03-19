@@ -65,6 +65,8 @@ sealed class CfbFileStream : Stream
         int bytesRead = 0;
         int sectorSize = m_IsMiniStream ? CfbConstants.MiniSectorSize : m_Context.SectorSize;
 
+        Span<byte> sectorBuffer = stackalloc byte[sectorSize];
+
         while (bytesRead < toRead)
         {
             int sectorIndex = (int)(m_Position / sectorSize);
@@ -75,13 +77,14 @@ sealed class CfbFileStream : Stream
             if (m_SectorId >= CfbConstants.DifatSectorId)
                 break;
 
-            ReadOnlySpan<byte> sectorData = m_IsMiniStream
-                ? m_Context.ReadMiniSector(m_SectorId)
-                : m_Context.ReadFatSector(m_SectorId);
+            if (m_IsMiniStream)
+                m_Context.ReadMiniSector(m_SectorId, sectorBuffer);
+            else
+                m_Context.ReadFatSector(m_SectorId, sectorBuffer);
 
             int available = sectorSize - sectorOffset;
             int toCopy = Math.Min(available, toRead - bytesRead);
-            sectorData.Slice(sectorOffset, toCopy).CopyTo(buffer.AsSpan(offset + bytesRead));
+            sectorBuffer.Slice(sectorOffset, toCopy).CopyTo(buffer.AsSpan(offset + bytesRead));
 
             bytesRead += toCopy;
             m_Position += toCopy;
