@@ -294,7 +294,6 @@ sealed class CfbContext : IDisposable
 
     public IEnumerable<uint> GetSectorChain(uint firstSectorId)
     {
-        var chain = new List<uint>();
         uint id = firstSectorId;
         while (id != CfbConstants.EndOfChainSectorId && id < CfbConstants.DifatSectorId)
         {
@@ -323,7 +322,6 @@ sealed class CfbContext : IDisposable
 
     public IEnumerable<uint> GetMiniSectorChain(uint firstMiniSectorId)
     {
-        var chain = new List<uint>();
         uint id = firstMiniSectorId;
         while (id != CfbConstants.EndOfChainSectorId && id < CfbConstants.DifatSectorId)
         {
