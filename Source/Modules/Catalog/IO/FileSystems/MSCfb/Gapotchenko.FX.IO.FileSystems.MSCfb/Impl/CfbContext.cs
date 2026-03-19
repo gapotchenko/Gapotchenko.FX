@@ -88,7 +88,7 @@ sealed class CfbContext : IDisposable
     // Physical sector IDs of the directory chain (null = not yet built).
     List<uint>? m_DirChain;
 
-    // Directory entry cache keyed by entry ID (null = not loaded or unallocated).
+    // Directory entry cache keyed by entry ID.
     readonly Dictionary<uint, CfbEntry> m_DirCache = [];
 
     // -------------------------------------------------------------------------
@@ -106,6 +106,8 @@ sealed class CfbContext : IDisposable
         m_Stream = stream;
         m_LeaveOpen = leaveOpen;
     }
+
+    internal Stream Stream => m_Stream;
 
     public static CfbContext Open(Stream stream, bool leaveOpen, bool writable)
     {
@@ -207,7 +209,7 @@ sealed class CfbContext : IDisposable
     // Low-level sector I/O
     // -------------------------------------------------------------------------
 
-    long GetSectorOffset(uint sectorId) =>
+    internal long GetSectorOffset(uint sectorId) =>
         CfbConstants.HeaderSize + (long)sectorId * SectorSize;
 
     /// <summary>
@@ -240,6 +242,24 @@ sealed class CfbContext : IDisposable
         return count;
     }
 
+    /// <summary>
+    /// Writes <paramref name="count"/> bytes into a mini-sector at the given byte offset
+    /// within the mini-sector. Used by <see cref="CfbFileStream"/> for partial writes.
+    /// </summary>
+    public void WriteMiniSectorRange(uint miniSectorId, int miniSectorOffset, byte[] data, int srcOffset, int count)
+    {
+        long containerOffset = (long)miniSectorId * CfbConstants.MiniSectorSize + miniSectorOffset;
+        int containerSectorIndex = (int)(containerOffset / SectorSize);
+        int containerSectorByte = (int)(containerOffset % SectorSize);
+
+        uint[] rootChain = GetRootSectorChain();
+        if (containerSectorIndex >= rootChain.Length)
+            throw new InvalidOperationException("Mini-sector is beyond the mini-stream container.");
+
+        m_Stream.Position = GetSectorOffset(rootChain[containerSectorIndex]) + containerSectorByte;
+        m_Stream.Write(data, srcOffset, count);
+    }
+
     void EnsureStreamCoversAtLeast(long requiredLength)
     {
         if (m_Stream.Length < requiredLength)
@@ -259,7 +279,7 @@ sealed class CfbContext : IDisposable
         return LoadFatSector(fatIdx)[fatOff];
     }
 
-    void SetFatEntry(uint sectorId, uint value)
+    internal void SetFatEntry(uint sectorId, uint value)
     {
         int fatIdx = (int)(sectorId / (uint)m_FatEntriesPerSector);
         int fatOff = (int)(sectorId % (uint)m_FatEntriesPerSector);
@@ -339,7 +359,7 @@ sealed class CfbContext : IDisposable
         return LoadMiniFatSector(fatIdx)[fatOff];
     }
 
-    void SetMiniFatEntry(uint miniSectorId, uint value)
+    internal void SetMiniFatEntry(uint miniSectorId, uint value)
     {
         EnsureMiniFatReady();
         int fatIdx = (int)(miniSectorId / (uint)m_FatEntriesPerSector);
@@ -555,7 +575,7 @@ sealed class CfbContext : IDisposable
     }
 
     // -------------------------------------------------------------------------
-    // Stream opening - read
+    // Stream opening
     // -------------------------------------------------------------------------
 
     public Stream OpenReadStream(CfbEntry entry)
@@ -563,72 +583,30 @@ sealed class CfbContext : IDisposable
         if (entry.Type != CfbEntryType.Stream)
             throw new InvalidOperationException("Entry is not a stream.");
 
-        if (entry.PendingData is not null)
-            return new MemoryStream(entry.PendingData, writable: false);
-
         return new CfbFileStream(this, entry);
     }
 
-    // -------------------------------------------------------------------------
-    // Stream opening - write
-    // -------------------------------------------------------------------------
-
     public Stream OpenWriteStream(CfbEntry entry, FileMode mode, FileAccess access, bool create)
     {
-        MemoryStream ms;
-
         if (create || mode is FileMode.Create or FileMode.Truncate)
         {
-            ms = new MemoryStream();
-        }
-        else
-        {
-            byte[] existing = entry.PendingData ?? (entry.Size > 0 ? ReadEntryData(entry) : []);
-            ms = new MemoryStream(existing.Length);
-            ms.Write(existing, 0, existing.Length);
-            ms.Position = mode == FileMode.Append ? ms.Length : 0;
+            // Free existing sector chain and start fresh.
+            if (entry.StartSectorId < CfbConstants.DifatSectorId)
+            {
+                bool isMini = entry.Size > 0 && entry.Size < CfbConstants.MiniStreamCutOffSize;
+                if (isMini)
+                    FreeMiniSectorChain(entry.StartSectorId);
+                else
+                    FreeSectorChain(entry.StartSectorId);
+                entry.StartSectorId = CfbConstants.EndOfChainSectorId;
+                entry.Size = 0;
+                WriteDirectoryEntry(entry);
+            }
         }
 
+        long initialPosition = mode == FileMode.Append ? entry.Size : 0;
         m_Dirty = true;
-        return new CfbWriteStream(entry, ms, access);
-    }
-
-    byte[] ReadEntryData(CfbEntry entry)
-    {
-        if (entry.Size <= 0)
-            return [];
-
-        int size = (int)entry.Size;
-        byte[] data = new byte[size];
-        int bytesRead = 0;
-
-        bool isMini = entry.Size < CfbConstants.MiniStreamCutOffSize;
-        if (isMini)
-        {
-            Span<byte> buf = stackalloc byte[CfbConstants.MiniSectorSize];
-            foreach (uint id in GetMiniSectorChain(entry.StartSectorId))
-            {
-                ReadMiniSector(id, buf);
-                int toCopy = Math.Min(CfbConstants.MiniSectorSize, size - bytesRead);
-                buf[..toCopy].CopyTo(data.AsSpan(bytesRead));
-                bytesRead += toCopy;
-                if (bytesRead >= size) break;
-            }
-        }
-        else
-        {
-            Span<byte> buf = stackalloc byte[SectorSize];
-            foreach (uint id in GetSectorChain(entry.StartSectorId))
-            {
-                ReadFatSector(id, buf);
-                int toCopy = Math.Min(SectorSize, size - bytesRead);
-                buf[..toCopy].CopyTo(data.AsSpan(bytesRead));
-                bytesRead += toCopy;
-                if (bytesRead >= size) break;
-            }
-        }
-
-        return data;
+        return new CfbFileStream(this, entry, access, initialPosition);
     }
 
     // -------------------------------------------------------------------------
@@ -640,7 +618,7 @@ sealed class CfbContext : IDisposable
     /// Extends the chain if <paramref name="entry"/>'s ID is beyond the current capacity.
     /// Updates the cache.
     /// </summary>
-    void WriteDirectoryEntry(CfbEntry entry)
+    internal void WriteDirectoryEntry(CfbEntry entry)
     {
         var dirChain = GetOrLoadDirChain();
         int sectorIdx = (int)(entry.Id / (uint)m_DirEntriesPerSector);
@@ -790,7 +768,6 @@ sealed class CfbContext : IDisposable
         entry.LeftSiblingId = CfbConstants.NoStream;
         entry.RightSiblingId = CfbConstants.NoStream;
         entry.ChildId = CfbConstants.NoStream;
-        entry.PendingData = null;
         entry.StartSectorId = CfbConstants.EndOfChainSectorId;
         entry.Size = 0;
         WriteDirectoryEntry(entry);
@@ -834,7 +811,7 @@ sealed class CfbContext : IDisposable
     /// Allocates a free sector, sets its FAT entry to <see cref="CfbConstants.EndOfChainSectorId"/>
     /// as a placeholder, extends the underlying stream if needed, and returns the sector ID.
     /// </summary>
-    uint AllocateSector()
+    internal uint AllocateSector()
     {
         for (int fatIdx = 0; fatIdx < m_FatSectorIds.Count; fatIdx++)
         {
@@ -967,7 +944,7 @@ sealed class CfbContext : IDisposable
         return id;
     }
 
-    void FreeSectorChain(uint firstSectorId)
+    internal void FreeSectorChain(uint firstSectorId)
     {
         uint id = firstSectorId;
         while (id < CfbConstants.DifatSectorId)
@@ -978,7 +955,7 @@ sealed class CfbContext : IDisposable
         }
     }
 
-    void FreeMiniSectorChain(uint firstMiniSectorId)
+    internal void FreeMiniSectorChain(uint firstMiniSectorId)
     {
         uint id = firstMiniSectorId;
         while (id < CfbConstants.DifatSectorId)
@@ -990,67 +967,10 @@ sealed class CfbContext : IDisposable
     }
 
     // -------------------------------------------------------------------------
-    // Write support - sector chain allocation
+    // Write support - mini-sector allocation
     // -------------------------------------------------------------------------
 
-    /// <summary>
-    /// Allocates a contiguous (logically-chained) set of FAT sectors for <paramref name="data"/>,
-    /// writes the data (with padding to sector boundaries), and returns the first sector ID.
-    /// </summary>
-    uint AllocateRegularSectorChain(byte[] data)
-    {
-        int count = CeilDiv(data.Length, SectorSize);
-        uint[] chain = new uint[count];
-        for (int i = 0; i < count; i++)
-            chain[i] = AllocateSector();
-
-        for (int i = 0; i < count - 1; i++)
-            SetFatEntry(chain[i], chain[i + 1]);
-        // chain[count-1] already = EndOfChain from AllocateSector.
-
-        for (int i = 0; i < count; i++)
-        {
-            m_Stream.Position = GetSectorOffset(chain[i]);
-            int srcOff = i * SectorSize;
-            int toCopy = Math.Min(SectorSize, data.Length - srcOff);
-            m_Stream.Write(data, srcOff, toCopy);
-            if (toCopy < SectorSize)
-            {
-                // Pad remainder with zeros.
-                byte[] pad = new byte[SectorSize - toCopy];
-                m_Stream.Write(pad, 0, pad.Length);
-            }
-        }
-
-        return chain[0];
-    }
-
-    /// <summary>
-    /// Allocates mini-sectors for <paramref name="data"/>, writes to the mini-stream container,
-    /// and returns the first mini-sector ID.
-    /// </summary>
-    uint AllocateMiniSectorChain(byte[] data)
-    {
-        int count = CeilDiv(data.Length, CfbConstants.MiniSectorSize);
-        uint[] chain = new uint[count];
-        for (int i = 0; i < count; i++)
-            chain[i] = AllocateMiniSector();
-
-        for (int i = 0; i < count - 1; i++)
-            SetMiniFatEntry(chain[i], chain[i + 1]);
-        SetMiniFatEntry(chain[count - 1], CfbConstants.EndOfChainSectorId);
-
-        for (int i = 0; i < count; i++)
-        {
-            int srcOff = i * CfbConstants.MiniSectorSize;
-            int toCopy = Math.Min(CfbConstants.MiniSectorSize, data.Length - srcOff);
-            WriteMiniSector(chain[i], data, srcOff, toCopy);
-        }
-
-        return chain[0];
-    }
-
-    uint AllocateMiniSector()
+    internal uint AllocateMiniSector()
     {
         EnsureMiniFatReady();
 
@@ -1105,13 +1025,12 @@ sealed class CfbContext : IDisposable
         Array.Resize(ref m_MiniFatCache, newIdx + 1);
         Array.Resize(ref m_MiniFatDirty, newIdx + 1);
         m_MiniFatCache![newIdx] = newData;
-        // Not dirty: just written.
 
         m_MiniFatSectorCount++;
         m_HeaderDirty = true;
     }
 
-    void EnsureMiniStreamCovers(uint miniSectorId)
+    internal void EnsureMiniStreamCovers(uint miniSectorId)
     {
         long requiredBytes = ((long)miniSectorId + 1) * CfbConstants.MiniSectorSize;
         var root = GetRootEntry();
@@ -1163,23 +1082,44 @@ sealed class CfbContext : IDisposable
         WriteDirectoryEntry(root);
     }
 
-    void WriteMiniSector(uint miniSectorId, byte[] data, int srcOffset, int count)
+    // -------------------------------------------------------------------------
+    // Write support - regular sector chain allocation (bulk)
+    // -------------------------------------------------------------------------
+
+    /// <summary>
+    /// Allocates a chain of sectors for <paramref name="data"/>, writes the data
+    /// with padding to sector boundaries, and returns the first sector ID.
+    /// Used for mini to regular stream promotion where all data is known upfront.
+    /// </summary>
+    internal uint AllocateRegularSectorChain(byte[] data)
     {
-        long off = (long)miniSectorId * CfbConstants.MiniSectorSize;
-        int containerSectorIndex = (int)(off / SectorSize);
-        int containerSectorOffset = (int)(off % SectorSize);
+        if (data.Length == 0)
+            return CfbConstants.EndOfChainSectorId;
 
-        uint[] rootChain = GetRootSectorChain();
-        if (containerSectorIndex >= rootChain.Length)
-            throw new InvalidOperationException("Mini-sector is beyond the mini-stream container.");
+        int count = CeilDiv(data.Length, SectorSize);
+        uint[] chain = new uint[count];
+        for (int i = 0; i < count; i++)
+            chain[i] = AllocateSector();
 
-        m_Stream.Position = GetSectorOffset(rootChain[containerSectorIndex]) + containerSectorOffset;
-        m_Stream.Write(data, srcOffset, count);
-        if (count < CfbConstants.MiniSectorSize)
+        for (int i = 0; i < count - 1; i++)
+            SetFatEntry(chain[i], chain[i + 1]);
+        // chain[count-1] already = EndOfChain from AllocateSector.
+
+        for (int i = 0; i < count; i++)
         {
-            byte[] pad = new byte[CfbConstants.MiniSectorSize - count];
-            m_Stream.Write(pad, 0, pad.Length);
+            m_Stream.Position = GetSectorOffset(chain[i]);
+            int srcOff = i * SectorSize;
+            int toCopy = Math.Min(SectorSize, data.Length - srcOff);
+            m_Stream.Write(data, srcOff, toCopy);
+            if (toCopy < SectorSize)
+            {
+                // Pad remainder with zeros.
+                byte[] pad = new byte[SectorSize - toCopy];
+                m_Stream.Write(pad, 0, pad.Length);
+            }
         }
+
+        return chain[0];
     }
 
     // -------------------------------------------------------------------------
@@ -1193,64 +1133,18 @@ sealed class CfbContext : IDisposable
         if (!m_Writable || !m_Dirty)
             return;
 
-        // 1. Commit pending stream data (written by CfbWriteStream on close).
-        foreach (var entry in m_DirCache.Values.ToList())
-        {
-            if (entry.PendingData is not null)
-                CommitPendingData(entry);
-        }
-
-        // 2. Flush dirty mini-FAT sectors.
+        // Flush dirty mini-FAT sectors.
         FlushDirtyMiniFatSectors();
 
-        // 3. Flush dirty FAT sectors.
+        // Flush dirty FAT sectors.
         FlushDirtyFatSectors();
 
-        // 4. Re-write header if FAT sector count or first-sector pointers changed.
+        // Re-write header if FAT sector count or first-sector pointers changed.
         if (m_HeaderDirty)
             WriteHeader();
 
         m_Stream.Flush();
         m_Dirty = false;
-    }
-
-    void CommitPendingData(CfbEntry entry)
-    {
-        byte[] data = entry.PendingData!;
-
-        bool isMiniNow = entry.StartSectorId < CfbConstants.DifatSectorId
-                         && entry.Size > 0
-                         && entry.Size < CfbConstants.MiniStreamCutOffSize
-                         && entry.Type == CfbEntryType.Stream;
-
-        // Free old sectors.
-        if (entry.StartSectorId < CfbConstants.DifatSectorId)
-        {
-            if (isMiniNow)
-                FreeMiniSectorChain(entry.StartSectorId);
-            else
-                FreeSectorChain(entry.StartSectorId);
-        }
-
-        // Allocate new sectors and write data.
-        if (data.Length == 0)
-        {
-            entry.StartSectorId = CfbConstants.EndOfChainSectorId;
-            entry.Size = 0;
-        }
-        else if (data.Length < CfbConstants.MiniStreamCutOffSize)
-        {
-            entry.StartSectorId = AllocateMiniSectorChain(data);
-            entry.Size = data.Length;
-        }
-        else
-        {
-            entry.StartSectorId = AllocateRegularSectorChain(data);
-            entry.Size = data.Length;
-        }
-
-        entry.PendingData = null;
-        WriteDirectoryEntry(entry);
     }
 
     void FlushDirtyFatSectors()
@@ -1324,8 +1218,8 @@ sealed class CfbContext : IDisposable
     void WriteMinimalCompoundFile()
     {
         const ushort sectorShift = 9;     // 512-byte sectors
-        const ushort miniShift = 6;     // 64-byte mini-sectors
-        const int ss = 1 << sectorShift; // 512
+        const ushort miniShift = 6;       // 64-byte mini-sectors
+        const int ss = 1 << sectorShift;  // 512
 
         // Sector 0: directory (root entry)
         // Sector 1: FAT sector
