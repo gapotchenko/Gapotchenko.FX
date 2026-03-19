@@ -1,0 +1,29 @@
+# Gapotchenko.FX
+#
+# Copyright © Gapotchenko and Contributors
+#
+# File introduced by: Oleksiy Gapotchenko
+# Year of introduction: 2026
+
+set fallback := true
+set windows-shell := ["gnu-tk", "-i", "-c"]
+set script-interpreter := ["gnu-tk", "-i", "-l", "/bin/sh", "-eu"]
+
+# -----------------------------------------------------------------------------
+
+# Show the help for this justfile
+@help:
+    just --list
+
+# -----------------------------------------------------------------------------
+# Development
+# -----------------------------------------------------------------------------
+
+# Format source code
+[group("development")]
+[script]
+format:
+    just --unstable --fmt
+    echo 'Formatting exclusion dictionary...'
+    # Visual Studio shenanigans: https://developercommunity.visualstudio.com/t/Spelling-Exclusions-dont-work-after-res/10825755
+    cat Exclusion.dic | sed 's/\xFE\xFF//g' | iconv -f UTF-16BE -t UTF-8 | tr '[:upper:]' '[:lower:]' | sort -u | iconv -f UTF-8 -t UTF-16BE | sed '1s/^/\xFE\xFF/' | sponge Exclusion.dic
