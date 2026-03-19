@@ -28,9 +28,9 @@ sealed class CfbFileStream : Stream
             entry.Type == CfbEntryType.Stream &&
             entry.Size < CfbConstants.MiniStreamCutOffSize;
 
-        m_SectorChain = m_IsMiniStream
+        m_SectorChain = [.. m_IsMiniStream
             ? context.GetMiniSectorChain(entry.StartSectorId)
-            : context.GetSectorChain(entry.StartSectorId);
+            : context.GetSectorChain(entry.StartSectorId)];
     }
 
     public override bool CanRead => true;

@@ -5,7 +5,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
-using Gapotchenko.FX.IO;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Text;
@@ -293,23 +292,22 @@ sealed class CfbContext : IDisposable
     // FAT chain traversal
     // -------------------------------------------------------------------------
 
-    public uint[] GetSectorChain(uint firstSectorId)
+    public IEnumerable<uint> GetSectorChain(uint firstSectorId)
     {
         var chain = new List<uint>();
         uint id = firstSectorId;
         while (id != CfbConstants.EndOfChainSectorId && id < CfbConstants.DifatSectorId)
         {
-            chain.Add(id);
+            yield return id;
             if (id >= (uint)m_Fat.Length)
                 break;
             id = m_Fat[id];
         }
-        return chain.ToArray();
     }
 
     byte[] ReadChain(uint firstSectorId)
     {
-        uint[] chain = GetSectorChain(firstSectorId);
+        uint[] chain = [.. GetSectorChain(firstSectorId)];
         byte[] result = new byte[chain.Length * SectorSize];
         for (int i = 0; i < chain.Length; i++)
         {
@@ -323,18 +321,17 @@ sealed class CfbContext : IDisposable
     // Mini-stream
     // -------------------------------------------------------------------------
 
-    public uint[] GetMiniSectorChain(uint firstMiniSectorId)
+    public IEnumerable<uint> GetMiniSectorChain(uint firstMiniSectorId)
     {
         var chain = new List<uint>();
         uint id = firstMiniSectorId;
         while (id != CfbConstants.EndOfChainSectorId && id < CfbConstants.DifatSectorId)
         {
-            chain.Add(id);
+            yield return id;
             if (id >= (uint)m_MiniFat.Length)
                 break;
             id = m_MiniFat[id];
         }
-        return chain.ToArray();
     }
 
     uint[]? m_RootSectorChain;
@@ -344,7 +341,7 @@ sealed class CfbContext : IDisposable
         if (m_RootSectorChain is null)
         {
             var root = GetRootEntry();
-            m_RootSectorChain = GetSectorChain(root.StartSectorId);
+            m_RootSectorChain = [.. GetSectorChain(root.StartSectorId)];
         }
         return m_RootSectorChain;
     }
@@ -608,8 +605,7 @@ sealed class CfbContext : IDisposable
         bool isMini = entry.Size < CfbConstants.MiniStreamCutOffSize;
         if (isMini)
         {
-            uint[] chain = GetMiniSectorChain(entry.StartSectorId);
-            foreach (uint id in chain)
+            foreach (uint id in GetMiniSectorChain(entry.StartSectorId))
             {
                 ReadOnlySpan<byte> miniSector = ReadMiniSector(id);
                 int toCopy = Math.Min(CfbConstants.MiniSectorSize, size - bytesRead);
@@ -621,8 +617,7 @@ sealed class CfbContext : IDisposable
         }
         else
         {
-            uint[] chain = GetSectorChain(entry.StartSectorId);
-            foreach (uint id in chain)
+            foreach (uint id in GetSectorChain(entry.StartSectorId))
             {
                 byte[] sector = ReadSectorBytes(id);
                 int toCopy = Math.Min(SectorSize, size - bytesRead);
