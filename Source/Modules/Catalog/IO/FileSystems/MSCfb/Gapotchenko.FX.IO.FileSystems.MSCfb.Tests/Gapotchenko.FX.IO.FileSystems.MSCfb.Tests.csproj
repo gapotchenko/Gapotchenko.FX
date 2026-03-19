@@ -11,4 +11,8 @@
     <PackageReference Include="MSTest.TestFramework" Version="4.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Assets\Apache POI\" />
+  </ItemGroup>
+
 </Project>
