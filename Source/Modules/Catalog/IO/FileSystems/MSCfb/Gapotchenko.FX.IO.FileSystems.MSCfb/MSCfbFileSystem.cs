@@ -5,9 +5,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.IO.FileSystems.MSCfb.Impl;
 using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
-using Gapotchenko.FX.IO.FileSystems.MSCfb.Impl;
 using Gapotchenko.FX.Memory;
 using System.Diagnostics;
 
@@ -102,15 +102,7 @@ public sealed partial class MSCfbFileSystem :
 
         EnsureCanRead();
 
-        var parts = new StructuredPath(path).Parts.Span;
-        if (parts == null || parts.IsEmpty)
-            ThrowFileNotFound(path);
-
-        var entry = TryFindEntry(parts);
-        if (entry?.Type != CfbEntryType.Stream)
-            ThrowFileNotFound(path);
-
-        return entry.Size;
+        return GetCfbFileEntry(path).Entry.Size;
     }
 
     /// <inheritdoc/>
@@ -168,24 +160,45 @@ public sealed partial class MSCfbFileSystem :
 
         EnsureCanWrite();
 
-        var parts = new StructuredPath(path).Parts.Span;
-        if (parts.IsEmpty)
-            ThrowFileNotFound(path);
+        var (entry, parent) = GetCfbFileEntry(path);
+        m_Context.RemoveChild(parent, entry);
+    }
 
-        var parent =
-            TryGetCfbDirectoryEntry(parts[..^1]) ??
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+    (CfbEntry Entry, CfbEntry Parent) GetCfbFileEntry(in StructuredPath path)
+    {
+        if (path.IsDirectory)
+            throw new IOException(VfsResourceKit.InvalidFileName(path.ToString()));
+
+        var parts = path.Parts.Span;
+        if (parts.IsEmpty)
+        {
+            if (parts == null)
+                ThrowDirectoryNotFound(path.ToString());
+            else
+                ThrowFileNotFound(path.ToString());
+        }
+
+        var parent = TryGetCfbDirectoryEntry(parts[..^1]);
+        if (parent is null)
+            ThrowDirectoryNotFound(path.ToString());
 
         var entry = m_Context.TryFindChild(parent, parts[^1]);
-        if (entry is null || entry.Type != CfbEntryType.Stream)
-            ThrowFileNotFound(path);
+        if (entry is null || entry.Type is CfbEntryType.Unallocated)
+            ThrowFileNotFound(path.ToString());
 
-        m_Context.RemoveChild(parent, entry);
+        if (entry.Type != CfbEntryType.Stream)
+            throw new UnauthorizedAccessException(VfsResourceKit.AccessToPathIsDenied(path.ToString()));
+
+        return (entry, parent);
     }
 
     [DoesNotReturn]
     static void ThrowFileNotFound(string? path) =>
         throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(path), path);
+
+    [DoesNotReturn]
+    static void ThrowDirectoryNotFound(string? path) =>
+        throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
 
     #endregion
 
@@ -244,20 +257,20 @@ public sealed partial class MSCfbFileSystem :
 
         EnsureCanWrite();
 
-        var parts = new StructuredPath(path).Parts.Span;
-        if (parts == null || parts.IsEmpty)
+        var pathParts = new StructuredPath(path).Parts.Span;
+        if (pathParts == null || pathParts.IsEmpty)
             throw new IOException(VfsResourceKit.AccessToPathIsDenied(path));
 
-        var entry = TryFindEntry(parts);
-        if (entry is null || entry.Type is not CfbEntryType.Storage and not CfbEntryType.Root)
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+        var entry = TryGetCfbDirectoryEntry(pathParts);
+        if (entry is null)
+            ThrowDirectoryNotFound(path);
 
         if (!recursive && m_Context.EnumerateChildren(entry).Any())
             throw new IOException(VfsResourceKit.DirectoryIsNotEmpty(path));
 
-        var parent = TryGetCfbDirectoryEntry(parts[..^1]);
+        var parent = TryGetCfbDirectoryEntry(pathParts[..^1]);
         if (parent is null)
-            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+            ThrowDirectoryNotFound(path);
 
         DeleteEntryRecursive(parent, entry);
     }
@@ -401,12 +414,14 @@ public sealed partial class MSCfbFileSystem :
     IEnumerable<CfbEntry> EnumerateChildrenSnapshot(CfbEntry parent)
     {
         var query = m_Context.EnumerateChildren(parent);
+
         if (m_Writable)
         {
             // Snapshot children before iterating: the caller may remove entries from the tree
             // (e.g. during a directory move) rebuilding the BST and invalidating live pointers.
             query = [.. query];
         }
+
         return query;
     }
 
@@ -438,6 +453,18 @@ public sealed partial class MSCfbFileSystem :
         }
 
         return null;
+
+        CfbEntry? TryFindEntry(ReadOnlySpan<string> pathParts)
+        {
+            if (pathParts.IsEmpty)
+                return m_Context.GetRootEntry();
+
+            var parent = TryGetCfbDirectoryEntry(pathParts[..^1]);
+            if (parent is null)
+                return null;
+
+            return m_Context.TryFindChild(parent, pathParts[^1]);
+        }
     }
 
     CfbEntry? TryGetCfbDirectoryEntry(ReadOnlySpan<string> pathParts)
@@ -451,18 +478,6 @@ public sealed partial class MSCfbFileSystem :
             entry = child;
         }
         return entry;
-    }
-
-    CfbEntry? TryFindEntry(ReadOnlySpan<string> pathParts)
-    {
-        if (pathParts.IsEmpty)
-            return m_Context.GetRootEntry();
-
-        var parent = TryGetCfbDirectoryEntry(pathParts[..^1]);
-        if (parent is null)
-            return null;
-
-        return m_Context.TryFindChild(parent, pathParts[^1]);
     }
 
     #endregion
