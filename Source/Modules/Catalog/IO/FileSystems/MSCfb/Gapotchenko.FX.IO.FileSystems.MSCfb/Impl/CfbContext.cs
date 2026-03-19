@@ -880,12 +880,8 @@ sealed class CfbContext : IDisposable
 
         int newFatIdx = m_FatSectorIds.Count;
         m_FatSectorIds.Add(newFatSectorId);
-        if (newFatIdx >= m_FatCache.Length)
-        {
-            int capacity = newFatIdx * 2;
-            Array.Resize(ref m_FatCache, capacity);
-            Array.Resize(ref m_FatDirty, capacity);
-        }
+        Array.Resize(ref m_FatCache, newFatIdx + 1);
+        Array.Resize(ref m_FatDirty, newFatIdx + 1);
         m_FatCache[newFatIdx] = newData;
 
         // Register the new FAT sector in the DIFAT.
