@@ -507,7 +507,7 @@ public sealed partial class MSCfbFileSystem :
         if (entry.ModificationTime != lastWriteTime)
         {
             entry.ModificationTime = lastWriteTime;
-            m_Context.MarkDirty();
+            m_Context.WriteModifiedEntry(entry);
         }
     }
 
@@ -534,7 +534,7 @@ public sealed partial class MSCfbFileSystem :
         if (entry.CreationTime != creationTime)
         {
             entry.CreationTime = creationTime;
-            m_Context.MarkDirty();
+            m_Context.WriteModifiedEntry(entry);
         }
     }
 
