@@ -91,6 +91,11 @@ sealed class CfbEntry
     public long Size { get; set; }
 
     /// <summary>
+    /// Pending write data. Non-null means this stream has been modified in memory and needs to be flushed.
+    /// </summary>
+    internal byte[]? PendingData { get; set; }
+
+    /// <summary>
     /// Compares two entry names according to the MS-CFB specification:
     /// first by length (shorter names are "less"), then character-by-character using ToUpperInvariant.
     /// </summary>
