@@ -1,7 +1,7 @@
 // Gapotchenko.FX
 //
 // Copyright © Gapotchenko and Contributors
-// Portions © OpenMcdf Project
+// Portions © Open MCDF Project
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
@@ -9,22 +9,22 @@
 namespace Gapotchenko.FX.IO.FileSystems.MSCfb.Tests;
 
 [TestClass]
-public sealed class MSCfbSampleTests
+public sealed class MSCfbOpenMcdfTests
 {
     #region Stream
 
     [TestMethod]
-    [DataRow("TestStream_v3_0.cfb", 0)]
-    [DataRow("TestStream_v3_63.cfb", 63)]
-    [DataRow("TestStream_v3_64.cfb", 64)]
-    [DataRow("TestStream_v3_65.cfb", 65)]
-    [DataRow("TestStream_v3_511.cfb", 511)]
-    [DataRow("TestStream_v3_512.cfb", 512)]
-    [DataRow("TestStream_v3_513.cfb", 513)]
-    [DataRow("TestStream_v3_4095.cfb", 4095)]
-    [DataRow("TestStream_v3_4096.cfb", 4096)]
-    [DataRow("TestStream_v3_4097.cfb", 4097)]
-    public void MSCfb_Sample_Stream_Read(string fileName, int expectedLength)
+    [DataRow("Open MCDF/TestStream_v3_0.cfb", 0)]
+    [DataRow("Open MCDF/TestStream_v3_63.cfb", 63)]
+    [DataRow("Open MCDF/TestStream_v3_64.cfb", 64)]
+    [DataRow("Open MCDF/TestStream_v3_65.cfb", 65)]
+    [DataRow("Open MCDF/TestStream_v3_511.cfb", 511)]
+    [DataRow("Open MCDF/TestStream_v3_512.cfb", 512)]
+    [DataRow("Open MCDF/TestStream_v3_513.cfb", 513)]
+    [DataRow("Open MCDF/TestStream_v3_4095.cfb", 4095)]
+    [DataRow("Open MCDF/TestStream_v3_4096.cfb", 4096)]
+    [DataRow("Open MCDF/TestStream_v3_4097.cfb", 4097)]
+    public void MSCfb_OpenMcdf_Stream_Read(string fileName, int expectedLength)
     {
         using var assetStream = Assets.OpenStream(fileName);
         using var vfs = new MSCfbFileSystem(assetStream);
@@ -50,11 +50,11 @@ public sealed class MSCfbSampleTests
     #region Storage
 
     [TestMethod]
-    [DataRow("MultipleStorage.cfb", 1)]
-    [DataRow("MultipleStorage2.cfb", 1)]
-    [DataRow("MultipleStorage3.cfb", 1)]
-    [DataRow("MultipleStorage4.cfb", 1)]
-    public void MSCfb_Sample_Storage_Enumerate(string fileName, int expectedCount)
+    [DataRow("Open MCDF/MultipleStorage.cfb", 1)]
+    [DataRow("Open MCDF/MultipleStorage2.cfb", 1)]
+    [DataRow("Open MCDF/MultipleStorage3.cfb", 1)]
+    [DataRow("Open MCDF/MultipleStorage4.cfb", 1)]
+    public void MSCfb_OpenMcdf_Storage_Enumerate(string fileName, int expectedCount)
     {
         using var assetStream = Assets.OpenStream(fileName);
         using var vfs = new MSCfbFileSystem(assetStream);
@@ -64,9 +64,9 @@ public sealed class MSCfbSampleTests
     }
 
     [TestMethod]
-    public void MSCfb_Sample_Storage_OpenNamed()
+    public void MSCfb_OpenMcdf_Storage_OpenNamed()
     {
-        using var assetStream = Assets.OpenStream("MultipleStorage.cfb");
+        using var assetStream = Assets.OpenStream("Open MCDF/MultipleStorage.cfb");
         using var vfs = new MSCfbFileSystem(assetStream);
 
         Assert.IsTrue(vfs.DirectoryExists("/MyStorage"));
@@ -75,16 +75,16 @@ public sealed class MSCfbSampleTests
 
     #endregion
 
-    #region Office documents
+    #region Samples
 
     [TestMethod]
-    [DataRow("Samples/LibreOfficeBlankSample_v25.8.doc")]
-    [DataRow("Samples/LibreOfficeBlankSample_v25.8.xls")]
-    [DataRow("Samples/LibreOfficeBlankSample_v25.8.ppt")]
-    [DataRow("Samples/Office365BlankSample_v2507.doc")]
-    [DataRow("Samples/Office365BlankSample_v2507.xls")]
-    [DataRow("Samples/Office365BlankSample_v2507.ppt")]
-    public void MSCfb_Sample_OfficeDocument_Open(string fileName)
+    [DataRow("Open MCDF/Samples/LibreOfficeBlankSample_v25.8.doc")]
+    [DataRow("Open MCDF/Samples/LibreOfficeBlankSample_v25.8.xls")]
+    [DataRow("Open MCDF/Samples/LibreOfficeBlankSample_v25.8.ppt")]
+    [DataRow("Open MCDF/Samples/Office365BlankSample_v2507.doc")]
+    [DataRow("Open MCDF/Samples/Office365BlankSample_v2507.xls")]
+    [DataRow("Open MCDF/Samples/Office365BlankSample_v2507.ppt")]
+    public void MSCfb_OpenMcdf_Sample_Open(string fileName)
     {
         using var assetStream = Assets.OpenStream(fileName);
         using var vfs = new MSCfbFileSystem(assetStream);
