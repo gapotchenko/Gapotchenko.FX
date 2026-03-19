@@ -249,6 +249,13 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// The date and time the file or directory was last written to.
     /// If not otherwise specified, this value is expressed in UTC time.
     /// </param>
+    /// <exception cref="NotSupportedException">
+    /// The current file system does not support setting the last write time.
+    /// </exception>
+    /// <exception cref="NotSupportedException">
+    /// The specified entry exists but does not support setting the last write time
+    /// (for example, a virtual or synthetic entry such as the root directory).
+    /// </exception>
     void SetLastWriteTime(string path, DateTime lastWriteTime);
 
     /// <summary>
@@ -269,6 +276,13 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// An object that contains the value to set for the creation date and time of <paramref name="path"/>. 
     /// If not otherwise specified, this value is expressed in UTC time.
     /// </param>
+    /// <exception cref="NotSupportedException">
+    /// The current file system does not support setting the creation time.
+    /// </exception>
+    /// <exception cref="NotSupportedException">
+    /// The specified entry exists but does not support setting the creation time
+    /// (for example, a virtual or synthetic entry such as the root directory).
+    /// </exception>
     void SetCreationTime(string path, DateTime creationTime);
 
     /// <summary>
@@ -289,6 +303,13 @@ public interface IFileSystemView : IReadOnlyFileSystemView
     /// An object that contains the value to set for the access date and time of <paramref name="path"/>. 
     /// If not otherwise specified, this value is expressed in UTC time.
     /// </param>
+    /// <exception cref="NotSupportedException">
+    /// The current file system does not support setting the last access time.
+    /// </exception>
+    /// <exception cref="NotSupportedException">
+    /// The specified entry exists but does not support setting the last access time
+    /// (for example, a virtual or synthetic entry such as the root directory).
+    /// </exception>
     void SetLastAccessTime(string path, DateTime lastAccessTime);
 
     /// <summary>

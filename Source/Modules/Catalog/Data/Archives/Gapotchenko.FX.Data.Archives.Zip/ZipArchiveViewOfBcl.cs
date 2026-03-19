@@ -856,6 +856,9 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
     ZipArchiveEntry CreateArchiveEntry(string entryName)
     {
+        if (entryName.Equals("/", StringComparison.Ordinal))
+            throw new NotSupportedException("The root ZIP directory is a virtual entry and does not support this operation.");
+
         var entry = m_Archive.CreateEntry(entryName);
         if (m_NormalizedArchiveEntries.Value is { } entries)
             entries.Add(entryName, entry);
