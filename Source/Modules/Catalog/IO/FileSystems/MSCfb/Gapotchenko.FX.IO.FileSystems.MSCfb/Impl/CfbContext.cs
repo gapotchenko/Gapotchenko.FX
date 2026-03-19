@@ -161,22 +161,24 @@ sealed class CfbContext : IDisposable
             fatSectorIds.Add(id);
         }
 
+        Span<byte> sectorBuffer = stackalloc byte[h.SectorSize];
+
         // Collect FAT sector IDs from DIFAT extension sectors if any.
         if (h.DifatSectorCount > 0)
         {
             uint difatSectorId = h.FirstDifatSectorId;
             while (difatSectorId != CfbConstants.EndOfChainSectorId && difatSectorId != CfbConstants.FreeSectorId)
             {
-                byte[] sector = ReadSectorBytes(difatSectorId);
+                ReadFatSector(difatSectorId, sectorBuffer);
                 int entriesPerDifatSector = h.SectorSize / 4 - 1; // last int32 is the next DIFAT sector ID
                 for (int i = 0; i < entriesPerDifatSector; i++)
                 {
-                    uint id = BinaryPrimitives.ReadUInt32LittleEndian(sector.AsSpan(i * 4));
+                    uint id = BinaryPrimitives.ReadUInt32LittleEndian(sectorBuffer[(i * 4)..]);
                     if (id == CfbConstants.FreeSectorId || id == CfbConstants.EndOfChainSectorId)
                         break;
                     fatSectorIds.Add(id);
                 }
-                difatSectorId = BinaryPrimitives.ReadUInt32LittleEndian(sector.AsSpan(h.SectorSize - 4));
+                difatSectorId = BinaryPrimitives.ReadUInt32LittleEndian(sectorBuffer[(h.SectorSize - 4)..]);
             }
         }
 
@@ -185,9 +187,9 @@ sealed class CfbContext : IDisposable
         uint[] fat = new uint[fatSectorIds.Count * entriesPerFatSector];
         for (int i = 0; i < fatSectorIds.Count; i++)
         {
-            byte[] sector = ReadSectorBytes(fatSectorIds[i]);
+            ReadFatSector(fatSectorIds[i], sectorBuffer);
             for (int j = 0; j < entriesPerFatSector; j++)
-                fat[i * entriesPerFatSector + j] = BinaryPrimitives.ReadUInt32LittleEndian(sector.AsSpan(j * 4));
+                fat[i * entriesPerFatSector + j] = BinaryPrimitives.ReadUInt32LittleEndian(sectorBuffer[(j * 4)..]);
         }
 
         return fat;
@@ -273,15 +275,7 @@ sealed class CfbContext : IDisposable
     // -------------------------------------------------------------------------
 
     long GetSectorOffset(uint sectorId) =>
-        CfbConstants.HeaderSize + (long)sectorId * SectorSize;
-
-    byte[] ReadSectorBytes(uint sectorId)
-    {
-        byte[] buffer = new byte[SectorSize];
-        m_Stream.Position = GetSectorOffset(sectorId);
-        m_Stream.ReadExactly(buffer, 0, buffer.Length);
-        return buffer;
-    }
+        CfbConstants.HeaderSize + sectorId * SectorSize;
 
     /// <summary>
     /// Reads a sector's bytes for use in a stream (may be cached in the future).
@@ -636,11 +630,12 @@ sealed class CfbContext : IDisposable
         }
         else
         {
+            Span<byte> sectorBuffer = stackalloc byte[SectorSize];
             foreach (uint id in GetSectorChain(entry.StartSectorId))
             {
-                byte[] sector = ReadSectorBytes(id);
+                ReadFatSector(id, sectorBuffer);
                 int toCopy = Math.Min(SectorSize, size - bytesRead);
-                Array.Copy(sector, 0, data, bytesRead, toCopy);
+                sectorBuffer[..toCopy].CopyTo(data.AsSpan(bytesRead));
                 bytesRead += toCopy;
                 if (bytesRead >= size)
                     break;
