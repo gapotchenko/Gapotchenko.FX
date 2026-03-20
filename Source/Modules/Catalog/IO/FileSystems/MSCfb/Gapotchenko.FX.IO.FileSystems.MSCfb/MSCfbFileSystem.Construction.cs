@@ -5,8 +5,10 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
-using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.FileSystems.MSCfb.Impl;
+using Gapotchenko.FX.IO.Vfs;
+using Gapotchenko.FX.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.IO.FileSystems.MSCfb;
 
@@ -75,12 +77,18 @@ partial class MSCfbFileSystem
     {
     }
 
-    internal MSCfbFileSystem(Stream stream, bool writable, bool leaveOpen, MSCfbFileSystemOptions? options, VfsStorageContext? context,
+    internal MSCfbFileSystem(
+        Stream stream,
+        bool writable,
+        bool leaveOpen,
+        MSCfbFileSystemOptions? options,
+        VfsStorageContext? context,
         bool create = false)
     {
         ArgumentNullException.ThrowIfNull(stream);
+        Debug.Assert(!create || writable);
 
-        m_Writable = writable || create;
+        m_Writable = writable;
 
         m_Context = create
             ? CfbContext.Create(stream, leaveOpen)
@@ -89,6 +97,59 @@ partial class MSCfbFileSystem
         if (options?.TrackLocation ?? true)
             Location = context?.Location;
     }
+
+    // ------------------------------------------------------------------------
+    // Asynchronous
+    // ------------------------------------------------------------------------
+
+    /// <summary>
+    /// Asynchronously creates an instance of the <see cref="MSCfbFileSystem"/> class on the given stream
+    /// with the <see cref="IFileSystemView.CanWrite"/> property set as specified,
+    /// optionally leaving the stream open,
+    /// and using the specified options.
+    /// </summary>
+    /// <param name="stream">The stream that contains the MS-CFB compound file.</param>
+    /// <param name="writable">
+    /// The setting of the <see cref="IFileSystemView.CanWrite"/> property, 
+    /// which determines whether the file system supports writing.
+    /// </param>
+    /// <param name="leaveOpen">
+    /// <see langword="true"/> to leave the stream open after the <see cref="MSCfbFileSystem"/> object is disposed;
+    /// otherwise, <see langword="false"/>.
+    /// </param>
+    /// <param name="options">The MS-CFB file system options.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains a created instance of the <see cref="MSCfbFileSystem"/> class.
+    /// </returns>
+    public static Task<MSCfbFileSystem> CreateAsync(
+        Stream stream,
+        bool writable = false,
+        bool leaveOpen = false,
+        MSCfbFileSystemOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        return CreateAsync(stream, writable, leaveOpen, options, null, cancellationToken);
+    }
+
+    internal static async Task<MSCfbFileSystem> CreateAsync(
+        Stream stream,
+        bool writable,
+        bool leaveOpen,
+        MSCfbFileSystemOptions? options,
+        VfsStorageContext? context,
+        CancellationToken cancellationToken)
+    {
+        // TODO: true async
+        return await
+            TaskBridge.ExecuteAsync(
+                () => new MSCfbFileSystem(stream, writable, leaveOpen, options, context),
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    // ------------------------------------------------------------------------
 
     /// <inheritdoc/>
     protected override void Dispose(bool disposing)

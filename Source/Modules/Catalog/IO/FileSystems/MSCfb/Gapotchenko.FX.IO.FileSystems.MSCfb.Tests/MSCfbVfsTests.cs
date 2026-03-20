@@ -1,5 +1,5 @@
 ﻿using Gapotchenko.FX.IO.Vfs;
-using Gapotchenko.FX.IO.Vfs.Kits;
+using Gapotchenko.FX.IO.Vfs.Tests;
 using Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
 namespace Gapotchenko.FX.IO.FileSystems.MSCfb.Tests;
@@ -14,9 +14,16 @@ public sealed class MSCfbVfsTests : FileSystemViewVfsTestKit
         return new VfsLocation(vfs, $"{vfs.DirectorySeparatorChar}");
     }
 
+    protected override async Task<VfsLocation> CreateVfsAsync(CancellationToken cancellationToken)
+    {
+        var stream = new MemoryStream();
+        var vfs = await TestableVfs.CreateAsync(stream, cancellationToken).ConfigureAwait(false);
+        return new VfsLocation(vfs, $"{vfs.DirectorySeparatorChar}");
+    }
+
     protected override bool TryRoundTripVfs(ref IFileSystemView vfs)
     {
-        var testableVfs = (TestableVfs)UnwrapVfs(vfs, out object? cookie);
+        var testableVfs = (ITestableVfs)UnwrapVfs(vfs, out object? cookie);
 
         // Unmount the existing file system.
         testableVfs.Dispose();
@@ -33,25 +40,27 @@ public sealed class MSCfbVfsTests : FileSystemViewVfsTestKit
         return true;
     }
 
-    sealed class TestableVfs :
-        FileSystemViewProxyKit<MSCfbFileSystem>,
-        IDisposable
+    sealed class TestableVfs : TestableVfsKit<MSCfbFileSystem>
     {
+        public static async Task<TestableVfs> CreateAsync(Stream stream, CancellationToken cancellationToken = default)
+        {
+            return new TestableVfs(
+                await
+                    MSCfbFileSystem.CreateAsync(stream, stream.CanWrite, true, cancellationToken: cancellationToken)
+                    .ConfigureAwait(false),
+                stream);
+        }
+
         public TestableVfs(Stream stream) :
-            this(
+            base(
                 new MSCfbFileSystem(stream, stream.CanWrite, true),
                 stream)
         {
         }
 
         TestableVfs(MSCfbFileSystem baseView, Stream stream) :
-            base(baseView)
+            base(baseView, stream)
         {
-            Stream = stream;
         }
-
-        public Stream Stream { get; }
-
-        public void Dispose() => BaseView.Dispose();
     }
 }

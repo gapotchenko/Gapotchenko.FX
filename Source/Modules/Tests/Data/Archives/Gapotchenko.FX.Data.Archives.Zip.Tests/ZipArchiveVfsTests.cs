@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.IO.Vfs;
-using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.IO.Vfs.Tests.Kits;
 
 namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
@@ -10,20 +9,20 @@ public sealed class ZipArchiveVfsTests : FileSystemViewVfsTestKit
     protected override VfsLocation CreateVfs()
     {
         var stream = new MemoryStream();
-        return new VfsLocation(new ArchiveVfs(stream), "/");
+        var vfs = new TestableVfs(stream);
+        return new VfsLocation(vfs, $"{vfs.DirectorySeparatorChar}");
     }
 
     protected override async Task<VfsLocation> CreateVfsAsync(CancellationToken cancellationToken)
     {
         var stream = new MemoryStream();
-        return new VfsLocation(
-            await ArchiveVfs.CreateAsync(stream, cancellationToken).ConfigureAwait(false),
-            "/");
+        var vfs = await TestableVfs.CreateAsync(stream, cancellationToken).ConfigureAwait(false);
+        return new VfsLocation(vfs, $"{vfs.DirectorySeparatorChar}");
     }
 
     protected override bool TryRoundTripVfs(ref IFileSystemView vfs)
     {
-        var archiveVfs = (ArchiveVfs)UnwrapVfs(vfs, out object? cookie);
+        var archiveVfs = (TestableVfs)UnwrapVfs(vfs, out object? cookie);
 
         archiveVfs.Dispose();
 
@@ -34,38 +33,31 @@ public sealed class ZipArchiveVfsTests : FileSystemViewVfsTestKit
         oldStream.CopyTo(newStream);
         newStream.Position = 0;
 
-        vfs = WrapVfs(new ArchiveVfs(newStream), cookie);
+        vfs = WrapVfs(new TestableVfs(newStream), cookie);
         return true;
     }
 
-    sealed class ArchiveVfs :
-        FileSystemViewProxyKit<ZipArchive>,
-        IDisposable
+    sealed class TestableVfs : TestableVfsKit<ZipArchive>
     {
-        public ArchiveVfs(Stream stream) :
-            this(
-                new ZipArchive(stream, stream.CanWrite, true),
-                stream)
+        public static async Task<TestableVfs> CreateAsync(Stream stream, CancellationToken cancellationToken = default)
         {
-        }
-
-        ArchiveVfs(ZipArchive baseView, Stream stream) :
-            base(baseView)
-        {
-            Stream = stream;
-        }
-
-        public static async Task<ArchiveVfs> CreateAsync(Stream stream, CancellationToken cancellationToken = default)
-        {
-            return new ArchiveVfs(
+            return new TestableVfs(
                 await
                     ZipArchive.CreateAsync(stream, stream.CanWrite, true, cancellationToken: cancellationToken)
                     .ConfigureAwait(false),
                 stream);
         }
 
-        public Stream Stream { get; }
+        public TestableVfs(Stream stream) :
+            this(
+                new ZipArchive(stream, stream.CanWrite, true),
+                stream)
+        {
+        }
 
-        public void Dispose() => BaseView.Dispose();
+        TestableVfs(ZipArchive baseView, Stream stream) :
+            base(baseView, stream)
+        {
+        }
     }
 }

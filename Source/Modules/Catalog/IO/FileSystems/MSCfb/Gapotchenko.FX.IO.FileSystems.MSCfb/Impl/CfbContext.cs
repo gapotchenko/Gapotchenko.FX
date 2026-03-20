@@ -480,7 +480,7 @@ sealed class CfbContext : IDisposable
     }
 
     // -------------------------------------------------------------------------
-    // Write support — entry mutation
+    // Write support - entry mutation
     // -------------------------------------------------------------------------
 
     /// <summary>
@@ -526,7 +526,7 @@ sealed class CfbContext : IDisposable
 
     /// <summary>
     /// Removes <paramref name="entry"/> from <paramref name="parent"/>'s child tree and marks it as unallocated.
-    /// Does not recursively remove children — callers must do that beforehand.
+    /// Does not recursively remove children - callers must do that beforehand.
     /// </summary>
     public void RemoveChild(CfbEntry parent, CfbEntry entry)
     {
@@ -577,7 +577,7 @@ sealed class CfbContext : IDisposable
     }
 
     // -------------------------------------------------------------------------
-    // Write support — stream opening
+    // Write support - stream opening
     // -------------------------------------------------------------------------
 
     /// <summary>
@@ -646,7 +646,7 @@ sealed class CfbContext : IDisposable
     }
 
     // -------------------------------------------------------------------------
-    // Write support — flush
+    // Write support - flush
     // -------------------------------------------------------------------------
 
     public void MarkDirty() => m_Dirty = true;
