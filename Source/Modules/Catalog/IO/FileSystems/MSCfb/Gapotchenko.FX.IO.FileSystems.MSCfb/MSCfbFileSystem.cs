@@ -567,6 +567,12 @@ public sealed partial class MSCfbFileSystem :
 
     #endregion
 
+    /// <inheritdoc/>
+    public override void Flush()
+    {
+        m_Context.Flush();
+    }
+
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly CfbContext m_Context;
 
