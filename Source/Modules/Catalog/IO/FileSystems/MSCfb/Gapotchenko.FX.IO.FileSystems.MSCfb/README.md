@@ -1,4 +1,4 @@
-# Gapotchenko.FX.IO.FileSystems.MSCfb
+﻿# Gapotchenko.FX.IO.FileSystems.MSCfb
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](../../../../../../../LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/Gapotchenko.FX.IO.FileSystems.MSCfb.svg)](https://www.nuget.org/packages/Gapotchenko.FX.IO.FileSystems.MSCfb)
@@ -85,15 +85,12 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Collections](../../../../Gapotchenko.FX.Collections#readme)
 - [Gapotchenko.FX.Console](../../../../Gapotchenko.FX.Console#readme)
 - [Gapotchenko.FX.Data](../../../../Data/Archives/Gapotchenko.FX.Data.Archives#readme)
-  - [Gapotchenko.FX.Data.Archives](../../../../Data/Archives/Gapotchenko.FX.Data.Archives#readme)
-    - [Gapotchenko.FX.Data.Archives.Zip](../../../../Data/Archives/Gapotchenko.FX.Data.Archives.Zip#readme)
-  - [Gapotchenko.FX.Data.Encoding](../../../../Data/Encoding/Gapotchenko.FX.Data.Encoding#readme)
-  - [Gapotchenko.FX.Data.Integrity.Checksum](../../../../Data/Integrity/Checksum/Gapotchenko.FX.Data.Integrity.Checksum#readme)
 - [Gapotchenko.FX.Diagnostics](../../../../Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
 - [Gapotchenko.FX.IO](../../../Gapotchenko.FX.IO#readme)
-  - [Gapotchenko.FX.IO.Vfs](../../../Gapotchenko.FX.IO.Vfs#readme)
   - [Gapotchenko.FX.IO.FileSystems](../../Gapotchenko.FX.IO.FileSystems#readme)
-  - &#x27B4; [Gapotchenko.FX.IO.FileSystems.MSCfb](.#readme)
+    - &#x27B4; [Gapotchenko.FX.IO.FileSystems.MSCfb](.#readme)
+      - [Gapotchenko.FX.IO.FileSystems.MSCfb.Tests](../Gapotchenko.FX.IO.FileSystems.MSCfb.Tests#readme)
+  - [Gapotchenko.FX.IO.Vfs](../../../Gapotchenko.FX.IO.Vfs#readme)
 - [Gapotchenko.FX.Linq](../../../../Linq/Gapotchenko.FX.Linq#readme)
 - [Gapotchenko.FX.Math](../../../../Math/Gapotchenko.FX.Math#readme)
 - [Gapotchenko.FX.Memory](../../../../Gapotchenko.FX.Memory#readme)
@@ -103,4 +100,4 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Tuples](../../../../Gapotchenko.FX.Tuples#readme)
 - [Gapotchenko.FX.Versioning](../../../../Versioning/Gapotchenko.FX.Versioning#readme)
 
-Or look at the [full list of modules](../../../../../..#readme).
+Or look at the [full list of modules](../../../../..#readme).
