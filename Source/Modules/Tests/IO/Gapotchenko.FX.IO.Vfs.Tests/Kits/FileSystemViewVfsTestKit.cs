@@ -31,19 +31,57 @@ public abstract partial class FileSystemViewVfsTestKit
 
     #region Engine
 
+    protected static IVirtualFileSystem CreateTemporaryVfs(out string rootPath)
+    {
+        var vfs = new TempLocalVfs();
+        rootPath = vfs.RootPath;
+        return vfs;
+    }
+
     /// <summary>
     /// Creates an empty virtual file system view.
     /// </summary>
     /// <returns>A VFS location where the testing should be performed.</returns>
-    protected abstract VfsLocation CreateVfs();
+    VfsLocation CreateVfs()
+    {
+        return OpenVfs(new MemoryStream());
+    }
 
     /// <summary>
     /// Asynchronously creates an empty virtual file system view.
     /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A VFS location where the testing should be performed.</returns>
-    protected virtual Task<VfsLocation> CreateVfsAsync(CancellationToken cancellationToken)
+    Task<VfsLocation> CreateVfsAsync(CancellationToken cancellationToken)
     {
-        return TaskBridge.ExecuteAsync(CreateVfs, cancellationToken);
+        return OpenVfsAsync(new MemoryStream(), cancellationToken);
+    }
+
+    /// <summary>
+    /// Opens a virtual file system view.
+    /// </summary>
+    /// <param name="stream">The stream to open the virtual file system view on.</param>
+    /// <returns>A VFS location where the testing should be performed.</returns>
+    protected abstract VfsLocation OpenVfs(Stream stream);
+
+    /// <summary>
+    /// Opens a virtual file system view.
+    /// </summary>
+    /// <param name="stream">The stream to open the virtual file system view on.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A VFS location where the testing should be performed.</returns>
+    protected virtual Task<VfsLocation> OpenVfsAsync(Stream stream, CancellationToken cancellationToken)
+    {
+        return TaskBridge.ExecuteAsync(() => OpenVfs(stream), cancellationToken);
+    }
+
+    bool TryRoundTripLayeredVfs(ref IFileSystemView vfs)
+    {
+        var baseVfs = UnwrapVfs(vfs, out object? cookie);
+        if (!TryRoundTripVfs(ref baseVfs))
+            return false;
+        vfs = WrapVfs(baseVfs, cookie);
+        return true;
     }
 
     /// <summary>
@@ -55,30 +93,34 @@ public abstract partial class FileSystemViewVfsTestKit
     /// the previous file system is disposed.
     /// </param>
     /// <returns><see langword="true"/> when round-tripping is supported; otherwise, <see langword="false"/>.</returns>
-    protected virtual bool TryRoundTripVfs(ref IFileSystemView vfs) => false;
-
-    protected static IVirtualFileSystem CreateTemporaryVfs(out string rootPath)
+    protected virtual bool TryRoundTripVfs(ref IFileSystemView vfs)
     {
-        var vfs = new TempLocalVfs();
-        rootPath = vfs.RootPath;
-        return vfs;
-    }
-
-    protected static IFileSystemView UnwrapVfs(IFileSystemView view, out object? cookie)
-    {
-        if (view is IVfsTransform vt)
+        if (vfs is ITestableVfs testableVfs)
         {
-            cookie = vt.GetType();
-            return vt.UnderlyingVfs;
+            // Unmount the existing file system.
+            testableVfs.Dispose();
+
+            // Rewind the existing file system image.
+            var existingStream = testableVfs.Stream;
+            existingStream.Position = 0;
+
+            // Copy the existing file system image to a new storage.
+            var newStream = new MemoryStream();
+            existingStream.CopyTo(newStream);
+            newStream.Position = 0;
+
+            // Mount a new file system on the new storage using the copied image.
+            vfs = OpenVfs(newStream).View;
+
+            return true;
         }
         else
         {
-            cookie = null;
-            return view;
+            return false;
         }
     }
 
-    protected static IFileSystemView WrapVfs(IFileSystemView view, object? cookie)
+    static IFileSystemView WrapVfs(IFileSystemView view, object? cookie)
     {
         if (cookie is null)
         {
@@ -94,6 +136,20 @@ public abstract partial class FileSystemViewVfsTestKit
         else
         {
             throw new NotImplementedException();
+        }
+    }
+
+    static IFileSystemView UnwrapVfs(IFileSystemView view, out object? cookie)
+    {
+        if (view is IVfsTransform vt)
+        {
+            cookie = vt.GetType();
+            return vt.UnderlyingVfs;
+        }
+        else
+        {
+            cookie = null;
+            return view;
         }
     }
 
@@ -132,7 +188,7 @@ public abstract partial class FileSystemViewVfsTestKit
             {
                 verify(vfs, rootPath, 0);
 
-                if (TryRoundTripVfs(ref vfs))
+                if (TryRoundTripLayeredVfs(ref vfs))
                     verify(vfs, rootPath, 1);
             }
         }
