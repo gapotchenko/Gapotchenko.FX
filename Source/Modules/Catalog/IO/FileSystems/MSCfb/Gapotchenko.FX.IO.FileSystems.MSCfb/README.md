@@ -11,7 +11,7 @@ This module implements the MS-CFB (Compound File Binary Format) file system and 
 [MS-CFB](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/) is a structured storage format that embeds a complete file system within a single file.
 It underpins a variety of widespread file formats, such as Microsoft Office binary documents, `.msi` files, and many others.
 
-`Gapotchenko.FX.IO.FileSystems.MSCfb` exposes a compound file as `MSCfbFileSystem`, which implements `IMSCfbFileSystem` and the usual VFS surface (`IVirtualFileSystem` / `IFileSystemView`), including streams, directories, enumeration, and timestamps.
+`Gapotchenko.FX.IO.FileSystems.MSCfb` exposes a compound file via `MSCfbFileSystem` class, which implements `IMSCfbFileSystem` and the usual VFS surface (`IVirtualFileSystem` / `IFileSystemView`), including streams, directories, enumeration, and timestamps.
 
 Paths in `MSCfbFileSystem` are case-insensitive, in accordance with the format specification.
 
@@ -47,7 +47,7 @@ Use the constructor overloads when you need a writable file system, leave-open b
 
 ### Opening or creating a file via storage
 
-`MSCfbFileSystem.Storage` property implements `IFileSystemStorage<IMSCfbFileSystem, MSCfbFileSystemOptions>` interface and follows the same patterns as other mountable VFS types: read-only open, create/overwrite, and full `OpenFile`/`WriteFile`/`ReadFile` semantics via extension methods provided by`Gapotchenko.FX.IO.Vfs` module:
+`MSCfbFileSystem.Storage` property implements `IFileSystemStorage<IMSCfbFileSystem, MSCfbFileSystemOptions>` interface and follows the same patterns as other mountable VFS types: read-only open, create/overwrite, and full `OpenFile`/`WriteFile`/`ReadFile` semantics via extension methods provided by`Gapotchenko.FX.IO.Vfs` module.
 
 ``` C#
 using Gapotchenko.FX.IO.FileSystems.MSCfb;
