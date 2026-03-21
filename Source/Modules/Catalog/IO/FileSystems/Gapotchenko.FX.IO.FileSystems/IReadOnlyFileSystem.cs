@@ -10,8 +10,8 @@ using Gapotchenko.FX.IO.Vfs;
 namespace Gapotchenko.FX.IO.FileSystems;
 
 /// <summary>
-/// Defines the interface of a mountable file system.
+/// Defines the interface of a mountable read-only file system.
 /// </summary>
-public interface IFileSystem : IReadOnlyFileSystem, IVirtualFileSystem
+public interface IReadOnlyFileSystem : IReadOnlyVirtualFileSystem
 {
 }
