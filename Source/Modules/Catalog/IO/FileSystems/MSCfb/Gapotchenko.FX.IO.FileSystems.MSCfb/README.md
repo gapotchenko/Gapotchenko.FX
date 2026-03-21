@@ -13,7 +13,7 @@ It underpins a variety of widespread file formats, such as Microsoft Office bina
 
 `Gapotchenko.FX.IO.FileSystems.MSCfb` exposes a compound file via `MSCfbFileSystem` class, which implements `IMSCfbFileSystem` and the usual VFS surface (`IVirtualFileSystem` / `IFileSystemView`), including streams, directories, enumeration, and timestamps.
 
-Paths in `MSCfbFileSystem` are case-insensitive, in accordance with the format specification.
+Paths in `MSCfbFileSystem` are case-insensitive in accordance with the format specification.
 
 Conceptually, the MS-CFB format can be viewed as a compact, portable, and — most importantly — standardized file system encapsulated within a single file, similar in spirit to FAT12 or FAT16.
 
