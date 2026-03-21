@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.IO.FileSystems.Kits;
 using Gapotchenko.FX.IO.FileSystems.MSCfb.Impl;
 using Gapotchenko.FX.IO.Vfs;
 using Gapotchenko.FX.IO.Vfs.Kits;
@@ -17,7 +18,7 @@ namespace Gapotchenko.FX.IO.FileSystems.MSCfb;
 /// Represents an MS-CFB (Microsoft Compound File Binary) virtual file system.
 /// </summary>
 public sealed partial class MSCfbFileSystem :
-    VirtualFileSystemKit,
+    FileSystemKit,
     IMSCfbFileSystem,
     IStorageMountableFileSystem<IMSCfbFileSystem, MSCfbFileSystemOptions>
 {
