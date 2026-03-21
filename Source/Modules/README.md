@@ -33,7 +33,6 @@ The full list of available modules is presented in the table below.
 - [Gapotchenko.FX.IO](Catalog/IO/Gapotchenko.FX.IO#readme)
   - [Gapotchenko.FX.IO.FileSystems](Catalog/IO/FileSystems/Gapotchenko.FX.IO.FileSystems#readme)
     - [Gapotchenko.FX.IO.FileSystems.MSCfb](Catalog/IO/FileSystems/MSCfb/Gapotchenko.FX.IO.FileSystems.MSCfb#readme)
-      - [Gapotchenko.FX.IO.FileSystems.MSCfb.Tests](Catalog/IO/FileSystems/MSCfb/Gapotchenko.FX.IO.FileSystems.MSCfb.Tests#readme)
   - [Gapotchenko.FX.IO.Vfs](Catalog/IO/Gapotchenko.FX.IO.Vfs#readme)
 - [Gapotchenko.FX.Linq](Catalog/Linq/Gapotchenko.FX.Linq#readme)
   - [Gapotchenko.FX.Linq.Async](Catalog/Linq/Gapotchenko.FX.Linq.Async#readme)

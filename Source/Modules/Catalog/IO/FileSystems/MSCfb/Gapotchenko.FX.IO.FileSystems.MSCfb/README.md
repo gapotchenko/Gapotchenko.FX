@@ -89,7 +89,6 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.IO](../../../Gapotchenko.FX.IO#readme)
   - [Gapotchenko.FX.IO.FileSystems](../../Gapotchenko.FX.IO.FileSystems#readme)
     - &#x27B4; [Gapotchenko.FX.IO.FileSystems.MSCfb](.#readme)
-      - [Gapotchenko.FX.IO.FileSystems.MSCfb.Tests](../Gapotchenko.FX.IO.FileSystems.MSCfb.Tests#readme)
   - [Gapotchenko.FX.IO.Vfs](../../../Gapotchenko.FX.IO.Vfs#readme)
 - [Gapotchenko.FX.Linq](../../../../Linq/Gapotchenko.FX.Linq#readme)
 - [Gapotchenko.FX.Math](../../../../Math/Gapotchenko.FX.Math#readme)
