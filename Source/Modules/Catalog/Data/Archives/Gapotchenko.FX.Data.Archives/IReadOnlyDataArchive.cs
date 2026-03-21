@@ -3,15 +3,15 @@
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
-// Year of introduction: 2025
+// Year of introduction: 2026
 
 using Gapotchenko.FX.IO.Vfs;
 
 namespace Gapotchenko.FX.Data.Archives;
 
 /// <summary>
-/// Defines the interface of a data archive.
+/// Defines the interface of a read-only data archive.
 /// </summary>
-public interface IDataArchive : IReadOnlyDataArchive, IVirtualFileSystem
+public interface IReadOnlyDataArchive : IReadOnlyVirtualFileSystem
 {
 }
