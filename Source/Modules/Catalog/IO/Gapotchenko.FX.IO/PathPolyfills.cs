@@ -213,13 +213,13 @@ public static partial class PathPolyfills
         /// </remarks>
         /// <param name="paths">The path components.</param>
         /// <returns>The combined paths.</returns>
-#if TFF_PATH_JOIN
+#if NET9_0_OR_GREATER
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static string Join(params ReadOnlySpan<string?> paths)
         {
-#if TFF_PATH_JOIN
+#if NET9_0_OR_GREATER
             return Path.Join(paths);
 #else
             var builder = new StringBuilder();

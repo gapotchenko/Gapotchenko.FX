@@ -7,6 +7,7 @@
 Release date: not released yet
 
 - Improved nullability annotations
+- Fixed issue with `System.IO.Path.Join(params ReadOnlySpan<string?>)` polyfill for .NET target frameworks before 9.0
 
 ### Gapotchenko.FX 2026.5
 
