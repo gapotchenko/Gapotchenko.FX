@@ -284,7 +284,7 @@ public abstract class GenericKuonBase24 : TextDataEncoding, IBase24
                 {
                     if (!relax)
                     {
-                        if ((m_Options & DataEncodingOptions.Pure) != 0 ||
+                        if ((m_Options & DataEncodingOptions.Strict) != 0 ||
                             !char.IsWhiteSpace(c))
                         {
                             if (throwOnError)

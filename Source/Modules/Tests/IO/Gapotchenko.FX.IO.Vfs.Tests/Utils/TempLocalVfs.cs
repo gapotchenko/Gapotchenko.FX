@@ -33,5 +33,14 @@ sealed class TempLocalVfs : FileSystemViewProxyKit, IVirtualFileSystem
 
     public ValueTask DisposeAsync() => new(TaskBridge.ExecuteAsync(Dispose));
 
+    public void Flush()
+    {
+    }
+
+    public Task FlushAsync(CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
+    }
+
     public string RootPath { get; }
 }

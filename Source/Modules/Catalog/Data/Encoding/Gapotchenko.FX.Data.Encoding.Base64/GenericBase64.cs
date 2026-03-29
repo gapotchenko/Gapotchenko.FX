@@ -255,7 +255,7 @@ public abstract class GenericBase64 : TextDataEncoding, IBase64
                 {
                     if ((m_Options & DataEncodingOptions.Relax) == 0)
                     {
-                        if ((m_Options & DataEncodingOptions.Pure) != 0 ||
+                        if ((m_Options & DataEncodingOptions.Strict) != 0 ||
                             !char.IsWhiteSpace(c))
                         {
                             if (throwOnError)

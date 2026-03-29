@@ -45,4 +45,15 @@ public abstract class VirtualFileSystemKit : FileSystemViewKit, IVirtualFileSyst
     {
         return new(TaskBridge.ExecuteAsync(() => Dispose(true)));
     }
+
+    /// <inheritdoc/>
+    public virtual void Flush()
+    {
+    }
+
+    /// <inheritdoc/>
+    public virtual Task FlushAsync(CancellationToken cancellationToken = default)
+    {
+        return TaskBridge.ExecuteAsync(Flush, cancellationToken);
+    }
 }

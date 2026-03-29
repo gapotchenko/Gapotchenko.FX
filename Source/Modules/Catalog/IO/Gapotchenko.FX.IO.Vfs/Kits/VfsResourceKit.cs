@@ -37,6 +37,20 @@ public static class VfsResourceKit
     /// <returns>The formatted string.</returns>
     public static string FileAlreadyExists(string? path) => string.Format(Resources.FileXAlreadyExists, path);
 
+    /// <summary>
+    /// Looks up a localized string similar to:
+    /// <code>
+    /// The file name is invalid: '{path}'.
+    /// </code>
+    /// </summary>
+    /// <remarks>
+    /// This resource string is typically used as an error message for <see cref="IOException"/> signifying that
+    /// a path points to a directory while expecting a file.
+    /// </remarks>
+    /// <param name="path">The path.</param>
+    /// <returns>The formatted string.</returns>
+    public static string InvalidFileName(string? path) => string.Format(Resources.InvalidFileNameX, path);
+
     #endregion
 
     #region Directories
@@ -79,7 +93,7 @@ public static class VfsResourceKit
     /// </summary>
     /// <remarks>
     /// This resource string is typically used as an error message for <see cref="IOException"/> signifying that
-    /// a directory path points to a file and not to a directory.
+    /// a path points to a file while expecting a directory.
     /// </remarks>
     /// <param name="path">The path.</param>
     /// <returns>The formatted string.</returns>

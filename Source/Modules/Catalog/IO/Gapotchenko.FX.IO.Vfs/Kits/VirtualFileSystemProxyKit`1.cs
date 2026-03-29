@@ -38,4 +38,10 @@ public abstract class VirtualFileSystemProxyKit<T> : FileSystemViewProxyKit<T>, 
         await BaseView.DisposeAsync().ConfigureAwait(false);
         GC.SuppressFinalize(this);
     }
+
+    /// <inheritdoc/>
+    public virtual void Flush() => BaseView.Flush();
+
+    /// <inheritdoc/>
+    public virtual Task FlushAsync(CancellationToken cancellationToken = default) => BaseView.FlushAsync(cancellationToken);
 }

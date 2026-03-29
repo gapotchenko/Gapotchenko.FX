@@ -9,12 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
-    <ProjectReference Include="..\..\IO\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.103" />
+    <ProjectReference Include="..\..\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
   </ItemGroup>
 
 </Project>

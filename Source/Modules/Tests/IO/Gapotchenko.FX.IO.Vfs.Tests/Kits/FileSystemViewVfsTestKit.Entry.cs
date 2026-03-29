@@ -106,17 +106,21 @@ partial class FileSystemViewVfsTestKit
 
             #endregion
 
-            char dsc = vfs.DirectorySeparatorChar;
+            IReadOnlyList<char> dscs = [.. new[] { vfs.DirectorySeparatorChar, vfs.AltDirectorySeparatorChar }.Distinct()];
 
             Assert.ThrowsExactly<FileNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent"), specialTime));
-            Assert.ThrowsExactly<FileNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent" + dsc), specialTime));
+            foreach (char dsc in dscs)
+                Assert.ThrowsExactly<FileNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent" + dsc), specialTime));
             Assert.ThrowsExactly<DirectoryNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent-container", "nonexistent"), specialTime));
-            Assert.ThrowsExactly<DirectoryNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent-container", "nonexistent") + dsc, specialTime));
+            foreach (char dsc in dscs)
+                Assert.ThrowsExactly<DirectoryNotFoundException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "nonexistent-container", "nonexistent") + dsc, specialTime));
 
             setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "directory-a"), specialTime);
-            setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "directory-b") + dsc, specialTime);
+            foreach (char dsc in dscs)
+                setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "directory-b") + dsc, specialTime);
             setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "file"), specialTime);
-            Assert.ThrowsExactly<IOException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "file") + dsc, specialTime));
+            foreach (char dsc in dscs)
+                Assert.ThrowsExactly<IOException>(() => setXxxTime(vfs, vfs.CombinePaths(rootPath, "container", "file") + dsc, specialTime));
         }
 
         void Verify(IReadOnlyFileSystemView vfs, string rootPath)

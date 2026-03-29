@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Tests\IO\Gapotchenko.FX.IO.Vfs.Tests\Gapotchenko.FX.IO.Vfs.Tests.csproj" />
+    <ProjectReference Include="..\Gapotchenko.FX.IO.FileSystems.MSCfb\Gapotchenko.FX.IO.FileSystems.MSCfb.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.1.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.1.0" />
+  </ItemGroup>
+
+</Project>

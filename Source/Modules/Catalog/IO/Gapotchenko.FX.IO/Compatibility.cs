@@ -30,31 +30,33 @@ public static class IOExceptionExtensions
 /// <summary>
 /// Provides polyfill methods for <see cref="Path"/> class.
 /// </summary>
-#if TFF_EXTENSION_DECLARATION
-[Obsolete("Use System.IO.Path type instead.")]
 [EditorBrowsable(EditorBrowsableState.Never)]
-#endif
 public static class PathEx
 {
     /// <inheritdoc cref="PathPolyfills.GetRelativePath(string, string)"/>
+    [Obsolete("Use Path.GetRelativePath(string, string) method instead.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string GetRelativePath(string relativeTo, string path) =>
         Path.GetRelativePath(relativeTo, path);
 
     /// <inheritdoc cref="PathPolyfills.Join(IEnumerable{string?})"/>
+    [Obsolete("Use Path.Join(params ReadOnlySpan<string>) method instead.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Join(params string?[] paths) => Path.Join(paths);
 
     /// <inheritdoc cref="PathPolyfills.Join(IEnumerable{string?})"/>
+    [Obsolete("Use Path.Join(params IEnumerable<string>) method instead.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Join(IEnumerable<string?> paths) => Path.Join(paths);
 
     /// <inheritdoc cref="PathPolyfills.TrimEndingDirectorySeparator(string)"/>
+    [Obsolete("Use Path.TrimEndingDirectorySeparator(string) method instead.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string TrimEndingDirectorySeparator(string path) =>
         Path.TrimEndingDirectorySeparator(path);
 
     /// <inheritdoc cref="PathPolyfills.TrimEndingDirectorySeparator(ReadOnlySpan{char})"/>
+    [Obsolete("Use Path.TrimEndingDirectorySeparator(ReadOnlySpan<char>) method instead.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path) =>
         Path.TrimEndingDirectorySeparator(path);

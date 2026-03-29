@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -62,26 +63,26 @@ public abstract class DataEncoding : IDataEncoding
 
         #endregion
 
-        #region Pure
+        #region Strict
 
-        const DataEncodingOptions PureMask1 = DataEncodingOptions.Pure | DataEncodingOptions.Indent;
-        if ((options & PureMask1) == PureMask1)
+        const DataEncodingOptions strictMask1 = DataEncodingOptions.Strict | DataEncodingOptions.Indent;
+        if ((options & strictMask1) == strictMask1)
         {
             throw new ArgumentException(
                 string.Format(
                     Properties.Resources.XAndYDataEncodingOptionsCannotBeUsedSimultaneously,
-                    nameof(DataEncodingOptions.Pure),
+                    nameof(DataEncodingOptions.Strict),
                     nameof(DataEncodingOptions.Indent)),
                 nameof(options));
         }
 
-        const DataEncodingOptions PureMask2 = DataEncodingOptions.Pure | DataEncodingOptions.Relax;
-        if ((options & PureMask2) == PureMask2)
+        const DataEncodingOptions strictMask2 = DataEncodingOptions.Strict | DataEncodingOptions.Relax;
+        if ((options & strictMask2) == strictMask2)
         {
             throw new ArgumentException(
                 string.Format(
                     Properties.Resources.XAndYDataEncodingOptionsCannotBeUsedSimultaneously,
-                    nameof(DataEncodingOptions.Pure),
+                    nameof(DataEncodingOptions.Strict),
                     nameof(DataEncodingOptions.Relax)),
                 nameof(options));
         }

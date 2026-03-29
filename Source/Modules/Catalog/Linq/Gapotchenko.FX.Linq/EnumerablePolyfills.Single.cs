@@ -87,7 +87,7 @@ partial class EnumerablePolyfills
             }
         }
 
-        return result.GetValueOrDefault(defaultValue);
+        return result.GetValueOrDefault(defaultValue)!;
     }
 #endif
 }

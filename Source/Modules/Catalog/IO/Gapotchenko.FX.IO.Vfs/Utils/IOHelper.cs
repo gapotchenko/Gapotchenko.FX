@@ -509,7 +509,14 @@ static class IOHelper
         {
             var lastWriteTime = source.View.GetLastWriteTime(source.Path);
             EnsureEntryExist(source.Path, lastWriteTime);
-            destination.View.SetLastWriteTime(destination.Path, lastWriteTime);
+
+            try
+            {
+                destination.View.SetLastWriteTime(destination.Path, lastWriteTime);
+            }
+            catch (NotSupportedException)
+            {
+            }
         }
     }
 
@@ -522,7 +529,13 @@ static class IOHelper
         {
             var lastWriteTime = await source.View.GetLastWriteTimeAsync(source.Path, cancellationToken).ConfigureAwait(false);
             EnsureEntryExist(source.Path, lastWriteTime);
-            await destination.View.SetLastWriteTimeAsync(destination.Path, lastWriteTime, cancellationToken).ConfigureAwait(false);
+            try
+            {
+                await destination.View.SetLastWriteTimeAsync(destination.Path, lastWriteTime, cancellationToken).ConfigureAwait(false);
+            }
+            catch (NotSupportedException)
+            {
+            }
         }
     }
 
@@ -593,10 +606,26 @@ static class IOHelper
             var (view, path) = location;
 
             if (CreationTime.HasValue && view.SupportsCreationTime)
-                view.SetCreationTime(path, CreationTime.Value);
+            {
+                try
+                {
+                    view.SetCreationTime(path, CreationTime.Value);
+                }
+                catch (NotSupportedException)
+                {
+                }
+            }
 
             if (LastAccessTime.HasValue && view.SupportsLastAccessTime)
-                view.SetLastAccessTime(path, LastAccessTime.Value);
+            {
+                try
+                {
+                    view.SetLastAccessTime(path, LastAccessTime.Value);
+                }
+                catch (NotSupportedException)
+                {
+                }
+            }
         }
 
         public async Task SetToAsync(VfsLocation location, CancellationToken cancellationToken)
@@ -604,10 +633,26 @@ static class IOHelper
             var (view, path) = location;
 
             if (CreationTime.HasValue && view.SupportsCreationTime)
-                await view.SetCreationTimeAsync(path, CreationTime.Value, cancellationToken);
+            {
+                try
+                {
+                    await view.SetCreationTimeAsync(path, CreationTime.Value, cancellationToken).ConfigureAwait(false);
+                }
+                catch (NotSupportedException)
+                {
+                }
+            }
 
             if (LastAccessTime.HasValue && view.SupportsLastAccessTime)
-                await view.SetLastAccessTimeAsync(path, LastAccessTime.Value, cancellationToken);
+            {
+                try
+                {
+                    await view.SetLastAccessTimeAsync(path, LastAccessTime.Value, cancellationToken).ConfigureAwait(false);
+                }
+                catch (NotSupportedException)
+                {
+                }
+            }
         }
 
         public DateTime? CreationTime { get; }

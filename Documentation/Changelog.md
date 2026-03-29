@@ -2,6 +2,15 @@
 
 ## 2026
 
+### Gapotchenko.FX 2026.6 (Beta)
+
+Release date: not released yet
+
+- Added `Gapotchenko.FX.IO.FileSystems.MSCfb` module providing an implementation of the [MS-CFB](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/) file system
+- Improved nullability annotations
+- Fixed issue with `System.IO.Path.Join(params ReadOnlySpan<string?>)` polyfill for .NET target frameworks prior to 9.0
+- `Gapotchenko.FX.Diagnostics.CommandShell` module has been superseded by `Gapotchenko.FX.Diagnostics.CommandLine`
+
 ### Gapotchenko.FX 2026.5
 
 Release date: February 24, 2026

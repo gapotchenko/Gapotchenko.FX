@@ -118,6 +118,71 @@ C:\Temp\Test 1.txt
 C:\Temp\Test 2.txt
 ```
 
+## CommandShell
+
+`CommandShell` static class from `Gapotchenko.FX.Diagnostics.CommandLine` module provides operations for locating files using the `PATH` environment variable according to the rules of a host operating system.
+
+### Where
+
+The `Where` method enumerates the paths of a file with the specified name using the `PATH` environment variable. It is similar to the Windows `where` command or Unix `which` command, but works cross-platform.
+
+The basic usage is straightforward:
+
+``` C#
+using Gapotchenko.FX.Diagnostics;
+
+foreach (string path in CommandShell.Where("notepad"))
+    Console.WriteLine(path);
+```
+
+On Windows, this might produce output like:
+
+```
+C:\Windows\System32\notepad.exe
+C:\Windows\notepad.exe
+```
+
+The method respects the operating system's file discovery rules:
+- On Windows, it uses the `PATHEXT` environment variable to try different file extensions (`.exe`, `.cmd`, `.bat`, etc.)
+- On Unix-like systems, it searches for files with the exact name specified
+- It handles case sensitivity according to the host operating system
+
+#### `Where` with Probing Paths
+
+You can also specify custom probing paths that will be checked before the `PATH` environment variable:
+
+``` C#
+using Gapotchenko.FX.Diagnostics;
+
+// Check custom directories first, then PATH
+string[] customPaths = [@"C:\MyTools", @"C:\MyDir"];
+foreach (string path in CommandShell.Where("myapp", customPaths))
+    Console.WriteLine(path);
+```
+
+This is useful when you want to prioritize certain directories or check additional locations beyond the standard `PATH`.
+
+#### Handling Paths with Directory Information
+
+If the file name contains directory information, `Where` method will only search in that specific directory:
+
+``` C#
+using Gapotchenko.FX.Diagnostics;
+
+// Only searches in "C:\MyDir" directory
+foreach (string path in CommandShell.Where(@"C:\MyDir\myapp"))
+    Console.WriteLine(path);
+```
+
+#### Cross-Platform Behavior
+
+The `Where` method automatically adapts to the host operating system:
+
+- **On Windows**: uses `PATHEXT` environment variable to try multiple file extensions
+- **On Unix/Linux/macOS**: searches for files with the exact name specified
+
+This makes it easy to write cross-platform code that locates executable files correctly on any operating system.
+
 ## Usage
 
 `Gapotchenko.FX.Diagnostics.CommandLine` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Diagnostics.CommandLine):
@@ -137,7 +202,6 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Data](../../Data/Archives/Gapotchenko.FX.Data.Archives#readme)
 - [Gapotchenko.FX.Diagnostics](#)
   - &#x27B4; [Gapotchenko.FX.Diagnostics.CommandLine](.#readme)
-  - [Gapotchenko.FX.Diagnostics.CommandShell](../Gapotchenko.FX.Diagnostics.CommandShell#readme)
   - [Gapotchenko.FX.Diagnostics.Process](../Gapotchenko.FX.Diagnostics.Process#readme)
   - [Gapotchenko.FX.Diagnostics.WebBrowser](../Gapotchenko.FX.Diagnostics.WebBrowser#readme)
 - [Gapotchenko.FX.IO](../../IO/Gapotchenko.FX.IO#readme)

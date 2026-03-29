@@ -31,8 +31,4 @@
     </PackageReference>
   </ItemGroup>
     
-  <ItemGroup>
-    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.103" />
-  </ItemGroup>
-
 </Project>

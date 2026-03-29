@@ -1,0 +1,581 @@
+// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2026
+
+using Gapotchenko.FX.IO.FileSystems.Kits;
+using Gapotchenko.FX.IO.FileSystems.MSCfb.Impl;
+using Gapotchenko.FX.IO.Vfs;
+using Gapotchenko.FX.IO.Vfs.Kits;
+using Gapotchenko.FX.Memory;
+using System.Diagnostics;
+
+namespace Gapotchenko.FX.IO.FileSystems.MSCfb;
+
+/// <summary>
+/// Represents an MS-CFB (Microsoft Compound File Binary) virtual file system.
+/// </summary>
+public sealed partial class MSCfbFileSystem :
+    FileSystemKit,
+    IMSCfbFileSystem,
+    IStorageMountableFileSystem<IMSCfbFileSystem, MSCfbFileSystemOptions>
+{
+    #region Paths
+
+    /// <inheritdoc/>
+    public override char DirectorySeparatorChar => base.DirectorySeparatorChar;
+
+    /// <inheritdoc/>
+    public override char AltDirectorySeparatorChar => base.AltDirectorySeparatorChar;
+
+    /// <inheritdoc/>
+    public override StringComparer PathComparer => StringComparer.OrdinalIgnoreCase;
+
+    /// <inheritdoc/>
+    public override StringComparison PathComparison => StringComparison.OrdinalIgnoreCase;
+
+    /// <inheritdoc/>
+    public VfsReadOnlyLocation? Location { get; private set; }
+
+    string GetOriginallyPrefixedPath(in StructuredPath prefixPath, ReadOnlySpan<string> parts)
+    {
+        if (prefixPath.OriginalPath is not null and string originalPath)
+        {
+            var prefixParts = prefixPath.Parts.Span;
+            if (parts.StartsWith(prefixParts, PathComparer))
+                return this.JoinPaths(originalPath, VfsPathKit.Join(parts[prefixParts.Length..]));
+        }
+
+        return GetFullPathCore(parts);
+    }
+
+    /// <inheritdoc/>
+    protected override string GetFullPathCore(string path) =>
+        GetFullPathCore(VfsPathKit.Split(path)) ??
+        throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+
+    [return: NotNullIfNotNull(nameof(parts))]
+    static string? GetFullPathCore(ReadOnlySpan<string> parts) =>
+        parts == null
+            ? null!
+            : (VfsPathKit.DirectorySeparatorChar + VfsPathKit.Join(parts));
+
+    #endregion
+
+    #region Capabilities
+
+    /// <inheritdoc/>
+    public override bool CanRead => true;
+
+    /// <inheritdoc/>
+    public override bool CanWrite => m_Writable;
+
+    /// <inheritdoc/>
+    public override bool SupportsCreationTime => true;
+
+    /// <inheritdoc/>
+    public override bool SupportsLastWriteTime => true;
+
+    #endregion
+
+    #region Files
+
+    /// <inheritdoc/>
+    public override bool FileExists([NotNullWhen(true)] string? path)
+    {
+        EnsureCanRead();
+
+        return FileExistsCore(path);
+    }
+
+    bool FileExistsCore(in StructuredPath path) => EntryExistsCore(path, true, false);
+
+    /// <inheritdoc/>
+    public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) =>
+        EnumerateEntriesImpl(path, searchPattern, searchOption, true, false);
+
+    /// <inheritdoc/>
+    public override long GetFileSize(string path)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanRead();
+
+        return GetCfbFileEntry(path).Entry.Size;
+    }
+
+    /// <inheritdoc/>
+    public override Stream OpenFile(string path, FileMode mode, FileAccess access, FileShare share)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateFileMode(mode);
+        VfsValidationKit.Arguments.ValidateFileAccess(access);
+        VfsValidationKit.Arguments.ValidateFileShare(share);
+
+        EnsureCanOpenFile(mode, access);
+
+        var parts = new StructuredPath(path).Parts.Span;
+        if (parts.IsEmpty)
+            ThrowFileNotFound(path);
+
+        var parent =
+            TryGetCfbDirectoryEntry(parts[..^1]) ??
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+
+        var entry = m_Context.TryFindChild(parent, parts[^1]);
+        bool writeable = (access & FileAccess.Write) != 0;
+
+        if (entry is not null)
+        {
+            if (entry.Type != CfbEntryType.Stream)
+                throw new UnauthorizedAccessException(VfsResourceKit.AccessToPathIsDenied(path));
+
+            if (mode == FileMode.CreateNew)
+                throw new IOException(VfsResourceKit.FileAlreadyExists(path));
+
+            if (writeable)
+                return m_Context.OpenWriteStream(entry, mode, access, false);
+            else
+                return m_Context.OpenReadStream(entry);
+        }
+        else
+        {
+            if (mode is FileMode.Open or FileMode.Truncate)
+                ThrowFileNotFound(path);
+
+            if (!writeable)
+                ThrowFileNotFound(path);
+
+            // Create the stream entry and return a write stream.
+            entry = m_Context.AddChild(parent, parts[^1], CfbEntryType.Stream);
+            return m_Context.OpenWriteStream(entry, mode, access, true);
+        }
+    }
+
+    /// <inheritdoc/>
+    public override void DeleteFile(string path)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanWrite();
+
+        var (entry, parent) = GetCfbFileEntry(path);
+        m_Context.RemoveChild(parent, entry);
+    }
+
+    (CfbEntry Entry, CfbEntry Parent) GetCfbFileEntry(in StructuredPath path)
+    {
+        if (path.IsDirectory)
+            throw new IOException(VfsResourceKit.InvalidFileName(path.ToString()));
+
+        var parts = path.Parts.Span;
+        if (parts.IsEmpty)
+        {
+            if (parts == null)
+                ThrowDirectoryNotFound(path.ToString());
+            else
+                ThrowFileNotFound(path.ToString());
+        }
+
+        var parent = TryGetCfbDirectoryEntry(parts[..^1]);
+        if (parent is null)
+            ThrowDirectoryNotFound(path.ToString());
+
+        var entry = m_Context.TryFindChild(parent, parts[^1]);
+        if (entry is null || entry.Type is CfbEntryType.Unallocated)
+            ThrowFileNotFound(path.ToString());
+
+        if (entry.Type != CfbEntryType.Stream)
+            throw new UnauthorizedAccessException(VfsResourceKit.AccessToPathIsDenied(path.ToString()));
+
+        return (entry, parent);
+    }
+
+    [DoesNotReturn]
+    static void ThrowFileNotFound(string? path) =>
+        throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(path), path);
+
+    [DoesNotReturn]
+    static void ThrowDirectoryNotFound(string? path) =>
+        throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+
+    #endregion
+
+    #region Directories
+
+    /// <inheritdoc/>
+    public override bool DirectoryExists([NotNullWhen(true)] string? path)
+    {
+        EnsureCanRead();
+
+        return DirectoryExistsCore(path);
+    }
+
+    bool DirectoryExistsCore(in StructuredPath path) => EntryExistsCore(path, false, true);
+
+    /// <inheritdoc/>
+    public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption) =>
+        EnumerateEntriesImpl(path, searchPattern, searchOption, false, true);
+
+    /// <inheritdoc/>
+    public override void CreateDirectory(string path)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanWrite();
+
+        string[]? parts = VfsPathKit.Split(path);
+        if (parts == null)
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path));
+        if (parts.Length == 0)
+            return; // Root always exists.
+
+        var parent = m_Context.GetRootEntry();
+        foreach (string part in parts)
+        {
+            var existing = m_Context.TryFindChild(parent, part);
+            if (existing == null)
+            {
+                parent = m_Context.AddChild(parent, part, CfbEntryType.Storage);
+            }
+            else if (existing.Type is CfbEntryType.Storage or CfbEntryType.Root)
+            {
+                parent = existing;
+            }
+            else
+            {
+                throw new IOException(VfsResourceKit.CannotCreateAlreadyExistingEntry(path));
+            }
+        }
+    }
+
+    /// <inheritdoc/>
+    public override void DeleteDirectory(string path, bool recursive)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanWrite();
+
+        var pathParts = new StructuredPath(path).Parts.Span;
+        if (pathParts == null || pathParts.IsEmpty)
+            throw new IOException(VfsResourceKit.AccessToPathIsDenied(path));
+
+        var entry = TryGetCfbDirectoryEntry(pathParts);
+        if (entry is null)
+            ThrowDirectoryNotFound(path);
+
+        if (!recursive && m_Context.EnumerateChildren(entry).Any())
+            throw new IOException(VfsResourceKit.DirectoryIsNotEmpty(path));
+
+        var parent = TryGetCfbDirectoryEntry(pathParts[..^1]);
+        if (parent is null)
+            ThrowDirectoryNotFound(path);
+
+        DeleteEntryRecursive(parent, entry);
+    }
+
+    void DeleteEntryRecursive(CfbEntry parent, CfbEntry entry)
+    {
+        foreach (var child in EnumerateChildrenSnapshot(entry))
+            DeleteEntryRecursive(entry, child);
+
+        m_Context.RemoveChild(parent, entry);
+    }
+
+    #endregion
+
+    #region Entries
+
+    /// <inheritdoc/>
+    public override bool EntryExists([NotNullWhen(true)] string? path)
+    {
+        EnsureCanRead();
+
+        return EntryExistsCore(path, true, true);
+    }
+
+    bool EntryExistsCore(
+        in StructuredPath path,
+        bool considerFiles,
+        bool considerDirectories)
+    {
+        var pathParts = path.Parts.Span;
+        if (pathParts == null)
+            return false;
+
+        if (pathParts.Length == 0)
+        {
+            // The root directory always exists.
+            // A root file never exists.
+            return considerDirectories;
+        }
+
+        if (TryGetCfbEntry(path, considerFiles, considerDirectories) != null)
+            return true;
+
+        return false;
+    }
+
+    IEnumerable<string> EnumerateEntriesImpl(
+        string path,
+        string searchPattern,
+        SearchOption searchOption,
+        bool enumerateFiles,
+        bool enumerateDirectories)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+        VfsValidationKit.Arguments.ValidateSearchPattern(searchPattern);
+        VfsValidationKit.Arguments.ValidateSearchOption(searchOption);
+
+        EnsureCanRead();
+
+        VfsSearchKit.AdjustPatternPath(this, ref path, ref searchPattern);
+
+        var structuredPath = new StructuredPath(path);
+        return
+            EnumerateEntriesCore(
+                structuredPath,
+                searchPattern,
+                MatchType.Win32,
+                MatchCasing.PlatformDefault,
+                VfsSearchKit.GetMaxRecursionDepth(searchOption),
+                enumerateFiles,
+                enumerateDirectories)
+            .Select(x => GetOriginallyPrefixedPath(structuredPath, x.Span));
+    }
+
+    IEnumerable<ReadOnlyMemory<string>> EnumerateEntriesCore(
+        in StructuredPath path,
+        string searchPattern,
+        MatchType matchType,
+        MatchCasing matchCasing,
+        int maxRecursionDepth,
+        bool enumerateFiles,
+        bool enumerateDirectories)
+    {
+        var entry = TryGetCfbEntry(path, true, true);
+
+        // Distinguish "path is a file" (IOException) from "path does not exist" (DirectoryNotFoundException).
+        if (entry is null)
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
+        else if (entry.Type == CfbEntryType.Stream)
+            throw new IOException(VfsResourceKit.InvalidDirectoryName(path.ToString()));
+
+        var searchExpression = new VfsSearchExpression(
+            searchPattern,
+            DirectorySeparatorChar,
+            matchType,
+            VfsSearchKit.GetSearchExpressionOptions(this, matchCasing));
+
+        return EnumerateChildrenCore(
+            entry,
+            path.Parts.ToArray(),
+            searchExpression,
+            maxRecursionDepth,
+            0,
+            enumerateFiles,
+            enumerateDirectories);
+    }
+
+    IEnumerable<ReadOnlyMemory<string>> EnumerateChildrenCore(
+        CfbEntry storage,
+        string[] storageParts,
+        VfsSearchExpression searchExpression,
+        int maxRecursionDepth,
+        int depth,
+        bool enumerateFiles,
+        bool enumerateDirectories)
+    {
+        // Snapshot children before iterating: the caller may remove entries from the tree
+        // (e.g. during a directory move) and RemoveChild rebuilds the BST, invalidating live pointers.
+        foreach (var child in EnumerateChildrenSnapshot(storage))
+        {
+            if (child.Type == CfbEntryType.Stream)
+            {
+                if (enumerateFiles && searchExpression.IsMatch(child.Name))
+                    yield return (string[])[.. storageParts, child.Name];
+            }
+            else if (child.Type == CfbEntryType.Storage)
+            {
+                if (enumerateDirectories && searchExpression.IsMatch(child.Name))
+                    yield return (string[])[.. storageParts, child.Name];
+
+                if (depth < maxRecursionDepth)
+                {
+                    string[] childParts = [.. storageParts, child.Name];
+                    foreach (var entry in EnumerateChildrenCore(child, childParts, searchExpression, maxRecursionDepth, depth + 1, enumerateFiles, enumerateDirectories))
+                        yield return entry;
+                }
+            }
+        }
+    }
+
+    IEnumerable<CfbEntry> EnumerateChildrenSnapshot(CfbEntry parent)
+    {
+        var query = m_Context.EnumerateChildren(parent);
+
+        if (m_Writable)
+        {
+            // Snapshot children before iterating: the caller may remove entries from the tree
+            // (e.g. during a directory move) rebuilding the BST and invalidating live pointers.
+            query = [.. query];
+        }
+
+        return query;
+    }
+
+    CfbEntry? TryGetCfbEntry(
+        in StructuredPath path,
+        bool considerFiles,
+        bool considerDirectories)
+    {
+        var pathParts = path.Parts.Span;
+        if (pathParts == null)
+            return null;
+
+        if (considerFiles && path.IsDirectory)
+        {
+            // Since a file is not a directory, the lookup should not consider files.
+            considerFiles = false;
+
+            if (!considerDirectories)
+                return null;
+        }
+
+        if (TryFindEntry(pathParts) is { } entry)
+        {
+            if (considerDirectories && entry.Type is CfbEntryType.Root or CfbEntryType.Storage ||
+                considerFiles && entry.Type is CfbEntryType.Stream)
+            {
+                return entry;
+            }
+        }
+
+        return null;
+
+        CfbEntry? TryFindEntry(ReadOnlySpan<string> pathParts)
+        {
+            if (pathParts.IsEmpty)
+                return m_Context.GetRootEntry();
+
+            var parent = TryGetCfbDirectoryEntry(pathParts[..^1]);
+            if (parent is null)
+                return null;
+
+            return m_Context.TryFindChild(parent, pathParts[^1]);
+        }
+    }
+
+    CfbEntry? TryGetCfbDirectoryEntry(ReadOnlySpan<string> pathParts)
+    {
+        var entry = m_Context.GetRootEntry();
+        foreach (string part in pathParts)
+        {
+            var child = m_Context.TryFindChild(entry, part);
+            if (child is null || child.Type is CfbEntryType.Stream or CfbEntryType.Unallocated)
+                return null;
+            entry = child;
+        }
+        return entry;
+    }
+
+    #endregion
+
+    #region Timestamps
+
+    /// <inheritdoc/>
+    public override DateTime GetLastWriteTime(string path)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanRead();
+
+        return
+            TryGetCfbEntry(path, true, true)?.ModificationTime ??
+            DateTime.MinValue;
+    }
+
+    /// <inheritdoc/>
+    public override void SetLastWriteTime(string path, DateTime lastWriteTime)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanWrite();
+
+        var entry = GetExplicitCfbEntry(path);
+        if (entry.ModificationTime != lastWriteTime)
+        {
+            entry.ModificationTime = lastWriteTime;
+            m_Context.MarkDirty();
+        }
+    }
+
+    /// <inheritdoc/>
+    public override DateTime GetCreationTime(string path)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanRead();
+
+        return
+            TryGetCfbEntry(path, true, true)?.CreationTime ??
+            DateTime.MinValue;
+    }
+
+    /// <inheritdoc/>
+    public override void SetCreationTime(string path, DateTime creationTime)
+    {
+        VfsValidationKit.Arguments.ValidatePath(path);
+
+        EnsureCanWrite();
+
+        var entry = GetExplicitCfbEntry(path);
+        if (entry.CreationTime != creationTime)
+        {
+            entry.CreationTime = creationTime;
+            m_Context.MarkDirty();
+        }
+    }
+
+    CfbEntry GetExplicitCfbEntry(in StructuredPath path)
+    {
+        var parts = path.Parts.Span;
+
+        if (parts == null)
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
+
+        if (parts.IsEmpty)
+            return m_Context.GetRootEntry();
+
+        var parent =
+            TryGetCfbDirectoryEntry(parts[..^1]) ??
+            throw new DirectoryNotFoundException(VfsResourceKit.CouldNotFindPartOfPath(path.ToString()));
+
+        var entry = m_Context.TryFindChild(parent, parts[^1]);
+        if (entry is null || entry.Type is CfbEntryType.Unallocated)
+        {
+            string? displayPath = path.ToString();
+            throw new FileNotFoundException(VfsResourceKit.CouldNotFindFile(displayPath), displayPath);
+        }
+
+        if (path.IsDirectory && entry.Type == CfbEntryType.Stream)
+            throw new IOException(VfsResourceKit.InvalidDirectoryName(path.ToString()));
+
+        return entry;
+    }
+
+    #endregion
+
+    /// <inheritdoc/>
+    public override void Flush()
+    {
+        m_Context.Flush();
+    }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    readonly CfbContext m_Context;
+
+    readonly bool m_Writable;
+}

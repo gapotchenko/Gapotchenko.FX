@@ -31,7 +31,11 @@ partial class FileSystemViewVfsTestKit
             string filePath = vfs.CombinePaths(rootPath, fileName);
             Assert.IsTrue(vfs.FileExists(filePath));
 
+            IReadOnlyList<char> dscs = [.. new[] { vfs.DirectorySeparatorChar, vfs.AltDirectorySeparatorChar }.Distinct()];
+
             Assert.AreEqual(0, vfs.GetFileSize(filePath));
+            foreach (char dsc in dscs)
+                Assert.ThrowsExactly<IOException>(() => vfs.GetFileSize(filePath + dsc));
         }
     }
 
@@ -561,6 +565,37 @@ partial class FileSystemViewVfsTestKit
     public void FileSystemView_Vfs_File_Enumerate()
     {
         FileSystemView_Vfs_Entry_Enumerate(true, false);
+    }
+
+    #endregion
+
+    #region Delete
+
+    [TestMethod]
+    public void FileSystemView_Vfs_File_Delete()
+    {
+        RunVfsTest(Mutate, Verify);
+
+        const string fileName = "File.txt";
+
+        static void Mutate(IFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            vfs.CreateFile(filePath).Dispose();
+
+            IReadOnlyList<char> dscs = [.. new[] { vfs.DirectorySeparatorChar, vfs.AltDirectorySeparatorChar }.Distinct()];
+
+            foreach (char dsc in dscs)
+                Assert.ThrowsExactly<IOException>(() => vfs.DeleteFile(filePath + dsc));
+
+            vfs.DeleteFile(filePath);
+        }
+
+        static void Verify(IReadOnlyFileSystemView vfs, string rootPath)
+        {
+            string filePath = vfs.CombinePaths(rootPath, fileName);
+            Assert.IsFalse(vfs.FileExists(filePath));
+        }
     }
 
     #endregion

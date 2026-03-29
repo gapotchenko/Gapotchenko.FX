@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Gapotchenko.FX.IO.Vfs\Gapotchenko.FX.IO.Vfs.csproj" />
+  </ItemGroup>
+
+</Project>

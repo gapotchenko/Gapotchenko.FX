@@ -21,10 +21,10 @@ using Gapotchenko.FX.IO.Vfs;
 void ProcessArchive(IDataArchive archive)
 {
     // Since IDataArchive extends IVirtualFileSystem,
-    // we can use it as a file system view
+    // we can rely on a unified interface for all file system operations
     if (archive.FileExists("data.txt"))
     {
-        string content = archive.ReadAllText("data.txt");
+        string content = archive.ReadAllFileText("data.txt");
         // Process content...
     }
 }

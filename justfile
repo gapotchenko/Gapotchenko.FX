@@ -50,7 +50,7 @@ format:
     fd -e sh -x shfmt -l -w
     echo 'Formatting **/justfile...'
     fd --glob justfile -x just --unstable --fmt --justfile
-    (cd Mastering; cat Exclusion.dic | tr '[:upper:]' '[:lower:]' | sort -u | sponge Exclusion.dic)
+    (cd Mastering; just format)
 
 # -----------------------------------------------------------------------------
 # Build

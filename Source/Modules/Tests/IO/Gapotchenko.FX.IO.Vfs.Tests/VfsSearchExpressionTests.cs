@@ -32,7 +32,7 @@ public sealed partial class VfsSearchExpressionTests
     public void VfsSearchExpression_Star(MatchType matchType)
     {
         var vse = new VfsSearchExpression("*", matchType: matchType);
-        AssertThatVseMatchesNonEmptyInputs(vse);
+        AssertThatVseMatchesAllInputs(vse);
     }
 
     [TestMethod]

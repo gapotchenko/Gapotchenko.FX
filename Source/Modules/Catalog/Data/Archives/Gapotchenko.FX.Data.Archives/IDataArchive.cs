@@ -12,6 +12,6 @@ namespace Gapotchenko.FX.Data.Archives;
 /// <summary>
 /// Defines the interface of a data archive.
 /// </summary>
-public interface IDataArchive : IVirtualFileSystem
+public interface IDataArchive : IReadOnlyDataArchive, IVirtualFileSystem
 {
 }

@@ -65,7 +65,7 @@ static class GenerateTocCommand
                     Path.Combine(rootPath, hierarchy.Path),
                     "*",
                     hierarchy.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
-                .Where(x => Path.GetFileName(x).Contains('.'));
+                .Where(x => Path.GetFileName(x) is var fileName && fileName.Contains('.') && !fileName.EndsWith(".Tests", StringComparison.OrdinalIgnoreCase));
 
             directories = directories.Concat(query);
         }

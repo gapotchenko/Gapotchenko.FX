@@ -54,7 +54,6 @@ Let's continue with a look at some other modules provided by Gapotchenko.FX:
 - [Gapotchenko.FX.Data](../../Data/Archives/Gapotchenko.FX.Data.Archives#readme)
 - [Gapotchenko.FX.Diagnostics](../Gapotchenko.FX.Diagnostics.CommandLine#readme)
   - [Gapotchenko.FX.Diagnostics.CommandLine](../Gapotchenko.FX.Diagnostics.CommandLine#readme)
-  - [Gapotchenko.FX.Diagnostics.CommandShell](../Gapotchenko.FX.Diagnostics.CommandShell#readme)
   - [Gapotchenko.FX.Diagnostics.Process](../Gapotchenko.FX.Diagnostics.Process#readme)
   - &#x27B4; [Gapotchenko.FX.Diagnostics.WebBrowser](.#readme)
 - [Gapotchenko.FX.IO](../../IO/Gapotchenko.FX.IO#readme)

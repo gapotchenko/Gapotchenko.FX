@@ -71,7 +71,7 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     /// The value of the <see cref="Value"/> property if the <see cref="HasValue"/> property is <see langword="true"/>;
     /// otherwise, the <see langword="default"/> value of <typeparamref name="T"/> type.
     /// </returns>
-    public readonly T GetValueOrDefault() => m_Value;
+    public readonly T? GetValueOrDefault() => m_Value;
 
     /// <summary>
     /// Retrieves the value of the current <see cref="Optional{T}"/> object, or the specified default value.
@@ -81,7 +81,8 @@ public struct Optional<T> : IOptional, IEquatable<Optional<T>>, IComparable<Opti
     /// The value of the <see cref="Value"/> property if the <see cref="HasValue"/> property is <see langword="true"/>;
     /// otherwise, the <paramref name="defaultValue"/> parameter.
     /// </returns>
-    public readonly T GetValueOrDefault(T defaultValue) => m_HasValue ? m_Value : defaultValue;
+    [return: NotNullIfNotNull(nameof(defaultValue))]
+    public readonly T? GetValueOrDefault(T? defaultValue) => m_HasValue ? m_Value : defaultValue;
 
     /// <summary>
     /// Returns a new <see cref="Optional{T}"/> instance whose underlying <typeparamref name="T"/> value is casted to the specified <typeparamref name="TResult"/> type.

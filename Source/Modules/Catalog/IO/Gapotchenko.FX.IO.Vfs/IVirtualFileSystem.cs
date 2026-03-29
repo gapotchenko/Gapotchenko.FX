@@ -12,4 +12,15 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// </summary>
 public interface IVirtualFileSystem : IReadOnlyVirtualFileSystem, IFileSystemView
 {
+    /// <summary>
+    /// Writes all pending changes to the underlying storage.
+    /// </summary>
+    void Flush();
+
+    /// <summary>
+    /// Asynchronously writes all pending changes to the underlying storage.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous flushing operation.</returns>
+    Task FlushAsync(CancellationToken cancellationToken = default);
 }

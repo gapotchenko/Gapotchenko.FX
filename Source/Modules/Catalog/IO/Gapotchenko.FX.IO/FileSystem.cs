@@ -462,8 +462,15 @@ public static class FileSystem
     /// <returns>A size of the file.</returns>
     public static long GetFileSize(string path)
     {
+        ArgumentNullException.ThrowIfNullOrEmpty(path);
+
+        char lastChar = path[^1];
+        if (lastChar == Path.DirectorySeparatorChar || lastChar == Path.AltDirectorySeparatorChar)
+            throw new IOException("The directory name is invalid.");
+
         // TODO: Use native API to eliminate object allocation.
         // GetFileAttributesEx is the fastest candidate on Windows.
+
         return new FileInfo(path).Length;
     }
 

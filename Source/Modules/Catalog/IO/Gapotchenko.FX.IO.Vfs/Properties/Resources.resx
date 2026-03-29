@@ -168,4 +168,7 @@
   <data name="InvalidDirectoryNameX" xml:space="preserve">
     <value>The directory name is invalid: '{0}'.</value>
   </data>
+  <data name="InvalidFileNameX" xml:space="preserve">
+    <value>The file name is invalid: '{0}'.</value>
+  </data>
 </root>

@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.IO.Vfs;
-using Gapotchenko.FX.IO.Vfs.Kits;
 using Gapotchenko.FX.IO.Vfs.Tests.Kits;
 using System.IO.Compression;
 
@@ -9,36 +8,24 @@ namespace Gapotchenko.FX.Data.Archives.Zip.Tests;
 [TestCategory("bcl")]
 public sealed class ZipArchiveViewOnBclVfsTests : FileSystemViewVfsTestKit
 {
-    protected override VfsLocation CreateVfs()
+    protected override VfsLocation OpenVfs(Stream stream)
     {
-        return new VfsLocation(new ArchiveVfs(new MemoryStream()), "/");
+        var vfs = new TestableVfs(stream);
+        return new VfsLocation(vfs, $"{vfs.DirectorySeparatorChar}");
     }
 
-    protected override bool TryRoundTripVfs(ref IFileSystemView vfs)
+    sealed class TestableVfs : TestableVfsKit<IZipArchiveView<System.IO.Compression.ZipArchive>>
     {
-        var archiveVfs = (ArchiveVfs)UnwrapVfs(vfs, out object? cookie);
+        public TestableVfs(Stream stream) :
+            this(
+                ZipArchive.CreateView(new System.IO.Compression.ZipArchive(stream, ZipArchiveMode.Update, true)),
+                stream)
+        {
+        }
 
-        archiveVfs.Dispose();
-
-        var oldStream = archiveVfs.Stream;
-        oldStream.Position = 0;
-
-        var newStream = new MemoryStream();
-        oldStream.CopyTo(newStream);
-        newStream.Position = 0;
-
-        vfs = WrapVfs(new ArchiveVfs(newStream), cookie);
-        return true;
-    }
-
-    sealed class ArchiveVfs(Stream stream) :
-        FileSystemViewProxyKit<IZipArchiveView<System.IO.Compression.ZipArchive>>(
-            ZipArchive.CreateView(
-                new System.IO.Compression.ZipArchive(stream, ZipArchiveMode.Update, true))),
-        IDisposable
-    {
-        public Stream Stream => stream;
-
-        public void Dispose() => BaseView.Dispose();
+        TestableVfs(IZipArchiveView<System.IO.Compression.ZipArchive> baseView, Stream stream) :
+        base(baseView, stream)
+        {
+        }
     }
 }

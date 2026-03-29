@@ -13,7 +13,7 @@ sealed class ZipArchiveStorage : IDataArchiveStorage<IZipArchive, ZipArchiveOpti
 {
     public static ZipArchiveStorage Instance { get; } = new();
 
-    IVfsFileStorageFormat<IZipArchive, ZipArchiveOptions> IVfsStorage<IZipArchive, ZipArchiveOptions>.Format => Format;
-
     public IDataArchiveFormat<IZipArchive, ZipArchiveOptions> Format => ZipArchiveFormat.Instance;
+
+    IVfsFileStorageFormat<IZipArchive, ZipArchiveOptions> IVfsStorage<IZipArchive, ZipArchiveOptions>.Format => Format;
 }

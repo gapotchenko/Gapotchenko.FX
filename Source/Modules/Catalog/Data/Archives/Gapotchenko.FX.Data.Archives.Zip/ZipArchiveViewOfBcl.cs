@@ -227,6 +227,9 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
     (ZipArchiveEntry Value, bool IsNew) GetFileArchiveEntry(in StructuredPath path, FileMode mode)
     {
+        if (path.IsDirectory)
+            throw new IOException(VfsResourceKit.InvalidFileName(path.ToString()));
+
         bool directoryExists;
         string? entryName = null;
 
@@ -242,7 +245,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
         else
         {
             entryName = VfsPathKit.Join(filePathParts);
-            var entry = GetArchiveEntry(entryName);
+            var entry = TryGetArchiveEntry(entryName);
             if (entry != null)
             {
                 // File exists.
@@ -270,7 +273,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
             directoryExists = filePathParts.Length == 1;
             if (!directoryExists)
-                directoryExists = GetArchiveEntry(VfsPathKit.Join(filePathParts[..^1]) + VfsPathKit.DirectorySeparatorChar) != null;
+                directoryExists = TryGetArchiveEntry(VfsPathKit.Join(filePathParts[..^1]) + VfsPathKit.DirectorySeparatorChar) != null;
         }
 
         if (!directoryExists)
@@ -396,7 +399,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     ZipArchiveEntry? TryGetDirectoryArchiveEntry(in StructuredPath path)
     {
         if (VfsPathKit.Join(path.Parts.Span) is { } entryPath)
-            return GetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar);
+            return TryGetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar);
         else
             return null;
     }
@@ -410,6 +413,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     public override bool EntryExists([NotNullWhen(true)] string? path)
     {
         EnsureCanRead();
+
         return EntryExistsCore(path, true, true);
     }
 
@@ -713,13 +717,13 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
         EnsureCanWrite();
 
-        var entry = GetExplicitArchiveEntry(path, true);
+        var entry = GetExplicitArchiveEntry(path);
         entry.LastWriteTime = lastWriteTime.ToLocalTime();
     }
 
-    ZipArchiveEntry GetExplicitArchiveEntry(in StructuredPath path, bool considerFiles)
+    ZipArchiveEntry GetExplicitArchiveEntry(in StructuredPath path)
     {
-        var entry = TryGetArchiveEntry(path, considerFiles, true);
+        var entry = TryGetArchiveEntry(path, true, true);
         if (entry != null)
         {
             return entry;
@@ -752,12 +756,12 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
         bool considerDirectories)
     {
         var pathParts = path.Parts.Span;
-        if (pathParts.IsEmpty)
+        if (pathParts == null)
             return null;
 
         if (considerFiles && path.IsDirectory)
         {
-            // Make sure that if the path ends in a trailing slash, it's truly a directory.
+            // Since a file is not a directory, the lookup should not consider files.
             considerFiles = false;
 
             if (!considerDirectories)
@@ -768,13 +772,13 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
         if (considerDirectories)
         {
-            if (GetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar) is { } directoryEntry)
+            if (TryGetArchiveEntry(entryPath + VfsPathKit.DirectorySeparatorChar) is { } directoryEntry)
                 return directoryEntry;
         }
 
         if (considerFiles)
         {
-            if (GetArchiveEntry(entryPath) is { } fileEntry)
+            if (TryGetArchiveEntry(entryPath) is { } fileEntry)
                 return fileEntry;
         }
 
@@ -825,7 +829,7 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
     // Quirks layer virtualizes archive operations by providing workarounds 
     // for known ZIP quirks.
 
-    ZipArchiveEntry? GetArchiveEntry(string entryName)
+    ZipArchiveEntry? TryGetArchiveEntry(string entryName)
     {
         if (m_NormalizedArchiveEntries.Value is { } entries)
             return entries.GetValueOrDefault(entryName);
@@ -852,6 +856,9 @@ sealed class ZipArchiveViewOfBcl : ZipArchiveBase, IZipArchiveView<System.IO.Com
 
     ZipArchiveEntry CreateArchiveEntry(string entryName)
     {
+        if (entryName.Equals("/", StringComparison.Ordinal))
+            throw new NotSupportedException("The root ZIP directory is a virtual entry and does not support this operation.");
+
         var entry = m_Archive.CreateEntry(entryName);
         if (m_NormalizedArchiveEntries.Value is { } entries)
             entries.Add(entryName, entry);

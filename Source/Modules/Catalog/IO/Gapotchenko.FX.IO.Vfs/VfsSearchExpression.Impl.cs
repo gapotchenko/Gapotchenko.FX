@@ -16,7 +16,7 @@ partial struct VfsSearchExpression
     {
         return (matchType, pattern) switch
         {
-            (_, "*") => AnyPlusImpl.Instance,
+            (_, "*") => AnyStarImpl.Instance,
 
             // Win32
             (MatchType.Win32, "" or "." or "*.*") => AnyPlusImpl.Instance,
