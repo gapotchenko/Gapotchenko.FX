@@ -4,7 +4,7 @@
 
 ### Gapotchenko.FX 2026.6 (Beta)
 
-Release date: not released yet
+Release date: March 30, 2026
 
 - Added `Gapotchenko.FX.IO.FileSystems.MSCfb` module providing an implementation of the [MS-CFB](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/) file system
 - Improved nullability annotations
