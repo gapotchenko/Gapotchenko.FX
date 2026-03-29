@@ -9,8 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
-    <ProjectReference Include="..\..\IO\Gapotchenko.FX.IO\Gapotchenko.FX.IO.csproj" />
+    <ProjectReference Include="..\..\Catalog\Diagnostics\Gapotchenko.FX.Diagnostics.CommandLine\Gapotchenko.FX.Diagnostics.CommandLine.csproj" />
   </ItemGroup>
 
 </Project>

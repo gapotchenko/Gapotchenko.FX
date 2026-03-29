@@ -27,7 +27,6 @@ The full list of available modules is presented in the table below.
   - [Gapotchenko.FX.Data.Linq](Catalog/Data/Linq/Gapotchenko.FX.Data.Linq#readme) ✱
 - [Gapotchenko.FX.Diagnostics](Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
   - [Gapotchenko.FX.Diagnostics.CommandLine](Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.CommandLine#readme)
-  - [Gapotchenko.FX.Diagnostics.CommandShell](Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.CommandShell#readme)
   - [Gapotchenko.FX.Diagnostics.Process](Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.Process#readme)
   - [Gapotchenko.FX.Diagnostics.WebBrowser](Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.WebBrowser#readme)
 - [Gapotchenko.FX.IO](Catalog/IO/Gapotchenko.FX.IO#readme)
