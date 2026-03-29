@@ -2,7 +2,7 @@
 
 ## 2026
 
-### Gapotchenko.FX 2026.6 (Beta)
+### Gapotchenko.FX 2026.6
 
 Release date: March 30, 2026
 
