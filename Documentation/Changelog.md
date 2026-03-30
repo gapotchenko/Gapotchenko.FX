@@ -6,6 +6,8 @@
 
 Release date: not released yet
 
+- Improved nullability annotations
+
 ### Gapotchenko.FX 2026.6
 
 Release date: March 30, 2026
