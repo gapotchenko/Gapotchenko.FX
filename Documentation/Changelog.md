@@ -7,6 +7,7 @@
 Release date: not released yet
 
 - Improved nullability annotations
+- Added `CommandLine.EncodeFileName(string)` method, which ensures that file names are interpreted as command-line arguments rather than options (e.g., prevents names starting with `-` from being misinterpreted)
 
 ### Gapotchenko.FX 2026.6
 

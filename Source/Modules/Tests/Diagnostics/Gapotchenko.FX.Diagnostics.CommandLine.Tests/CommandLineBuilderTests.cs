@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Gapotchenko.FX.Diagnostics.CommandLine.Tests;
+﻿namespace Gapotchenko.FX.Diagnostics.CommandLine.Tests;
 
 [TestClass]
 public class CommandLineBuilderTests

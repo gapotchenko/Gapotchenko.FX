@@ -1,7 +1,4 @@
 extern alias testable;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Gapotchenko.FX.Diagnostics.CommandLine.Tests;
 
 using CommandLine = testable::Gapotchenko.FX.Diagnostics.CommandLine;

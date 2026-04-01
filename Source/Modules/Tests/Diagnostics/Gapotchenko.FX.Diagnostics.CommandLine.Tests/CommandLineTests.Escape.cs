@@ -1,7 +1,5 @@
 extern alias testable;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Gapotchenko.FX.Diagnostics.CommandLine.Tests;
 
 using CommandLine = testable::Gapotchenko.FX.Diagnostics.CommandLine;
@@ -51,37 +49,37 @@ partial class CommandLineTests
     }
 
     [TestMethod]
-    public void CommandLine_EscapeFileName_PassThrough()
+    public void CommandLine_EncodeFileName_PassThrough()
     {
-        string argument = CommandLine.EscapeFileName("a");
+        string argument = CommandLine.EncodeFileName("a");
         Assert.AreEqual("a", argument);
     }
 
     [TestMethod]
-    public void CommandLine_EscapeFileName_Null()
+    public void CommandLine_EncodeFileName_Null()
     {
-        string? argument = CommandLine.EscapeFileName(null);
+        string? argument = CommandLine.EncodeFileName(null);
         Assert.IsNull(argument);
     }
 
     [TestMethod]
-    public void CommandLine_EscapeFileName_Empty()
+    public void CommandLine_EncodeFileName_Empty()
     {
-        string argument = CommandLine.EscapeFileName("");
+        string argument = CommandLine.EncodeFileName("");
         Assert.AreEqual("", argument);
     }
 
     [TestMethod]
-    public void CommandLine_EscapeFileName_Encode()
+    public void CommandLine_EncodeFileName_Encode()
     {
-        string argument = CommandLine.EscapeFileName("-");
+        string argument = CommandLine.EncodeFileName("-");
         Assert.AreEqual("." + Path.DirectorySeparatorChar + "-", argument);
     }
 
     [TestMethod]
-    public void CommandLine_EscapeFileName_Quote()
+    public void CommandLine_EncodeFileName_NoQuote()
     {
-        string argument = CommandLine.EscapeFileName("a x");
-        Assert.AreEqual("\"a x\"", argument);
+        string argument = CommandLine.EncodeFileName("a x");
+        Assert.AreEqual("a x", argument);
     }
 }

@@ -1,5 +1,3 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Gapotchenko.FX.Diagnostics.CommandLine.Tests;
 
 [TestClass]

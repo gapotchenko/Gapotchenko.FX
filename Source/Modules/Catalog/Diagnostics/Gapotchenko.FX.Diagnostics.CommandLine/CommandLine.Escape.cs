@@ -22,7 +22,7 @@ partial class CommandLine
             return null;
 
         int length = value.Length;
-        if (length is 0)
+        if (length == 0)
             return string.Empty;
 
         var sb = new StringBuilder(length + 8);
@@ -35,12 +35,23 @@ partial class CommandLine
     }
 
     /// <summary>
-    /// Escapes and optionally quotes a command-line argument that represents a file name.
+    /// Encodes the specified file name so it is safely interpreted as a command-line argument,
+    /// rather than being mistaken for an option.
     /// </summary>
-    /// <param name="value">The command-line argument that represents a file name.</param>
-    /// <returns>The escaped and optionally quoted command-line argument.</returns>
+    /// <remarks>
+    /// <para>
+    /// Some command-line applications treat arguments beginning with a hyphen (<c>-</c>) as options or flags.
+    /// If a file name starts with such a reserved character, it may be incorrectly parsed as an option.
+    /// </para>
+    /// <para>
+    /// This method ensures the file name is treated as a positional argument by prepending <c>./</c> when necessary
+    /// (for example, <c>-file.txt</c> becomes <c>./-file.txt</c>).
+    /// </para>
+    /// </remarks>
+    /// <param name="value">The file name to encode.</param>
+    /// <returns>The encoded command-line argument.</returns>
     [return: NotNullIfNotNull(nameof(value))]
-    public static string? EscapeFileName(string? value) => EscapeArgument(Escape.EncodeFileName(value));
+    public static string? EncodeFileName(string? value) => Escape.EncodeFileName(value);
 
     internal static class Escape
     {
