@@ -11,10 +11,10 @@ namespace Gapotchenko.FX.Diagnostics;
 partial class CommandLine
 {
     /// <summary>
-    /// Escapes and optionally quotes a command line argument.
+    /// Escapes and optionally quotes a command-line argument.
     /// </summary>
-    /// <param name="value">The command line argument.</param>
-    /// <returns>The escaped and optionally quoted command line argument.</returns>
+    /// <param name="value">The command-line argument.</param>
+    /// <returns>The escaped and optionally quoted command-line argument.</returns>
     [return: NotNullIfNotNull(nameof(value))]
     public static string? EscapeArgument(string? value)
     {
@@ -35,10 +35,10 @@ partial class CommandLine
     }
 
     /// <summary>
-    /// Escapes and optionally quotes a command line argument that represents a file name.
+    /// Escapes and optionally quotes a command-line argument that represents a file name.
     /// </summary>
-    /// <param name="value">The command line argument that represents a file name.</param>
-    /// <returns>The escaped and optionally quoted command line argument.</returns>
+    /// <param name="value">The command-line argument that represents a file name.</param>
+    /// <returns>The escaped and optionally quoted command-line argument.</returns>
     [return: NotNullIfNotNull(nameof(value))]
     public static string? EscapeFileName(string? value) => EscapeArgument(Escape.EncodeFileName(value));
 
