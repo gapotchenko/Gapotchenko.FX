@@ -10,6 +10,7 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// <summary>
 /// Defines the options for file and directory move operations provided by a virtual file system.
 /// </summary>
+[Flags]
 public enum VfsMoveOptions
 {
     /// <summary>
