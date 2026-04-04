@@ -528,7 +528,7 @@ static class IOHelper
         if (source.View.SupportsLastWriteTime && destination.View.SupportsLastWriteTime)
         {
             var lastWriteTime = await source.View.GetLastWriteTimeAsync(source.Path, cancellationToken).ConfigureAwait(false);
-            EnsureEntryExist(source.Path, lastWriteTime);
+            EnsureEntryExist(source, lastWriteTime);
             try
             {
                 await destination.View.SetLastWriteTimeAsync(destination.Path, lastWriteTime, cancellationToken).ConfigureAwait(false);
