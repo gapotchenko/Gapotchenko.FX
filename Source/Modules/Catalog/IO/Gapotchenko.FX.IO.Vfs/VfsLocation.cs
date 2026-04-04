@@ -125,7 +125,7 @@ public readonly struct VfsReadOnlyLocation
     /// <summary>
     /// Gets or initializes the read-only file system view containing an entry.
     /// </summary>
-    public IReadOnlyFileSystemView View { get; init; }
+    public required IReadOnlyFileSystemView View { get; init; }
 
     /// <summary>
     /// Gets or initializes the path of a file-system entry.
