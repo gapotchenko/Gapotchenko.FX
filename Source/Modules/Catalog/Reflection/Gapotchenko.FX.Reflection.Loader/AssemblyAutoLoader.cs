@@ -161,7 +161,7 @@ public class AssemblyAutoLoader :
     /// <summary>
     /// Gets the associated assembly load context.
     /// </summary>
-    public AssemblyLoadContext? AssemblyLoadContext => m_AssemblyLoadPal.AssemblyLoadContaxt;
+    public AssemblyLoadContext? AssemblyLoadContext => m_AssemblyLoadPal.AssemblyLoadContext;
 #endif
 
     /// <summary>

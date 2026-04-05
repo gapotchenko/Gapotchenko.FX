@@ -313,9 +313,23 @@ public sealed class AssemblyLoadPal
     /// <summary>
     /// Gets the associated assembly load context.
     /// </summary>
-    public AssemblyLoadContext? AssemblyLoadContaxt => m_AssemblyLoadContext;
+    public AssemblyLoadContext? AssemblyLoadContext => m_AssemblyLoadContext;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     readonly AssemblyLoadContext? m_AssemblyLoadContext;
 #endif
+
+    #region Compatibility
+
+#if BINARY_COMPATIBILITY || SOURCE_COMPATIBILITY
+
+#if TFF_ASSEMBLYLOADCONTEXT
+    /// <inheritdoc cref="AssemblyLoadContext"/>
+    [Obsolete("Use AssemblyLoadContext property instead.", true)] // 2026
+    public AssemblyLoadContext? AssemblyLoadContaxt => AssemblyLoadContext;
+#endif
+
+#endif
+
+    #endregion
 }
