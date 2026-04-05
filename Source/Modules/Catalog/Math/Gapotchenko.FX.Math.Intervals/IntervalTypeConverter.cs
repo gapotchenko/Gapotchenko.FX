@@ -141,7 +141,10 @@ public abstract class IntervalTypeConverterBase : TypeConverter
                 var method = GetFactoryMethod(interval.From.Kind, interval.To.Kind);
 
                 var parameters = method.GetParameters();
-                bool hasComparer = parameters is [.., var last] && last.ParameterType == typeof(IComparer<>);
+                bool hasComparer =
+                    parameters is [.., var last] &&
+                    last.ParameterType is { IsGenericType: true } pt &&
+                    pt.GetGenericTypeDefinition() == typeof(IComparer<>);
 
                 var arguments = new List<object?>(3);
                 switch (parameters.Length - (hasComparer ? 1 : 0))
