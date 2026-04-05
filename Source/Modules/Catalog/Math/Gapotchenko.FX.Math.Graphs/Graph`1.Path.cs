@@ -10,8 +10,8 @@ partial class Graph<TVertex>
 {
     /// <inheritdoc/>
     public bool HasPath(TVertex from, TVertex to) =>
-        Edges.Contains(from, to) || // happy path, free of memory allocations
-        HasTransitivePath(from, to); // transitive traversing may incur memory allocations
+        Edges.Contains(from, to) || // happy path
+        HasTransitivePath(from, to); // transitive traversing
 
     /// <summary>
     /// Gets a value indicating whether there is a transitive path from the specified source vertex to the destination.
@@ -27,10 +27,10 @@ partial class Graph<TVertex>
     /// </returns>
     bool HasTransitivePath(TVertex from, TVertex to) =>
         IsDirected ?
-            HasDirectedTransitivePathCore(from, to) :
-            HasUndirectedTransitivePathCore(from, to);
+            HasDirectedTransitivePath(from, to) :
+            HasUndirectedTransitivePath(from, to);
 
-    bool HasDirectedTransitivePathCore(TVertex from, TVertex to)
+    bool HasDirectedTransitivePath(TVertex from, TVertex to)
     {
         var visitedVertices = new HashSet<TVertex>(VertexComparer);
 
@@ -69,9 +69,9 @@ partial class Graph<TVertex>
         return CanBeReachedFrom(from);
     }
 
-    bool HasUndirectedTransitivePathCore(TVertex from, TVertex to)
+    bool HasUndirectedTransitivePath(TVertex from, TVertex to)
     {
-        var visitedVertices = new HashSet<TVertex>(VertexComparer);
+        var visitedVertices = new HashSet<TVertex>(VertexComparer) { to };
 
         bool CanBeReachedFrom(TVertex from, bool adjacent)
         {

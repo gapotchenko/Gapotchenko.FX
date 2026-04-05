@@ -11,6 +11,7 @@ Release date: not released yet
 - Fixed issue with `Graph<T>.IsCyclic` calculation for undirected graphs
 - Fixed issue with adjacency consistency in undirected graph after an edge removal
 - Fixed issue with neighbor preservation after a graph vertex removal
+- Fixed issue with transitive reduction of undirected graph
 
 ### Gapotchenko.FX 2026.6
 
