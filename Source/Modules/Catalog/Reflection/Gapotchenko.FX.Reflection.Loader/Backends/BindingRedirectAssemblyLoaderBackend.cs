@@ -167,9 +167,7 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
         if (probingPathList != null)
         {
             string baseDirectory = GetBaseDirectory(assemblyFilePath);
-            probingPaths = probingPathList
-                .Select(x => Path.GetFullPath(Path.Combine(baseDirectory, x)))
-                .ToList();
+            probingPaths = [.. probingPathList.Select(x => Path.GetFullPath(Path.Combine(baseDirectory, x)))];
         }
         else
         {

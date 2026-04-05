@@ -81,7 +81,7 @@ sealed class AssemblyDescriptor : IDisposable
                     m_IsAttached,
                     m_AssemblyLoadPal,
                     m_AssemblyDependencyTracker,
-                    probingPaths.ToArray());
+                    [.. probingPaths]);
             }
         }
     }
@@ -150,7 +150,7 @@ sealed class AssemblyDescriptor : IDisposable
                 m_IsAttached,
                 m_AssemblyLoadPal,
                 m_AssemblyDependencyTracker,
-                newProbingPaths.ToArray())
+                [.. newProbingPaths])
             {
                 StrictVersionMatch = m_HasBindingRedirects
             });
