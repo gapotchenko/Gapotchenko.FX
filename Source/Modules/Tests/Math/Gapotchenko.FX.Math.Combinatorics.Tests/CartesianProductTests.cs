@@ -25,6 +25,19 @@ public class CartesianProductTests
     }
 
     [TestMethod]
+    public void CartesianProduct_Of_2x2_Distinct_Linq()
+    {
+        int[][] factors =
+        [
+            [1, 1],
+            [2, 3]
+        ];
+
+        var p = CartesianProduct.Of(factors).AsEnumerable();
+        Assert.HasCount(2, p.Distinct());
+    }
+
+    [TestMethod]
     public void CartesianProduct_Of_2x3()
     {
         int[][] factors =
