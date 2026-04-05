@@ -125,7 +125,7 @@ public static class MathF
     /// </para>
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static float Atan2(float y, float x) => (float)Math.Atan2(x, y);
+    public static float Atan2(float y, float x) => (float)Math.Atan2(y, x);
 
     // TODO: Atanh -> MathEx.Atanh
     // public static float Atanh(float x);
