@@ -143,7 +143,7 @@ public static class AsyncEnumerableBridge
             }
             finally
             {
-                await TaskBridge.ExecuteAsync(enumerator.Dispose, cts.Token).ConfigureAwait(false);
+                await TaskBridge.ExecuteAsync(enumerator.Dispose, CancellationToken.None).ConfigureAwait(false);
             }
         }
     }
