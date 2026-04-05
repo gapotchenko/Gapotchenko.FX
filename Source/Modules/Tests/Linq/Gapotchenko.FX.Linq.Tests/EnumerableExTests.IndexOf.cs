@@ -30,6 +30,7 @@ partial class EnumerableExTests
     [DataRow("a", "abc")]
     [DataRow("b", "abc")]
     [DataRow("c", "abc")]
+    [DataRow("12123", "123")]
     public void Linq_Enumerable_IndexOf_Sequence_Discrepancy(string source, string value)
     {
         int expected = source.IndexOf(value, StringComparison.Ordinal);
