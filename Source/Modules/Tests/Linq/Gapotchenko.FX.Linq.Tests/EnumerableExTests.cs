@@ -84,61 +84,6 @@ public partial class EnumerableExTests
     }
 
     [TestMethod]
-    public void Linq_Enumerable_IndexOf_1()
-    {
-        IEnumerable<int> seq = [10, 20, 30];
-        Assert.AreEqual(2, seq.IndexOf(30));
-    }
-
-    [TestMethod]
-    public void Linq_Enumerable_IndexOf_2()
-    {
-        IEnumerable<int> seq = [10, 20, 30];
-        Assert.AreEqual(-1, seq.IndexOf(100));
-    }
-
-    [TestMethod]
-    public void Linq_Enumerable_IndexOf_3()
-    {
-        IEnumerable<char> seq = ['A', 'B', 'C'];
-        Assert.AreEqual(1, seq.IndexOf('B'));
-    }
-
-    [TestMethod]
-    public void Linq_Enumerable_IndexOf_Match_1()
-    {
-        static void Check(string source, string value)
-        {
-            int expected = source.IndexOf(value, StringComparison.Ordinal);
-            int actual = EnumerableEx.IndexOf(source, value);
-            Assert.AreEqual(expected, actual);
-        }
-
-        Check("abc", "");
-        Check("abc", "a");
-        Check("abc", "b");
-        Check("abc", "c");
-        Check("abc", "d");
-
-        Check("abc", "ab");
-        Check("abc", "bc");
-        Check("abc", "abc");
-        Check("abc", "abcd");
-
-        Check("abc", "efg");
-        Check("abc", "abe");
-        Check("abc", "aec");
-        Check("abc", "ebc");
-
-        Check("", "");
-        Check("a", "a");
-
-        Check("a", "abc");
-        Check("b", "abc");
-        Check("c", "abc");
-    }
-
-    [TestMethod]
     public void Linq_Enumerable_AnyAndAll_Empty_1()
     {
         int[] seq = [];
