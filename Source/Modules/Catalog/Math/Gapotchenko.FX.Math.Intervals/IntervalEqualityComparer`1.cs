@@ -18,7 +18,7 @@ public abstract partial class IntervalEqualityComparer<T> : IEqualityComparer<In
     public bool Equals(Interval<T>? x, Interval<T>? y) => Equals((IInterval<T>?)x, y);
 
     /// <inheritdoc/>
-    public int GetHashCode(Interval<T> obj) => throw new NotImplementedException();
+    public int GetHashCode(Interval<T> obj) => GetHashCode((IInterval<T>)obj);
 
     /// <inheritdoc/>
     public abstract bool Equals(IInterval<T>? x, IInterval<T>? y);
