@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Gapotchenko.FX.Tests;
+﻿namespace Gapotchenko.FX.Tests;
 
 [TestClass]
 public class UriQueryBuilderTests

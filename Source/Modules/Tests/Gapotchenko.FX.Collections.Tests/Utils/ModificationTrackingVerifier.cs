@@ -1,6 +1,4 @@
-﻿using Xunit;
-
-using Assert = Xunit.Assert;
+﻿using Assert = Xunit.Assert;
 
 namespace Gapotchenko.FX.Collections.Tests.Utils;
 

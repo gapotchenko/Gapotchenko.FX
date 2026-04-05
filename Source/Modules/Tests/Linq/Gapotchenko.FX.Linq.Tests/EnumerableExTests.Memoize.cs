@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace Gapotchenko.FX.Linq.Tests;
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Xunit;
+﻿using Xunit;
 
 [assembly: TestCategory("collections")]
 [assembly: AssemblyTrait("Category", "collections")]

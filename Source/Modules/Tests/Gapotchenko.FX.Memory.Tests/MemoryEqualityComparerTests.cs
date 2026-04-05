@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Gapotchenko.FX.Memory.Tests;
+﻿namespace Gapotchenko.FX.Memory.Tests;
 
 [TestClass]
 public class MemoryEqualityComparerTests

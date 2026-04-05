@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Gapotchenko.FX.Linq.Tests;
+﻿namespace Gapotchenko.FX.Linq.Tests;
 
 [TestClass]
 public partial class EnumerableExTests

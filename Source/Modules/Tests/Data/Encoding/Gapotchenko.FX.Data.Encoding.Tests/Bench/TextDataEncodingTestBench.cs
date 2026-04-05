@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Data.Encoding.Tests.Bench;

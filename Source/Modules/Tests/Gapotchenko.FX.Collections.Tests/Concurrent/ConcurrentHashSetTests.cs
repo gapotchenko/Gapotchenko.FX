@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Collections.Concurrent;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Gapotchenko.FX.Collections.Tests.Concurrent;
 

@@ -1,7 +1,6 @@
 // (c) Portions of code from the .NET project by Microsoft and .NET Foundation
 
 using System.Collections;
-using Xunit;
 
 using Assert = Xunit.Assert;
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace Gapotchenko.FX.Numerics.Tests;
 

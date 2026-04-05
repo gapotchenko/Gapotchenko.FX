@@ -1,7 +1,6 @@
 // Portions © .NET Foundation and its Licensors
 
 using System.Diagnostics;
-using Xunit;
 
 using Assert = Xunit.Assert;
 

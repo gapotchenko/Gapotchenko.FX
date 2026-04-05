@@ -5,8 +5,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-using System.Runtime.CompilerServices;
-
 namespace Gapotchenko.FX.Math.Intervals;
 
 partial class ValueInterval

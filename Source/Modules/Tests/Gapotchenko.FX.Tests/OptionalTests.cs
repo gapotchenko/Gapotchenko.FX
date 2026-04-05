@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-#pragma warning disable CS1718 // Comparison made to same variable
+﻿#pragma warning disable CS1718 // Comparison made to same variable
 
 namespace Gapotchenko.FX.Tests;
 

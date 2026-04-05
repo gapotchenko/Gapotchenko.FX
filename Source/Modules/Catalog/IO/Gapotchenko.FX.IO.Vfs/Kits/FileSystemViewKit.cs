@@ -9,7 +9,6 @@
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.IO.Vfs.Utils;
 using Gapotchenko.FX.Linq;
-using Gapotchenko.FX.Text;
 using Gapotchenko.FX.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using System.Security;

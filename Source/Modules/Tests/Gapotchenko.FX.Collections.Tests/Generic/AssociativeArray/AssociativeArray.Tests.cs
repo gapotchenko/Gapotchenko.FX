@@ -8,7 +8,6 @@
 
 using Gapotchenko.FX.Collections.Generic;
 using Gapotchenko.FX.Collections.Tests.Bench;
-using Gapotchenko.FX.Collections.Tests.Utils;
 using Xunit;
 
 using Assert = Xunit.Assert;
