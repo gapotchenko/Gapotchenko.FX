@@ -57,6 +57,26 @@ public partial class GraphTests
     }
 
     [TestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public void Graph_Vertices_Remove_NeighborPreservation(bool directed)
+    {
+        // Bug: removing the source vertex of an edge dropped the destination
+        // vertex when it had no key entry of its own in the adjacency list
+        // (i.e., it never appeared as an edge source).
+        var g = new Graph<int>
+        {
+            IsDirected = directed,
+            Edges = { (1, 2) }
+        };
+
+        g.Vertices.Remove(1);
+
+        Assert.IsTrue(g.Vertices.Contains(2), "Neighbor vertex must survive removal of its only incident vertex.");
+        Assert.AreEqual(1, g.Vertices.Count);
+    }
+
+    [TestMethod]
     public void Graph_Vertices_Clear()
     {
         var g = new Graph<int>
