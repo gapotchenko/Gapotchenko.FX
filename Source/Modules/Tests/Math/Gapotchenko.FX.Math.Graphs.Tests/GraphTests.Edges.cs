@@ -141,5 +141,25 @@ partial class GraphTests
         Assert.IsTrue(g.Edges.SetEquals(new[] { (2, 1) }));
     }
 
+    [TestMethod]
+    public void Graph_Undirected_Edges_Remove_AdjacencyConsistency()
+    {
+        var g = new Graph<int>
+        {
+            IsDirected = false,
+            Edges = { (1, 2) }
+        };
+
+        // Access adjacency from the destination side of the stored edge to
+        // force the reverse adjacency list into the cache. The bug was that
+        // EdgeSet.Remove did not invalidate that cached reverse list, leaving
+        // vertex 2 appearing adjacent to vertex 1 even after removal.
+        Assert.IsTrue(g.OutgoingVerticesAdjacentTo(2).Contains(1));
+
+        g.Edges.Remove(1, 2);
+
+        Assert.IsFalse(g.OutgoingVerticesAdjacentTo(2).Contains(1));
+    }
+
     #endregion
 }

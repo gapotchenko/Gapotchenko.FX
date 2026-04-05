@@ -9,6 +9,7 @@ Release date: not released yet
 - Improved nullability annotations
 - Added `CommandLine.EncodeFileName(string)` method, which ensures that file names are interpreted as command-line arguments rather than options (e.g., prevents names starting with `-` from being misinterpreted)
 - Fixed issue with `Graph<T>.IsCyclic` calculation for undirected graphs
+- Fixed issue with adjacency consistency in undirected graph after an edge removal
 
 ### Gapotchenko.FX 2026.6
 

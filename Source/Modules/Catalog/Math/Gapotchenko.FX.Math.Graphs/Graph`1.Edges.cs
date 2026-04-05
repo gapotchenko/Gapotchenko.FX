@@ -123,6 +123,15 @@ partial class Graph<TVertex>
                     RemoveFromAdjacencyList(adjacencyList, item.To, item.From);
                 if (!hit)
                     return false;
+
+                var reverseAdjacencyList = graph.m_ReverseAdjacencyList;
+                if (reverseAdjacencyList != null)
+                {
+                    bool reverseHit =
+                        RemoveFromAdjacencyList(reverseAdjacencyList, item.To, item.From) ||
+                        RemoveFromAdjacencyList(reverseAdjacencyList, item.From, item.To);
+                    Debug.Assert(reverseHit);
+                }
             }
 
             --graph.m_CachedSize;
@@ -152,7 +161,6 @@ partial class Graph<TVertex>
 
                 return true;
             }
-
         }
 
         /// <inheritdoc/>
