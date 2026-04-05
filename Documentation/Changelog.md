@@ -12,6 +12,7 @@ Release date: not released yet
 - Fixed issue with adjacency consistency in undirected graph after an edge removal
 - Fixed issue with neighbor preservation after a graph vertex removal
 - Fixed issue with transitive reduction of undirected graph
+- Fixed rounding error in Jaro similarity algorithm that could lead to slightly off results
 
 ### Gapotchenko.FX 2026.6
 

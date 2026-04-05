@@ -17,8 +17,9 @@ public sealed class JaroTests : IStringSimilarityAlgorithmTests
     [DataRow("washington", "washingtonx", 0.97)]
     [DataRow("daniel", "danielle", 0.92)]
     [DataRow("sat", "urn", 0)]
+    [DataRow("abcxxx", "bcaxxx", 0.92)]
     public void StringSimilarity_Jaro_TestVectors(string a, string b, double expectedSimilarity) =>
-        TestVector(a, b, expectedSimilarity, 0.01);
+        TestVector(a, b, expectedSimilarity, 0.005);
 
     // ----------------------------------------------------------------------
 

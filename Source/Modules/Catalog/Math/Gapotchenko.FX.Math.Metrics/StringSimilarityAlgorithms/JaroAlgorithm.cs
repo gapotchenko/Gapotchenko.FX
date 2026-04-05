@@ -97,7 +97,7 @@ sealed class JaroAlgorithm : StringSimilarityAlgorithm
             double similarity =
                 (matches / aList.Count +
                 matches / bList.Count +
-                (matches - transpositions / 2) / matches)
+                (matches - transpositions / 2.0) / matches)
                 / 3;
 
             return similarity;
