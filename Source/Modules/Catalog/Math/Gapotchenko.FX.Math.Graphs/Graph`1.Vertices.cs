@@ -73,11 +73,10 @@ partial class Graph<TVertex>
             var graph = m_Graph;
 
             var adjacencyList = graph.m_AdjacencyList;
-            var reverseAdjacencyList = graph.m_ReverseAdjacencyList;
-
-            if (!RemoveFromAdjacencyList(adjacencyList, reverseAdjacencyList, vertex))
+            if (!RemoveFromAdjacencyList(adjacencyList, null, vertex))
                 return false;
 
+            var reverseAdjacencyList = graph.m_ReverseAdjacencyList;
             if (reverseAdjacencyList != null)
             {
                 bool hit = RemoveFromAdjacencyList(reverseAdjacencyList, adjacencyList, vertex);

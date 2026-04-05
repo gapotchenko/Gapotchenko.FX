@@ -77,6 +77,25 @@ public partial class GraphTests
     }
 
     [TestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public void Graph_Vertices_Remove_NeighborPreservation_ReverseAdjacency(bool directed)
+    {
+        var g = new Graph<int>
+        {
+            IsDirected = directed,
+            Edges = { (1, 2) }
+        };
+
+        // Materialize the reverse adjacency list.
+        _ = g.IncomingVerticesAdjacentTo(2).ToList();
+
+        g.Vertices.Remove(1);
+
+        Assert.IsTrue(g.Vertices.SetEquals([2]));
+    }
+
+    [TestMethod]
     public void Graph_Vertices_Clear()
     {
         var g = new Graph<int>
