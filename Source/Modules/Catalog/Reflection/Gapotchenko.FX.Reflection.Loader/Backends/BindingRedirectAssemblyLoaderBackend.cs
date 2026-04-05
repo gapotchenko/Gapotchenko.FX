@@ -189,7 +189,7 @@ sealed class BindingRedirectAssemblyLoaderBackend : IAssemblyLoaderBackend
         {
             var assemblyName = AssemblyName.GetAssemblyName(assemblyFilePath);
             if (AssemblyNameEqualityComparer.Instance.Equals(
-                Assembly.GetExecutingAssembly().GetName(),
+                Assembly.GetEntryAssembly()?.GetName(),
                 assemblyName))
             {
                 // Not a library. The assembly represents the main executable assembly.
