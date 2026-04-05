@@ -157,41 +157,64 @@ partial class EnumerableEx
         if (ReferenceEquals(source, value))
             return 0;
 
+        value = value.Memoize();
+        using var e2 = value.GetEnumerator();
+        if (!e2.MoveNext())
+            return 0;
+
         comparer ??= EqualityComparer<TSource>.Default;
 
-        value = value.Memoize();
-        int match = 0;
-
-        using var e2 = value.GetEnumerator();
-
         int index = 0;
+        int matchWindowStart = -1;
+        var window = new List<(TSource Element, int Index)>();
+        int windowPosition = 0;
+
         checked
         {
-            foreach (var e1Current in source)
-            {
-                if (!e2.MoveNext())
-                    return match;
+            using var e1 = source.GetEnumerator();
 
-                if (comparer.Equals(e1Current, e2.Current))
+            while (true)
+            {
+                TSource current;
+                int currentIndex;
+
+                if (windowPosition < window.Count)
                 {
-                    if (match == -1)
-                        match = index;
+                    (current, currentIndex) = window[windowPosition];
+                }
+                else if (e1.MoveNext())
+                {
+                    current = e1.Current;
+                    currentIndex = index++;
+                    window.Add((current, currentIndex));
                 }
                 else
                 {
-                    match = -1;
+                    break;
+                }
+                windowPosition++;
+
+                if (comparer.Equals(current, e2.Current))
+                {
+                    if (matchWindowStart == -1)
+                        matchWindowStart = windowPosition - 1;
+
+                    if (!e2.MoveNext())
+                        return window[matchWindowStart].Index;
+                }
+                else if (matchWindowStart != -1)
+                {
+                    windowPosition = matchWindowStart + 1;
+                    matchWindowStart = -1;
+
                     e2.Reset();
+                    e2.MoveNext();
                 }
-
-                ++index;
-            }
-
-            if (match != -1)
-            {
-                if (!e2.MoveNext())
-                    return match;
-                else
-                    return -1;
+                else if (windowPosition == window.Count)
+                {
+                    window.Clear();
+                    windowPosition = 0;
+                }
             }
 
             return -1;
