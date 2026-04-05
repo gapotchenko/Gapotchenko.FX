@@ -67,4 +67,18 @@ partial class GraphTests
         h.Edges.Clear();
         Assert.IsFalse(h.IsCyclic);
     }
+
+    [TestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public void Graph_IsCyclic_SingleEdge(bool directed)
+    {
+        var g = new Graph<int>
+        {
+            IsDirected = directed,
+            Edges = { (1, 2) }
+        };
+
+        Assert.IsFalse(g.IsCyclic, "A single edge graph must not be cyclic.");
+    }
 }
