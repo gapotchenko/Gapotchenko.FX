@@ -72,13 +72,15 @@ partial class Graph<TVertex>
         {
             var graph = m_Graph;
 
-            if (!RemoveFromAdjacencyList(graph.m_AdjacencyList, vertex))
+            var adjacencyList = graph.m_AdjacencyList;
+            var reverseAdjacencyList = graph.m_ReverseAdjacencyList;
+
+            if (!RemoveFromAdjacencyList(adjacencyList, reverseAdjacencyList, vertex))
                 return false;
 
-            var reverseAdjacencyList = graph.m_ReverseAdjacencyList;
             if (reverseAdjacencyList != null)
             {
-                bool hit = RemoveFromAdjacencyList(reverseAdjacencyList, vertex);
+                bool hit = RemoveFromAdjacencyList(reverseAdjacencyList, adjacencyList, vertex);
                 Debug.Assert(hit);
             }
 
@@ -89,15 +91,31 @@ partial class Graph<TVertex>
 
             return true;
 
-            static bool RemoveFromAdjacencyList(AssociativeArray<TVertex, AdjacencyRow?> adjacencyList, TVertex vertex)
+            static bool RemoveFromAdjacencyList(
+                AssociativeArray<TVertex, AdjacencyRow?> adjacencyList,
+                AssociativeArray<TVertex, AdjacencyRow?>? reverseAdjacencyListHint,
+                TVertex vertex)
             {
-                bool hit = adjacencyList.Remove(vertex);
+                bool hit = adjacencyList.Remove(vertex, out var removedRow);
 
                 foreach (var i in adjacencyList)
                 {
                     var adjacencyRow = i.Value;
                     if (adjacencyRow != null)
                         hit |= adjacencyRow.Remove(vertex);
+                }
+
+                // Neighbors that existed only as destinations in the removed
+                // vertex's row (never as sources themselves) would otherwise
+                // disappear from the graph. Re-add them as isolated vertices.
+                if (removedRow != null)
+                {
+                    var comparer = adjacencyList.Comparer;
+                    foreach (var neighbor in removedRow)
+                    {
+                        if (!comparer.Equals(neighbor, vertex) && reverseAdjacencyListHint?.ContainsKey(neighbor) != true)
+                            adjacencyList.TryAdd(neighbor, null);
+                    }
                 }
 
                 return hit;
