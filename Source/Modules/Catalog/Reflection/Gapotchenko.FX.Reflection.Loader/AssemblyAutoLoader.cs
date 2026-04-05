@@ -271,8 +271,10 @@ public class AssemblyAutoLoader :
 
         ProbingPathAssemblyLoaderBackend? loader;
         lock (m_ProbingPathResolvers)
+        {
             if (!m_ProbingPathResolvers.Remove(path, out loader))
                 return false;
+        }
 
         loader.Dispose();
         return true;
@@ -291,13 +293,19 @@ public class AssemblyAutoLoader :
 #endif
 
             lock (m_AssemblyDescriptors)
+            {
                 foreach (var i in m_AssemblyDescriptors)
+                {
                     foreach (var j in i.Value.AssemblyLoaderBackends)
                         yield return j;
+                }
+            }
 
             lock (m_ProbingPathResolvers)
+            {
                 foreach (var i in m_ProbingPathResolvers)
                     yield return i.Value;
+            }
         }
     }
 
