@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -21,27 +22,34 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public IEnumerable<GraphEdge<TVertex>> EdgesIncidentWith(TVertex vertex)
     {
-        return DistinctSelfLoop(
-            IncomingEdgesIncidentWith(vertex).Concat(OutgoingEdgesIncidentWith(vertex)),
-            VertexComparer);
-
-        static IEnumerable<GraphEdge<TVertex>> DistinctSelfLoop(
-            IEnumerable<GraphEdge<TVertex>> source,
-            IEqualityComparer<TVertex> vertexComparer)
+        if (IsDirected)
         {
-            bool hasSelfLoop = false;
+            return DistinctSelfLoop(
+                IncomingEdgesIncidentWith(vertex).Concat(OutgoingEdgesIncidentWith(vertex)),
+                VertexComparer);
 
-            foreach (var i in source)
+            static IEnumerable<GraphEdge<TVertex>> DistinctSelfLoop(
+                IEnumerable<GraphEdge<TVertex>> source,
+                IEqualityComparer<TVertex> vertexComparer)
             {
-                if (vertexComparer.Equals(i.From, i.To))
-                {
-                    if (hasSelfLoop)
-                        continue;
-                    hasSelfLoop = true;
-                }
+                bool hasSelfLoop = false;
 
-                yield return i;
+                foreach (var i in source)
+                {
+                    if (vertexComparer.Equals(i.From, i.To))
+                    {
+                        if (hasSelfLoop)
+                            continue;
+                        hasSelfLoop = true;
+                    }
+
+                    yield return i;
+                }
             }
+        }
+        else
+        {
+            return VerticesAdjacentTo(vertex).Select(x => GraphEdge.Create(vertex, x));
         }
     }
 }
