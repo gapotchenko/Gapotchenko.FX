@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 // Portions © Stephen Cleary
 // Portions © Masashi Mizuno
@@ -8,7 +9,7 @@
 //
 // Contributors:
 //   - Stephen Cleary (inspiration, parts of the code)
-//   - Oleksiy Gapotchenko (development)
+//   - Oleksiy Gapotchenko (this module development)
 //   - Masashi Mizuno (inspiration, parts of the code)
 
 using Gapotchenko.FX.Collections.Utils;
@@ -1648,9 +1649,13 @@ public class Deque<T> : IList<T>, IReadOnlyList<T>, IList
 
     #endregion
 
+    #region IEnumerable
+
     IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    #endregion
 
     #endregion
 }
