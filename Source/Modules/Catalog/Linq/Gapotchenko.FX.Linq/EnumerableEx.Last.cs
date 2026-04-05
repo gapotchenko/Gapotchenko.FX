@@ -95,8 +95,7 @@ partial class EnumerableEx
 #else
     public static IEnumerable<TSource> TakeLast<TSource>(this IEnumerable<TSource> source, int count)
     {
-        if (source == null)
-            throw new ArgumentException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         static IEnumerable<TSource> Iterator(IEnumerable<TSource> source, int count)
         {
@@ -165,8 +164,7 @@ partial class EnumerableEx
 #else
     public static IEnumerable<TSource> SkipLast<TSource>(this IEnumerable<TSource> source, int count)
     {
-        if (source == null)
-            throw new ArgumentException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         static IEnumerable<TSource> Iterator(IEnumerable<TSource> source, int count)
         {
