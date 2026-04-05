@@ -35,7 +35,6 @@ partial class CartesianProduct
             return
                 ReferenceEquals(this, other) ||
                 other is ResultRow<T> otherRow &&
-                ReferenceEquals(m_Source, otherRow.m_Source) &&
                 this.SequenceEqual(otherRow);
         }
 
@@ -43,9 +42,7 @@ partial class CartesianProduct
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(
-                m_Source.GetHashCode(),
-                HashCodeEx.SequenceCombine(this));
+            return HashCodeEx.SequenceCombine(this);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
