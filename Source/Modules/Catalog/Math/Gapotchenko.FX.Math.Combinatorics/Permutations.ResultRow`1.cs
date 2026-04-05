@@ -34,11 +34,14 @@ partial class Permutations
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public bool Equals(IResultRow<T>? other) =>
-            ReferenceEquals(this, other) ||
-            other is ResultRow<T> otherRow &&
-            ReferenceEquals(m_Source, otherRow.m_Source) && // ensure that the source is the same
-            this.SequenceEqual(otherRow); // and that the resulting permutation is the same
+        public bool Equals(IResultRow<T>? other)
+        {
+            return
+                ReferenceEquals(this, other) ||
+                other is ResultRow<T> otherRow &&
+                ReferenceEquals(m_Source, otherRow.m_Source) && // ensure that the source is the same
+                this.SequenceEqual(otherRow); // and that the resulting permutation is the same
+        }
 
         public override bool Equals(object? obj) => obj is IResultRow<T> other && Equals(other);
 

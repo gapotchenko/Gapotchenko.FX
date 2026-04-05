@@ -20,13 +20,8 @@ partial class CartesianProduct
     {
     }
 
-    sealed class ResultRow<T> : IResultRow<T>, IReadOnlyList<T>
+    sealed class ResultRow<T>(IReadOnlyList<T> source) : IResultRow<T>, IReadOnlyList<T>
     {
-        public ResultRow(IReadOnlyList<T> source)
-        {
-            m_Source = source;
-        }
-
         public int Count => m_Source.Count;
 
         public T this[int index] => m_Source[index];
@@ -35,25 +30,25 @@ partial class CartesianProduct
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public bool Equals(IResultRow<T>? other) =>
-            ReferenceEquals(this, other) ||
-            other is ResultRow<T> otherRow &&
-            ReferenceEquals(m_Source, otherRow.m_Source) &&
-            this.SequenceEqual(otherRow);
+        public bool Equals(IResultRow<T>? other)
+        {
+            return
+                ReferenceEquals(this, other) ||
+                other is ResultRow<T> otherRow &&
+                ReferenceEquals(m_Source, otherRow.m_Source) &&
+                this.SequenceEqual(otherRow);
+        }
 
-        public override bool Equals(object? obj) =>
-            obj switch
-            {
-                ResultRow<T> other => Equals(other),
-                _ => false
-            };
+        public override bool Equals(object? obj) => obj is ResultRow<T> other && Equals(other);
 
-        public override int GetHashCode() =>
-            HashCode.Combine(
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(
                 m_Source.GetHashCode(),
                 HashCodeEx.SequenceCombine(this));
+        }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        readonly IReadOnlyList<T> m_Source;
+        readonly IReadOnlyList<T> m_Source = source;
     }
 }
