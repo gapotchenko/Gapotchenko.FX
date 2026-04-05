@@ -34,7 +34,11 @@ partial class EnumerableExTests
     public void Linq_Enumerable_IndexOf_Sequence_Discrepancy(string source, string value)
     {
         int expected = source.IndexOf(value, StringComparison.Ordinal);
+
         int actual = EnumerableEx.IndexOf(source, value);
         Assert.AreEqual(expected, actual);
+
+        long actualLong = EnumerableEx.LongIndexOf(source, value);
+        Assert.AreEqual(expected, actualLong);
     }
 }
