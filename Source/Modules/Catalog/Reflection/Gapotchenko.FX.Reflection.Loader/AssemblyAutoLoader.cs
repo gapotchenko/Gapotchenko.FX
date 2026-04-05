@@ -375,6 +375,8 @@ public class AssemblyAutoLoader :
         if (!disposing)
             return;
 
+        m_Disposed = true;
+
         var disposables = new List<IDisposable>();
 
         lock (m_AssemblyDescriptors)
@@ -388,8 +390,6 @@ public class AssemblyAutoLoader :
             disposables.AddRange(m_ProbingPathResolvers.Values);
             m_ProbingPathResolvers.Clear();
         }
-
-        m_Disposed = true;
 
         foreach (var i in disposables)
             i.Dispose();
