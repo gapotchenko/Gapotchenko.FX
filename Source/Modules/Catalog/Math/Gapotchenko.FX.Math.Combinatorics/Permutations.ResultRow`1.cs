@@ -39,11 +39,16 @@ partial class Permutations
             return
                 ReferenceEquals(this, other) ||
                 other is ResultRow<T> otherRow &&
+                // The guard below is an intentional design constraint:
+                // permutation rows carry source identity as part of their equality semantics,
+                // scoping comparisons to rows from the same set.
                 ReferenceEquals(m_Source, otherRow.m_Source) && // ensure that the source is the same
                 this.SequenceEqual(otherRow); // and that the resulting permutation is the same
         }
 
-        public override bool Equals(object? obj) => obj is IResultRow<T> other && Equals(other);
+        public override bool Equals(object? obj) =>
+            obj is IResultRow<T> other &&
+            Equals(other);
 
         public override int GetHashCode()
         {

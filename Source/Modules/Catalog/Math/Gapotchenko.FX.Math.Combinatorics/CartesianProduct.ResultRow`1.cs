@@ -38,7 +38,9 @@ partial class CartesianProduct
                 this.SequenceEqual(otherRow);
         }
 
-        public override bool Equals(object? obj) => obj is ResultRow<T> other && Equals(other);
+        public override bool Equals(object? obj) =>
+            obj is ResultRow<T> other &&
+            Equals(other);
 
         public override int GetHashCode()
         {
