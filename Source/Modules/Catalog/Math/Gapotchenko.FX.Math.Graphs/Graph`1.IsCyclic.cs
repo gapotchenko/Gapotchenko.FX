@@ -25,31 +25,64 @@ partial class Graph<TVertex>
     {
         var comparer = VertexComparer;
         var visited = new HashSet<TVertex>(comparer);
-        var recStack = new HashSet<TVertex>(comparer);
 
-        bool IsCyclicHelper(TVertex v)
+        if (IsDirected)
         {
-            if (recStack.Contains(v))
-                return true;
+            var recStack = new HashSet<TVertex>(comparer);
 
-            if (!visited.Add(v))
-                return false;
+            foreach (var v in Vertices)
+            {
+                if (IsCyclicHelper(v))
+                    return true;
+            }
 
-            recStack.Add(v);
-
-            foreach (var i in OutgoingVerticesAdjacentTo(v))
-                if (IsCyclicHelper(i))
+            bool IsCyclicHelper(TVertex v)
+            {
+                if (recStack.Contains(v))
                     return true;
 
-            recStack.Remove(v);
+                if (!visited.Add(v))
+                    return false;
 
-            return false;
+                recStack.Add(v);
+
+                foreach (var i in OutgoingVerticesAdjacentTo(v))
+                {
+                    if (IsCyclicHelper(i))
+                        return true;
+                }
+
+                recStack.Remove(v);
+
+                return false;
+            }
         }
-
-        foreach (var v in Vertices)
+        else
         {
-            if (IsCyclicHelper(v))
-                return true;
+            foreach (var v in Vertices)
+            {
+                if (!visited.Contains(v) && IsCyclicHelper(v, default))
+                    return true;
+            }
+
+            bool IsCyclicHelper(TVertex v, Optional<TVertex> parent)
+            {
+                visited.Add(v);
+
+                foreach (var i in OutgoingVerticesAdjacentTo(v))
+                {
+                    if (parent.HasValue && comparer.Equals(i, parent.Value))
+                        continue;
+
+                    if (visited.Contains(i))
+                        return true;
+
+                    if (IsCyclicHelper(i, v))
+                        return true;
+                }
+
+                return false;
+            }
         }
 
         return false;
