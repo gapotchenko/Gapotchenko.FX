@@ -90,7 +90,7 @@ public static class AsyncEnumerableBridge
 
     static IEnumerable<T> EnumerateCore<T>(IAsyncEnumerable<T> source, CancellationToken cancellationToken)
     {
-        var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var enumerator = TaskBridge.Execute(
             ct =>
             {
