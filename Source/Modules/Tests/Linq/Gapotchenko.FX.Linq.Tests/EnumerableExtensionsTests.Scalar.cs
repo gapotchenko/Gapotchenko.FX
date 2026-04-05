@@ -1,6 +1,8 @@
-﻿namespace Gapotchenko.FX.Linq.Tests;
+﻿using Gapotchenko.FX.Text;
 
-partial class EnumerableExTests
+namespace Gapotchenko.FX.Linq.Tests;
+
+partial class EnumerableExtensionsTests
 {
     [TestMethod]
     public void Linq_Enumerable_ScalarOrDefault_NullSourceArg()
@@ -234,7 +236,7 @@ partial class EnumerableExTests
     public void Linq_Enumerable_ScalarOrDefault_Predicate_NoMatch()
     {
         string[] seq = ["ABC", "DEF", "GHJ"];
-        string? result = seq.ScalarOrDefault(x => x.StartsWith("Z", StringComparison.Ordinal));
+        string? result = seq.ScalarOrDefault(x => x.StartsWith('Z'));
         Assert.IsNull(result);
     }
 
@@ -242,7 +244,7 @@ partial class EnumerableExTests
     public void Linq_Enumerable_ScalarOrDefault_Predicate_SingleMatch()
     {
         string[] seq = ["ABC", "DEF", "GHJ"];
-        string? result = seq.ScalarOrDefault(x => x.StartsWith("D", StringComparison.Ordinal));
+        string? result = seq.ScalarOrDefault(x => x.StartsWith('D'));
         Assert.AreEqual("DEF", result);
     }
 
@@ -250,7 +252,7 @@ partial class EnumerableExTests
     public void Linq_Enumerable_ScalarOrDefault_Predicate_MultpipleMatch()
     {
         string[] seq = ["ABC", "DEF", "GHJ", "AMBER"];
-        string? result = seq.ScalarOrDefault(x => x.StartsWith("A", StringComparison.Ordinal));
+        string? result = seq.ScalarOrDefault(x => x.StartsWith('A'));
         Assert.IsNull(result);
     }
 
@@ -258,7 +260,7 @@ partial class EnumerableExTests
     public void Linq_Enumerable_ScalarOrDefault_Predicate_Value_NoMatch()
     {
         string[] seq = ["ABC", "DEF", "GHJ"];
-        string result = seq.ScalarOrDefault(x => x.StartsWith("Z", StringComparison.Ordinal), "X");
+        string result = seq.ScalarOrDefault(x => x.StartsWith('Z'), "X");
         Assert.AreEqual("X", result);
     }
 
@@ -266,7 +268,7 @@ partial class EnumerableExTests
     public void Linq_Enumerable_ScalarOrDefault_Predicate_Value_SingleMatch()
     {
         string[] seq = ["ABC", "DEF", "GHJ"];
-        string result = seq.ScalarOrDefault(x => x.StartsWith("D", StringComparison.Ordinal), "X");
+        string result = seq.ScalarOrDefault(x => x.StartsWith('D'), "X");
         Assert.AreEqual("DEF", result);
     }
 
@@ -274,7 +276,7 @@ partial class EnumerableExTests
     public void Linq_Enumerable_ScalarOrDefault_Predicate_Valye_MultpipleMatch()
     {
         string[] seq = ["ABC", "DEF", "GHJ", "AMBER"];
-        string result = seq.ScalarOrDefault(x => x.StartsWith("A", StringComparison.Ordinal), "X");
+        string result = seq.ScalarOrDefault(x => x.StartsWith('A'), "X");
         Assert.AreEqual("X", result);
     }
 }
