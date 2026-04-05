@@ -76,7 +76,7 @@ partial class EnumerableExtensions
     /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
     public static bool TryReifyNonEnumeratedList<TSource>(
         this IEnumerable<TSource> source,
-        [NotNullWhen(true)] out IReadOnlyCollection<TSource>? list) =>
+        [NotNullWhen(true)] out IReadOnlyList<TSource>? list) =>
         (list = TryReifyNonEnumeratedList(source)) is not null;
 
     /// <summary>
