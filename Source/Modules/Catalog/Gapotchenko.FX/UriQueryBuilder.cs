@@ -185,7 +185,7 @@ public sealed class UriQueryBuilder
     {
         ArgumentNullException.ThrowIfNull(name);
 
-        string token = name + '=';
+        string token = Uri.EscapeDataString(name) + '=';
         string query = ToString();
 
         return
@@ -263,8 +263,8 @@ public sealed class UriQueryBuilder
         }
         else
         {
-            char delimeter = qsi == -1 ? QuerySeparator : ParameterSeparator;
-            return InsertOrConcat(uri, fsi, delimeter + query);
+            char delimiter = qsi == -1 ? QuerySeparator : ParameterSeparator;
+            return InsertOrConcat(uri, fsi, delimiter + query);
         }
     }
 
