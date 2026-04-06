@@ -5,6 +5,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Microsoft.Testing.Platform.Extensions.Messages;
+
 namespace Gapotchenko.FX.IO.Tests.Kits;
 
 [TestCategory("io")]
@@ -25,5 +27,29 @@ public abstract class StreamTestKit
         var stream = CreateStream(new MemoryStream(data, false), false);
         Assert.AreEqual(expectedOffset, stream.Seek(seekOffset, seekOrigin), "Offset mismatch.");
         Assert.AreEqual(expectedByte, stream.ReadByte(), "Data mismatch");
+    }
+
+    [TestMethod]
+    public void IO_Stream_Position()
+    {
+        var stream = CreateStream(new MemoryStream([1, 2, 3], false), false);
+
+        // Undershot.
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => stream.Position = -1, "Undershoot is not rejected.");
+
+        // Exact.
+        SetAndVerify(0);
+        SetAndVerify(1);
+        SetAndVerify(2);
+
+        // Overshot.
+        SetAndVerify(3);
+        SetAndVerify(4);
+
+        void SetAndVerify(long position)
+        {
+            stream.Position = position;
+            Assert.AreEqual(position, stream.Position);
+        }
     }
 }

@@ -30,7 +30,7 @@ public class FragmentedMemoryStream : Stream
         ArgumentNullException.ThrowIfNull(buffer);
 
         Write(buffer, 0, buffer.Length);
-        Position = 0;
+        m_Position = 0;
     }
 
     /// <inheritdoc/>
@@ -42,21 +42,33 @@ public class FragmentedMemoryStream : Stream
     /// <inheritdoc/>
     public override bool CanWrite => true;
 
+    /// <inheritdoc/>
+    public override long Length => m_Length;
+
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     long m_Length;
 
     /// <inheritdoc/>
-    public override long Length => m_Length;
+    public override long Position
+    {
+        get => m_Position;
+        set
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
 
-    /// <inheritdoc/>
-    public override long Position { get; set; }
+            m_Position = value;
+        }
+    }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    long m_Position;
 
     const int BlockSize = 65536;
 
     readonly List<byte[]> m_Blocks = [];
 
     /// <summary>
-    /// The block of memory currently addressed by Position
+    /// Gets the block of memory currently addressed by the stream position.
     /// </summary>
     byte[] CurrentBlock
     {
@@ -69,14 +81,14 @@ public class FragmentedMemoryStream : Stream
     }
 
     /// <summary>
-    /// The index of a block currently addressed by <see cref="Position"/>.
+    /// Gets the index of a block currently addressed by the stream position.
     /// </summary>
-    long CurrentBlockIndex => Position / BlockSize;
+    long CurrentBlockIndex => m_Position / BlockSize;
 
     /// <summary>
-    /// The block offset of a byte currently addressed by <see cref="Position"/>.
+    /// Gets the block offset of a byte currently addressed by the stream position.
     /// </summary>
-    int CurrentBlockOffset => (int)(Position % BlockSize);
+    int CurrentBlockOffset => (int)(m_Position % BlockSize);
 
     /// <inheritdoc/>
     public override void Flush()
@@ -101,7 +113,7 @@ public class FragmentedMemoryStream : Stream
     int ReadCore(Span<byte> buffer)
     {
         int offset = 0;
-        int count = (int)Math.Min(buffer.Length, m_Length - Position);
+        int count = (int)Math.Min(buffer.Length, m_Length - m_Position);
 
         int read = 0;
         while (count > 0)
@@ -117,7 +129,7 @@ public class FragmentedMemoryStream : Stream
             offset += copySize;
 
             read += copySize;
-            Position += copySize;
+            m_Position += copySize;
         }
 
         return read;
@@ -129,16 +141,16 @@ public class FragmentedMemoryStream : Stream
         switch (origin)
         {
             case SeekOrigin.Begin:
-                Position = offset;
+                m_Position = offset;
                 break;
             case SeekOrigin.Current:
-                Position += offset;
+                m_Position += offset;
                 break;
             case SeekOrigin.End:
-                Position = Length + offset;
+                m_Position = Length + offset;
                 break;
         }
-        return Position;
+        return m_Position;
     }
 
     /// <inheritdoc/>
@@ -187,7 +199,7 @@ public class FragmentedMemoryStream : Stream
         int count = buffer.Length;
         int offset = 0;
 
-        long savedPosition = Position;
+        long savedPosition = m_Position;
         try
         {
             while (count > 0)
@@ -195,7 +207,7 @@ public class FragmentedMemoryStream : Stream
                 int currentBlockOffset = CurrentBlockOffset;
                 int copySize = Math.Min(count, BlockSize - currentBlockOffset);
 
-                EnsureCapacity(Position + copySize);
+                EnsureCapacity(m_Position + copySize);
 
                 buffer
                     .Slice(offset, copySize)
@@ -204,12 +216,12 @@ public class FragmentedMemoryStream : Stream
                 count -= copySize;
                 offset += copySize;
 
-                Position += copySize;
+                m_Position += copySize;
             }
         }
         catch
         {
-            Position = savedPosition;
+            m_Position = savedPosition;
             throw;
         }
     }
@@ -217,11 +229,11 @@ public class FragmentedMemoryStream : Stream
     /// <inheritdoc/>
     public override int ReadByte()
     {
-        if (Position >= m_Length)
+        if (m_Position >= m_Length)
             return -1;
 
         byte b = CurrentBlock[CurrentBlockOffset];
-        ++Position;
+        ++m_Position;
 
         return b;
     }
@@ -229,9 +241,10 @@ public class FragmentedMemoryStream : Stream
     /// <inheritdoc/>
     public override void WriteByte(byte value)
     {
-        EnsureCapacity(Position + 1);
+        long newPosition = m_Position + 1;
+        EnsureCapacity(newPosition);
         CurrentBlock[CurrentBlockOffset] = value;
-        ++Position;
+        m_Position = newPosition;
     }
 
     void EnsureCapacity(long capacity)
@@ -250,8 +263,8 @@ public class FragmentedMemoryStream : Stream
     /// <returns>A byte array containing the current data of the stream.</returns>
     public virtual byte[] ToArray()
     {
-        long savedPosition = Position;
-        Position = 0;
+        long savedPosition = m_Position;
+        m_Position = 0;
 
         long length = Length;
         byte[] buffer = new byte[length];
@@ -267,7 +280,7 @@ public class FragmentedMemoryStream : Stream
             Debug.Assert(r == length);
         }
 
-        Position = savedPosition;
+        m_Position = savedPosition;
 
         return buffer;
     }
@@ -275,7 +288,7 @@ public class FragmentedMemoryStream : Stream
     long ReadLargeCore(byte[] buffer)
     {
         long offset = 0;
-        long count = Math.Min(buffer.LongLength, m_Length - Position);
+        long count = Math.Min(buffer.LongLength, m_Length - m_Position);
 
         long read = 0;
         while (count > 0)
@@ -289,7 +302,7 @@ public class FragmentedMemoryStream : Stream
             offset += copySize;
 
             read += copySize;
-            Position += copySize;
+            m_Position += copySize;
         }
 
         return read;
@@ -303,15 +316,15 @@ public class FragmentedMemoryStream : Stream
 
         ArgumentNullException.ThrowIfNull(destination);
 
-        long savedPosition = Position;
-        Position = 0;
+        long savedPosition = m_Position;
+        m_Position = 0;
         try
         {
             CopyTo(destination);
         }
         finally
         {
-            Position = savedPosition;
+            m_Position = savedPosition;
         }
     }
 }
