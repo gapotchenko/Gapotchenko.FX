@@ -80,6 +80,7 @@
     <Project Path="Modules/Catalog/Diagnostics/Gapotchenko.FX.Diagnostics.WebBrowser/Gapotchenko.FX.Diagnostics.WebBrowser.csproj" />
   </Folder>
   <Folder Name="/01. Modules/IO/">
+    <Project Path="Modules/Catalog/IO/Gapotchenko.FX.IO.Tests/Gapotchenko.FX.IO.Tests.csproj" Id="fd275b0f-0e6c-4231-8e26-75dc78f055dd" />
     <Project Path="Modules/Catalog/IO/Gapotchenko.FX.IO/Gapotchenko.FX.IO.csproj" />
   </Folder>
   <Folder Name="/01. Modules/IO/FileSystems/">
