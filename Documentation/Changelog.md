@@ -13,6 +13,7 @@ Release date: not released yet
 - Fixed issue with neighbor preservation after a graph vertex removal
 - Fixed issue with transitive reduction of undirected graphs when specific edge-case topologies were encountered
 - Fixed rounding error in Jaro similarity algorithm that could lead to slightly off results
+- Fixed file system case-sensitivity detection in `Gapotchenko.FX.Reflection.Loader` module for macOS
 
 ### Gapotchenko.FX 2026.6
 
