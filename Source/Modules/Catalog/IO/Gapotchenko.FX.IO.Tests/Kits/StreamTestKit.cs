@@ -27,35 +27,35 @@ public abstract class StreamTestKit
     protected abstract Stream CreateStream(Stream? content, bool writable);
 
     [TestMethod]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, -2, -1, 1)] // one beyond underflow boundary
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, -1, -1, 1)] // exact underflow boundary
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 0, 0, 1)] // in-range position 0
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 1, 1, 2)] // in-range position 1
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 2, 2, 3)] // in-range position 2
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 3, 3, -1)] // at end
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 4, 4, -1)] // past end
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 5, 5, -1)] // one past end
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, -1, -1, 1)] // exact underflow boundary
-    [DataRow(new byte[] { 1, 2, 3 }, 1, SeekOrigin.Current, -2, -1, 2)] // underflow from non-zero position
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, 0, 0, 1)] // no movement
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, 1, 1, 2)] // 1 forward from start
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, 2, 2, 3)] // 2 forward from start
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, 3, 3, -1)] // 3 forward from start
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, 4, 4, -1)] // 4 forward from start
-    [DataRow(new byte[] { 1, 2, 3 }, 1, SeekOrigin.Current, -1, 0, 1)] // backward to start
-    [DataRow(new byte[] { 1, 2, 3 }, 2, SeekOrigin.Current, -1, 1, 2)] // backward mid-stream
-    [DataRow(new byte[] { 1, 2, 3 }, 3, SeekOrigin.Current, -1, 2, 3)] // backward from end
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 2, 5, -1)] // past end + 1
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 1, 4, -1)] // past end
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 0, 3, -1)] // at end
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -1, 2, 3)] // in-range position 2
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -2, 1, 2)] // in-range position 1
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -3, 0, 1)] // in-range position 0
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -4, -1, 1)] // exact underflow boundary  
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -5, -1, 1)] // one beyond underflow boundary 
-    public void IO_Stream_Seek(byte[]? data, long initialPosition, SeekOrigin seekOrigin, long seekOffset, long expectedPosition, int expectedByte)
+    [DataRow(0, SeekOrigin.Begin, -2, -1, 1)] // one beyond underflow boundary
+    [DataRow(0, SeekOrigin.Begin, -1, -1, 1)] // exact underflow boundary
+    [DataRow(0, SeekOrigin.Begin, 0, 0, 1)] // in-range position 0
+    [DataRow(0, SeekOrigin.Begin, 1, 1, 2)] // in-range position 1
+    [DataRow(0, SeekOrigin.Begin, 2, 2, 3)] // in-range position 2
+    [DataRow(0, SeekOrigin.Begin, 3, 3, -1)] // at end
+    [DataRow(0, SeekOrigin.Begin, 4, 4, -1)] // past end
+    [DataRow(0, SeekOrigin.Begin, 5, 5, -1)] // one past end
+    [DataRow(0, SeekOrigin.Current, -1, -1, 1)] // exact underflow boundary
+    [DataRow(1, SeekOrigin.Current, -2, -1, 2)] // underflow from non-zero position
+    [DataRow(0, SeekOrigin.Current, 0, 0, 1)] // no movement
+    [DataRow(0, SeekOrigin.Current, 1, 1, 2)] // 1 forward from start
+    [DataRow(0, SeekOrigin.Current, 2, 2, 3)] // 2 forward from start
+    [DataRow(0, SeekOrigin.Current, 3, 3, -1)] // 3 forward from start
+    [DataRow(0, SeekOrigin.Current, 4, 4, -1)] // 4 forward from start
+    [DataRow(1, SeekOrigin.Current, -1, 0, 1)] // backward to start
+    [DataRow(2, SeekOrigin.Current, -1, 1, 2)] // backward mid-stream
+    [DataRow(3, SeekOrigin.Current, -1, 2, 3)] // backward from end
+    [DataRow(0, SeekOrigin.End, 2, 5, -1)] // past end + 1
+    [DataRow(0, SeekOrigin.End, 1, 4, -1)] // past end
+    [DataRow(0, SeekOrigin.End, 0, 3, -1)] // at end
+    [DataRow(0, SeekOrigin.End, -1, 2, 3)] // in-range position 2
+    [DataRow(0, SeekOrigin.End, -2, 1, 2)] // in-range position 1
+    [DataRow(0, SeekOrigin.End, -3, 0, 1)] // in-range position 0
+    [DataRow(0, SeekOrigin.End, -4, -1, 1)] // exact underflow boundary  
+    [DataRow(0, SeekOrigin.End, -5, -1, 1)] // one beyond underflow boundary 
+    public void IO_Stream_Seek(long initialPosition, SeekOrigin seekOrigin, long seekOffset, long expectedPosition, int expectedByte)
     {
-        var stream = CreateStream(data, false);
+        var stream = CreateStream([1, 2, 3], false);
 
         // Initial position.
         if (initialPosition != 0)
@@ -84,26 +84,27 @@ public abstract class StreamTestKit
     }
 
     [TestMethod]
-    public void IO_Stream_Position()
+    [DataRow(-2, true, 1)] // one beyond underflow boundary
+    [DataRow(-1, true, 1)] // exact underflow boundary
+    [DataRow(0, false, 1)] // in-range position 0
+    [DataRow(1, false, 2)] // in-range position 1
+    [DataRow(2, false, 3)] // in-range position 2
+    [DataRow(3, false, -1)] // at end
+    [DataRow(4, false, -1)] // past end
+    public void IO_Stream_Position(long position, bool underflow, int expectedByte)
     {
         var stream = CreateStream([1, 2, 3], false);
 
-        // Underflow
-        foreach (long position in (ReadOnlySpan<long>)[-1, -2])
-            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => stream.Position = position, "Underflow is not rejected.");
-
-        // In-range
-        foreach (long position in (ReadOnlySpan<long>)[0, 1, 2])
-            SetAndVerify(position);
-
-        // Overflow
-        foreach (long position in (ReadOnlySpan<long>)[3, 4])
-            SetAndVerify(position);
-
-        void SetAndVerify(long position)
+        if (underflow)
+        {
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => stream.Position = position);
+        }
+        else
         {
             stream.Position = position;
             Assert.AreEqual(position, stream.Position);
         }
+
+        Assert.AreEqual(expectedByte, stream.ReadByte(), "Data mismatch");
     }
 }
