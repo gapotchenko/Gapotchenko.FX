@@ -67,7 +67,7 @@ public static class Poll
 
             if (!random.HasValue)
             {
-                int dispersion = millisecondsInterval / 5;
+                int dispersion = millisecondsInterval / 4;
                 if (dispersion > 0)
                 {
                     random = new Random();
@@ -100,7 +100,9 @@ public static class Poll
                     millisecondsDelay = (int)remaining;
                     if (rv != null)
                     {
-                        int cappedDispersion = millisecondsDelay * 2 / 5;
+                        // Only half of the capped dispersion range is used, so it should
+                        // be 2x to target the same collision probability.
+                        int cappedDispersion = millisecondsDelay / 2;
                         if (cappedDispersion > 0)
                             millisecondsDelay -= rv.Next(0, cappedDispersion + 1);
                     }
