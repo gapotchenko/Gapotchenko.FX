@@ -1,6 +1,7 @@
 ﻿// Based on the work "Improving on .NET Memory Management for Large Objects" by Michael Sydney Balloni
 // https://www.codeproject.com/Tips/894885/Improving-on-NET-Memory-Management-for-Large-Objec
 
+using Gapotchenko.FX.IO.Properties;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.IO;
@@ -138,19 +139,20 @@ public class FragmentedMemoryStream : Stream
     /// <inheritdoc/>
     public override long Seek(long offset, SeekOrigin origin)
     {
-        switch (origin)
-        {
-            case SeekOrigin.Begin:
-                m_Position = offset;
-                break;
-            case SeekOrigin.Current:
-                m_Position += offset;
-                break;
-            case SeekOrigin.End:
-                m_Position = Length + offset;
-                break;
-        }
-        return m_Position;
+        long newPosition =
+            origin switch
+            {
+                SeekOrigin.Begin => offset,
+                SeekOrigin.Current => m_Position + offset,
+                SeekOrigin.End => m_Length + offset,
+                _ => throw new ArgumentException(Resources.InvalidStreamSeekOrigin, nameof(origin)),
+            };
+
+        if (newPosition < 0)
+            throw new IOException(Resources.StreamSeekBeforeBegin);
+        m_Position = newPosition;
+
+        return newPosition;
     }
 
     /// <inheritdoc/>
