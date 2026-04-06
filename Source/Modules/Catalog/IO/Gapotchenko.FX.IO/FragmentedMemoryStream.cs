@@ -265,11 +265,12 @@ public class FragmentedMemoryStream : Stream
     /// <returns>A byte array containing the current data of the stream.</returns>
     public virtual byte[] ToArray()
     {
+        long length = Length;
+        byte[] buffer = new byte[length];
+
         long savedPosition = m_Position;
         m_Position = 0;
 
-        long length = Length;
-        byte[] buffer = new byte[length];
         if (length <= int.MaxValue)
         {
             int r = ReadCore(buffer);
