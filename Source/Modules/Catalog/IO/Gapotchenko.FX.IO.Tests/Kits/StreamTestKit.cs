@@ -27,25 +27,48 @@ public abstract class StreamTestKit
     protected abstract Stream CreateStream(Stream? content, bool writable);
 
     [TestMethod]
-    [DataRow(new byte[] { 1, 2, 3 }, SeekOrigin.End, -2, 1, 2)]
-    [DataRow(new byte[] { 1, 2, 3 }, SeekOrigin.Current, -1, -1, 1)]
-    public void IO_Stream_Seek(byte[]? data, SeekOrigin seekOrigin, long seekOffset, long expectedPosition, int expectedByte)
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, -1, -1, 1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 0, 0, 1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 1, 1, 2)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 2, 2, 3)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 3, 3, -1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 4, 4, -1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, -1, -1, 1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 2, 5, -1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 1, 4, -1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 0, 3, -1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -1, 2, 3)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -2, 1, 2)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -3, 0, 1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -4, -1, 1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -5, -1, 1)]
+    public void IO_Stream_Seek(byte[]? data, long initialPosition, SeekOrigin seekOrigin, long seekOffset, long expectedPosition, int expectedByte)
     {
         var stream = CreateStream(data, false);
 
+        // Initial position.
+        if (initialPosition != 0)
+            stream.Position = initialPosition;
+
+        // Stream seek.
+        long position;
         if (expectedPosition == -1)
         {
-            long originalPosition = stream.Position;
+            position = stream.Position;
             Assert.ThrowsExactly<IOException>(() => stream.Seek(seekOffset, seekOrigin));
-            Assert.AreEqual(originalPosition, stream.Position);
         }
         else
         {
-            Assert.AreEqual(expectedPosition, stream.Seek(seekOffset, seekOrigin), "Position mismatch.");
+            position = stream.Seek(seekOffset, seekOrigin);
+            Assert.AreEqual(expectedPosition, position, "Position mismatch.");
         }
+        Assert.AreEqual(position, stream.Position);
 
+        // Validation of seek arguments.
         Assert.ThrowsExactly<ArgumentException>(() => stream.Seek(1, (SeekOrigin)100));
+        Assert.AreEqual(position, stream.Position);
 
+        // Verify the data.
         Assert.AreEqual(expectedByte, stream.ReadByte(), "Data mismatch");
     }
 
