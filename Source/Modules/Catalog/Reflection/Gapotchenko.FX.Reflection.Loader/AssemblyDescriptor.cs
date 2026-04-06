@@ -72,7 +72,7 @@ sealed class AssemblyDescriptor : IDisposable
                 var probingPaths = new List<string>();
 
                 if (!string.IsNullOrEmpty(assemblyDirectoryPath))
-                    probingPaths.Add(assemblyDirectoryPath);
+                    AccumulateNewProbingPaths(probingPaths, [assemblyDirectoryPath]);
 
                 if (additionalProbingPaths != null)
                     AccumulateNewProbingPaths(probingPaths, additionalProbingPaths);
