@@ -27,6 +27,7 @@ public abstract class StreamTestKit
     protected abstract Stream CreateStream(Stream? content, bool writable);
 
     [TestMethod]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, -2, -1, 1)]
     [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, -1, -1, 1)]
     [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 0, 0, 1)]
     [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 1, 1, 2)]
@@ -34,6 +35,15 @@ public abstract class StreamTestKit
     [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 3, 3, -1)]
     [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 4, 4, -1)]
     [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, -1, -1, 1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 1, SeekOrigin.Current, -2, -1, 2)] // underflow from non-zero position
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, 0, 0, 1)] // no movement
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, 1, 1, 2)] // 1 forward from start
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, 2, 2, 3)] // 2 forward from start
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, 3, 3, -1)] // 3 forward from start
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, 4, 4, -1)] // 4 forward from start
+    [DataRow(new byte[] { 1, 2, 3 }, 1, SeekOrigin.Current, -1, 0, 1)] // backward to start
+    [DataRow(new byte[] { 1, 2, 3 }, 2, SeekOrigin.Current, -1, 1, 2)] // backward mid-stream
+    [DataRow(new byte[] { 1, 2, 3 }, 3, SeekOrigin.Current, -1, 2, 3)] // backward from end
     [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 2, 5, -1)]
     [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 1, 4, -1)]
     [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 0, 3, -1)]
@@ -78,16 +88,16 @@ public abstract class StreamTestKit
         var stream = CreateStream([1, 2, 3], false);
 
         // Undershot.
-        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => stream.Position = -1, "Undershoot is not rejected.");
+        foreach (long position in (ReadOnlySpan<long>)[-1, -2])
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => stream.Position = position, "Undershoot is not rejected.");
 
         // Exact.
-        SetAndVerify(0);
-        SetAndVerify(1);
-        SetAndVerify(2);
+        foreach (long position in (ReadOnlySpan<long>)[0, 1, 2])
+            SetAndVerify(position);
 
         // Overshot.
-        SetAndVerify(3);
-        SetAndVerify(4);
+        foreach (long position in (ReadOnlySpan<long>)[3, 4])
+            SetAndVerify(position);
 
         void SetAndVerify(long position)
         {
