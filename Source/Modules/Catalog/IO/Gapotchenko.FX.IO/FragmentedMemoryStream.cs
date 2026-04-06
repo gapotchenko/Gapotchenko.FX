@@ -87,10 +87,8 @@ public class FragmentedMemoryStream : Stream
     public override int Read(byte[] buffer, int offset, int count)
     {
         ArgumentNullException.ThrowIfNull(buffer);
-        if (offset < 0)
-            throw new ArgumentOutOfRangeException(nameof(offset), offset, "Buffer offset cannot be negative.");
-        if (count < 0)
-            throw new ArgumentOutOfRangeException(nameof(count), count, "Count cannot be negative.");
+        ArgumentOutOfRangeException.ThrowIfNegative(offset);
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
 
         return ReadCore(buffer.AsSpan(offset, count));
     }
