@@ -177,9 +177,7 @@ sealed class VirtualTerminalWriter : TextWriter
                 {
                     // Final byte.
 
-                    if (m_CommandBuilder == null)
-                        throw new InvalidOperationException();
-                    _ExecuteCsi(m_CommandBuilder.ToString(), c);
+                    _ExecuteCsi(m_CommandBuilder?.ToString() ?? string.Empty, c);
                     m_CommandBuilder = null;
 
                     m_CurrentState = State.Default;
@@ -227,7 +225,9 @@ sealed class VirtualTerminalWriter : TextWriter
         {
             switch (part)
             {
+                case "": // per ANSI spec, \x1b[m = \x1b[0m
                 case "0":
+                    // Reset all text formatting to default.
                     m_Backend.ResetColor();
                     break;
 
