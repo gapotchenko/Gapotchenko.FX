@@ -40,8 +40,10 @@ class ProbingPathAssemblyLoaderBackend : IAssemblyLoaderBackend
     List<KeyValuePair<string, AssemblyName>> GetProbingList()
     {
         if (m_CachedProbingList == null)
+        {
             lock (this)
                 m_CachedProbingList ??= GetProbingListCore(m_ProbingPaths);
+        }
 
         return m_CachedProbingList;
     }

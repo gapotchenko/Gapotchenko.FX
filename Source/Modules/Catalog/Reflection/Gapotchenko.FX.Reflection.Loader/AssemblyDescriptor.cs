@@ -110,8 +110,10 @@ sealed class AssemblyDescriptor : IDisposable
                 yield return m_AssemblyLoaderBackend;
 
             if (m_ProbingPathAssemblyLoaderBackends != null)
+            {
                 foreach (var i in m_ProbingPathAssemblyLoaderBackends)
                     yield return i;
+            }
         }
     }
 
@@ -167,7 +169,9 @@ sealed class AssemblyDescriptor : IDisposable
         m_AssemblyLoaderBackend?.Dispose();
 
         if (m_ProbingPathAssemblyLoaderBackends != null)
+        {
             foreach (var backend in m_ProbingPathAssemblyLoaderBackends)
                 backend.Dispose();
+        }
     }
 }

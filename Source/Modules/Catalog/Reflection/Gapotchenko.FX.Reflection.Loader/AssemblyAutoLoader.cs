@@ -215,8 +215,10 @@ public class AssemblyAutoLoader :
 
         AssemblyDescriptor? descriptor;
         lock (m_AssemblyDescriptors)
+        {
             if (!m_AssemblyDescriptors.Remove(assembly, out descriptor))
                 return false;
+        }
 
         descriptor.Dispose();
         return true;
