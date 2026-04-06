@@ -117,7 +117,7 @@ partial class EnumerableEx
     public static TSource MaxOrDefault<TSource>(this IEnumerable<TSource> source, TSource defaultValue, IComparer<TSource>? comparer) =>
         MaxOrDefaultBy(source, Fn.Identity, defaultValue, comparer);
 
-    static TSource? _MinMaxCore<TSource, TKey>(
+    static TSource? MinMaxCore<TSource, TKey>(
         IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         IComparer<TKey>? comparer,
@@ -133,7 +133,7 @@ partial class EnumerableEx
         {
             if (defaultValue.HasValue)
                 return defaultValue.Value;
-            else if (default(TSource) == null)
+            else if (default(TSource) is null)
                 return default;
             else
                 throw new InvalidOperationException(Resources.NoElements);
@@ -151,15 +151,8 @@ partial class EnumerableEx
                 var candidateValue = e.Current;
                 var candidateKey = keySelector(candidateValue);
 
-                if (candidateKey == null)
+                if (candidateKey is null)
                     continue;
-
-                static bool IsMatch<T>(T candidateValue, T value, bool isMax, IComparer<T> comparer)
-                {
-                    int d = comparer.Compare(candidateValue, value);
-                    bool match = isMax ? d > 0 : d < 0;
-                    return match;
-                }
 
                 if (IsMatch(candidateKey, key, isMax, comparer))
                 {
@@ -171,6 +164,12 @@ partial class EnumerableEx
         }
 
         return value;
+
+        static bool IsMatch<T>(T candidateValue, T existingValue, bool isMax, IComparer<T> comparer)
+        {
+            int d = comparer.Compare(candidateValue, existingValue);
+            return isMax ? d > 0 : d < 0;
+        }
     }
 
     /// <summary>
@@ -188,7 +187,7 @@ partial class EnumerableEx
         Enumerable.MinBy(source, keySelector, comparer);
 #else
     public static TSource? MinBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
-        _MinMaxCore(source, keySelector, comparer, false, Optional.None<TSource>());
+        MinMaxCore(source, keySelector, comparer, false, Optional.None<TSource>());
 #endif
 
     /// <summary>
@@ -221,7 +220,7 @@ partial class EnumerableEx
         Enumerable.MaxBy(source, keySelector, comparer);
 #else
     public static TSource? MaxBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) =>
-        _MinMaxCore(source, keySelector, comparer, true, Optional.None<TSource>());
+        MinMaxCore(source, keySelector, comparer, true, Optional.None<TSource>());
 #endif
 
     /// <summary>
@@ -288,7 +287,7 @@ partial class EnumerableEx
     /// or <paramref name="defaultValue"/> if the sequence is empty.
     /// </returns>
     public static TSource MinOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, TSource defaultValue, IComparer<TKey>? comparer) =>
-        _MinMaxCore(source, keySelector, comparer, false, Optional.Some(defaultValue))!;
+        MinMaxCore(source, keySelector, comparer, false, Optional.Some(defaultValue))!;
 
     /// <summary>
     /// Returns the maximum value in a sequence according to a specified key selector function, or a <see langword="default"/> value if the sequence is empty.
@@ -339,5 +338,5 @@ partial class EnumerableEx
     /// or <paramref name="defaultValue"/> if the sequence is empty.
     /// </returns>
     public static TSource MaxOrDefaultBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, TSource defaultValue, IComparer<TKey>? comparer) =>
-        _MinMaxCore(source, keySelector, comparer, true, Optional.Some(defaultValue))!;
+        MinMaxCore(source, keySelector, comparer, true, Optional.Some(defaultValue))!;
 }
