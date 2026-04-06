@@ -146,6 +146,26 @@ public class FragmentedMemoryStream : Stream
     /// <inheritdoc/>
     public override void SetLength(long value)
     {
+        ArgumentOutOfRangeException.ThrowIfNegative(value);
+
+        if (value < m_Length)
+        {
+            int blocksNeeded = value == 0 ? 0 : checked((int)((value - 1) / BlockSize + 1));
+
+            // Trim excess blocks.
+            while (m_Blocks.Count > blocksNeeded)
+                m_Blocks.RemoveAt(m_Blocks.Count - 1);
+
+            // Zero out the unused tail of the last partial block so that a
+            // subsequent re-expansion of the stream sees clean bytes.
+            if (blocksNeeded > 0 && m_Blocks.Count == blocksNeeded)
+            {
+                int lastBlockUsed = (int)(value % BlockSize);
+                if (lastBlockUsed > 0)
+                    Array.Clear(m_Blocks[blocksNeeded - 1], lastBlockUsed, BlockSize - lastBlockUsed);
+            }
+        }
+
         m_Length = value;
     }
 
@@ -153,10 +173,8 @@ public class FragmentedMemoryStream : Stream
     public override void Write(byte[] buffer, int offset, int count)
     {
         ArgumentNullException.ThrowIfNull(buffer);
-        if (offset < 0)
-            throw new ArgumentOutOfRangeException(nameof(offset), offset, "Buffer offset cannot be negative.");
-        if (count < 0)
-            throw new ArgumentOutOfRangeException(nameof(count), count, "Count cannot be negative.");
+        ArgumentOutOfRangeException.ThrowIfNegative(offset);
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
 
         WriteCore(buffer.AsSpan(offset, count));
     }
