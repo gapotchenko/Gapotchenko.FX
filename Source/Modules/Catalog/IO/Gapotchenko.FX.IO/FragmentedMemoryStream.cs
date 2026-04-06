@@ -30,7 +30,7 @@ public class FragmentedMemoryStream : Stream
     {
         ArgumentNullException.ThrowIfNull(buffer);
 
-        Write(buffer, 0, buffer.Length);
+        WriteCore(buffer);
         m_Position = 0;
     }
 
