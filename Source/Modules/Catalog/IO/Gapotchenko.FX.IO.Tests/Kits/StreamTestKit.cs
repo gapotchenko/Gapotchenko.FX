@@ -27,14 +27,15 @@ public abstract class StreamTestKit
     protected abstract Stream CreateStream(Stream? content, bool writable);
 
     [TestMethod]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, -2, -1, 1)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, -1, -1, 1)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 0, 0, 1)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 1, 1, 2)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 2, 2, 3)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 3, 3, -1)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 4, 4, -1)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, -1, -1, 1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, -2, -1, 1)] // one beyond underflow boundary
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, -1, -1, 1)] // exact underflow boundary
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 0, 0, 1)] // in-range position 0
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 1, 1, 2)] // in-range position 1
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 2, 2, 3)] // in-range position 2
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 3, 3, -1)] // at end
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 4, 4, -1)] // past end
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Begin, 5, 5, -1)] // one past end
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, -1, -1, 1)] // exact underflow boundary
     [DataRow(new byte[] { 1, 2, 3 }, 1, SeekOrigin.Current, -2, -1, 2)] // underflow from non-zero position
     [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, 0, 0, 1)] // no movement
     [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.Current, 1, 1, 2)] // 1 forward from start
@@ -44,14 +45,14 @@ public abstract class StreamTestKit
     [DataRow(new byte[] { 1, 2, 3 }, 1, SeekOrigin.Current, -1, 0, 1)] // backward to start
     [DataRow(new byte[] { 1, 2, 3 }, 2, SeekOrigin.Current, -1, 1, 2)] // backward mid-stream
     [DataRow(new byte[] { 1, 2, 3 }, 3, SeekOrigin.Current, -1, 2, 3)] // backward from end
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 2, 5, -1)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 1, 4, -1)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 0, 3, -1)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -1, 2, 3)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -2, 1, 2)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -3, 0, 1)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -4, -1, 1)]
-    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -5, -1, 1)]
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 2, 5, -1)] // past end + 1
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 1, 4, -1)] // past end
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, 0, 3, -1)] // at end
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -1, 2, 3)] // in-range position 2
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -2, 1, 2)] // in-range position 1
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -3, 0, 1)] // in-range position 0
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -4, -1, 1)] // exact underflow boundary  
+    [DataRow(new byte[] { 1, 2, 3 }, 0, SeekOrigin.End, -5, -1, 1)] // one beyond underflow boundary 
     public void IO_Stream_Seek(byte[]? data, long initialPosition, SeekOrigin seekOrigin, long seekOffset, long expectedPosition, int expectedByte)
     {
         var stream = CreateStream(data, false);
@@ -76,7 +77,7 @@ public abstract class StreamTestKit
 
         // Validation of seek arguments.
         Assert.ThrowsExactly<ArgumentException>(() => stream.Seek(1, (SeekOrigin)100));
-        Assert.AreEqual(position, stream.Position);
+        Assert.AreEqual(position, stream.Position, "Wrong seek argument should not change stream position.");
 
         // Verify the data.
         Assert.AreEqual(expectedByte, stream.ReadByte(), "Data mismatch");
@@ -87,15 +88,15 @@ public abstract class StreamTestKit
     {
         var stream = CreateStream([1, 2, 3], false);
 
-        // Undershot.
+        // Underflow
         foreach (long position in (ReadOnlySpan<long>)[-1, -2])
-            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => stream.Position = position, "Undershoot is not rejected.");
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => stream.Position = position, "Underflow is not rejected.");
 
-        // Exact.
+        // In-range
         foreach (long position in (ReadOnlySpan<long>)[0, 1, 2])
             SetAndVerify(position);
 
-        // Overshot.
+        // Overflow
         foreach (long position in (ReadOnlySpan<long>)[3, 4])
             SetAndVerify(position);
 
