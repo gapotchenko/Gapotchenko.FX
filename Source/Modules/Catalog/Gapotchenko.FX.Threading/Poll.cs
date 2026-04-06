@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
@@ -86,6 +87,24 @@ public static class Poll
             {
                 int dispersion = rv.Next(minDispersion, maxDispersion);
                 millisecondsDelay += dispersion;
+            }
+
+            if (sw != null)
+            {
+                long remaining = millisecondsTimeout - sw.ElapsedMilliseconds;
+                if (remaining <= 0)
+                    return false;
+
+                if (millisecondsDelay > remaining)
+                {
+                    millisecondsDelay = (int)remaining;
+                    if (rv != null)
+                    {
+                        int cappedDispersion = millisecondsDelay * 2 / 5;
+                        if (cappedDispersion > 0)
+                            millisecondsDelay -= rv.Next(0, cappedDispersion + 1);
+                    }
+                }
             }
 
             await Task.Delay(millisecondsDelay, cancellationToken).ConfigureAwait(false);
