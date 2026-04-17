@@ -100,18 +100,17 @@ public abstract class IntervalTypeConverterBase : TypeConverter
     {
         return
             sourceType == typeof(string) ||
-            sourceType.IsGenericType && sourceType.GetGenericTypeDefinition() == m_IntervalType ||
+            IsCompatibleType(sourceType) ||
             base.CanConvertFrom(context, sourceType);
     }
 
     /// <inheritdoc/>
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
-        if (value is IInterval interval)
+        if (value is ICloneableInterval interval)
         {
-            var sourceType = interval.GetType();
-            if (sourceType.IsGenericType && sourceType.GetGenericTypeDefinition() == m_IntervalType)
-                return ((ICloneableInterval)interval).CloneInterval();
+            if (IsCompatibleType(interval.GetType()))
+                return interval.CloneInterval();
         }
 
         return
@@ -128,7 +127,7 @@ public abstract class IntervalTypeConverterBase : TypeConverter
         if (destinationType is not null)
         {
             if (destinationType == typeof(InstanceDescriptor) ||
-                destinationType.IsGenericType && destinationType.GetGenericTypeDefinition() == m_IntervalType)
+                IsCompatibleType(destinationType))
             {
                 return true;
             }
@@ -142,7 +141,7 @@ public abstract class IntervalTypeConverterBase : TypeConverter
     {
         if (value is IInterval interval)
         {
-            if (destinationType.IsGenericType && destinationType.GetGenericTypeDefinition() == m_IntervalType)
+            if (IsCompatibleType(destinationType) && IsCompatibleType(interval.GetType()))
                 return ((ICloneableInterval)interval).CloneInterval();
 
             if (destinationType == typeof(InstanceDescriptor))
@@ -205,12 +204,14 @@ public abstract class IntervalTypeConverterBase : TypeConverter
         var type = context?.PropertyDescriptor?.PropertyType;
         if (type is null)
             return null;
-        if (!type.IsGenericType)
-            return null;
-        var typeDefinition = type.GetGenericTypeDefinition();
-        if (typeDefinition != m_IntervalType)
+        if (!IsCompatibleType(type))
             return null;
         return type.GetGenericArguments()[0];
+    }
+
+    bool IsCompatibleType(Type type)
+    {
+        return type.IsGenericType && type.GetGenericTypeDefinition() == m_IntervalType;
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
