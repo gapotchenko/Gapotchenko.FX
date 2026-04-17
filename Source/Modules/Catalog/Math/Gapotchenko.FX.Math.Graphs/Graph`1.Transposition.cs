@@ -12,7 +12,10 @@ partial class Graph<TVertex>
     public void Transpose()
     {
         if (IsDirected)
+        {
             (m_AdjacencyList, m_ReverseAdjacencyList) = (ReverseAdjacencyListCore, m_AdjacencyList);
+            IncrementVersion();
+        }
     }
 
     /// <inheritdoc cref="IGraph{TVertex}.GetTransposition"/>
