@@ -209,7 +209,12 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        if (Comparer<T>.Default.Equals(m_Comparer))
+        if (m_Comparer is IEqualityComparer<T> equalityComparer)
+        {
+            // If a custom IComparer<T> implements IEqualityComparer<T>, it means that both interfaces have a matching behavior. 
+            return IntervalEngine.GetIntervalHashCode(this, equalityComparer);
+        }
+        else if (Comparer<T>.Default.Equals(m_Comparer))
         {
             // Default IComparer<T> matches the default IEqualityComparer<T>.
             return IntervalEngine.GetIntervalHashCode<Interval<T>, T>(this, null);
@@ -217,7 +222,7 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
         else
         {
             // Hash code cannot be calculated without IEqualityComparer<T> instance that matches IComparer<T> of this interval.
-            // The workaround that, the fixed value is returned below which is mathematically sound but not optimal.
+            // To workaround that, the fixed value is returned below which is mathematically sound but not optimal.
             // An IntervalEqualityComparer<T> instance must be used for optimal comparison of Interval<T> instances with non-default IComparer<T>. 
             return 0;
         }
