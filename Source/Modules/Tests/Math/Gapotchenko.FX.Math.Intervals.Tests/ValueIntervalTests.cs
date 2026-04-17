@@ -22,6 +22,22 @@ public sealed class ValueIntervalTests : IntervalCoreTests
 
     protected override IInterval<T> EmptyInterval<T>() => ValueInterval.Empty<T>();
 
+    #region Empty
+
+    [TestMethod]
+    public void ValueInterval_Empty_1()
+    {
+        var canonicalEmpty = ValueInterval.Empty<int>();
+        var computedEmpty = new ValueInterval<int>(1, 1);
+
+        Assert.IsTrue(canonicalEmpty.IntervalEquals(computedEmpty));
+
+        Assert.AreEqual(canonicalEmpty, computedEmpty);
+        Assert.AreEqual(canonicalEmpty.GetHashCode(), computedEmpty.GetHashCode());
+    }
+
+    #endregion
+
     #region Parsing
 
     protected override IInterval<T> Parse<T>(ReadOnlySpan<char> input, IFormatProvider? provider = null) =>

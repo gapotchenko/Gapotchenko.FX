@@ -223,6 +223,15 @@ static class IntervalEngine
             x.From.Equals(y.From, comparer) && x.To.Equals(y.To, comparer));
     }
 
+    public static int GetIntervalHashCode<TInterval, TValue>(in TInterval interval)
+        where TInterval : IInterval<TValue>
+    {
+        if (interval.IsEmpty)
+            return 0;
+        else
+            return HashCode.Combine(interval.From.GetHashCode(), interval.To.GetHashCode());
+    }
+
     static int CompareBoundaries<TValue>(
         BoundaryDirection directionX, in IntervalBoundary<TValue> boundaryX,
         BoundaryDirection directionY, in IntervalBoundary<TValue> boundaryY,

@@ -23,16 +23,7 @@ partial class IntervalEqualityComparer<T>
 
         public override int GetHashCode(IInterval<T> obj)
         {
-            if (obj.IsEmpty)
-            {
-                return 0;
-            }
-            else
-            {
-                return HashCode.Combine(
-                    obj.From.GetHashCode(comparer),
-                    obj.To.GetHashCode(comparer));
-            }
+            return IntervalEngine.GetIntervalHashCode<IInterval<T>, T>(obj);
         }
     }
 }

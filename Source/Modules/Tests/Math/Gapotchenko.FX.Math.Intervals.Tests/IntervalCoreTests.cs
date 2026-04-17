@@ -121,11 +121,14 @@ public abstract partial class IntervalCoreTests
     [TestMethod]
     public void Interval_Core_Empty_4()
     {
-        var a = NewInterval(1, 0);
-        var b = EmptyInterval<int>();
+        var canonicalEmpty = EmptyInterval<int>();
+        var computedEmpty = NewInterval(1, 0);
 
-        Assert.IsTrue(a.IntervalEquals(b));
-        Assert.AreEqual(a, b, IntervalEqualityComparer.Default<int>());
+        Assert.IsTrue(canonicalEmpty.IntervalEquals(computedEmpty));
+
+        var comparer = IntervalEqualityComparer.Default<int>();
+        Assert.AreEqual(canonicalEmpty, computedEmpty, comparer);
+        Assert.AreEqual(comparer.GetHashCode(canonicalEmpty), comparer.GetHashCode(computedEmpty));
     }
 
     #endregion
