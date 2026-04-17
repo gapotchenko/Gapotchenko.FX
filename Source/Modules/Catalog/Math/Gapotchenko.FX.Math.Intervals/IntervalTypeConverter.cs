@@ -99,6 +99,7 @@ public abstract class IntervalTypeConverterBase : TypeConverter
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
     {
         return
+            // TODO: (sourceType == typeof(string) && TryGetSpecializingType(context) is not null) is more precise
             sourceType == typeof(string) ||
             IsCompatibleType(sourceType) ||
             base.CanConvertFrom(context, sourceType);
