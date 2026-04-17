@@ -107,6 +107,13 @@ public abstract class IntervalTypeConverterBase : TypeConverter
     /// <inheritdoc/>
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
     {
+        if (value is IInterval interval)
+        {
+            var sourceType = interval.GetType();
+            if (sourceType.IsGenericType && sourceType.GetGenericTypeDefinition() == m_IntervalType)
+                return ((ICloneableInterval)interval).CloneInterval();
+        }
+
         return
             value switch
             {
