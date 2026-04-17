@@ -148,6 +148,22 @@ public partial class GraphTests
     }
 
     [TestMethod]
+    public void Graph_Transpose_InvalidatesEnumeration()
+    {
+        var g = new Graph<int>
+        {
+            Edges = { (1, 2), (2, 3) }
+        };
+
+        using var e = g.Edges.GetEnumerator();
+        e.MoveNext();
+
+        g.Transpose();
+
+        Assert.ThrowsExactly<InvalidOperationException>(() => e.MoveNext());
+    }
+
+    [TestMethod]
     public void Graph_GetTransposition()
     {
         var g = new Graph<int>
