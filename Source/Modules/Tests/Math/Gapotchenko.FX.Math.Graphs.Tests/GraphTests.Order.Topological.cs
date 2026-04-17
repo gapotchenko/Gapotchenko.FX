@@ -268,6 +268,28 @@ partial class GraphTests
     }
 
     [TestMethod]
+    public void Graph_OrderTopologically_Subsequent_MixedKeyTypes()
+    {
+        var g = new Graph<(int group, string name)>
+        {
+            Vertices =
+            {
+                (1, "b"),
+                (1, "a"),
+                (2, "b"),
+                (2, "a"),
+            }
+        };
+
+        var order = g
+            .OrderTopologically()
+            .ThenBy(x => x.group)
+            .ThenBy(x => x.name);
+
+        Assert.AreEqual("1a 1b 2a 2b", string.Join(" ", order.Select(x => $"{x.group}{x.name}")));
+    }
+
+    [TestMethod]
     public void Graph_OrderTopologicallyInReverse()
     {
         var g = new Graph<char>();
