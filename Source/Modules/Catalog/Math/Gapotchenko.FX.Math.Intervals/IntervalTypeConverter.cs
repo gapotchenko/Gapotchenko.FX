@@ -43,6 +43,7 @@ public class IntervalTypeConverter() : IntervalTypeConverterBase(typeof(Interval
                 (IntervalBoundaryKind.Exclusive, IntervalBoundaryKind.PositiveInfinity) => (MethodOf<Func<Unit, IComparer<Unit>, Interval<Unit>>>)Interval.FromExclusive,
                 (IntervalBoundaryKind.NegativeInfinity, IntervalBoundaryKind.Inclusive) => (MethodOf<Func<Unit, IComparer<Unit>, Interval<Unit>>>)Interval.ToInclusive,
                 (IntervalBoundaryKind.NegativeInfinity, IntervalBoundaryKind.Exclusive) => (MethodOf<Func<Unit, IComparer<Unit>, Interval<Unit>>>)Interval.ToExclusive,
+                (IntervalBoundaryKind.Empty, IntervalBoundaryKind.Empty) => MethodOf(() => Interval.Empty<Unit>()),
                 _ => throw new NotSupportedException(Resources.UnsupportedBoundaryKindCombination)
             };
         return method.GetGenericMethodDefinition();
@@ -76,6 +77,7 @@ public class ValueIntervalTypeConverter() : IntervalTypeConverterBase(typeof(Val
                 (IntervalBoundaryKind.Exclusive, IntervalBoundaryKind.PositiveInfinity) => (MethodOf<Func<Unit, ValueInterval<Unit>>>)ValueInterval.FromExclusive,
                 (IntervalBoundaryKind.NegativeInfinity, IntervalBoundaryKind.Inclusive) => (MethodOf<Func<Unit, ValueInterval<Unit>>>)ValueInterval.ToInclusive,
                 (IntervalBoundaryKind.NegativeInfinity, IntervalBoundaryKind.Exclusive) => (MethodOf<Func<Unit, ValueInterval<Unit>>>)ValueInterval.ToExclusive,
+                (IntervalBoundaryKind.Empty, IntervalBoundaryKind.Empty) => MethodOf(() => ValueInterval.Empty<Unit>()),
                 _ => throw new NotSupportedException(Resources.UnsupportedBoundaryKindCombination)
             };
         return method.GetGenericMethodDefinition();
