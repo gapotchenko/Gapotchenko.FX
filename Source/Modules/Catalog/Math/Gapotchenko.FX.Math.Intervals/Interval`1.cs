@@ -201,6 +201,7 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IntervalEquals<TOther>([NotNullWhen(true)] in TOther? other) where TOther : IIntervalModel<T> =>
         IsThis(other) ||
+        (other is not IIntervalOperations<T> operations || m_Comparer.Equals(operations.Comparer)) &&
         IntervalEngine.IntervalsEqual(this, other, m_Comparer);
 
     /// <inheritdoc/>

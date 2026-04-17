@@ -175,8 +175,13 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <inheritdoc cref="IntervalEquals(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the interval to compare.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public bool IntervalEquals<TOther>([NotNullWhen(true)] in TOther? other) where TOther : IIntervalModel<T> =>
-        IntervalEngine.IntervalsEqual(this, other, Comparer<T>.Default);
+    public bool IntervalEquals<TOther>([NotNullWhen(true)] in TOther? other) where TOther : IIntervalModel<T>
+    {
+        var comparer = Comparer<T>.Default;
+        return
+            (other is not IIntervalOperations<T> operations || comparer.Equals(operations.Comparer)) &&
+            IntervalEngine.IntervalsEqual(this, other, comparer);
+    }
 
     /// <summary>
     /// Determines whether the specified intervals are equal.

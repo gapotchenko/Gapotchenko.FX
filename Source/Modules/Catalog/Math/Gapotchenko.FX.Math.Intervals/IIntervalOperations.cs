@@ -82,6 +82,9 @@ public interface IIntervalOperations : IIntervalModel, IEmptiable
     /// <summary>
     /// Determines whether this and the specified intervals are equal.
     /// </summary>
+    /// <remarks>
+    /// Interval equality across different instances requires comparer identity/equality agreement, not just equivalent boundary sets.
+    /// </remarks>
     /// <param name="other">The interval to check for equality.</param>
     /// <returns><see langword="true"/> if this and <paramref name="other"/> intervals are equal; otherwise, <see langword="false"/>.</returns>
     bool IntervalEquals([NotNullWhen(true)] IInterval? other);
