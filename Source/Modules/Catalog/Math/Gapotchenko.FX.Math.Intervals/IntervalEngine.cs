@@ -509,7 +509,16 @@ static class IntervalEngine
             case IntervalBoundaryKind.Exclusive:
                 {
                     var limit = interval.From.Value;
-                    allowedMinimum = nextUp(limit);
+
+                    var upperValue = nextUp(limit);
+                    if (comparer.Compare(upperValue, limit) <= 0)
+                    {
+                        // Overflow/stall.
+                        // Convergence is impossible.
+                        return default;
+                    }
+
+                    allowedMinimum = upperValue;
                     if (comparer.Compare(value, limit) <= 0)
                         value = allowedMinimum.Value;
                 }
@@ -532,6 +541,13 @@ static class IntervalEngine
                     if (comparer.Compare(value, limit) >= 0)
                     {
                         value = nextDown(limit);
+                        if (comparer.Compare(value, limit) >= 0)
+                        {
+                            // Underflow/stall.
+                            // Convergence is impossible.
+                            return default;
+                        }
+
                         if (allowedMinimum.HasValue && comparer.Compare(value, allowedMinimum.Value) < 0)
                         {
                             // Convergence is impossible.

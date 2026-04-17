@@ -1247,6 +1247,26 @@ public abstract partial class IntervalCoreTests
         Assert.IsFalse(clamped.HasValue);
     }
 
+    [TestMethod]
+    public void Interval_Core_Clamp_Integer_9()
+    {
+        var interval = NewInterval(ValueInterval.FromExclusive(int.MaxValue));
+        var clamped = interval.Clamp(21);
+
+        // The clamped value belonging to (Int32.MaxValue,∞) interval cannot be represented by Int32 type.
+        Assert.IsFalse(clamped.HasValue);
+    }
+
+    [TestMethod]
+    public void Interval_Core_Clamp_Integer_10()
+    {
+        var interval = NewInterval(ValueInterval.ToExclusive(int.MinValue));
+        var clamped = interval.Clamp(21);
+
+        // The clamped value belonging to (-∞,Int32.MinValue) interval cannot be represented by Int32 type.
+        Assert.IsFalse(clamped.HasValue);
+    }
+
     #endregion
 
     #region Equality
