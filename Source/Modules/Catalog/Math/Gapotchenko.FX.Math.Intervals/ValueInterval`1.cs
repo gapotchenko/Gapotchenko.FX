@@ -126,7 +126,7 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <typeparam name="TOther">Type of the interval to check for overlapping.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool Overlaps<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.Overlaps(this, other, Comparer<T>.Default);
+        IntervalEngine.Overlaps(this, other ?? throw new ArgumentNullException(nameof(other)), Comparer<T>.Default);
 
     /// <inheritdoc/>
     public bool IsSubintervalOf(IInterval<T> other) => IsSubintervalOf<IInterval<T>>(other);
@@ -135,7 +135,7 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <typeparam name="TOther">Type of the other interval.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsSubintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.IsSubintervalOf(this, other, Comparer<T>.Default);
+        IntervalEngine.IsSubintervalOf(this, other ?? throw new ArgumentNullException(nameof(other)), Comparer<T>.Default);
 
     /// <inheritdoc/>
     public bool IsSuperintervalOf(IInterval<T> other) => IsSuperintervalOf<IInterval<T>>(other);
@@ -144,7 +144,7 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <typeparam name="TOther">Type of the other interval.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsSuperintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.IsSuperintervalOf(this, other, Comparer<T>.Default);
+        IntervalEngine.IsSuperintervalOf(this, other ?? throw new ArgumentNullException(nameof(other)), Comparer<T>.Default);
 
     /// <inheritdoc/>
     public bool IsProperSubintervalOf(IInterval<T> other) => IsProperSubintervalOf<IInterval<T>>(other);
@@ -153,7 +153,7 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <typeparam name="TOther">Type of the other interval.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsProperSubintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.IsProperSubintervalOf(this, other, Comparer<T>.Default);
+        IntervalEngine.IsProperSubintervalOf(this, other ?? throw new ArgumentNullException(nameof(other)), Comparer<T>.Default);
 
     /// <inheritdoc/>
     public bool IsProperSuperintervalOf(IInterval<T> other) => IsProperSuperintervalOf<IInterval<T>>(other);
@@ -162,7 +162,7 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     /// <typeparam name="TOther">Type of the other interval.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public bool IsProperSuperintervalOf<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.IsProperSuperintervalOf(this, other, Comparer<T>.Default);
+        IntervalEngine.IsProperSuperintervalOf(this, other ?? throw new ArgumentNullException(nameof(other)), Comparer<T>.Default);
 
     /// <inheritdoc/>
     public bool IntervalEquals([NotNullWhen(true)] IInterval? other) =>
