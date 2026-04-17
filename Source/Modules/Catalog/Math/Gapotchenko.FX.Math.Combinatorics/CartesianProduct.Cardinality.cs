@@ -14,6 +14,9 @@ partial class CartesianProduct
     /// <summary>
     /// Returns a Cartesian product cardinality for the specified lengths of multiplied factors.
     /// </summary>
+    /// <remarks>
+    /// The Cartesian product cardinality of zero factors is 1.
+    /// </remarks>
     /// <param name="lengths">The lengths of multiplied factors.</param>
     /// <returns>A Cartesian product cardinality.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="lengths"/> is <see langword="null"/>.</exception>
@@ -23,21 +26,14 @@ partial class CartesianProduct
         ArgumentNullException.ThrowIfNull(lengths);
 
         int cardinality = 1;
-        bool hasFactor = false;
 
         foreach (int length in lengths)
         {
-            if (length == 0)
-                return 0;
-
+            ArgumentOutOfRangeException.ThrowIfNegative(length, nameof(lengths));
             cardinality = checked(cardinality * length);
-            hasFactor = true;
         }
 
-        if (hasFactor)
-            return cardinality;
-        else
-            return 0;
+        return cardinality;
     }
 
     /// <inheritdoc cref="Cardinality(IEnumerable{long})"/>
@@ -46,6 +42,9 @@ partial class CartesianProduct
     /// <summary>
     /// <inheritdoc cref="Cardinality(IEnumerable{int})"/>
     /// </summary>
+    /// <remarks>
+    /// <inheritdoc cref="Cardinality(IEnumerable{int})"/>
+    /// </remarks>
     /// <param name="lengths"><inheritdoc cref="Cardinality(IEnumerable{int})"/></param>
     /// <returns><inheritdoc cref="Cardinality(IEnumerable{int})"/></returns>
     /// <exception cref="ArgumentNullException"><paramref name="lengths"/> is <see langword="null"/>.</exception>
@@ -55,20 +54,13 @@ partial class CartesianProduct
         ArgumentNullException.ThrowIfNull(lengths);
 
         long cardinality = 1;
-        bool hasFactor = false;
 
         foreach (long length in lengths)
         {
-            if (length == 0)
-                return 0;
-
+            ArgumentOutOfRangeException.ThrowIfNegative(length, nameof(lengths));
             cardinality = checked(cardinality * length);
-            hasFactor = true;
         }
 
-        if (hasFactor)
-            return cardinality;
-        else
-            return 0;
+        return cardinality;
     }
 }

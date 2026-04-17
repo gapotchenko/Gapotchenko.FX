@@ -6,6 +6,44 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests;
 public class CartesianProductTests
 {
     [TestMethod]
+    [DataRow(new int[] { 1, 2, 3 }, 6)]
+    [DataRow(new int[] { 5 }, 5)]
+    [DataRow(new int[] { 5, 6 }, 30)]
+    [DataRow(new int[] { 5, 6, 7 }, 210)]
+    [DataRow(new int[] { 5, 0, 7 }, 0)]
+    [DataRow(new int[] { 0 }, 0)]
+    [DataRow(new int[] { }, 1)]
+    [DataRow(new int[] { -1 }, null)]
+    [DataRow(new int[] { 1, -1, 3 }, null)]
+    [DataRow(new int[] { 1, 2, -1 }, null)]
+    [DataRow(new int[] { 0, -1 }, null)]
+    [DataRow(null, null)]
+    public void CartesianProduct_Cardinality(int[]? factors, int? expectedCardinality)
+    {
+        if (factors is null)
+        {
+            Assert.IsNull(expectedCardinality);
+            Assert.ThrowsExactly<ArgumentNullException>(() => CartesianProduct.Cardinality((int[])null!));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CartesianProduct.Cardinality((long[])null!));
+        }
+        else
+        {
+            var longFactors = factors.Select(x => (long)x);
+
+            if (expectedCardinality is { } cardinality)
+            {
+                Assert.AreEqual(cardinality, CartesianProduct.Cardinality(factors));
+                Assert.AreEqual(cardinality, CartesianProduct.Cardinality(longFactors));
+            }
+            else
+            {
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => CartesianProduct.Cardinality(factors));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => CartesianProduct.Cardinality(longFactors));
+            }
+        }
+    }
+
+    [TestMethod]
     public void CartesianProduct_Of_2x0()
     {
         int[][] factors =
