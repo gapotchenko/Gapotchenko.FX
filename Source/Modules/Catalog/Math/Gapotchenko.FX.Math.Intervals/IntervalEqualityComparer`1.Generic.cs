@@ -23,7 +23,7 @@ partial class IntervalEqualityComparer<T>
 
         public override int GetHashCode(IInterval<T> obj)
         {
-            return IntervalEngine.GetIntervalHashCode<IInterval<T>, T>(obj);
+            return IntervalEngine.GetIntervalHashCode(obj, comparer);
         }
     }
 }

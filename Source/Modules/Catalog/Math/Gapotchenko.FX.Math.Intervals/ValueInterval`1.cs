@@ -211,7 +211,7 @@ public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, Valu
     public bool Equals(ValueInterval<T> other) => IntervalEngine.IntervalsEqual(this, other, Comparer<T>.Default);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => IntervalEngine.GetIntervalHashCode<ValueInterval<T>, T>(this);
+    public override int GetHashCode() => IntervalEngine.GetIntervalHashCode<ValueInterval<T>, T>(this, null);
 
     /// <inheritdoc/>
     public override string ToString() => IntervalEngine.ToString<ValueInterval<T>, T>(this);
