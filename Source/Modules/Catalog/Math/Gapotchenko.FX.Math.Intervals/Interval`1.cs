@@ -203,6 +203,12 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
         IsThis(other) ||
         IntervalEngine.IntervalsEqual(this, other, m_Comparer);
 
+    /// <inheritdoc/>
+    public bool Equals([NotNullWhen(true)] Interval<T>? other) => IntervalEquals(other);
+
+    /// <inheritdoc/>
+    public override int GetHashCode() => IntervalEngine.GetIntervalHashCode<Interval<T>, T>(this);
+
     /// <summary>
     /// Determines whether the specified intervals are equal.
     /// </summary>

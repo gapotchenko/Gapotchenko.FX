@@ -125,6 +125,7 @@ public abstract partial class IntervalCoreTests
         var computedEmpty = NewInterval(1, 0);
 
         Assert.IsTrue(canonicalEmpty.IntervalEquals(computedEmpty));
+        Assert.AreEqual(canonicalEmpty.GetHashCode(), computedEmpty.GetHashCode());
 
         var comparer = IntervalEqualityComparer.Default<int>();
         Assert.AreEqual(canonicalEmpty, computedEmpty, comparer);
