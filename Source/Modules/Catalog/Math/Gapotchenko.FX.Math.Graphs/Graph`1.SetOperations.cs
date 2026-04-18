@@ -16,6 +16,7 @@ partial class Graph<TVertex>
 
         return
             other == this ||
+            IsDirected == other.IsDirected &&
             Vertices.SetEquals(other.Vertices) &&
             Edges.SetEquals(other.Edges);
     }

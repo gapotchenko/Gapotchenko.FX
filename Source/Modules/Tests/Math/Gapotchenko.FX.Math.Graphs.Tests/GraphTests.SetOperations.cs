@@ -59,6 +59,24 @@ partial class GraphTests
     }
 
     [TestMethod]
+    public void Graph_GraphEquals_DistinguishesGraphDirection()
+    {
+        IReadOnlyGraph<int> directed = new Graph<int>
+        {
+            Edges = { (1, 2) }
+        };
+
+        IReadOnlyGraph<int> undirected = new Graph<int>
+        {
+            IsDirected = false,
+            Edges = { (1, 2) }
+        };
+
+        Assert.IsFalse(directed.GraphEquals(undirected));
+        Assert.IsFalse(undirected.GraphEquals(directed));
+    }
+
+    [TestMethod]
     public void Graph_IsProperSubgraphOf()
     {
         var g = new Graph<char>
