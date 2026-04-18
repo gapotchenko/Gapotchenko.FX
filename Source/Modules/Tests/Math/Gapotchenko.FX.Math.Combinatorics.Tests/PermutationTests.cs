@@ -311,4 +311,69 @@ public class PermutationTests
         Assert.Contains(["a", "b", "A"], s);
         Assert.Contains(["b", "a", "A"], s);
     }
+
+    [TestMethod]
+    [DataRow(new int[] { })]
+    [DataRow(new[] { 1 })]
+    [DataRow(new[] { 1, 2 })]
+    [DataRow(new[] { 1, 1 })]
+    [DataRow(new[] { 1, 2, 2 })]
+    [DataRow(new[] { 1, 2, 3 })]
+    public void Permutations_Count_AcceleratedVsPlain(int[] source)
+    {
+        var accelerated = Permutations.Of(source);
+        var plain = accelerated.AsEnumerable();
+
+        Assert.AreEqual(plain.Count(), accelerated.Count());
+        Assert.AreEqual(plain.LongCount(), accelerated.LongCount());
+    }
+
+    [TestMethod]
+    [DataRow([])]
+    [DataRow(["a"])]
+    [DataRow(["a", "A"])]
+    [DataRow(["a", "A", "b"])]
+    [DataRow(["a", "A", "b", "B"])]
+    public void Permutations_Distinct_AcceleratedVsPlain_WithCustomComparer(string[] source)
+    {
+        var comparer = StringComparer.OrdinalIgnoreCase;
+        var rowComparer = ArrayEqualityComparer.Create(comparer);
+
+        var accelerated =
+            Permutations.Of(source)
+            .Distinct(comparer)
+            .Select(x => x.ToArray())
+            .ToHashSet(rowComparer);
+
+        var plain =
+            Enumerable.Distinct(
+                Permutations.Of(source),
+                ResultRowComparer.Create<string>(comparer))
+            .Select(x => x.ToArray())
+            .ToHashSet(rowComparer);
+
+        Assert.HasCount(plain.Count, accelerated);
+        Assert.IsTrue(accelerated.SetEquals(plain));
+    }
+
+    #region ResultRowComparer
+
+    static class ResultRowComparer
+    {
+        public static IEqualityComparer<Permutations.IResultRow<T>> Create<T>(IEqualityComparer<T>? elementComparer) =>
+            new ResultRowComparer<T>(elementComparer);
+    }
+
+    sealed class ResultRowComparer<T>(IEqualityComparer<T>? elementComparer) : IEqualityComparer<Permutations.IResultRow<T>>
+    {
+        public bool Equals(Permutations.IResultRow<T>? x, Permutations.IResultRow<T>? y) =>
+            ReferenceEquals(x, y) ||
+            x is not null &&
+            y is not null &&
+            x.SequenceEqual(y, elementComparer);
+
+        public int GetHashCode(Permutations.IResultRow<T> obj) => HashCodeEx.SequenceCombine(obj, elementComparer);
+    }
+
+    #endregion
 }
