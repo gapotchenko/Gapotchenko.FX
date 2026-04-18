@@ -14,15 +14,9 @@ partial class Graph<TVertex>
     public int GetVertexIndegree(TVertex vertex)
     {
         if (m_ReverseAdjacencyList != null)
-        {
             return GetVertexOutdegreeCore(m_ReverseAdjacencyList, vertex);
-        }
         else
-        {
-            return m_AdjacencyList
-                .Where(kv => kv.Value?.Contains(vertex) == true)
-                .Count();
-        }
+            return m_AdjacencyList.Count(kv => kv.Value?.Contains(vertex) == true);
     }
 
     /// <inheritdoc />
