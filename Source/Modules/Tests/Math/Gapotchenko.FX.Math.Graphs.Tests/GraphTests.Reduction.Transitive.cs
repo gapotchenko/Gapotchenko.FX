@@ -25,7 +25,7 @@ partial class GraphTests
     [TestMethod]
     [DataRow(false)]
     [DataRow(true)]
-    public void Graph_Reduction_Transitive_CycleGraph(bool directed)
+    public void Graph_Reduction_Transitive_CycleGraph_1(bool directed)
     {
         var g = new Graph<int>
         {
@@ -39,5 +39,25 @@ partial class GraphTests
         Assert.IsTrue(r.HasPath(1, 2));
         Assert.IsTrue(r.HasPath(2, 3));
         Assert.IsTrue(r.HasPath(1, 3));
+    }
+
+    [TestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public void Graph_Reduction_Transitive_CycleGraph_2(bool directed)
+    {
+        var g = new Graph<int>
+        {
+            IsDirected = directed,
+            Edges = { (1, 2), (1, 3), (2, 3), (3, 2) }
+        };
+
+        var r = g.GetTransitiveReduction();
+
+        Assert.IsTrue(r.Vertices.SetEquals([1, 2, 3]));
+        Assert.IsTrue(r.HasPath(1, 2));
+        Assert.IsTrue(r.HasPath(1, 3));
+        Assert.IsTrue(r.HasPath(2, 3));
+        Assert.IsTrue(r.HasPath(3, 2));
     }
 }

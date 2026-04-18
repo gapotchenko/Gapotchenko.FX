@@ -11,7 +11,8 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public void ReduceTransitions()
     {
-        if (IsDirected)
+        // Use the fast path only when acyclicity is already known for free.
+        if (IsCyclicHint == false)
         {
             bool hasChanges = false;
 
@@ -45,16 +46,17 @@ partial class Graph<TVertex>
         {
             var edges = Edges;
 
+            // In cyclic graphs, multiple edges can appear redundant
+            // against the same original state while depending on each other
+            // collectively to preserve connectivity. Remove them one by one.
+
             foreach (var edge in edges.ToList())
             {
-                // In undirected graphs, multiple edges can appear redundant
-                // against the same original state while depending on each other
-                // collectively to preserve connectivity. Remove them one by one.
-                if (!edges.Remove(edge))
-                    continue;
-
-                if (!HasPath(edge.From, edge.To))
-                    edges.Add(edge);
+                if (edges.Remove(edge))
+                {
+                    if (!HasPath(edge.From, edge.To))
+                        edges.Add(edge);
+                }
             }
         }
     }
