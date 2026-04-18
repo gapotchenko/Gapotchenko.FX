@@ -45,10 +45,11 @@ partial class TaskPolyfills
 #endif
         Task task, TimeSpan timeout)
     {
+        ArgumentNullException.ThrowIfNull(task);
+
 #if TFF_TASK_WAITASYNC
         return task.WaitAsync(timeout);
 #else
-        ExceptionHelper.ThrowIfThisArgumentIsNull(task);
         ExceptionHelper.ValidateTimeoutArgument(timeout);
 
         return WaitAsyncCore(task, timeout, CancellationToken.None);
@@ -82,10 +83,11 @@ partial class TaskPolyfills
 #endif
         Task<TResult> task, TimeSpan timeout)
     {
+        ArgumentNullException.ThrowIfNull(task);
+
 #if TFF_TASK_WAITASYNC
         return task.WaitAsync(timeout);
 #else
-        ExceptionHelper.ThrowIfThisArgumentIsNull(task);
         ExceptionHelper.ValidateTimeoutArgument(timeout);
 
         return WaitAsyncCore(task, timeout, CancellationToken.None);
@@ -115,11 +117,11 @@ partial class TaskPolyfills
 #endif
         Task task, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(task);
+
 #if TFF_TASK_WAITASYNC
         return task.WaitAsync(cancellationToken);
 #else
-        ExceptionHelper.ThrowIfThisArgumentIsNull(task);
-
         return WaitAsyncCore(task, Timeout.InfiniteTimeSpan, cancellationToken);
 #endif
     }
@@ -147,11 +149,11 @@ partial class TaskPolyfills
 #endif
         Task<TResult> task, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(task);
+
 #if TFF_TASK_WAITASYNC
         return task.WaitAsync(cancellationToken);
 #else
-        ExceptionHelper.ThrowIfThisArgumentIsNull(task);
-
         return WaitAsyncCore(task, Timeout.InfiniteTimeSpan, cancellationToken);
 #endif
     }
@@ -188,10 +190,11 @@ partial class TaskPolyfills
 #endif
         Task task, TimeSpan timeout, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(task);
+
 #if TFF_TASK_WAITASYNC
         return task.WaitAsync(timeout, cancellationToken);
 #else
-        ExceptionHelper.ThrowIfThisArgumentIsNull(task);
         ExceptionHelper.ValidateTimeoutArgument(timeout);
 
         return WaitAsyncCore(task, timeout, cancellationToken);
@@ -230,10 +233,11 @@ partial class TaskPolyfills
 #endif
         Task<TResult> task, TimeSpan timeout, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(task);
+
 #if TFF_TASK_WAITASYNC
         return task.WaitAsync(timeout, cancellationToken);
 #else
-        ExceptionHelper.ThrowIfThisArgumentIsNull(task);
         ExceptionHelper.ValidateTimeoutArgument(timeout);
 
         return WaitAsyncCore(task, timeout, cancellationToken);
