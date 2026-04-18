@@ -28,6 +28,7 @@ partial class Graph<TVertex>
 
         return
             other == this ||
+            IsDirected == other.IsDirected &&
             Vertices.IsSubsetOf(other.Vertices) &&
             Edges.IsSubsetOf(GetInducedSubgraphEdges(this, other)) &&
             Vertices.All(v => !IsVertexIsolated(v));
@@ -40,6 +41,7 @@ partial class Graph<TVertex>
 
         return
             other == this ||
+            IsDirected == other.IsDirected &&
             Vertices.IsSupersetOf(other.Vertices) &&
             Edges.IsSupersetOf(GetInducedSubgraphEdges(this, other)) &&
             other.Vertices.All(v => !other.IsVertexIsolated(v));
@@ -78,6 +80,7 @@ partial class Graph<TVertex>
 
         return
             other == this ||
+            IsDirected == other.IsDirected &&
             Vertices.IsSubsetOf(other.Vertices) &&
             Edges.IsSubsetOf(other.Edges);
     }
@@ -89,6 +92,7 @@ partial class Graph<TVertex>
 
         return
             other == this ||
+            IsDirected == other.IsDirected &&
             Vertices.IsSupersetOf(other.Vertices) &&
             Edges.IsSupersetOf(other.Edges);
     }
@@ -100,6 +104,7 @@ partial class Graph<TVertex>
 
         return
             other == this ||
+            IsDirected == other.IsDirected &&
             Vertices.IsSubsetOf(other.Vertices) &&
             VertexInducedSubgraphEdgesEqual(this, other);
     }
@@ -111,6 +116,7 @@ partial class Graph<TVertex>
 
         return
             other == this ||
+            IsDirected == other.IsDirected &&
             Vertices.IsSupersetOf(other.Vertices) &&
             VertexInducedSubgraphEdgesEqual(other, this);
     }

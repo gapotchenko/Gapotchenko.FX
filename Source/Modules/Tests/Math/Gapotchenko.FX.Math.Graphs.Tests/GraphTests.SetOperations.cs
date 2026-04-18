@@ -59,7 +59,7 @@ partial class GraphTests
     }
 
     [TestMethod]
-    public void Graph_GraphEquals_DistinguishesGraphDirection()
+    public void Graph_SetRelations_DistinguishGraphDirection()
     {
         IReadOnlyGraph<int> directed = new Graph<int>
         {
@@ -72,8 +72,21 @@ partial class GraphTests
             Edges = { (1, 2) }
         };
 
-        Assert.IsFalse(directed.GraphEquals(undirected));
-        Assert.IsFalse(undirected.GraphEquals(directed));
+        Verify(directed, undirected);
+        Verify(undirected, directed);
+
+        static void Verify(IReadOnlyGraph<int> x, IReadOnlyGraph<int> y)
+        {
+            Assert.IsFalse(x.GraphEquals(y));
+            Assert.IsFalse(x.IsSubgraphOf(y));
+            Assert.IsFalse(x.IsSupergraphOf(y));
+            Assert.IsFalse(x.IsProperSubgraphOf(y));
+            Assert.IsFalse(x.IsProperSupergraphOf(y));
+            Assert.IsFalse(x.IsVertexInducedSubgraphOf(y));
+            Assert.IsFalse(x.IsVertexInducedSupergraphOf(y));
+            Assert.IsFalse(x.IsEdgeInducedSubgraphOf(y));
+            Assert.IsFalse(x.IsEdgeInducedSupergraphOf(y));
+        }
     }
 
     [TestMethod]
