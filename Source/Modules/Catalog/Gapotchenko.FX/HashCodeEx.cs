@@ -51,8 +51,10 @@ public static class HashCodeEx
     public static void AddRange<T>(this ref HashCode hashCode, IEnumerable<T?>? source)
     {
         if (source != null)
+        {
             foreach (var i in source)
                 hashCode.Add(i);
+        }
     }
 
     /// <summary>
