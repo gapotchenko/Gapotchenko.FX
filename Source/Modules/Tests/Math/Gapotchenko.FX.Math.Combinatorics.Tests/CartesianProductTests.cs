@@ -157,4 +157,71 @@ public class CartesianProductTests
         Assert.AreEqual((1, "C"), p[4]);
         Assert.AreEqual((2, "C"), p[5]);
     }
+
+    [TestMethod]
+    public void CartesianProduct_Count_AcceleratedVsPlain()
+    {
+        int[][] factors =
+        [
+            [1, 2],
+            [3, 4, 5],
+            [6]
+        ];
+
+        var accelerated = CartesianProduct.Of(factors);
+        var plain = accelerated.AsEnumerable();
+
+        Assert.AreEqual(plain.Count(), accelerated.Count());
+        Assert.AreEqual(plain.LongCount(), accelerated.LongCount());
+    }
+
+    [TestMethod]
+    public void CartesianProduct_Distinct_AcceleratedVsPlain_WithCustomComparer()
+    {
+        string[][] factors =
+        [
+            ["a", "A"],
+            ["b", "B"],
+            ["c", "C"]
+        ];
+
+        var comparer = StringComparer.OrdinalIgnoreCase;
+        var rowComparer = ArrayEqualityComparer.Create(comparer);
+
+        var accelerated =
+            CartesianProduct.Of(factors)
+            .Distinct(comparer)
+            .Select(x => x.ToArray())
+            .ToHashSet(rowComparer);
+
+        var plain =
+            Enumerable
+            .Distinct(CartesianProduct.Of(factors), ResultRowComparer.Create<string>(comparer))
+            .Select(x => x.ToArray())
+            .ToHashSet(rowComparer);
+
+        Assert.HasCount(plain.Count, accelerated);
+        Assert.IsTrue(accelerated.SetEquals(plain));
+    }
+
+    #region ResultRowComparer
+
+    static class ResultRowComparer
+    {
+        public static IEqualityComparer<CartesianProduct.IResultRow<T>> Create<T>(IEqualityComparer<T>? elementComparer) =>
+            new ResultRowComparer<T>(elementComparer);
+    }
+
+    sealed class ResultRowComparer<T>(IEqualityComparer<T>? elementComparer) : IEqualityComparer<CartesianProduct.IResultRow<T>>
+    {
+        public bool Equals(CartesianProduct.IResultRow<T>? x, CartesianProduct.IResultRow<T>? y) =>
+            ReferenceEquals(x, y) ||
+            x is not null &&
+            y is not null &&
+            x.SequenceEqual(y, elementComparer);
+
+        public int GetHashCode(CartesianProduct.IResultRow<T> obj) => HashCodeEx.SequenceCombine(obj, elementComparer);
+    }
+
+    #endregion
 }
