@@ -21,4 +21,23 @@ partial class GraphTests
         Assert.IsTrue(r.Edges.Contains(2, 3));
         Assert.AreEqual(2, r.Edges.Count);
     }
+
+    [TestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public void Graph_Reduction_Transitive_CycleGraph(bool directed)
+    {
+        var g = new Graph<int>
+        {
+            IsDirected = directed,
+            Edges = { (1, 2), (2, 3), (1, 3) }
+        };
+
+        var r = g.GetTransitiveReduction();
+
+        Assert.IsTrue(r.Vertices.SetEquals([1, 2, 3]));
+        Assert.IsTrue(r.HasPath(1, 2));
+        Assert.IsTrue(r.HasPath(2, 3));
+        Assert.IsTrue(r.HasPath(1, 3));
+    }
 }
