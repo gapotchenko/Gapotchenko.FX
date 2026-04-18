@@ -6,6 +6,7 @@
 
 using System.Collections;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Math.Combinatorics;
 
@@ -16,7 +17,12 @@ partial class Permutations
     /// </summary>
     /// <typeparam name="T">The type of elements that the row contains.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public interface IResultRow<T> : IEnumerable<T>, IEquatable<IResultRow<T>>
+    public interface IResultRow<T> :
+        IEnumerable<T>,
+#if TFF_ITUPLE
+        ITuple,
+#endif
+        IEquatable<IResultRow<T>>
     {
     }
 
@@ -25,6 +31,14 @@ partial class Permutations
         public T this[int index] => m_Source[transform[index]];
 
         public int Count => transform.Length;
+
+#if TFF_ITUPLE
+
+        int ITuple.Length => Count;
+
+        object? ITuple.this[int index] => this[index];
+
+#endif
 
         public IEnumerator<T> GetEnumerator()
         {
