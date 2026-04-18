@@ -1,1 +1,3 @@
-﻿[assembly: Parallelize(Workers = 0, Scope = ExecutionScope.MethodLevel)]
+﻿[assembly: TestCategory("linq")]
+
+[assembly: Parallelize(Scope = ExecutionScope.MethodLevel)]

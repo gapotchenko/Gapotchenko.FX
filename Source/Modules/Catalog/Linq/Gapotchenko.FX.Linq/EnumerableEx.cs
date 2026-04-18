@@ -97,6 +97,19 @@ public static partial class EnumerableEx
 
     /// <summary>
     /// Determines whether the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence
+    /// by using the default equality comparer to compare values.
+    /// </summary>
+    /// <typeparam name="TSource">The type of the elements of the input sequences.</typeparam>
+    /// <param name="source">The source sequence.</param>
+    /// <param name="value">An <see cref="IEnumerable{T}"/> to compare to the source sequence.</param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence; otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is null.</exception>
+    public static bool Contains<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value) => Contains(source, value, null);
+
+    /// <summary>
+    /// Determines whether the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence
     /// by using a specified equality comparer.
     /// </summary>
     /// <typeparam name="TSource">The type of the elements of the input sequences.</typeparam>
@@ -115,47 +128,60 @@ public static partial class EnumerableEx
         if (ReferenceEquals(source, value))
             return true;
 
+        value = value.Memoize();
+        using var e2 = value.GetEnumerator();
+        if (!e2.MoveNext())
+            return true;
+
         comparer ??= EqualityComparer<TSource>.Default;
 
-        value = value.Memoize();
-        bool match = true;
+        int matchWindowStart = -1;
+        var window = new List<TSource>();
+        int windowPosition = 0;
 
-        using var e2 = value.GetEnumerator();
-
-        foreach (var e1Current in source)
+        using var e1 = source.GetEnumerator();
+        while (true)
         {
-            if (!e2.MoveNext())
-                return match;
+            TSource current;
 
-            if (comparer.Equals(e1Current, e2.Current))
+            if (windowPosition < window.Count)
             {
-                match = true;
+                current = window[windowPosition];
+            }
+            else if (e1.MoveNext())
+            {
+                current = e1.Current;
+                window.Add(current);
             }
             else
             {
-                match = false;
+                return false;
+            }
+            windowPosition++;
+
+            if (comparer.Equals(current, e2.Current))
+            {
+                if (matchWindowStart == -1)
+                    matchWindowStart = windowPosition - 1;
+
+                if (!e2.MoveNext())
+                    return true;
+            }
+            else if (matchWindowStart != -1)
+            {
+                windowPosition = matchWindowStart + 1;
+                matchWindowStart = -1;
+
                 e2.Reset();
+                e2.MoveNext();
+            }
+            else if (windowPosition == window.Count)
+            {
+                window.Clear();
+                windowPosition = 0;
             }
         }
-
-        if (match)
-            return !e2.MoveNext();
-
-        return false;
     }
-
-    /// <summary>
-    /// Determines whether the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence
-    /// by using the default equality comparer to compare values.
-    /// </summary>
-    /// <typeparam name="TSource">The type of the elements of the input sequences.</typeparam>
-    /// <param name="source">The source sequence.</param>
-    /// <param name="value">An <see cref="IEnumerable{T}"/> to compare to the source sequence.</param>
-    /// <returns>
-    /// <see langword="true"/> if the <paramref name="source"/> sequence contains the <paramref name="value"/> sequence; otherwise, <see langword="false"/>.
-    /// </returns>
-    /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="value"/> is null.</exception>
-    public static bool Contains<TSource>(this IEnumerable<TSource> source, IEnumerable<TSource> value) => Contains(source, value, null);
 
     /// <summary>
     /// Determines whether the beginning of a sequence matches the specified value by using the default equality comparer for elements' type.

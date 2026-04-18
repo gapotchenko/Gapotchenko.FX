@@ -31,6 +31,7 @@ partial class EnumerableExTests
     [DataRow("b", "abc")]
     [DataRow("c", "abc")]
     [DataRow("12123", "123")]
+    [DataRow("aab", "ab")]
     public void Linq_Enumerable_IndexOf_Sequence_Discrepancy(string source, string value)
     {
         int expected = source.IndexOf(value, StringComparison.Ordinal);
@@ -40,5 +41,7 @@ partial class EnumerableExTests
 
         long actualLong = EnumerableEx.LongIndexOf(source, value);
         Assert.AreEqual(expected, actualLong);
+
+        Assert.AreEqual(expected != -1, EnumerableEx.Contains(source, value));
     }
 }
