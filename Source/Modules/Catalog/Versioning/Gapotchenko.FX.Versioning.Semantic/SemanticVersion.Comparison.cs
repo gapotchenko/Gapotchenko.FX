@@ -13,13 +13,15 @@ partial record SemanticVersion : IComparable, IComparable<SemanticVersion>
     /// Compares the current <see cref="SemanticVersion"/> object to a specified object and returns an indication of their relative values.
     /// </summary>
     /// <inheritdoc/>
-    public int CompareTo(object? obj) =>
-        obj switch
+    public int CompareTo(object? obj)
+    {
+        return obj switch
         {
             null => 1,
             SemanticVersion other => CompareTo(other),
             _ => throw new ArgumentException("Argument must be an instance of SemanticVersion type.", nameof(obj))
         };
+    }
 
     /// <summary>
     /// Compares the current <see cref="SemanticVersion"/> object to a specified <see cref="SemanticVersion"/> object and returns an indication of their relative values.
