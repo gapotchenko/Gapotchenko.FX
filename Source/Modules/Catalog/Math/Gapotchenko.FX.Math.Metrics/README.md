@@ -98,7 +98,7 @@ Console.WriteLine("Distance is {0}.", distance);  // distance = 1
 
 ### Jaro Similarity
 
-`StringMetrics.Similarity.Jaro` algorithm allows you to calculate the Jaro distance between two strings of symbols.
+`StringMetrics.Similarity.Jaro` algorithm allows you to calculate the Jaro similarity between two strings of symbols.
 
 Although the Jaro similarity is often referred to as an edit distance metric, its value does not represent a number of edit operations
 and varies between 0.0 and 1.0 such that 1.0 represents an exact match and 0.0 equates to no similarities.
@@ -109,7 +109,7 @@ Consider an example:
 using Gapotchenko.FX.Math.Metrics;
 
 double similarity = StringMetrics.Similarity.Jaro.Calculate("ABC", "BAC");
-Console.WriteLine("Similarity is {0.00}.", similarity);  // similarity = 0.36
+Console.WriteLine("Similarity is {0:f2}.", similarity);  // similarity = 0.56
 ```
 
 ## Usage
