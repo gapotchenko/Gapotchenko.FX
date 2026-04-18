@@ -47,8 +47,8 @@ sealed class HammingAlgorithm : StringDistanceAlgorithm
 
             for (; ; )
             {
-                var aNext = aEnumerator.MoveNext();
-                var bNext = bEnumerator.MoveNext();
+                bool aNext = aEnumerator.MoveNext();
+                bool bNext = bEnumerator.MoveNext();
 
                 if (aNext && bNext)
                 {
@@ -56,10 +56,11 @@ sealed class HammingAlgorithm : StringDistanceAlgorithm
                     {
                         ++distance;
 
-                        cancellationToken.ThrowIfCancellationRequested();
                         if (distance > range)
                             return distance;
                     }
+
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
                 else if (aNext || bNext)
                 {
