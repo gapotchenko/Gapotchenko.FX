@@ -93,12 +93,15 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
     /// <inheritdoc cref="Intersect(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the other interval to produce the intersection with.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public Interval<T> Intersect<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.Intersect(
+    public Interval<T> Intersect<TOther>(in TOther other) where TOther : IIntervalOperations<T>
+    {
+        return IntervalEngine.Intersect(
             this,
             other ?? throw new ArgumentNullException(nameof(other)),
             m_Comparer,
-            Construct);
+            Construct,
+            nameof(other));
+    }
 
     IInterval<T> IIntervalOperations<T>.Intersect(IInterval<T> other) => Intersect<IIntervalOperations<T>>(other);
 
@@ -108,12 +111,15 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
     /// <inheritdoc cref="Union(IInterval{T})"/>
     /// <typeparam name="TOther">Type of the other interval to produce the union with.</typeparam>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public Interval<T> Union<TOther>(in TOther other) where TOther : IIntervalOperations<T> =>
-        IntervalEngine.Union(
+    public Interval<T> Union<TOther>(in TOther other) where TOther : IIntervalOperations<T>
+    {
+        return IntervalEngine.Union(
             this,
             other ?? throw new ArgumentNullException(nameof(other)),
             m_Comparer,
-            Construct);
+            Construct,
+            nameof(other));
+    }
 
     IInterval<T> IIntervalOperations<T>.Union(IInterval<T> other) => Union<IIntervalOperations<T>>(other);
 

@@ -79,6 +79,7 @@ public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>
     /// <param name="other">The interval to produce the intersection with.</param>
     /// <returns>A new interval representing an intersection of the current and specified intervals.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="other"/> interval uses an incompatible comparer.</exception>
     IInterval<T> Intersect(IInterval<T> other);
 
     /// <summary>
@@ -87,6 +88,7 @@ public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>
     /// <param name="other">The interval to produce the union with.</param>
     /// <returns>A new interval representing a union of the current and specified intervals.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="other"/> interval uses an incompatible comparer.</exception>
     IInterval<T> Union(IInterval<T> other);
 
     /// <summary>
@@ -95,6 +97,7 @@ public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>
     /// <param name="other">The interval to check for overlapping.</param>
     /// <returns><see langword="true"/> if this and <paramref name="other"/> intervals overlap; otherwise, <see langword="false"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="other"/> interval uses an incompatible comparer.</exception>
     bool Overlaps(IInterval<T> other);
 
     /// <summary>
@@ -103,6 +106,7 @@ public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>
     /// <param name="other">The interval to compare to the current interval.</param>
     /// <returns><see langword="true"/> if the current interval is a subinterval of the <paramref name="other"/> interval; otherwise, <see langword="false"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="other"/> interval uses an incompatible comparer.</exception>
     bool IsSubintervalOf(IInterval<T> other);
 
     /// <summary>
@@ -111,6 +115,7 @@ public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>
     /// <param name="other">The interval to compare to the current interval.</param>
     /// <returns><see langword="true"/> if the current interval is a superinterval of the <paramref name="other"/> interval; otherwise, <see langword="false"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="other"/> interval uses an incompatible comparer.</exception>
     bool IsSuperintervalOf(IInterval<T> other);
 
     /// <summary>
@@ -119,6 +124,7 @@ public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>
     /// <param name="other">The interval to compare to the current interval.</param>
     /// <returns><see langword="true"/> if the current interval is a proper subinterval of the <paramref name="other"/> interval; otherwise, <see langword="false"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="other"/> interval uses an incompatible comparer.</exception>
     bool IsProperSubintervalOf(IInterval<T> other);
 
     /// <summary>
@@ -127,6 +133,7 @@ public interface IIntervalOperations<T> : IIntervalOperations, IIntervalModel<T>
     /// <param name="other">The interval to compare to the current interval.</param>
     /// <returns><see langword="true"/> if the current interval is a proper superinterval of the <paramref name="other"/> interval; otherwise, <see langword="false"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="other"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="other"/> interval uses an incompatible comparer.</exception>
     bool IsProperSuperintervalOf(IInterval<T> other);
 
     /// <inheritdoc cref="IIntervalOperations.IntervalEquals(IInterval?)"/>

@@ -204,10 +204,16 @@ static class IntervalEngine
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Overlaps<TInterval, TOther, TValue>(in TInterval interval, in TOther other, IComparer<TValue> comparer)
+    public static bool Overlaps<TInterval, TOther, TValue>(
+        in TInterval interval,
+        in TOther other,
+        IComparer<TValue> comparer,
+        [CallerArgumentExpression(nameof(other))] string? otherParamName = null)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue>
+        where TOther : IIntervalOperations<TValue>
     {
+        ValidateComparerCompatibility(comparer, other, otherParamName);
+
         return
             CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.To, other.To, comparer) <= 0 &&
             CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.From, other.From, comparer) >= 0;
@@ -263,10 +269,13 @@ static class IntervalEngine
         in TInterval interval,
         in TOther other,
         IComparer<TValue> comparer,
-        Constructor<TInterval, TValue> constructor)
+        Constructor<TInterval, TValue> constructor,
+        [CallerArgumentExpression(nameof(other))] string? otherParamName = null)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue>
+        where TOther : IIntervalOperations<TValue>
     {
+        ValidateComparerCompatibility(comparer, other, otherParamName);
+
         return constructor(
             CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) >= 0 ? interval.From : other.From,
             CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) <= 0 ? interval.To : other.To);
@@ -277,40 +286,61 @@ static class IntervalEngine
         in TInterval interval,
         in TOther other,
         IComparer<TValue> comparer,
-        Constructor<TInterval, TValue> constructor)
+        Constructor<TInterval, TValue> constructor,
+        [CallerArgumentExpression(nameof(other))] string? otherParamName = null)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue>
+        where TOther : IIntervalOperations<TValue>
     {
+        ValidateComparerCompatibility(comparer, other, otherParamName);
+
         return constructor(
             CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) <= 0 ? interval.From : other.From,
             CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) >= 0 ? interval.To : other.To);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsSubintervalOf<TInterval, TOther, TValue>(in TInterval interval, in TOther other, IComparer<TValue> comparer)
+    public static bool IsSubintervalOf<TInterval, TOther, TValue>(
+        in TInterval interval,
+        in TOther other,
+        IComparer<TValue> comparer,
+        [CallerArgumentExpression(nameof(other))] string? otherParamName = null)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue>
+        where TOther : IIntervalOperations<TValue>
     {
+        ValidateComparerCompatibility(comparer, other, otherParamName);
+
         return
             CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) >= 0 &&
             CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) <= 0;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsSuperintervalOf<TInterval, TOther, TValue>(in TInterval interval, in TOther other, IComparer<TValue> comparer)
+    public static bool IsSuperintervalOf<TInterval, TOther, TValue>(
+        in TInterval interval,
+        in TOther other,
+        IComparer<TValue> comparer,
+        [CallerArgumentExpression(nameof(other))] string? otherParamName = null)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue>
+        where TOther : IIntervalOperations<TValue>
     {
+        ValidateComparerCompatibility(comparer, other, otherParamName);
+
         return
             CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer) <= 0 &&
             CompareBoundaries(BoundaryDirection.To, interval.To, BoundaryDirection.To, other.To, comparer) >= 0;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsProperSubintervalOf<TInterval, TOther, TValue>(in TInterval interval, in TOther other, IComparer<TValue> comparer)
+    public static bool IsProperSubintervalOf<TInterval, TOther, TValue>(
+        in TInterval interval,
+        in TOther other,
+        IComparer<TValue> comparer,
+        [CallerArgumentExpression(nameof(other))] string? otherParamName = null)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue>
+        where TOther : IIntervalOperations<TValue>
     {
+        ValidateComparerCompatibility(comparer, other, otherParamName);
+
         int cFrom = CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer);
         if (cFrom < 0)
             return false;
@@ -323,10 +353,16 @@ static class IntervalEngine
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsProperSuperintervalOf<TInterval, TOther, TValue>(in TInterval interval, in TOther other, IComparer<TValue> comparer)
+    public static bool IsProperSuperintervalOf<TInterval, TOther, TValue>(
+        in TInterval interval,
+        in TOther other,
+        IComparer<TValue> comparer,
+        [CallerArgumentExpression(nameof(other))] string? otherParamName = null)
         where TInterval : IIntervalModel<TValue>
-        where TOther : IIntervalModel<TValue>
+        where TOther : IIntervalOperations<TValue>
     {
+        ValidateComparerCompatibility(comparer, other, otherParamName);
+
         int cFrom = CompareBoundaries(BoundaryDirection.From, interval.From, BoundaryDirection.From, other.From, comparer);
         if (cFrom > 0)
             return false;
@@ -336,6 +372,20 @@ static class IntervalEngine
             return false;
 
         return cFrom != 0 || cTo != 0;
+    }
+
+    static void ValidateComparerCompatibility<TOther, TValue>(
+        IComparer<TValue> comparer,
+        in TOther other,
+        [CallerArgumentExpression(nameof(other))] string? paramName = null)
+        where TOther : IIntervalOperations<TValue>
+    {
+        if (!comparer.Equals(other.Comparer))
+        {
+            throw new ArgumentException(
+                "The specified interval uses an incompatible comparer.",
+                paramName);
+        }
     }
 
     static OrderedBoundaryKind GetOrderedBoundaryKind(BoundaryDirection direction, IntervalBoundaryKind kind)

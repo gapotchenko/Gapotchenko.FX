@@ -72,6 +72,31 @@ public sealed class IntervalTests : IntervalCoreTests
 
     #endregion
 
+    #region Compatibility
+
+    [TestMethod]
+    public void Interval_Compatibility_Comparer()
+    {
+        var a = Interval.Inclusive("a", "a", StringComparer.OrdinalIgnoreCase);
+        var b = Interval.Inclusive("A", "A", StringComparer.Ordinal);
+
+        AssertIncompatibleComparer(() => a.Intersect(b));
+        AssertIncompatibleComparer(() => a.Union(b));
+        AssertIncompatibleComparer(() => a.Overlaps(b));
+        AssertIncompatibleComparer(() => a.IsSubintervalOf(b));
+        AssertIncompatibleComparer(() => a.IsSuperintervalOf(b));
+        AssertIncompatibleComparer(() => a.IsProperSubintervalOf(b));
+        AssertIncompatibleComparer(() => a.IsProperSuperintervalOf(b));
+
+        static void AssertIncompatibleComparer(Action action)
+        {
+            var exception = Assert.ThrowsExactly<ArgumentException>(action);
+            Assert.AreEqual("other", exception.ParamName);
+        }
+    }
+
+    #endregion
+
     #region Serialization
 
 #if TFF_JSON
