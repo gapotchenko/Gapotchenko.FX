@@ -4,6 +4,7 @@
 // File introduced by: Kirill Rode
 // Year of introduction: 2021
 
+using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Math.Intervals;
 
 namespace Gapotchenko.FX.Math.Metrics.StringDistanceAlgorithms;
@@ -57,14 +58,29 @@ sealed class HammingAlgorithm : StringDistanceAlgorithm
                         ++distance;
 
                         if (distance > range)
+                        {
+                            // Compare sequence lengths on a shortcut exit.
+                            do
+                            {
+                                aNext = aEnumerator.MoveNext();
+                                bNext = bEnumerator.MoveNext();
+
+                                if (aNext != bNext)
+                                    ThrowDifferentLengths();
+
+                                cancellationToken.ThrowIfCancellationRequested();
+                            }
+                            while (aNext || bNext);
+
                             return distance;
+                        }
                     }
 
                     cancellationToken.ThrowIfCancellationRequested();
                 }
                 else if (aNext || bNext)
                 {
-                    throw new ArgumentException("Hamming distance applies to sequences of the same length only.");
+                    ThrowDifferentLengths();
                 }
                 else
                 {
@@ -74,5 +90,11 @@ sealed class HammingAlgorithm : StringDistanceAlgorithm
 
             return distance;
         }
+    }
+
+    [DoesNotReturn]
+    static void ThrowDifferentLengths()
+    {
+        throw new ArgumentException("Hamming distance applies to sequences of the same length only.");
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Gapotchenko.FX.Math.Metrics.Tests.StringDistanceAlgorithms;
+﻿using Gapotchenko.FX.Math.Intervals;
+
+namespace Gapotchenko.FX.Math.Metrics.Tests.StringDistanceAlgorithms;
 
 [TestClass]
 public sealed class HammingTests : IStringDistanceAlgorithmTests
@@ -21,9 +23,15 @@ public sealed class HammingTests : IStringDistanceAlgorithmTests
         Assert.ThrowsExactly<ArgumentException>(() => DistanceAlgorithm.Calculate("abra", "abr", cancellationToken: TestContext.CancellationToken));
     }
 
+    [TestMethod]
+    public void StringDistance_Hamming_DifferentLengths_WithRange()
+    {
+        Assert.ThrowsExactly<ArgumentException>(() => DistanceAlgorithm.Calculate("ab", "c", ValueInterval.Degenerate(0), cancellationToken: TestContext.CancellationToken));
+    }
+
     // ----------------------------------------------------------------------
 
     protected override IStringDistanceAlgorithm DistanceAlgorithm => StringMetrics.Distance.Hamming;
 
-    public TestContext TestContext { get; set; }
+    public required TestContext TestContext { get; init; }
 }
