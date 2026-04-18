@@ -24,7 +24,7 @@ public static class CartesianProductExtensions
         ArgumentNullException.ThrowIfNull(factors);
 
         return CartesianProduct.MultiplyAccelerated(
-            factors.Select(x => x ?? throw new ArgumentException("A Cartesian product factor cannot be null.", nameof(factors))));
+            factors.Select(x => x ?? throw new ArgumentNullException(nameof(factors))));
     }
 
     /// <summary>
@@ -110,7 +110,9 @@ public static class CartesianProductExtensions
         ArgumentNullException.ThrowIfNull(fourth);
         ArgumentNullException.ThrowIfNull(rest);
 
-        return CartesianProduct.MultiplyAccelerated(new[] { first, second, third, fourth }.Concat(rest));
+        return CartesianProduct.MultiplyAccelerated(
+            new[] { first, second, third, fourth }
+            .Concat(rest.Select(x => x ?? throw new ArgumentNullException(nameof(rest)))));
     }
 
     /// <summary>

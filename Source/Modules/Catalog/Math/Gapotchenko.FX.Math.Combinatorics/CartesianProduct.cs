@@ -46,7 +46,7 @@ public static partial class CartesianProduct
     {
         ArgumentNullException.ThrowIfNull(factors);
 
-        factors = factors.Select(x => x ?? throw new ArgumentException("A Cartesian product factor cannot be null.", nameof(factors)));
+        factors = factors.Select(x => x ?? throw new ArgumentNullException(nameof(factors)));
 
         return MultiplyAccelerated(factors);
     }
