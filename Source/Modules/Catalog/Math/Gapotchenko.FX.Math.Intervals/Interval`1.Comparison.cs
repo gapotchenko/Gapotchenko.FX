@@ -5,10 +5,27 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+using System.Diagnostics;
+
 namespace Gapotchenko.FX.Math.Intervals;
 
 partial record Interval<T>
 {
+    /// <summary>
+    /// Gets or initializes the <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
+    /// </summary>
+    [AllowNull]
+    public IComparer<T> Comparer
+    {
+        get => m_Comparer;
+
+        [MemberNotNull(nameof(m_Comparer))]
+        init => m_Comparer = value ?? Comparer<T>.Default;
+    }
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    IComparer<T> m_Comparer;
+
     /// <inheritdoc/>
     public int CompareTo(T? value) => IntervalEngine.CompareTo(this, value, m_Comparer);
 

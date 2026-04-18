@@ -35,21 +35,6 @@ public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>
 
     IIntervalBoundary IIntervalModel.To => To;
 
-    /// <summary>
-    /// Gets or initializes the <see cref="IComparer{T}"/> object that is used to compare the values in the interval.
-    /// </summary>
-    [AllowNull]
-    public IComparer<T> Comparer
-    {
-        get => m_Comparer;
-
-        [MemberNotNull(nameof(m_Comparer))]
-        init => m_Comparer = value ?? Comparer<T>.Default;
-    }
-
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    IComparer<T> m_Comparer;
-
     /// <inheritdoc/>
     public bool IsBounded => IntervalEngine.IsBounded<Interval<T>, T>(this);
 
