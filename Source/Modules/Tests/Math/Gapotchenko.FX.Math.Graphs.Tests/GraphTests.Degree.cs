@@ -191,4 +191,25 @@ partial class GraphTests
         Assert.AreEqual(1, g.GetVertexOutdegree('b'));
         Assert.AreEqual(1, g.GetVertexOutdegree('c'));
     }
+
+    [TestMethod]
+    public void Graph_Undirected_GetVertexInOutDegree()
+    {
+        var g = new Graph<char>
+        {
+            IsDirected = false,
+            Edges = { ('a', 'b') }
+        };
+
+        Verify(g);
+        Verify(g.GetTransposition());
+
+        static void Verify(IReadOnlyGraph<char> g)
+        {
+            Assert.AreEqual(1, g.GetVertexIndegree('a'));
+            Assert.AreEqual(1, g.GetVertexOutdegree('a'));
+            Assert.AreEqual(1, g.GetVertexIndegree('b'));
+            Assert.AreEqual(1, g.GetVertexOutdegree('b'));
+        }
+    }
 }

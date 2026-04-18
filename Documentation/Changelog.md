@@ -18,6 +18,7 @@ Release date: not released yet
 - Fixed file system case-sensitivity detection in `Gapotchenko.FX.Reflection.Loader` module for macOS
 - Fixed issue with `Gapotchenko.FX.IO.FragmentedMemoryStream` seeking from the end origin
 - Fixed issue with Cartesian product of zero factors which now produces the mathematically correct result `{∅}`
+- Fixed issue with in/out degree calculation for undirected graphs
 
 ### Gapotchenko.FX 2026.6
 
