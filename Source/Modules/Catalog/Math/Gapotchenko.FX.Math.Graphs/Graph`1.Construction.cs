@@ -54,6 +54,7 @@ partial class Graph<TVertex>
     {
         ArgumentNullException.ThrowIfNull(graph);
 
+        IsDirected = graph.IsDirected;
         UnionWithCore(graph);
 
         if (graph is Graph<TVertex> other && VertexComparer.Equals(other.VertexComparer))
