@@ -22,7 +22,10 @@ public static class EnumeratorExtensions
     public static IEnumerable<T> Rest<T>(this IEnumerator<T> enumerator)
     {
         ArgumentNullException.ThrowIfNull(enumerator);
+
         while (enumerator.MoveNext())
             yield return enumerator.Current;
+
+        // The enumerator is specifically not disposed here to allow re-enumerations.
     }
 }
