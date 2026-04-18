@@ -84,6 +84,28 @@ public class CartesianProductTests
     }
 
     [TestMethod]
+    public void CartesianProduct_Of_2x2_Distinct_WithCustomComparer()
+    {
+        string[][] factors =
+        [
+            ["a", "A"],
+            ["b", "B"]
+        ];
+
+        var comparer = StringComparer.OrdinalIgnoreCase;
+
+        var p = CartesianProduct.Of(factors).Distinct(comparer).ReifyCollection();
+        Assert.HasCount(1, p);
+
+        var s = p
+            .Select(x => x.ToArray())
+            .ToHashSet(ArrayEqualityComparer.Create(comparer));
+
+        Assert.HasCount(1, s);
+        Assert.Contains(["a", "b"], s);
+    }
+
+    [TestMethod]
     public void CartesianProduct_Of_2x3()
     {
         int[][] factors =

@@ -290,4 +290,25 @@ public class PermutationTests
         Assert.Contains([2, 1, 2], s);
         Assert.Contains([2, 2, 1], s);
     }
+
+    [TestMethod]
+    public void Permutations_Distinct_WithCustomComparer()
+    {
+        string[] source = ["a", "A", "b"];
+
+        var comparer = StringComparer.OrdinalIgnoreCase;
+
+        var p = Permutations.Of(source).Distinct(comparer).ReifyCollection();
+        Assert.HasCount(3, p);
+
+        var s = p
+            .Select(x => x.ToArray())
+            .ToHashSet(ArrayEqualityComparer.Create(comparer));
+
+        Assert.HasCount(3, s);
+
+        Assert.Contains(["a", "A", "b"], s);
+        Assert.Contains(["a", "b", "A"], s);
+        Assert.Contains(["b", "a", "A"], s);
+    }
 }
