@@ -133,6 +133,33 @@ public abstract class IConditionVariableTests
         }
     }
 
+    [TestMethod]
+    public void IConditionVariable_Wait_DoesNotReleaseLockWhenCancelled()
+    {
+        foreach (var recursionLevel in EnumerateRecursionLevels())
+            Run(recursionLevel);
+
+        void Run(int recursionLevel)
+        {
+            var cv = CreateConditionVariable();
+            var lockable = GetLockable(cv);
+            using var lockScope = lockable.EnterScopeRecursively(recursionLevel);
+
+            bool wasCanceled = false;
+            try
+            {
+                cv.Wait(new CancellationToken(true));
+            }
+            catch (OperationCanceledException)
+            {
+                wasCanceled = true;
+            }
+
+            Assert.IsTrue(wasCanceled);
+            Assert.AreEqual(recursionLevel, LockableHelper.GetLockDepth(lockable));
+        }
+    }
+
     // ----------------------------------------------------------------------
 
     [TestMethod]

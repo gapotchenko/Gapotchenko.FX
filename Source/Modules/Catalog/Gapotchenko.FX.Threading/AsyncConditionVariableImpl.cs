@@ -95,6 +95,8 @@ readonly struct AsyncConditionVariableImpl
 
     bool DoWait(ILockable lockable, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var cts = CancellationTokenSourceHelper.CreateLinked(cancellationToken);
         try
         {
@@ -154,6 +156,9 @@ readonly struct AsyncConditionVariableImpl
 
     Task<bool> DoWaitAsync(IAsyncLockable lockable, CancellationToken cancellationToken)
     {
+        if (cancellationToken.IsCancellationRequested)
+            return Task.FromCanceled<bool>(cancellationToken);
+
         var waitHandle = AllocateWaitHandleAsync(cancellationToken);
 
         async Task<bool> ExecuteAsync()

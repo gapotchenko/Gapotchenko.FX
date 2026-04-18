@@ -101,6 +101,33 @@ public abstract class IAsyncConditionVariableTests : IConditionVariableTests
         }
     }
 
+    [TestMethod]
+    public async Task IAsyncConditionVariable_WaitAsync_DoesNotReleaseLockWhenCancelled()
+    {
+        foreach (var recursionLevel in EnumerateRecursionLevels())
+            await Run(recursionLevel);
+
+        async Task Run(int recursionLevel)
+        {
+            var cv = CreateAsyncConditionVariable();
+            var lockable = GetAsyncLockable(cv);
+            using var lockScope = await lockable.EnterScopeRecursivelyAsync(recursionLevel);
+
+            bool wasCanceled = false;
+            try
+            {
+                await cv.WaitAsync(new CancellationToken(true));
+            }
+            catch (OperationCanceledException)
+            {
+                wasCanceled = true;
+            }
+
+            Assert.IsTrue(wasCanceled);
+            Assert.AreEqual(recursionLevel, await LockableHelper.GetLockDepthAsync(lockable));
+        }
+    }
+
     // ----------------------------------------------------------------------
 
     [TestMethod]
