@@ -30,7 +30,6 @@ partial class SemanticVersionTests
     {
         var version = SemanticVersion.Parse(input);
 
-#if TODO
         if (input is null)
         {
             Assert.ThrowsExactly<FormatException>(() => SemanticVersion.Parse(input.AsSpan()));
@@ -40,7 +39,6 @@ partial class SemanticVersionTests
             var anotherVersion = SemanticVersion.Parse(input.AsSpan());
             Assert.AreEqual(version, anotherVersion);
         }
-#endif
 
         return version;
     }
