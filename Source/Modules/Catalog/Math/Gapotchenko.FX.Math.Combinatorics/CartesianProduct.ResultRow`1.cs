@@ -48,12 +48,12 @@ partial class CartesianProduct
         {
             return
                 ReferenceEquals(this, other) ||
-                other is ResultRow<T> otherRow &&
+                other is IResultRow<T> otherRow &&
                 this.SequenceEqual(otherRow);
         }
 
         public override bool Equals(object? obj) =>
-            obj is ResultRow<T> other &&
+            obj is IResultRow<T> other &&
             Equals(other);
 
         public override int GetHashCode()
