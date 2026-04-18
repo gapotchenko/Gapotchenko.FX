@@ -61,47 +61,37 @@ public abstract class AsyncMonitorImpl<TMutex> : IAsyncMonitor
     #region IConditionVariable
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public void Wait() => Wait(CancellationToken.None);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public void Wait(CancellationToken cancellationToken) => m_ConditionVariable.Wait(Mutex, cancellationToken);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public bool Wait(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
         m_ConditionVariable.Wait(Mutex, millisecondsTimeout, cancellationToken);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public bool Wait(TimeSpan timeout, CancellationToken cancellationToken = default) =>
         m_ConditionVariable.Wait(Mutex, timeout, cancellationToken);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public Task WaitAsync() => WaitAsync(CancellationToken.None);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public Task WaitAsync(CancellationToken cancellationToken) => m_ConditionVariable.WaitAsync(Mutex, cancellationToken);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public Task<bool> WaitAsync(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
         m_ConditionVariable.WaitAsync(Mutex, millisecondsTimeout, cancellationToken);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public Task<bool> WaitAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
         m_ConditionVariable.WaitAsync(Mutex, timeout, cancellationToken);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public void Notify() => m_ConditionVariable.Notify(Mutex);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public void NotifyAll() => m_ConditionVariable.NotifyAll(Mutex);
 
     #endregion

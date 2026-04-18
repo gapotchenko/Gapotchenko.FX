@@ -15,6 +15,9 @@ public interface IAwaitable
     /// <summary>
     /// Blocks the current thread until the synchronization primitive receives a signal.
     /// </summary>
+    /// <exception cref="SynchronizationLockException">
+    /// Object synchronization method was called from an unsynchronized block of code.
+    /// </exception>
     void Wait();
 
     /// <param name="cancellationToken">The cancellation token.</param>
@@ -42,7 +45,7 @@ public interface IAwaitable
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="millisecondsTimeout"/> is greater than <see cref="int.MaxValue"/>.
     /// </exception>
-    /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    /// <inheritdoc cref="Wait(CancellationToken)"/>
     bool Wait(int millisecondsTimeout, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -66,5 +69,6 @@ public interface IAwaitable
     /// <paramref name="timeout"/> is greater than <see cref="Int32.MaxValue"/>.
     /// </exception>
     /// <exception cref="OperationCanceledException"><paramref name="cancellationToken"/> was canceled.</exception>
+    /// <inheritdoc cref="Wait(CancellationToken)"/>
     bool Wait(TimeSpan timeout, CancellationToken cancellationToken = default);
 }

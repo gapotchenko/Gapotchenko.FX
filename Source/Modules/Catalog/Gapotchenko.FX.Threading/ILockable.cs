@@ -103,6 +103,8 @@ public interface ILockable
     /// </remarks>
     /// <exception cref="SynchronizationLockException">
     /// The current task does not hold the lock.
+    /// The check is only performed for recursive synchronization primitives.
+    /// Non-recursive primitives can be exited by any task.
     /// </exception>
     void Exit();
 

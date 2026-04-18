@@ -17,12 +17,16 @@ public interface IConditionVariable : IAwaitable
     /// <summary>
     /// Notifies a thread in the waiting queue of a change in the locked shared state.
     /// </summary>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
+    /// <exception cref="SynchronizationLockException">
+    /// Object synchronization method was called from an unsynchronized block of code.
+    /// </exception>
     void Notify();
 
     /// <summary>
     /// Notifies all waiting threads of a change in the locked shared state.
     /// </summary>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
+    /// <exception cref="SynchronizationLockException">
+    /// Object synchronization method was called from an unsynchronized block of code.
+    /// </exception>
     void NotifyAll();
 }

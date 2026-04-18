@@ -219,6 +219,36 @@ public abstract class IAsyncLockableTests : ILockableTests
 
     // ----------------------------------------------------------------------
 
+    [TestMethod]
+    public async Task IAsyncLockable_Ownership()
+    {
+        var cancellationToken = TestContext.CancellationToken;
+
+        var lockable = CreateAsyncLockable();
+        await lockable.EnterAsync(cancellationToken);
+
+        try
+        {
+            Task exitTask;
+            using (ExecutionContext.SuppressFlow())
+                exitTask = Task.Run(lockable.Exit, cancellationToken);
+
+            if (lockable.IsRecursive)
+                await Assert.ThrowsExactlyAsync<SynchronizationLockException>(() => exitTask);
+            else
+                await exitTask;
+
+            Assert.AreEqual(lockable.IsRecursive, lockable.IsEntered);
+        }
+        finally
+        {
+            if (lockable.IsEntered)
+                lockable.Exit();
+        }
+    }
+
+    // ----------------------------------------------------------------------
+
     #region Helpers
 
     static async Task VerifyLockingSemanticsAsync(
@@ -460,4 +490,6 @@ public abstract class IAsyncLockableTests : ILockableTests
     }
 
     #endregion
+
+    public required TestContext TestContext { get; init; }
 }

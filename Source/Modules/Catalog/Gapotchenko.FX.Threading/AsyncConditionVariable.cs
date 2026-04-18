@@ -48,38 +48,30 @@ public class AsyncConditionVariable : IAsyncConditionVariable
     public void NotifyAll() => m_CoreImpl.NotifyAll(m_Lockable);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public void Wait() => Wait(CancellationToken.None);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public void Wait(CancellationToken cancellationToken) => m_CoreImpl.Wait(m_Lockable, cancellationToken);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public bool Wait(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
         m_CoreImpl.Wait(m_Lockable, millisecondsTimeout, cancellationToken);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public bool Wait(TimeSpan timeout, CancellationToken cancellationToken = default) =>
         m_CoreImpl.Wait(m_Lockable, timeout, cancellationToken);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public Task WaitAsync() => WaitAsync(CancellationToken.None);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public Task WaitAsync(CancellationToken cancellationToken) => m_CoreImpl.WaitAsync(m_Lockable, cancellationToken);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public Task<bool> WaitAsync(int millisecondsTimeout, CancellationToken cancellationToken = default) =>
         m_CoreImpl.WaitAsync(m_Lockable, millisecondsTimeout, cancellationToken);
 
     /// <inheritdoc/>
-    /// <exception cref="SynchronizationLockException">Object synchronization method was called from an unsynchronized block of code.</exception>
     public Task<bool> WaitAsync(TimeSpan timeout, CancellationToken cancellationToken = default) =>
         m_CoreImpl.WaitAsync(m_Lockable, timeout, cancellationToken);
 }
