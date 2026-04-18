@@ -5,8 +5,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-using System.Globalization;
-
 namespace Gapotchenko.FX.Versioning;
 
 partial record SemanticVersion : IComparable, IComparable<SemanticVersion>
@@ -57,20 +55,20 @@ partial record SemanticVersion : IComparable, IComparable<SemanticVersion>
         string[] yUnits = y.Split('.');
 
         int minLength = Math.Min(xUnits.Length, yUnits.Length);
-        var formatProvider = NumberFormatInfo.InvariantInfo;
 
         for (int i = 0; i < minLength; i++)
         {
             string unitX = xUnits[i];
             string unitY = yUnits[i];
 
-            bool isNumberX = int.TryParse(unitX, NumberStyles.None, formatProvider, out int numberX);
-            bool isNumberY = int.TryParse(unitY, NumberStyles.None, formatProvider, out int numberY);
+            bool isNumberX = IsNumericIdentifier(unitX);
+            bool isNumberY = IsNumericIdentifier(unitY);
 
             if (isNumberX && isNumberY)
             {
-                if (numberX != numberY)
-                    return numberX < numberY ? -1 : 1;
+                int result = CompareNumericIdentifiers(unitX, unitY);
+                if (result != 0)
+                    return result;
             }
             else
             {
@@ -86,6 +84,23 @@ partial record SemanticVersion : IComparable, IComparable<SemanticVersion>
         }
 
         return xUnits.Length.CompareTo(yUnits.Length);
+    }
+
+    static bool IsNumericIdentifier(string value)
+    {
+        foreach (char c in value)
+        {
+            if (!char.IsDigit(c))
+                return false;
+        }
+
+        return value.Length != 0;
+    }
+
+    static int CompareNumericIdentifiers(string x, string y)
+    {
+        int result = x.Length.CompareTo(y.Length);
+        return result != 0 ? result : string.CompareOrdinal(x, y);
     }
 
     /// <summary>

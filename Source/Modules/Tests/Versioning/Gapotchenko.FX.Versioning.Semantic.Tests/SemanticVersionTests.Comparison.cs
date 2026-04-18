@@ -34,6 +34,9 @@ partial class SemanticVersionTests
     [DataRow("1.0.0+0.3.7", "1.0.0", 0)]
     [DataRow("1.0.0+0.3.7", "1.0.0+0.3", 0)]
     // ---
+    [DataRow("1.0.0-99999999999999999999", "1.0.0-100000000000000000000", -1)]
+    [DataRow("1.0.0-200000000000000000000", "1.0.0-10a", -1)]
+    // ---
     public void SemanticVersion_Comparison(string? versionA, string? versionB, int relation) =>
         TestComparison(versionA, versionB, relation);
 

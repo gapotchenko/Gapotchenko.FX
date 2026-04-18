@@ -14,11 +14,12 @@ Release date: not released yet
 - Fixed issue with adjacency consistency in undirected graph after an edge removal
 - Fixed issue with neighbor preservation after a graph vertex removal
 - Fixed issue with transitive reduction of undirected graphs when specific edge-case topologies were encountered
-- Fixed rounding error in Jaro similarity algorithm that could lead to slightly off results
-- Fixed file system case-sensitivity detection in `Gapotchenko.FX.Reflection.Loader` module for macOS
-- Fixed issue with `Gapotchenko.FX.IO.FragmentedMemoryStream` seeking from the end origin
-- Fixed issue with Cartesian product of zero factors which now produces the mathematically correct result `{∅}`
 - Fixed issue with in/out degree calculation for undirected graphs
+- Fixed rounding error in Jaro similarity algorithm that could lead to slightly off results
+- Fixed issue with Cartesian product of zero factors which now produces the mathematically correct result `{∅}`
+- Fixed file system case-sensitivity detection in `Gapotchenko.FX.Reflection.Loader` module for macOS
+- Fixed issue in `Gapotchenko.FX.IO.FragmentedMemoryStream` with seeking from the end of stream
+- Fixed issue in semantic version comparison of large numeric prerelease labels greater than 2^31
 
 ### Gapotchenko.FX 2026.6
 
