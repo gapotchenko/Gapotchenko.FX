@@ -4,6 +4,9 @@
 // File introduced by: Kirill Rode
 // Year of introduction: 2021
 
+using Gapotchenko.FX.Math.Graphs.Properties;
+using Gapotchenko.FX.Math.Graphs.Utils;
+
 namespace Gapotchenko.FX.Math.Graphs;
 
 /// <summary>
@@ -207,6 +210,7 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentNullException"><paramref name="dependencyGraph"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException">Topological ordering is defined only for directed graphs.</exception>
     public static ITopologicallyOrderedEnumerable<TSource> OrderTopologicallyBy<TSource, TKey>(
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
@@ -215,6 +219,9 @@ public static class EnumerableExtensions
         ArgumentNullException.ThrowIfNull(source);
         ArgumentNullException.ThrowIfNull(keySelector);
         ArgumentNullException.ThrowIfNull(dependencyGraph);
+
+        if (!dependencyGraph.IsDirected)
+            throw new ArgumentException(Resources.TopologicalOrderForDirectedGraphsOnly, nameof(dependencyGraph));
 
         return new TopologicallyOrderedEnumerable.PrimaryEnumerable<TSource, TKey>(
             source,

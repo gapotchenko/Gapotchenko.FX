@@ -1,10 +1,12 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2021
 
 using Gapotchenko.FX.Collections.Generic;
+using Gapotchenko.FX.Math.Graphs.Properties;
 using System.Collections;
 using System.Diagnostics;
 
@@ -13,7 +15,13 @@ namespace Gapotchenko.FX.Math.Graphs;
 partial class Graph<TVertex>
 {
     /// <inheritdoc />
-    public ITopologicallyOrderedEnumerable<TVertex> OrderTopologically() => new PrimaryTopologicallyOrderedEnumerable(this);
+    public ITopologicallyOrderedEnumerable<TVertex> OrderTopologically()
+    {
+        if (!IsDirected)
+            throw new NotSupportedException(Resources.TopologicalOrderForDirectedGraphsOnly);
+
+        return new PrimaryTopologicallyOrderedEnumerable(this);
+    }
 
     #region Topologically ordered enumerable
 

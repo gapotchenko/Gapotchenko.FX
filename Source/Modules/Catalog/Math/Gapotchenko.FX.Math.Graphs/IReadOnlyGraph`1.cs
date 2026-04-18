@@ -354,5 +354,6 @@ public partial interface IReadOnlyGraph<TVertex>
     /// </remarks>
     /// <returns>Sequence of graph vertices sorted in topological order.</returns>
     /// <exception cref="GraphCircularReferenceException">Graph contains a cycle.</exception>
+    /// <exception cref="NotSupportedException">Topological ordering is defined only for directed graphs.</exception>
     ITopologicallyOrderedEnumerable<TVertex> OrderTopologically();
 }
