@@ -11,33 +11,52 @@ partial class Graph<TVertex>
     /// <inheritdoc/>
     public void ReduceTransitions()
     {
-        bool hasChanges = false;
-
-        foreach (var i in m_AdjacencyList)
+        if (IsDirected)
         {
-            var adjRow = i.Value;
-            if (adjRow == null)
-                continue;
+            bool hasChanges = false;
 
-            var from = i.Key;
-
-            List<TVertex>? removeList = null;
-
-            foreach (var to in adjRow)
+            foreach (var i in m_AdjacencyList)
             {
-                if (HasTransitivePath(from, to))
-                    (removeList ??= []).Add(to);
+                var adjRow = i.Value;
+                if (adjRow == null)
+                    continue;
+
+                var from = i.Key;
+
+                List<TVertex>? removeList = null;
+
+                foreach (var to in adjRow)
+                {
+                    if (HasTransitivePath(from, to))
+                        (removeList ??= []).Add(to);
+                }
+
+                if (removeList != null)
+                {
+                    adjRow.ExceptWith(removeList);
+                    hasChanges = true;
+                }
             }
 
-            if (removeList != null)
+            if (hasChanges)
+                InvalidateCache();
+        }
+        else
+        {
+            var edges = Edges;
+
+            foreach (var edge in edges.ToList())
             {
-                adjRow.ExceptWith(removeList);
-                hasChanges = true;
+                // In undirected graphs, multiple edges can appear redundant
+                // against the same original state while depending on each other
+                // collectively to preserve connectivity. Remove them one by one.
+                if (!edges.Remove(edge))
+                    continue;
+
+                if (!HasPath(edge.From, edge.To))
+                    edges.Add(edge);
             }
         }
-
-        if (hasChanges)
-            InvalidateCache();
     }
 
     /// <inheritdoc cref="IGraph{TVertex}.GetTransitiveReduction"/>
