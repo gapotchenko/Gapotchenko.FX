@@ -6,6 +6,17 @@ namespace Gapotchenko.FX.Math.Combinatorics.Tests;
 public class PermutationTests
 {
     [TestMethod]
+    public void Permutations_Of_0()
+    {
+        int cardinality = Permutations.Cardinality(0);
+        Assert.AreEqual(1, cardinality);
+
+        var p = Permutations.Of<int>([]).ReifyList();
+        Assert.HasCount(1, p);
+        Assert.IsEmpty(p[0]);
+    }
+
+    [TestMethod]
     [DataRow(new[] { 1, 2 })]
     [DataRow(new[] { 2, 1 })]
     public void Permutations_Of2UniqueElements(int[] source)
