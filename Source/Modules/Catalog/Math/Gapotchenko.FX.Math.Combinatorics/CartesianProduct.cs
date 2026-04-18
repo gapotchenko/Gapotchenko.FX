@@ -34,6 +34,10 @@ public static partial class CartesianProduct
     /// <summary>
     /// Returns a Cartesian product of the specified factors.
     /// </summary>
+    /// <remarks>
+    /// The Cartesian product of zero factors is <c>{∅}</c>,
+    /// meaning that the resulting set will contain one empty tuple (row).
+    /// </remarks>
     /// <typeparam name="T">Type of factor items.</typeparam>
     /// <param name="factors">The factors.</param>
     /// <returns>An <see cref="IResultCollection{T}"/> instance representing the sequence of Cartesian product results.</returns>

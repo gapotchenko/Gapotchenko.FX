@@ -44,6 +44,14 @@ public class CartesianProductTests
     }
 
     [TestMethod]
+    public void CartesianProduct_Of_0()
+    {
+        var p = CartesianProduct.Of<int>([]).ToList();
+        Assert.HasCount(1, p);
+        Assert.IsEmpty(p[0]);
+    }
+
+    [TestMethod]
     public void CartesianProduct_Of_2x0()
     {
         int[][] factors =

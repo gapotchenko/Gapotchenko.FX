@@ -7,7 +7,7 @@
 Release date: not released yet
 
 - Improved nullability annotations
-- Added `CommandLine.EncodeFileName(string)` method, which ensures that file names are interpreted as command-line arguments rather than options (e.g., prevents names starting with `-` from being misinterpreted)
+- Added `CommandLine.EncodeFileName(string)` method which can be used to ensure that file names are interpreted as command-line arguments rather than options (e.g., prevents names starting with `-` from being misinterpreted)
 - Fixed parameter name escaping in `UriQueryBuilder.HasParameter(string)` method
 - Fixed handling of `\x1b[m` control sequence in `Gapotchenko.FX.Console` module
 - Fixed issue with `Graph<T>.IsCyclic` calculation for undirected graphs
@@ -17,6 +17,7 @@ Release date: not released yet
 - Fixed rounding error in Jaro similarity algorithm that could lead to slightly off results
 - Fixed file system case-sensitivity detection in `Gapotchenko.FX.Reflection.Loader` module for macOS
 - Fixed issue with `Gapotchenko.FX.IO.FragmentedMemoryStream` seeking from the end origin
+- Fixed issue with Cartesian product of zero factors which now produces the mathematically correct result `{∅}`
 
 ### Gapotchenko.FX 2026.6
 

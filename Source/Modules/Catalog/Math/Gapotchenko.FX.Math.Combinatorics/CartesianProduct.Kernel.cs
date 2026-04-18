@@ -18,7 +18,8 @@ partial class CartesianProduct
 
         if (rank == 0)
         {
-            // No multipliers.
+            // The Cartesian product of zero multipliers produce {∅} result.
+            yield return new ResultRow<T>([]);
             yield break;
         }
 
