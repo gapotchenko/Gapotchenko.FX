@@ -73,9 +73,14 @@ partial class EnumerableEx
                 if (m_Factory is { } factory)
                 {
                     if (factory.IsValueCreated)
+                    {
                         factory.Value.Dispose();
+                        // The factory instance is kept to preserve the disposal semantics of the underlying enumerator.
+                    }
                     else
+                    {
                         m_Factory = null;
+                    }
                 }
             }
 
