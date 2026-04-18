@@ -111,6 +111,9 @@ partial class SemanticVersionTests
             yield return ["1.0.0+build"];
             yield return ["1.0.0-prerelease+build"];
             yield return ["1.0.0+build1-build2"];
+            yield return ["1.0.0-2147483648"];
+            yield return ["1.0.0-99999999999999999999"];
+            yield return ["1.0.0-100000000000000000000"];
         }
     }
 
