@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Runtime.CompilerServices;
-using System.Diagnostics;
 
 namespace Gapotchenko.FX;
 
@@ -18,17 +17,9 @@ partial class Fn
         Func<T, T, T> f,
         T val1, T val2, T val3)
     {
-        if (f == null)
-            _ThrowArgumentNullException(nameof(f));
+        ArgumentNullException.ThrowIfNull(f);
 
         return f(f(val1, val2), val3);
-    }
-
-    [DoesNotReturn, StackTraceHidden]
-    static void _ThrowArgumentNullException(string paramName)
-    {
-        // This is a separate method to allow the inlining of a caller method.
-        throw new ArgumentNullException(paramName);
     }
 
     /// <summary>
