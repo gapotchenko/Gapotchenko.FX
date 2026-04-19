@@ -18,7 +18,7 @@ partial class MathEx
     #region Min
 
     /// <inheritdoc cref="MathExtensions.Min{T}(T, T)"/>
-    [Obsolete("Use System.Math.Min(val1, val2) method instead (may change semantics for null arguments).")]
+    [Obsolete("Use System.Math.Min(val1, val2) method instead (may change semantics for null arguments). To preserve the semantics, use 'Fn.CoalesceWith(Math.Min, val1, val2)' expression.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
@@ -33,7 +33,7 @@ partial class MathEx
     }
 
     /// <inheritdoc cref="MathExtensions.Min{T}(T, T, IComparer{T}?)"/>
-    [Obsolete("Use System.Math.Min(val1, val2, comparer) method instead (may change semantics for null arguments).")]
+    [Obsolete("Use System.Math.Min(val1, val2, comparer) method instead (may change semantics for null arguments). To preserve the semantics, use 'Fn.CoalesceWith((a, b) => Math.Min(a, b, comparer), val1, val2)' expression.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
@@ -48,7 +48,7 @@ partial class MathEx
     }
 
     /// <inheritdoc cref="MathExtensions.Min{T}(T, T, T)"/>
-    [Obsolete("Use System.Math.Min(val1, val2, val3) method instead (may change semantics for null arguments).")]
+    [Obsolete("Use System.Math.Min(val1, val2, val3) method instead (may change semantics for null arguments). To preserve the semantics, use 'Fn.CoalesceWith(Math.Min, val1, val2, val3)' expression.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
@@ -57,7 +57,7 @@ partial class MathEx
         Min(Min(val1, val2), val3);
 
     /// <inheritdoc cref="MathExtensions.Min{T}(T, T, T, IComparer{T}?)"/>
-    [Obsolete("Use System.Math.Min(val1, val2, val3, comparer) method instead (may change semantics for null arguments).")]
+    [Obsolete("Use System.Math.Min(val1, val2, val3, comparer) method instead (may change semantics for null arguments). To preserve the semantics, use 'Fn.CoalesceWith((a, b, c) => Math.Min(a, b, c, comparer), val1, val2, val3)' expression.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
@@ -81,7 +81,7 @@ partial class MathEx
     public static DateTime Min(DateTime val1, DateTime val2, DateTime val3) => Math.Min(val1, val2, val3);
 
     /// <inheritdoc cref="MathExtensions.Min{T}(T, T)"/>
-    [Obsolete("Use System.Math.Min(val1, val2) method instead (may change semantics for null arguments).")]
+    [Obsolete("Use System.Math.Min(val1, val2) method instead (may change semantics for null arguments). To preserve the semantics, use 'Fn.CoalesceWith(Math.Min, val1, val2)' expression.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
@@ -95,7 +95,7 @@ partial class MathEx
     }
 
     /// <inheritdoc cref="MathExtensions.Min{T}(T, T, T)"/>
-    [Obsolete("Use System.Math.Min(val1, val2, val3) method instead (may change semantics for null arguments).")]
+    [Obsolete("Use System.Math.Min(val1, val2, val3) method instead (may change semantics for null arguments). To preserve the semantics, use 'Fn.CoalesceWith(Math.Min, val1, val2, val3)' expression.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
@@ -107,7 +107,7 @@ partial class MathEx
     #region Max
 
     /// <inheritdoc cref="MathExtensions.Max{T}(T, T)"/>
-    [Obsolete("Use System.Math.Max(val1, val2) method instead (may change semantics for null arguments).")]
+    [Obsolete("Use System.Math.Max(val1, val2) method instead (may change semantics for null arguments). To preserve the semantics, use 'Fn.CoalesceWith(Math.Max, val1, val2)' expression.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
@@ -122,7 +122,7 @@ partial class MathEx
     }
 
     /// <inheritdoc cref="MathExtensions.Max{T}(T, T, IComparer{T}?)"/>
-    [Obsolete("Use System.Math.Max(val1, val2, comparer) method instead (may change semantics for null arguments).")]
+    [Obsolete("Use System.Math.Max(val1, val2, comparer) method instead (may change semantics for null arguments). To preserve the semantics, use 'Fn.CoalesceWith((a, b) => Math.Max(a, b, comparer), val1, val2)' expression.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
@@ -137,7 +137,7 @@ partial class MathEx
     }
 
     /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T)"/>
-    [Obsolete("Use System.Math.Max(val1, val2, val3) method instead (may change semantics for null arguments).")]
+    [Obsolete("Use System.Math.Max(val1, val2, val3) method instead (may change semantics for null arguments). To preserve the semantics, use 'Fn.CoalesceWith(Math.Max, val1, val2, val3)' expression.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
@@ -146,7 +146,7 @@ partial class MathEx
         Max(Max(val1, val2), val3);
 
     /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T, IComparer{T}?)"/>
-    [Obsolete("Use System.Math.Max(val1, val2, val3, comparer) method instead (may change semantics for null arguments).")]
+    [Obsolete("Use System.Math.Max(val1, val2, val3, comparer) method instead (may change semantics for null arguments). To preserve the semantics, use 'Fn.CoalesceWith((a, b, c) => Math.Max(a, b, c, comparer), val1, val2, val3)' expression.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
@@ -170,7 +170,7 @@ partial class MathEx
     public static DateTime Max(DateTime val1, DateTime val2, DateTime val3) => Math.Max(val1, val2, val3);
 
     /// <inheritdoc cref="MathExtensions.Max{T}(T, T)"/>
-    [Obsolete("Use System.Math.Max(val1, val2) method instead (may change semantics for null arguments).")]
+    [Obsolete("Use System.Math.Max(val1, val2) method instead (may change semantics for null arguments). To preserve the semantics, use 'Fn.CoalesceWith(Math.Max, val1, val2)' expression.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
@@ -184,7 +184,7 @@ partial class MathEx
     }
 
     /// <inheritdoc cref="MathExtensions.Max{T}(T, T, T)"/>
-    [Obsolete("Use System.Math.Max(val1, val2, val3) method instead (may change semantics for null arguments).")]
+    [Obsolete("Use System.Math.Max(val1, val2, val3) method instead (may change semantics for null arguments). To preserve the semantics, use 'Fn.CoalesceWith(Math.Max, val1, val2, val3)' expression.")]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [return: NotNullIfNotNull(nameof(val1))]
     [return: NotNullIfNotNull(nameof(val2))]
