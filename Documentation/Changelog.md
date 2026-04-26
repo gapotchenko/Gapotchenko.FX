@@ -7,6 +7,7 @@
 Release date: not released yet
 
 - Improved nullability annotations
+- New `Gapotchenko.FX.EnvironmentVariables` type provides `NamesAreCaseSensitive`, `NameComparer`, and `NameComparison` properties useful for multi-platform software
 - Added `CommandLine.EncodeFileName(string)` method which can be used to ensure that file names are interpreted as command-line arguments rather than options (e.g., prevents names starting with `-` from being misinterpreted)
 - Fixed parameter name escaping in `UriQueryBuilder.HasParameter(string)` method
 - Fixed handling of `\x1b[m` control sequence in `Gapotchenko.FX.Console` module
