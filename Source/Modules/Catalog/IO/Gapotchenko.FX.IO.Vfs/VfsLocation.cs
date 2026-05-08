@@ -50,12 +50,20 @@ public readonly struct VfsLocation
     /// <summary>
     /// Gets or initializes the file system view containing an entry.
     /// </summary>
-    public required IFileSystemView View { get; init; }
+    public required IFileSystemView View
+    {
+        get => field ?? FileSystemView.Local;
+        init;
+    }
 
     /// <summary>
     /// Gets or initializes the path of a file-system entry.
     /// </summary>
-    public required string Path { get; init; }
+    public required string Path
+    {
+        get => field ?? string.Empty;
+        init;
+    }
 
     /// <summary>
     /// Implicitly converts a file-system entry path to a <see cref="VfsLocation"/>
@@ -71,7 +79,7 @@ public readonly struct VfsLocation
     public static implicit operator VfsReadOnlyLocation(VfsLocation location) => new(location.View, location.Path);
 
     /// <summary>
-    /// Desconstructs the instance into the view and the path.
+    /// Deconstructs the instance into the view and the path.
     /// </summary>
     /// <param name="view">The view.</param>
     /// <param name="path">The path.</param>
@@ -125,12 +133,20 @@ public readonly struct VfsReadOnlyLocation
     /// <summary>
     /// Gets or initializes the read-only file system view containing an entry.
     /// </summary>
-    public required IReadOnlyFileSystemView View { get; init; }
+    public required IReadOnlyFileSystemView View
+    {
+        get => field ?? FileSystemView.Local;
+        init;
+    }
 
     /// <summary>
     /// Gets or initializes the path of a file-system entry.
     /// </summary>
-    public required string Path { get; init; }
+    public required string Path
+    {
+        get => field ?? string.Empty;
+        init;
+    }
 
     /// <summary>
     /// Implicitly converts a file-system entry path to a <see cref="VfsReadOnlyLocation"/>
@@ -140,7 +156,7 @@ public readonly struct VfsReadOnlyLocation
     public static implicit operator VfsReadOnlyLocation(string path) => new(path);
 
     /// <summary>
-    /// Desconstructs the instance into the view and the path.
+    /// Deconstructs the instance into the view and the path.
     /// </summary>
     /// <param name="view">The view.</param>
     /// <param name="path">The path.</param>
