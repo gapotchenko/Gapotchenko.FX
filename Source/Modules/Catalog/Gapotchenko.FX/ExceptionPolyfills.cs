@@ -571,6 +571,22 @@ public static class ExceptionPolyfills
         [EditorBrowsable(EditorBrowsableState.Never)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        [CLSCompliant(false)]
+        public static void ThrowIfEqual(uint value, uint other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
+        {
+#if NET8_0_OR_GREATER
+            ArgumentOutOfRangeException.ThrowIfEqual(value, other, paramName);
+#else
+            if (value == other)
+                ThrowEqual(value, other, paramName);
+#endif
+        }
+
+        /// <inheritdoc cref="ThrowIfEqual(int, int, string?)"/>
+#if NET8_0_OR_GREATER
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         public static void ThrowIfEqual(double value, double other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
         {
 #if NET8_0_OR_GREATER
@@ -603,6 +619,22 @@ public static class ExceptionPolyfills
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static void ThrowIfNotEqual(int value, int other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
+        {
+#if NET8_0_OR_GREATER
+            ArgumentOutOfRangeException.ThrowIfNotEqual(value, other, paramName);
+#else
+            if (value != other)
+                ThrowNotEqual(value, other, paramName);
+#endif
+        }
+
+        /// <inheritdoc cref="ThrowIfNotEqual(int, int, string?)"/>
+#if NET8_0_OR_GREATER
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [CLSCompliant(false)]
+        public static void ThrowIfNotEqual(uint value, uint other, [CallerArgumentExpression(nameof(value))] string? paramName = null)
         {
 #if NET8_0_OR_GREATER
             ArgumentOutOfRangeException.ThrowIfNotEqual(value, other, paramName);
