@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.IO.Vfs;
 /// <summary>
 /// The path of a file-system entry associated with an <see cref="IFileSystemView"/>.
 /// </summary>
-public readonly struct VfsLocation
+public readonly struct VfsLocation : IEquatable<VfsLocation>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="VfsLocation"/> structure using
@@ -91,12 +91,61 @@ public readonly struct VfsLocation
 
     /// <inheritdoc/>
     public override string ToString() => VfsLocationFormatter.GetString(View, Path);
+
+    #region Equality
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj) =>
+        obj is VfsLocation other &&
+        Equals(other);
+
+    /// <inheritdoc/>
+    public bool Equals(VfsLocation other)
+    {
+        var view = View;
+        return
+            view.Equals(other.View) &&
+            view.PathComparer.Equals(Path, other.Path);
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        var view = View;
+        return HashCode.Combine(
+            view.GetHashCode(),
+            view.PathComparer.GetHashCode(Path));
+    }
+
+    /// <summary>
+    /// Determines whether the specified VFS locations are equal.
+    /// </summary>
+    /// <param name="x">The first VFS location.</param>
+    /// <param name="y">The second VFS location.</param>
+    /// <returns>
+    /// <see langword="true"/> if the specified VFS locations are equal;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator ==(VfsLocation x, VfsLocation y) => x.Equals(y);
+
+    /// <summary>
+    /// Determines whether the specified VFS locations are not equal.
+    /// </summary>
+    /// <param name="x">The first VFS location.</param>
+    /// <param name="y">The second VFS location.</param>
+    /// <returns>
+    /// <see langword="true"/> if the specified VFS locations are not equal;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator !=(VfsLocation x, VfsLocation y) => !x.Equals(y);
+
+    #endregion
 }
 
 /// <summary>
 /// The path of a file-system entry associated with an <see cref="IReadOnlyFileSystemView"/>.
 /// </summary>
-public readonly struct VfsReadOnlyLocation
+public readonly struct VfsReadOnlyLocation : IEquatable<VfsReadOnlyLocation>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="VfsReadOnlyLocation"/> structure using
@@ -168,6 +217,55 @@ public readonly struct VfsReadOnlyLocation
 
     /// <inheritdoc/>
     public override string ToString() => VfsLocationFormatter.GetString(View, Path);
+
+    #region Equality
+
+    /// <inheritdoc/>
+    public override bool Equals(object? obj) =>
+        obj is VfsReadOnlyLocation other &&
+        Equals(other);
+
+    /// <inheritdoc/>
+    public bool Equals(VfsReadOnlyLocation other)
+    {
+        var view = View;
+        return
+            view.Equals(other.View) &&
+            view.PathComparer.Equals(Path, other.Path);
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        var view = View;
+        return HashCode.Combine(
+            view.GetHashCode(),
+            view.PathComparer.GetHashCode(Path));
+    }
+
+    /// <summary>
+    /// Determines whether the specified VFS locations are equal.
+    /// </summary>
+    /// <param name="x">The first VFS location.</param>
+    /// <param name="y">The second VFS location.</param>
+    /// <returns>
+    /// <see langword="true"/> if the specified VFS locations are equal;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator ==(VfsReadOnlyLocation x, VfsReadOnlyLocation y) => x.Equals(y);
+
+    /// <summary>
+    /// Determines whether the specified VFS locations are not equal.
+    /// </summary>
+    /// <param name="x">The first VFS location.</param>
+    /// <param name="y">The second VFS location.</param>
+    /// <returns>
+    /// <see langword="true"/> if the specified VFS locations are not equal;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator !=(VfsReadOnlyLocation x, VfsReadOnlyLocation y) => !x.Equals(y);
+
+    #endregion
 }
 
 static class VfsLocationFormatter
