@@ -13,14 +13,30 @@ public static class ConsoleTraits
 {
     /// <summary>
     /// <para>
+    /// Gets a value indicating whether console color output is enabled.
+    /// </para>
+    /// <para>
+    /// The console color is enabled when it is <see cref="IsColorAvailable">available</see> and not <see cref="IsColorInhibited">inhibited</see>.
+    /// </para>
+    /// </summary>
+    public static bool IsColorEnabled => IsColorAvailable && !IsColorInhibited;
+
+    /// <summary>
+    /// <para>
     /// Gets a value indicating whether console color output is available.
     /// </para>
     /// <para>
     /// Console color is usually always available unless program standard output streams are redirected.
     /// </para>
     /// </summary>
-    public static bool IsColorAvailable => !(Console.IsOutputRedirected || Console.IsErrorRedirected);
+    public static bool IsColorAvailable => AtomicNullable.EnsureInitialized(ref m_CachedIsColorAvailable, IsColorAvailableCore);
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    static AtomicNullableBool m_CachedIsColorAvailable;
+
+    static bool IsColorAvailableCore() =>
+        IsColorForced ||
+        !(Console.IsOutputRedirected || Console.IsErrorRedirected);
 
     /// <summary>
     /// <para>
@@ -31,55 +47,25 @@ public static class ConsoleTraits
     /// For example, <c>NO_COLOR</c> environment variable can be used to inhibit console colors as described by the corresponding <a href="https://no-color.org/">specification</a>.
     /// </para>
     /// </summary>
-    public static bool IsColorInhibited
-    {
-        get
-        {
-            var value = m_CachedIsColorInhibited;
-            if (value == AtomicNullableBool.Null)
-            {
-                value = IsColorInhibitedCore() ? AtomicNullableBool.True : AtomicNullableBool.False;
-                m_CachedIsColorInhibited = value;
-                Thread.MemoryBarrier();  // Freshness improvement.
-            }
-            return value == AtomicNullableBool.True;
-        }
-    }
+    public static bool IsColorInhibited => AtomicNullable.EnsureInitialized(ref m_CachedIsColorInhibited, IsColorInhibitedCore);
 
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     static AtomicNullableBool m_CachedIsColorInhibited;
 
     static bool IsColorInhibitedCore() =>
+        !IsColorForced &&
         !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("NO_COLOR"));  // https://no-color.org/
 
-    /// <summary>
-    /// <para>
-    /// Gets a value indicating whether console color output is enabled.
-    /// </para>
-    /// <para>
-    /// The console color is enabled when it is <see cref="IsColorAvailable">available</see> and not <see cref="IsColorInhibited">inhibited</see>.
-    /// </para>
-    /// </summary>
-    public static bool IsColorEnabled => IsColorAvailable && !IsColorInhibited;
+    static bool IsColorForced =>
+        !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("FORCE_COLOR"));  // https://force-color.org/
 
     /// <summary>
     /// Gets a value indicating whether a console window will immediately disappear on program exit.
     /// </summary>
-    public static bool WillDisappearOnExit
-    {
-        get
-        {
-            var value = m_CachedWillDisappearOnExit;
-            if (value == AtomicNullableBool.Null)
-            {
-                value = WillDisappearOnExitCore() ? AtomicNullableBool.True : AtomicNullableBool.False;
-                m_CachedWillDisappearOnExit = value;
-                Thread.MemoryBarrier();  // Freshness improvement.
-            }
-            return value == AtomicNullableBool.True;
-        }
-    }
+    public static bool WillDisappearOnExit => AtomicNullable.EnsureInitialized(ref m_CachedWillDisappearOnExit, WillDisappearOnExitCore);
 
     // This cached value should not be discarded as it represents an immutable trait.
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     static AtomicNullableBool m_CachedWillDisappearOnExit;
 
     static bool WillDisappearOnExitCore() =>
@@ -115,7 +101,9 @@ public static class ConsoleTraits
     /// </summary>
     public static void Refresh()
     {
+        m_CachedIsColorAvailable = default;
         m_CachedIsColorInhibited = default;
-        Thread.MemoryBarrier();  // Freshness improvement.
+
+        Thread.MemoryBarrier(); // freshness improvement
     }
 }
