@@ -49,7 +49,7 @@ public static class ConsoleTraits
     static AtomicNullableBool m_CachedIsColorInhibited;
 
     static bool IsColorInhibitedCore() =>
-        Environment.GetEnvironmentVariable("NO_COLOR") != null;  // https://no-color.org/
+        !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("NO_COLOR"));  // https://no-color.org/
 
     /// <summary>
     /// <para>
