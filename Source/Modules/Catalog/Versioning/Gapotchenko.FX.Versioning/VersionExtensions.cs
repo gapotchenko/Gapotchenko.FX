@@ -19,7 +19,13 @@ public static class VersionExtensions
     /// Gets a version based on the given version with the specified number of components set.
     /// </summary>
     /// <remarks>
+    /// <para>
     /// For example, version <c>1.2.3.4</c> with three components is <c>1.2.3</c>.
+    /// </para>
+    /// <para>
+    /// If the version has less components than the specified number, the missing components are set to <c>0</c>.
+    /// For example, version <c>1.2</c> with three components is <c>1.2.0</c>.
+    /// </para>
     /// </remarks>
     /// <param name="version">The version.</param>
     /// <param name="count">The number of components.</param>
