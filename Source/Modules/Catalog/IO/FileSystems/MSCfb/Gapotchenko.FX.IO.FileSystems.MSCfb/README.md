@@ -11,11 +11,11 @@ This module implements the MS-CFB (Compound File Binary Format) file system and 
 [MS-CFB](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/) is a structured storage format that embeds a complete file system within a single file.
 It underpins a variety of widespread file formats, such as Microsoft Office binary documents, `.msi` files, and many others.
 
-`Gapotchenko.FX.IO.FileSystems.MSCfb` exposes a compound file via `MSCfbFileSystem` class, which implements `IMSCfbFileSystem` and the usual VFS surface (`IVirtualFileSystem` / `IFileSystemView`), including streams, directories, enumeration, and timestamps.
+`Gapotchenko.FX.IO.FileSystems.MSCfb` exposes a compound file via `MSCfbFileSystem` class, which implements the usual VFS surface (`IVirtualFileSystem` / `IFileSystemView`), including streams, directories, enumeration, and timestamps.
 
 Paths in `MSCfbFileSystem` are case-insensitive in accordance with the format specification.
 
-Conceptually, the MS-CFB format can be viewed as a compact, portable, and — most importantly — standardized file system encapsulated within a single file, similar in spirit to FAT12 or FAT16.
+Conceptually, the MS-CFB format can be viewed as a compact, portable, and standardized file system encapsulated within a single file, similar in spirit to FAT12 or FAT16.
 
 ## `MSCfbFileSystem`
 

@@ -256,6 +256,7 @@ dotnet package add Gapotchenko.FX.IO.Vfs
 
 - [Gapotchenko.FX.Data.Archives](../../Data/Archives/Gapotchenko.FX.Data.Archives#readme) - Provides base functionality for data archives
 - [Gapotchenko.FX.IO](../Gapotchenko.FX.IO#readme) - Provides extended I/O functionality for the local file system
+- [Gapotchenko.FX.IO.FileSystems](../Gapotchenko.FX.IO.FileSystems#readme) - Provides base functionality for file system implementations
 
 ## Other Modules
 
