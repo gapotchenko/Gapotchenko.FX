@@ -37,7 +37,7 @@ This is very similar to working with local files using `System.IO` namespace.
 
 ### Working with Files
 
-The module provides provides a unified interface for file operations:
+The module provides a unified interface for file operations:
 
 ``` C#
 using Gapotchenko.FX.IO.Vfs;
