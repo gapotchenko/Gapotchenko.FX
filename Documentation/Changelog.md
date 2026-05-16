@@ -6,7 +6,7 @@
 
 Release date: not released yet
 
-- New `Gapotchenko.FX.EnvironmentVariables` type provides `NamesAreCaseSensitive`, `NameComparer`, and `NameComparison` properties useful for multi-platform software
+- New `Gapotchenko.FX.EnvironmentVariables` type provides `NamesAreCaseSensitive`, `NameComparer`, and `NameComparison` properties useful for creating portable multi-platform code
 - Added support for [`FORCE_COLOR` convention](https://force-color.org/)
 - Added `CommandLine.EncodeFileName(string)` method which can be used to ensure that file names are interpreted as command-line arguments rather than options (e.g., prevents names starting with `-` from being misinterpreted)
 - Added path comparison-sound equality operations for `VfsLocation` and `VfsReadOnlyLocation`
