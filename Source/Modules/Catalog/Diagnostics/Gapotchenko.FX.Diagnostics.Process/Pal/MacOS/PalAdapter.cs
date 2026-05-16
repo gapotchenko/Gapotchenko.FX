@@ -141,13 +141,23 @@ sealed class PalAdapter : IPalAdapter
     {
         for (; ; )
         {
-            int c = br.Read();
+            int c = br.PeekChar();
             if (c == -1)
+            {
+                // EOF
                 break;
-            if (c == 0)
+            }
+            else if (c == 0)
+            {
+                // Read out zero char.
+                _ = br.Read();
                 continue;
-            --br.BaseStream.Position;
-            break;
+            }
+            else
+            {
+                // Non-zero char encountered.
+                break;
+            }
         }
     }
 
