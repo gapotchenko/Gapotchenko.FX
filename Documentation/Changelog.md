@@ -11,6 +11,7 @@ Release date: not released yet
 - Added `CommandLine.EncodeFileName(string)` method which can be used to ensure that file names are interpreted as command-line arguments rather than options (e.g., prevents names starting with `-` from being misinterpreted)
 - Added path comparison-sound equality operations for `VfsLocation` and `VfsReadOnlyLocation`
 - Improved nullability annotations
+- `AppInformation.Current.ExecutablePath`  can point to a launcher file only if it is proven by actual process information
 - Fixed parameter name escaping in `UriQueryBuilder.HasParameter(string)` method
 - Fixed handling of `\x1b[m` control sequence in `Gapotchenko.FX.Console` module
 - Fixed issue with `Graph<T>.IsCyclic` calculation for undirected graphs

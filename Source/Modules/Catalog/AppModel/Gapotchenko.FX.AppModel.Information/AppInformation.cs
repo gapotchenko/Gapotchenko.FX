@@ -7,6 +7,7 @@
 // Year of introduction: 2020
 
 using Gapotchenko.FX.Diagnostics;
+using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Linq.Operators;
 using Gapotchenko.FX.Threading;
 using System.Diagnostics;
@@ -497,7 +498,8 @@ public class AppInformation : IAppInformation
                 string? exeExtension = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".exe" : null;
                 string exePath = Path.ChangeExtension(localPath, exeExtension);
 
-                if (File.Exists(exePath))
+                string? imageFileName = Process.GetCurrentProcess().GetImageFileName();
+                if (FileSystem.PathComparer.Equals(exePath, imageFileName))
                     localPath = exePath;
             }
         }
