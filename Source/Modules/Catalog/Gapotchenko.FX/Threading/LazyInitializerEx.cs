@@ -1,11 +1,11 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 // Portions © .NET Foundation and its Licensors
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2019
 
-using System.Diagnostics;
 using System.Security.Permissions;
 
 #if NETFRAMEWORK || NETSTANDARD2_0 || NETSTANDARD2_1 || NETCOREAPP2_0 || NETCOREAPP2_1
@@ -81,8 +81,9 @@ public static class LazyInitializerEx
         Lock syncLock,
         Func<TTarget> valueFactory)
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+#pragma warning disable CS9216 // A value of type 'System.Threading.Lock' converted to a different type will use likely unintended monitor-based locking in 'lock' statement.
+        ArgumentNullException.ThrowIfNull(syncLock);
+#pragma warning restore CS9216
 
         if (Volatile.Read(ref initialized))
             return target!;
@@ -115,20 +116,26 @@ public static class LazyInitializerEx
     /// </summary>
     /// <param name="target">A reference of <see cref="Object"/> type to initialize if it has not already been initialized.</param>
     /// <returns>The initialized reference of <see cref="Object"/> type.</returns>
-    public static object EnsureInitialized([NotNull] ref object? target) =>
-        target ??
-        Interlocked.CompareExchange(ref target, new object(), null) ??
-        target;
+    public static object EnsureInitialized([NotNull] ref object? target)
+    {
+        return
+            target ??
+            Interlocked.CompareExchange(ref target, new object(), null) ??
+            target;
+    }
 
     /// <summary>
     /// Initializes a target <see cref="Lock"/> type with the type's default constructor if it hasn't already been initialized.
     /// </summary>
     /// <param name="target">A reference of <see cref="Lock"/> type to initialize if it has not already been initialized.</param>
     /// <returns>The initialized reference of <see cref="Lock"/> type.</returns>
-    public static Lock EnsureInitialized([NotNull] ref Lock? target) =>
-        target ??
-        Interlocked.CompareExchange(ref target, new Lock(), null) ??
-        target;
+    public static Lock EnsureInitialized([NotNull] ref Lock? target)
+    {
+        return
+            target ??
+            Interlocked.CompareExchange(ref target, new Lock(), null) ??
+            target;
+    }
 
     // ------------------------------------------------------------------------------------------------------------
 
@@ -159,8 +166,7 @@ public static class LazyInitializerEx
     [CLSCompliant(false)]
     public static void EnsureInitialized(ref bool initialized, object syncLock, Action action)
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+        ArgumentNullException.ThrowIfNull(syncLock);
 
         if (Volatile.Read(ref initialized))
             return;
@@ -209,8 +215,9 @@ public static class LazyInitializerEx
     [CLSCompliant(false)]
     public static void EnsureInitialized(ref bool initialized, Lock syncLock, Action action)
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+#pragma warning disable CS9216 // A value of type 'System.Threading.Lock' converted to a different type will use likely unintended monitor-based locking in 'lock' statement.
+        ArgumentNullException.ThrowIfNull(syncLock);
+#pragma warning restore CS9216
 
         if (Volatile.Read(ref initialized))
             return;
@@ -262,8 +269,7 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static void EnsureInitialized<TState>(ref bool initialized, object syncLock, Action<TState> action, TState state)
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+        ArgumentNullException.ThrowIfNull(syncLock);
 
         if (Volatile.Read(ref initialized))
             return;
@@ -316,8 +322,9 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static void EnsureInitialized<TState>(ref bool initialized, Lock syncLock, Action<TState> action, TState state)
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+#pragma warning disable CS9216 // A value of type 'System.Threading.Lock' converted to a different type will use likely unintended monitor-based locking in 'lock' statement.
+        ArgumentNullException.ThrowIfNull(syncLock);
+#pragma warning restore CS9216
 
         if (Volatile.Read(ref initialized))
             return;
@@ -335,15 +342,6 @@ public static class LazyInitializerEx
                 Volatile.Write(ref initialized, true);
             }
         }
-    }
-
-    // ------------------------------------------------------------------------------------------------------------
-
-    [DoesNotReturn, StackTraceHidden]
-    static void ThrowArgumentNullException_SyncLock()
-    {
-        // This should be a separate method to avoid performance degradation.
-        throw new ArgumentNullException("syncLock");
     }
 
     // ------------------------------------------------------------------------------------------------------------
@@ -384,8 +382,7 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget, TState>([AllowNull] ref TTarget target, ref bool initialized, object syncLock, Func<TState, TTarget> valueFactory, TState state)
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+        ArgumentNullException.ThrowIfNull(syncLock);
 
         if (Volatile.Read(ref initialized))
             return target!;
@@ -444,8 +441,9 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget, TState>([AllowNull] ref TTarget target, ref bool initialized, Lock syncLock, Func<TState, TTarget> valueFactory, TState state)
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+#pragma warning disable CS9216 // A value of type 'System.Threading.Lock' converted to a different type will use likely unintended monitor-based locking in 'lock' statement.
+        ArgumentNullException.ThrowIfNull(syncLock);
+#pragma warning restore CS9216
 
         if (Volatile.Read(ref initialized))
             return target!;
@@ -625,8 +623,7 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget, TState>([NotNull] ref TTarget? target, object syncLock, Func<TState, TTarget> valueFactory, TState state) where TTarget : class
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+        ArgumentNullException.ThrowIfNull(syncLock);
 
         var result = Volatile.Read(ref target);
         if (result is not null)
@@ -689,8 +686,9 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget, TState>([NotNull] ref TTarget? target, Lock syncLock, Func<TState, TTarget> valueFactory, TState state) where TTarget : class
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+#pragma warning disable CS9216 // A value of type 'System.Threading.Lock' converted to a different type will use likely unintended monitor-based locking in 'lock' statement.
+        ArgumentNullException.ThrowIfNull(syncLock);
+#pragma warning restore CS9216
 
         var result = Volatile.Read(ref target);
         if (result is not null)
@@ -751,8 +749,7 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget>([NotNull] ref TTarget? target, object syncLock, Func<TTarget> valueFactory) where TTarget : class
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+        ArgumentNullException.ThrowIfNull(syncLock);
 
         var result = Volatile.Read(ref target);
         if (result is not null)
@@ -810,8 +807,9 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget>([NotNull] ref TTarget? target, Lock syncLock, Func<TTarget> valueFactory) where TTarget : class
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+#pragma warning disable CS9216 // A value of type 'System.Threading.Lock' converted to a different type will use likely unintended monitor-based locking in 'lock' statement.
+        ArgumentNullException.ThrowIfNull(syncLock);
+#pragma warning restore CS9216
 
         var result = Volatile.Read(ref target);
         if (result is not null)
@@ -904,8 +902,7 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget>(ref Optional<TTarget> target, object syncLock, Func<TTarget> valueFactory)
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+        ArgumentNullException.ThrowIfNull(syncLock);
 
         return LazyInitializer.EnsureInitialized(ref target.m_Value, ref target.m_HasValue, ref syncLock, valueFactory);
     }
@@ -923,8 +920,7 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget, TState>(ref Optional<TTarget> target, object syncLock, Func<TState, TTarget> valueFactory, TState state)
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+        ArgumentNullException.ThrowIfNull(syncLock);
 
         return EnsureInitialized(ref target.m_Value, ref target.m_HasValue, syncLock, valueFactory, state);
     }
@@ -942,12 +938,14 @@ public static class LazyInitializerEx
     public static TTarget EnsureInitialized<TTarget>(
         ref Optional<TTarget> target,
         [NotNullIfNotNull(nameof(syncLock))] ref Lock? syncLock,
-        Func<TTarget> valueFactory) =>
-        EnsureInitialized(
+        Func<TTarget> valueFactory)
+    {
+        return EnsureInitialized(
             ref target.m_Value,
             ref target.m_HasValue,
             ref syncLock,
             valueFactory);
+    }
 
     /// <summary>
     /// Initializes an optional target reference by using a specified function if it hasn't already been initialized.
@@ -963,13 +961,15 @@ public static class LazyInitializerEx
         ref Optional<TTarget> target,
         [NotNullIfNotNull(nameof(syncLock))] ref Lock? syncLock,
         Func<TState, TTarget> valueFactory,
-        TState state) =>
-        EnsureInitialized(
+        TState state)
+    {
+        return EnsureInitialized(
             ref target.m_Value,
             ref target.m_HasValue,
             ref syncLock,
             valueFactory,
             state);
+    }
 
     /// <summary>
     /// Initializes an optional target reference by using a specified function if it hasn't already been initialized.
@@ -982,8 +982,9 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget>(ref Optional<TTarget> target, Lock syncLock, Func<TTarget> valueFactory)
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+#pragma warning disable CS9216 // A value of type 'System.Threading.Lock' converted to a different type will use likely unintended monitor-based locking in 'lock' statement.
+        ArgumentNullException.ThrowIfNull(syncLock);
+#pragma warning restore CS9216
 
         return EnsureInitialized(ref target.m_Value, ref target.m_HasValue, syncLock, valueFactory);
     }
@@ -1001,8 +1002,9 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget, TState>(ref Optional<TTarget> target, Lock syncLock, Func<TState, TTarget> valueFactory, TState state)
     {
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
+#pragma warning disable CS9216 // A value of type 'System.Threading.Lock' converted to a different type will use likely unintended monitor-based locking in 'lock' statement.
+        ArgumentNullException.ThrowIfNull(syncLock);
+#pragma warning restore CS9216
 
         return EnsureInitialized(ref target.m_Value, ref target.m_HasValue, syncLock, valueFactory, state);
     }
