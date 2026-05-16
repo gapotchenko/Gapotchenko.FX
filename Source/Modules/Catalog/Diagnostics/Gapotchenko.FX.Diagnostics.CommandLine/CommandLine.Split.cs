@@ -27,7 +27,7 @@ partial class CommandLine
             if (ch == -1)
                 break;
 
-            var c = (char)ch;
+            char c = (char)ch;
 
             switch (c)
             {

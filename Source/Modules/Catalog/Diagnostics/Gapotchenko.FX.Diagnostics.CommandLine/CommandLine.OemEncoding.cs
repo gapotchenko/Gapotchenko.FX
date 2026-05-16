@@ -29,7 +29,7 @@ partial class CommandLine
             {
                 int lcid = NativeMethods.GetSystemDefaultLCID();
                 var ci = CultureInfo.GetCultureInfo(lcid);
-                var page = ci.TextInfo.OEMCodePage;
+                int page = ci.TextInfo.OEMCodePage;
 
                 Encoding encoding;
                 if (page == 65001)
