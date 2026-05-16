@@ -74,4 +74,13 @@ partial class CommandLine
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static string Build(params string?[] args) => Build((IEnumerable<string?>)args);
 #endif
+
+    /// <inheritdoc cref="Build(IEnumerable{string?})"/>
+    public static string Build(params scoped ReadOnlySpan<string?> args)
+    {
+        var clb = new CommandLineBuilder();
+        foreach (string? arg in args)
+            clb.AppendArgument(arg);
+        return clb.ToString();
+    }
 }
