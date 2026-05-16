@@ -35,7 +35,7 @@ sealed class PalAdapter : IPalAdapter
         int[] mib = [NativeMethods.CTL_KERN, NativeMethods.KERN_PROC, NativeMethods.KERN_PROC_PID, process.Id];
         if (NativeMethods.sysctl(mib, mib.Length, info, &infoLength, null, 0) < 0)
             throw new Exception("sysctl for KERN_PROC failed.");
-        if (infoLength == IntPtr.Zero)
+        if (infoLength == 0)
             throw new Exception("sysctl returned an unexpected attribute length for KERN_PROC.");
 
         return *(int*)(info + 560); // info.kp_eproc.e_ppid

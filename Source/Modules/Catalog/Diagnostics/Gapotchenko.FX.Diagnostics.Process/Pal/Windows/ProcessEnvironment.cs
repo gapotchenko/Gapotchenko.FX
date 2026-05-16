@@ -36,12 +36,12 @@ static partial class ProcessEnvironment
             if (!ProcessMemory.TryReadIntPtr(hProcess, pProcessParameters + 0x78, out var pCommandLineBuffer))
                 throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
 
-            IProcessMemoryAccessor adapter =
+            IProcessMemoryAccessor accessor =
                 Environment.Is64BitProcess ?
                     new ProcessMemoryAccessor(hProcess) :
                     new ProcessMemoryAccessorWow64(hProcess);
 
-            var stream = new ProcessMemoryStream(adapter, pCommandLineBuffer, commandLineLength + sizeof(char));
+            var stream = new ProcessMemoryStream(accessor, pCommandLineBuffer, commandLineLength + sizeof(char));
             var br = new ProcessBinaryReader(stream, Encoding.Unicode);
 
             return br.ReadCString();
@@ -61,8 +61,8 @@ static partial class ProcessEnvironment
             if (!ProcessMemory.TryReadIntPtr(hProcess, pProcessParameters + 0x44, out var pCommandLineBuffer))
                 throw new Exception("Unable to read RTL_USER_PROCESS_PARAMETERS.");
 
-            var adapter = new ProcessMemoryAccessor(hProcess);
-            var stream = new ProcessMemoryStream(adapter, pCommandLineBuffer, commandLineLength + sizeof(char));
+            var accessor = new ProcessMemoryAccessor(hProcess);
+            var stream = new ProcessMemoryStream(accessor, pCommandLineBuffer, commandLineLength + sizeof(char));
             var br = new ProcessBinaryReader(stream, Encoding.Unicode);
 
             return br.ReadCString();
@@ -120,8 +120,8 @@ static partial class ProcessEnvironment
             if (!ProcessMemory.HasReadAccess(hProcess, pEnv, out int dataSize))
                 throw new Exception("Unable to read process environment block.");
 
-            var provider = new ProcessMemoryAccessor(hProcess);
-            return new ProcessMemoryStream(provider, pEnv, dataSize);
+            var accessor = new ProcessMemoryAccessor(hProcess);
+            return new ProcessMemoryStream(accessor, pEnv, dataSize);
         }
         else if (pEnv.Size == 8 && IntPtr.Size == 4)
         {
@@ -139,8 +139,8 @@ static partial class ProcessEnvironment
                 dataSize = -1;
             }
 
-            var adapter = new ProcessMemoryAccessorWow64(hProcess);
-            return new ProcessMemoryStream(adapter, pEnv, dataSize);
+            var accessor = new ProcessMemoryAccessorWow64(hProcess);
+            return new ProcessMemoryStream(accessor, pEnv, dataSize);
         }
         else
         {
