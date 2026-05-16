@@ -150,7 +150,7 @@ static partial class ProcessEnvironment
 
     static IReadOnlyDictionary<string, string> ReadEnv(ProcessBinaryReader br)
     {
-        var env = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+        var env = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         for (; ; )
         {

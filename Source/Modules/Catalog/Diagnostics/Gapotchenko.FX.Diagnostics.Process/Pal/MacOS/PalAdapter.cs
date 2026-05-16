@@ -55,11 +55,11 @@ sealed class PalAdapter : IPalAdapter
     {
         var br = GetProcArgs2BinaryReader(process.Id);
 
-        // Skip process arguments.
+        // Read and ignore process arguments first.
         foreach (string i in ReadArguments(br))
             _ = i;
 
-        var env = new Dictionary<string, string>(StringComparer.InvariantCulture);
+        var env = new Dictionary<string, string>(StringComparer.Ordinal);
 
         if (br.PeekChar() == -1)
             return env; // EOF

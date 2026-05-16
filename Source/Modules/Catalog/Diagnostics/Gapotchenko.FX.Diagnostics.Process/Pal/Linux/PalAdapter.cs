@@ -86,7 +86,7 @@ sealed class PalAdapter : IPalAdapter
             File.OpenRead(GetProcEntryFilePath(process.Id, "environ")),
             Encoding.UTF8);
 
-        var env = new Dictionary<string, string>(StringComparer.InvariantCulture);
+        var env = new Dictionary<string, string>(StringComparer.Ordinal);
 
         for (; ; )
         {
@@ -102,8 +102,8 @@ sealed class PalAdapter : IPalAdapter
             if (j <= 0)
                 continue;
 
-            string name = s.Substring(0, j);
-            string value = s.Substring(j + 1);
+            string name = s[..j];
+            string value = s[(j + 1)..];
 
             env[name] = value;
         }
