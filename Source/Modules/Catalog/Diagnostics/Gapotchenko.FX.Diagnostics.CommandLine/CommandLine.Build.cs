@@ -57,22 +57,21 @@ partial class CommandLine
     /// <summary>
     /// Builds a command line from a specified sequence of arguments.
     /// </summary>
-    /// <param name="args">A sequence of arguments.</param>
-    /// <returns>The command line.</returns>
-    public static string Build(IEnumerable<string?> args)
+    /// <param name="args">The sequence of arguments.</param>
+    /// <returns>The built command line.</returns>
+    public static string Build(params IEnumerable<string?> args)
     {
         ArgumentNullException.ThrowIfNull(args);
 
         var clb = new CommandLineBuilder();
-        foreach (var arg in args)
+        foreach (string? arg in args)
             clb.AppendArgument(arg);
         return clb.ToString();
     }
 
-    /// <summary>
-    /// Builds a command line from a specified array of arguments.
-    /// </summary>
-    /// <param name="args">An array of arguments.</param>
-    /// <returns>The command line.</returns>
+#if BINARY_COMPATIBILITY // 2026
+    /// <inheritdoc cref="Build(IEnumerable{string?})"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static string Build(params string?[] args) => Build((IEnumerable<string?>)args);
+#endif
 }
