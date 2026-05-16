@@ -81,11 +81,11 @@ public static class LazyInitializerEx
         Lock syncLock,
         Func<TTarget> valueFactory)
     {
-        if (Volatile.Read(ref initialized))
-            return target!;
-
         if (syncLock is null)
             ThrowArgumentNullException_SyncLock();
+
+        if (Volatile.Read(ref initialized))
+            return target!;
 
         return EnsureInitializedCore(ref target, ref initialized, syncLock, valueFactory);
     }
@@ -159,11 +159,11 @@ public static class LazyInitializerEx
     [CLSCompliant(false)]
     public static void EnsureInitialized(ref bool initialized, object syncLock, Action action)
     {
-        if (Volatile.Read(ref initialized))
-            return;
-
         if (syncLock is null)
             ThrowArgumentNullException_SyncLock();
+
+        if (Volatile.Read(ref initialized))
+            return;
 
         EnsureInitializedCore(ref initialized, syncLock, action);
     }
@@ -209,11 +209,11 @@ public static class LazyInitializerEx
     [CLSCompliant(false)]
     public static void EnsureInitialized(ref bool initialized, Lock syncLock, Action action)
     {
-        if (Volatile.Read(ref initialized))
-            return;
-
         if (syncLock is null)
             ThrowArgumentNullException_SyncLock();
+
+        if (Volatile.Read(ref initialized))
+            return;
 
         EnsureInitializedCore(ref initialized, syncLock, action);
     }
@@ -262,11 +262,11 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static void EnsureInitialized<TState>(ref bool initialized, object syncLock, Action<TState> action, TState state)
     {
-        if (Volatile.Read(ref initialized))
-            return;
-
         if (syncLock is null)
             ThrowArgumentNullException_SyncLock();
+
+        if (Volatile.Read(ref initialized))
+            return;
 
         EnsureInitializedCore(ref initialized, syncLock, action, state);
     }
@@ -316,11 +316,11 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static void EnsureInitialized<TState>(ref bool initialized, Lock syncLock, Action<TState> action, TState state)
     {
-        if (Volatile.Read(ref initialized))
-            return;
-
         if (syncLock is null)
             ThrowArgumentNullException_SyncLock();
+
+        if (Volatile.Read(ref initialized))
+            return;
 
         EnsureInitializedCore(ref initialized, syncLock, action, state);
     }
@@ -384,11 +384,11 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget, TState>([AllowNull] ref TTarget target, ref bool initialized, object syncLock, Func<TState, TTarget> valueFactory, TState state)
     {
-        if (Volatile.Read(ref initialized))
-            return target!;
-
         if (syncLock is null)
             ThrowArgumentNullException_SyncLock();
+
+        if (Volatile.Read(ref initialized))
+            return target!;
 
         return EnsureInitializedCore(ref target, ref initialized, syncLock, valueFactory, state);
     }
@@ -444,11 +444,11 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget, TState>([AllowNull] ref TTarget target, ref bool initialized, Lock syncLock, Func<TState, TTarget> valueFactory, TState state)
     {
-        if (Volatile.Read(ref initialized))
-            return target!;
-
         if (syncLock is null)
             ThrowArgumentNullException_SyncLock();
+
+        if (Volatile.Read(ref initialized))
+            return target!;
 
         return EnsureInitializedCore(ref target, ref initialized, syncLock, valueFactory, state);
     }
@@ -625,12 +625,12 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget, TState>([NotNull] ref TTarget? target, object syncLock, Func<TState, TTarget> valueFactory, TState state) where TTarget : class
     {
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
+
         var result = Volatile.Read(ref target);
         if (result is not null)
             return result;
-
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
 
         return EnsureInitializedCore(ref target, syncLock, valueFactory, state);
     }
@@ -689,12 +689,12 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget, TState>([NotNull] ref TTarget? target, Lock syncLock, Func<TState, TTarget> valueFactory, TState state) where TTarget : class
     {
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
+
         var result = Volatile.Read(ref target);
         if (result is not null)
             return result;
-
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
 
         return EnsureInitializedCore(ref target, syncLock, valueFactory, state);
     }
@@ -751,12 +751,12 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget>([NotNull] ref TTarget? target, object syncLock, Func<TTarget> valueFactory) where TTarget : class
     {
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
+
         var result = Volatile.Read(ref target);
         if (result is not null)
             return result;
-
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
 
         return EnsureInitializedCore(ref target, syncLock, valueFactory);
     }
@@ -810,12 +810,12 @@ public static class LazyInitializerEx
     /// <exception cref="ArgumentNullException"><paramref name="syncLock"/> is <see langword="null"/>.</exception>
     public static TTarget EnsureInitialized<TTarget>([NotNull] ref TTarget? target, Lock syncLock, Func<TTarget> valueFactory) where TTarget : class
     {
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
+
         var result = Volatile.Read(ref target);
         if (result is not null)
             return result;
-
-        if (syncLock is null)
-            ThrowArgumentNullException_SyncLock();
 
         return EnsureInitializedCore(ref target, syncLock, valueFactory);
     }
