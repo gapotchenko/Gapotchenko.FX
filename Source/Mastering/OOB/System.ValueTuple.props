@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TFF_VALUETUPLE_OOB)' == 'true' ">
-    <PackageReference Include="System.ValueTuple" Version="4.6.2" />
+    <PackageReference Include="System.ValueTuple" />
     <MasteringFrameworkFeature Include="TFF_VALUETUPLE;TFF_VALUETUPLE_OOB" />
   </ItemGroup>
 

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TFF_RUNTIME_INFORMATION_OOB)' == 'true' ">
-    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" />
     <MasteringFrameworkFeature Include="TFF_RUNTIME_INFORMATION;TFF_RUNTIME_INFORMATION_OOB" />
   </ItemGroup>
 

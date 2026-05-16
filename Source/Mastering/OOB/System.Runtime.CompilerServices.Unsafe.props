@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TFF_UNSAFE_OOB)' == 'true' ">
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" />
     <MasteringFrameworkFeature Include="TFF_UNSAFE;TFF_UNSAFE_OOB" />
   </ItemGroup>
 
