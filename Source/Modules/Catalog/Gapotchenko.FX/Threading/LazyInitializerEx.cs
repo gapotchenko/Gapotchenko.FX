@@ -858,8 +858,29 @@ public static class LazyInitializerEx
     public static TTarget EnsureInitialized<TTarget>(
         ref Optional<TTarget> target,
         [NotNull] ref object? syncLock,
-        Func<TTarget> valueFactory) =>
-        LazyInitializer.EnsureInitialized(ref target.m_Value, ref target.m_HasValue, ref syncLock, valueFactory);
+        Func<TTarget> valueFactory)
+    {
+        return LazyInitializer.EnsureInitialized(ref target.m_Value, ref target.m_HasValue, ref syncLock, valueFactory);
+    }
+
+    /// <summary>
+    /// Initializes an optional target reference by using a specified function if it hasn't already been initialized.
+    /// </summary>
+    /// <typeparam name="TTarget">The type of the target to be initialized.</typeparam>
+    /// <typeparam name="TState">The type of the state passed to the value factory.</typeparam>
+    /// <param name="target">A reference of type <see cref="Optional{TTarget}"/> to initialize if it hasn't already been initialized.</param>
+    /// <param name="syncLock">A reference to an object used as the mutually exclusive lock for initializing target. If syncLock is null, a new object will be instantiated.</param>
+    /// <param name="valueFactory">The function that is called to initialize the reference or value.</param>
+    /// <param name="state">The state passed to the value factory.</param>
+    /// <returns>The initialized value of type <typeparamref name="TTarget"/>.</returns>
+    public static TTarget EnsureInitialized<TTarget, TState>(
+        ref Optional<TTarget> target,
+        [NotNull] ref object? syncLock,
+        Func<TState, TTarget> valueFactory,
+        TState state)
+    {
+        return EnsureInitialized(ref target.m_Value, ref target.m_HasValue, ref syncLock, valueFactory, state);
+    }
 
     /// <summary>
     /// Initializes an optional target reference by using a specified function if it hasn't already been initialized.
@@ -875,6 +896,24 @@ public static class LazyInitializerEx
             ThrowArgumentNullException_SyncLock();
 
         return LazyInitializer.EnsureInitialized(ref target.m_Value, ref target.m_HasValue, ref syncLock, valueFactory);
+    }
+
+    /// <summary>
+    /// Initializes an optional target reference by using a specified function if it hasn't already been initialized.
+    /// </summary>
+    /// <typeparam name="TTarget">The type of the target to be initialized.</typeparam>
+    /// <typeparam name="TState">The type of the state passed to the value factory.</typeparam>
+    /// <param name="target">A reference of type <see cref="Optional{TTarget}"/> to initialize if it hasn't already been initialized.</param>
+    /// <param name="syncLock">An object used as the mutually exclusive lock for initializing target.</param>
+    /// <param name="valueFactory">The function that is called to initialize the reference or value.</param>
+    /// <param name="state">The state passed to the value factory.</param>
+    /// <returns>The initialized value of type <typeparamref name="TTarget"/>.</returns>
+    public static TTarget EnsureInitialized<TTarget, TState>(ref Optional<TTarget> target, object syncLock, Func<TState, TTarget> valueFactory, TState state)
+    {
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
+
+        return EnsureInitialized(ref target.m_Value, ref target.m_HasValue, syncLock, valueFactory, state);
     }
 
     // ------------------------------------------------------------------------------------------------------------
@@ -901,6 +940,28 @@ public static class LazyInitializerEx
     /// Initializes an optional target reference by using a specified function if it hasn't already been initialized.
     /// </summary>
     /// <typeparam name="TTarget">The type of the target to be initialized.</typeparam>
+    /// <typeparam name="TState">The type of the state passed to the value factory.</typeparam>
+    /// <param name="target">A reference of type <see cref="Optional{TTarget}"/> to initialize if it hasn't already been initialized.</param>
+    /// <param name="syncLock">A reference to an object used as the mutually exclusive lock for initializing target. If syncLock is null, a new object will be instantiated.</param>
+    /// <param name="valueFactory">The function that is called to initialize the reference or value.</param>
+    /// <param name="state">The state passed to the value factory.</param>
+    /// <returns>The initialized value of type <typeparamref name="TTarget"/>.</returns>
+    public static TTarget EnsureInitialized<TTarget, TState>(
+        ref Optional<TTarget> target,
+        [NotNullIfNotNull(nameof(syncLock))] ref Lock? syncLock,
+        Func<TState, TTarget> valueFactory,
+        TState state) =>
+        EnsureInitialized(
+            ref target.m_Value,
+            ref target.m_HasValue,
+            ref syncLock,
+            valueFactory,
+            state);
+
+    /// <summary>
+    /// Initializes an optional target reference by using a specified function if it hasn't already been initialized.
+    /// </summary>
+    /// <typeparam name="TTarget">The type of the target to be initialized.</typeparam>
     /// <param name="target">A reference of type <see cref="Optional{TTarget}"/> to initialize if it hasn't already been initialized.</param>
     /// <param name="syncLock">An object used as the mutually exclusive lock for initializing target.</param>
     /// <param name="valueFactory">The function that is called to initialize the reference or value.</param>
@@ -911,5 +972,23 @@ public static class LazyInitializerEx
             ThrowArgumentNullException_SyncLock();
 
         return EnsureInitialized(ref target.m_Value, ref target.m_HasValue, syncLock, valueFactory);
+    }
+
+    /// <summary>
+    /// Initializes an optional target reference by using a specified function if it hasn't already been initialized.
+    /// </summary>
+    /// <typeparam name="TTarget">The type of the target to be initialized.</typeparam>
+    /// <typeparam name="TState">The type of the state passed to the value factory.</typeparam>
+    /// <param name="target">A reference of type <see cref="Optional{TTarget}"/> to initialize if it hasn't already been initialized.</param>
+    /// <param name="syncLock">An object used as the mutually exclusive lock for initializing target.</param>
+    /// <param name="valueFactory">The function that is called to initialize the reference or value.</param>
+    /// <param name="state">The state passed to the value factory.</param>
+    /// <returns>The initialized value of type <typeparamref name="TTarget"/>.</returns>
+    public static TTarget EnsureInitialized<TTarget, TState>(ref Optional<TTarget> target, Lock syncLock, Func<TState, TTarget> valueFactory, TState state)
+    {
+        if (syncLock is null)
+            ThrowArgumentNullException_SyncLock();
+
+        return EnsureInitialized(ref target.m_Value, ref target.m_HasValue, syncLock, valueFactory, state);
     }
 }
