@@ -1,4 +1,5 @@
 ﻿// Gapotchenko.FX
+//
 // Copyright © Gapotchenko and Contributors
 // Portions © .NET Foundation and its Licensors
 //
@@ -52,7 +53,7 @@ public static class SafeBufferPolyfills
         {
             safeBuffer.AcquirePointer(ref handle);
 
-            var ptr = handle + byteOffset;
+            byte* ptr = handle + byteOffset;
             SpaceCheck(safeBuffer, handle, ptr, checked((nuint)buffer.Length));
 
             new ReadOnlySpan<byte>(ptr, buffer.Length).CopyTo(buffer);
@@ -68,7 +69,7 @@ public static class SafeBufferPolyfills
 #if !TFF_SAFEBUFFER_READSPAN
     static unsafe void SpaceCheck(SafeBuffer safeBuffer, void* handle, byte* ptr, nuint sizeInBytes)
     {
-        var _numBytes = safeBuffer.ByteLength;
+        ulong _numBytes = safeBuffer.ByteLength;
         if (_numBytes < sizeInBytes)
             throw new ArgumentException("Buffer is too small.");
         if ((ulong)(ptr - (byte*)handle) > (_numBytes - sizeInBytes))
