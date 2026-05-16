@@ -1,10 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>$([System.Text.RegularExpressions.Regex]::Replace('$(TargetFrameworks)', "\bnet461\b", ""))</TargetFrameworks>
-    <TargetFrameworks>$([MSBuild]::Unescape($(TargetFrameworks)))</TargetFrameworks>
-  </PropertyGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Arc4\TestVectors\**\*.txt" />
   </ItemGroup>

@@ -1,11 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>$([System.Text.RegularExpressions.Regex]::Replace('$(TargetFrameworks)', "\bnet461\b", ""))</TargetFrameworks>
-    <TargetFrameworks>$([MSBuild]::Unescape($(TargetFrameworks)))</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <NoWarn>xUnit1042</NoWarn>
   </PropertyGroup>
   
