@@ -12,10 +12,21 @@
 `Gapotchenko.FX.Runtime.InteropServices` is a complementary module to `System.Runtime.InteropServices` which is provided as a part of .NET.
 The module provides polyfills for functionality defined in `System.Runtime.InteropServices` BCL module.
 
+## Polyfills for `Marshal`
+
+[`Marshal`](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.marshal) class provided by `System.Runtime.InteropServices` module got new methods in recent .NET versions:
+
+- `GetLastPInvokeError()`
+
+`Gapotchenko.FX.Runtime.InteropServices` module makes them available for all supported target frameworks.
+
 ## Polyfills for `SafeBuffer`
 
-`SafeBuffer` class provided by `System.Runtime.InteropServices` module got a new `ReadSpan(ulong byteOffset, Span<byte> buffer)` method since .NET 6.0.
-This module makes it available for all other supported target frameworks.
+[`SafeBuffer`](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.safebuffer) class provided by `System.Runtime.InteropServices` module got new methods in recent .NET versions:
+
+- `ReadSpan(ulong byteOffset, Span<byte> buffer)`
+
+`Gapotchenko.FX.Runtime.InteropServices` module makes them available for all supported target frameworks.
 
 ## Usage
 
