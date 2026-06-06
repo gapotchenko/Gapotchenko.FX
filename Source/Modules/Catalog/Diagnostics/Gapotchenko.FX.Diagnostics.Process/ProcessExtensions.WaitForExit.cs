@@ -87,14 +87,14 @@ partial class ProcessExtensions
     /// <exception cref="SystemException">There is no process associated with this <see cref="Process"/> object.</exception>
     /// <exception cref="SystemException">You are attempting to call <see cref="WaitForExit(Process, int, CancellationToken)"/> for a process that is running on a remote computer. This method is available only for processes that are running on the local computer.</exception>
     /// <exception cref="Win32Exception">The wait setting could not be accessed.</exception>
-    public static void WaitForExit(this Process process, int milliseconds, CancellationToken cancellationToken)
+    public static bool WaitForExit(this Process process, int milliseconds, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(process);
 
         if (cancellationToken.CanBeCanceled)
-            TaskBridge.Execute(WaitForExitAsync(process, milliseconds, cancellationToken));
+            return TaskBridge.Execute(WaitForExitAsync(process, milliseconds, cancellationToken));
         else
-            process.WaitForExit(milliseconds);
+            return process.WaitForExit(milliseconds);
     }
 
     /// <summary>

@@ -6,6 +6,8 @@
 
 Release date: not released yet
 
+- Fixed issue with signature of `Process.WaitForExit(int, CancellationToken)` polyfill method that was not returning `bool` result as it should have been
+
 ### Gapotchenko.FX 2026.7
 
 Release date: May 17, 2026
