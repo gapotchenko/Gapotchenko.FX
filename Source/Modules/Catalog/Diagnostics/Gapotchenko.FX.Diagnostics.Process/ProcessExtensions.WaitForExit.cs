@@ -90,8 +90,14 @@ partial class ProcessExtensions
         ArgumentNullException.ThrowIfNull(process);
 
         if (cancellationToken.CanBeCanceled)
+        {
             WaitForExit(process, Timeout.Infinite, cancellationToken);
-        else
+
+            // IMPORTANT NOTE:
+            // When standard output has been redirected to asynchronous event handlers, it is possible that output processing will not have completed at this stage.
+            // To ensure that asynchronous event handling has been completed, WaitForExit() method with no parameters should be called afterwards.
+        }
+
             process.WaitForExit();
     }
 
