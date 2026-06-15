@@ -46,6 +46,7 @@ partial class ProcessExtensions
     /// <returns><see langword="true"/> if the associated process has exited; otherwise, <see langword="false"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="process"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="milliseconds"/> is a negative number other than -1, which represents an infinite timeout.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
     /// <exception cref="SystemException">No process <see cref="Process.Id"/> has been set, and a <see cref="Process.Handle"/> from which the <see cref="Process.Id"/> property can be determined does not exist.</exception>
     /// <exception cref="SystemException">There is no process associated with this <see cref="Process"/> object.</exception>
     /// <exception cref="SystemException">You are attempting to call the method for a process that is running on a remote computer. This method is available only for processes that are running on the local computer.</exception>
@@ -81,6 +82,7 @@ partial class ProcessExtensions
     /// <param name="process">The process.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <exception cref="ArgumentNullException"><paramref name="process"/> is <see langword="null"/>.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
     /// <exception cref="SystemException">No process <see cref="Process.Id"/> has been set, and a <see cref="Process.Handle"/> from which the <see cref="Process.Id"/> property can be determined does not exist.</exception>
     /// <exception cref="SystemException">There is no process associated with this <see cref="Process"/> object.</exception>
     /// <exception cref="SystemException">You are attempting to call the method for a process that is running on a remote computer. This method is available only for processes that are running on the local computer.</exception>
@@ -109,6 +111,7 @@ partial class ProcessExtensions
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <exception cref="ArgumentNullException"><paramref name="process"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="milliseconds"/> is a negative number other than -1, which represents an infinite timeout.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled.</exception>
     /// <exception cref="SystemException">No process <see cref="Process.Id"/> has been set, and a <see cref="Process.Handle"/> from which the <see cref="Process.Id"/> property can be determined does not exist.</exception>
     /// <exception cref="SystemException">There is no process associated with this <see cref="Process"/> object.</exception>
     /// <exception cref="SystemException">You are attempting to call the method for a process that is running on a remote computer. This method is available only for processes that are running on the local computer.</exception>
