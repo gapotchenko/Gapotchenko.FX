@@ -19,7 +19,7 @@ namespace Gapotchenko.FX.Threading;
 /// <typeparam name="T">Specifies the type of object that is being lazily evaluated.</typeparam>
 /// <remarks>
 /// <para>
-/// <see cref="EvaluateOnce{T}"/> is a struct and thus sometimes it may be a better choice than <see cref="Lazy{T}"/> in terms of performance and memory allocation.
+/// <see cref="EvaluateOnce{T}"/> is a struct and thus it may be a better choice than <see cref="Lazy{T}"/> in terms of performance and memory allocation for certain scenarios.
 /// </para>
 /// <para>
 /// <see cref="EvaluateOnce{T}"/> is thread-safe.

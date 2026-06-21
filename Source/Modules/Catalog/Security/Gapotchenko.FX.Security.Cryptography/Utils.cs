@@ -1,4 +1,11 @@
-﻿using System.Security.Cryptography;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2022
+
+using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Security.Cryptography;
 

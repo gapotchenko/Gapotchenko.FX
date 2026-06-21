@@ -1,4 +1,11 @@
-﻿using System.Security.Cryptography;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2022
+
+using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Security.Cryptography;
 
@@ -8,7 +15,7 @@ sealed class Arc4ManagedTransform(byte[] key) : ICryptoTransform
     {
         if (m_State is { } state)
         {
-            // Revoke the state reference as quickly as possible to signal that the object has been disposed.
+            // Revoke the state reference as quickly as possible to indicate that the object has been disposed.
             m_State = null;
 
             // Zero the state to avoid cryptographic material leaking.
@@ -85,6 +92,7 @@ sealed class Arc4ManagedTransform(byte[] key) : ICryptoTransform
     }
 
     byte m_X, m_Y;
+
     byte[]? m_State = CreateState(key);
 
     static byte[] CreateState(byte[] key)
