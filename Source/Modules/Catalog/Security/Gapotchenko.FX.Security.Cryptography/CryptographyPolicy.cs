@@ -50,7 +50,7 @@ public static class CryptographyPolicy
     static bool AreOnlyFipsAlgorithmsAllowed()
     {
         return
-            CryptoConfig.AllowOnlyFipsAlgorithms || // this alone is not enough for some .NET versions
+            CryptoConfig.AllowOnlyFipsAlgorithms || // this alone is not enough for some .NET runtime versions
             (QueryFips() ?? ProbeFips()); // query the OS and fallback to probing if the result is inconclusive
     }
 
@@ -102,8 +102,7 @@ public static class CryptographyPolicy
     /// </para>
     /// <para>
     /// This method cannot weaken restrictions imposed by the host environment.
-    /// It is primarily intended for enforcing FIPS algorithms at the application level on
-    /// operating systems that do not have system-wide FIPS policy controls.
+    /// It is primarily intended for enforcing FIPS algorithms at the application level.
     /// Another use case is testing and validation of application behavior
     /// under FIPS-only policy conditions.
     /// </para>
