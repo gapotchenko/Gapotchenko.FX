@@ -2,10 +2,11 @@
 
 ## 2026
 
-### Gapotchenko.FX 2026.8 Beta
+### Gapotchenko.FX 2026.8 (Beta)
 
 Release date: not released yet
 
+- Added polyfill for `System.Security.Cryptography.CryptographicOperations` class
 - Fixed issue with signature of `Process.WaitForExit(int, CancellationToken)` polyfill method that was not returning `bool` result as it should have been
 
 ### Gapotchenko.FX 2026.7

@@ -13,7 +13,7 @@ sealed class Arc4ManagedTransform(byte[] key) : ICryptoTransform
         {
             m_X = 0;
             m_Y = 0;
-            Array.Clear(m_State);
+            CryptographicOperations.ZeroMemory(m_State);
             m_State = null;
         }
     }
