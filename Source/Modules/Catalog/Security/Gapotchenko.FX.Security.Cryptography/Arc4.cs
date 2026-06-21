@@ -1,4 +1,11 @@
-﻿using System.Diagnostics;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2022
+
+using System.Diagnostics;
 using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Security.Cryptography;
@@ -83,5 +90,10 @@ public abstract class Arc4 : SymmetricAlgorithm
     /// Creates an instance of the default implementation of ARC4 algorithm.
     /// </summary>
     /// <returns>The instance of ARC4 algorithm.</returns>
-    public static new Arc4 Create() => new Arc4Managed();
+    public static new Arc4 Create()
+    {
+#pragma warning disable CS0618 // Type or member is obsolete
+        return new Arc4Managed();
+#pragma warning restore CS0618
+    }
 }
