@@ -4,17 +4,17 @@ namespace Gapotchenko.FX.Security.Cryptography;
 
 sealed class Arc4ManagedTransform(byte[] key) : ICryptoTransform
 {
-    byte[]? m_State = CreateState(key);
-    byte m_X, m_Y;
-
     public void Dispose()
     {
-        if (m_State != null)
+        if (m_State is { } state)
         {
+            // Revoke the state reference as quickly as possible to signal that the object has been disposed.
+            m_State = null;
+
+            // Zero the state to avoid cryptographic material leaking.
             m_X = 0;
             m_Y = 0;
-            CryptographicOperations.ZeroMemory(m_State);
-            m_State = null;
+            CryptographicOperations.ZeroMemory(state);
         }
     }
 
@@ -28,7 +28,7 @@ sealed class Arc4ManagedTransform(byte[] key) : ICryptoTransform
 
     public int TransformBlock(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
     {
-        CheckInputParameters(inputBuffer, inputOffset, inputCount);
+        ValidateInputParameters(inputBuffer, inputOffset, inputCount);
 
         ArgumentNullException.ThrowIfNull(outputBuffer);
         ArgumentOutOfRangeException.ThrowIfNegative(outputOffset);
@@ -44,42 +44,14 @@ sealed class Arc4ManagedTransform(byte[] key) : ICryptoTransform
 
     public byte[] TransformFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount)
     {
-        CheckInputParameters(inputBuffer, inputOffset, inputCount);
+        ValidateInputParameters(inputBuffer, inputOffset, inputCount);
 
         byte[] output = new byte[inputCount];
         TransformBlockCore(inputBuffer, inputOffset, inputCount, output, 0);
         return output;
     }
 
-    static byte[] CreateState(byte[] key)
-    {
-        const int StateSize = 256;
-
-        byte[] state = new byte[StateSize];
-
-        for (int i = 0; i < StateSize; ++i)
-            state[i] = (byte)i;
-
-        byte index1 = 0;
-        byte index2 = 0;
-        for (int i = 0; i < StateSize; ++i)
-        {
-            index2 = (byte)(key[index1] + state[i] + index2);
-            SwapElements(state, i, index2);
-            index1 = (byte)((index1 + 1) % key.Length);
-        }
-
-        return state;
-    }
-
-    static void SwapElements(byte[] array, int i, int j)
-    {
-        byte t = array[i];
-        array[i] = array[j];
-        array[j] = t;
-    }
-
-    static void CheckInputParameters(byte[] inputBuffer, int inputOffset, int inputCount)
+    static void ValidateInputParameters(byte[] inputBuffer, int inputOffset, int inputCount)
     {
         ArgumentNullException.ThrowIfNull(inputBuffer);
         ArgumentOutOfRangeException.ThrowIfNegative(inputOffset);
@@ -110,5 +82,36 @@ sealed class Arc4ManagedTransform(byte[] key) : ICryptoTransform
         }
 
         return inputCount;
+    }
+
+    byte m_X, m_Y;
+    byte[]? m_State = CreateState(key);
+
+    static byte[] CreateState(byte[] key)
+    {
+        const int StateSize = 256;
+
+        byte[] state = new byte[StateSize];
+
+        for (int i = 0; i < StateSize; ++i)
+            state[i] = (byte)i;
+
+        byte index1 = 0;
+        byte index2 = 0;
+        for (int i = 0; i < StateSize; ++i)
+        {
+            index2 = (byte)(key[index1] + state[i] + index2);
+            SwapElements(state, i, index2);
+            index1 = (byte)((index1 + 1) % key.Length);
+        }
+
+        return state;
+    }
+
+    static void SwapElements(byte[] array, int i, int j)
+    {
+        byte t = array[i];
+        array[i] = array[j];
+        array[j] = t;
     }
 }
