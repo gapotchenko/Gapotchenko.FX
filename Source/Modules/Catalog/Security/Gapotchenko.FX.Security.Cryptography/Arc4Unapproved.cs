@@ -1,8 +1,16 @@
-﻿namespace Gapotchenko.FX.Security.Cryptography;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2026
+
+namespace Gapotchenko.FX.Security.Cryptography;
 
 /// <summary>
-/// Provides factory methods for creating unapproved implementations of the
-/// Alleged Rivest Cipher 4 (ARC4) algorithm.
+/// Provides factory methods for creating instances of the
+/// Alleged Rivest Cipher 4 (ARC4) algorithm
+/// classified as unapproved for new applications.
 /// </summary>
 /// <remarks>
 /// ARC4 is retained for compatibility with legacy systems and data formats.
@@ -11,8 +19,7 @@
 public static class Arc4Unapproved
 {
     /// <summary>
-    /// Creates an ARC4 algorithm instance that is outside the set of algorithms
-    /// approved by <see cref="CryptographyPolicy"/>.
+    /// Creates an ARC4 algorithm instance classified as unapproved for new applications.
     /// </summary>
     /// <returns>An ARC4 algorithm instance.</returns>
     public static Arc4 Create()
