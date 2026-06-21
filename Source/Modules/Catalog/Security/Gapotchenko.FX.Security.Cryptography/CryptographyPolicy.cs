@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Security.Cryptography.Pal;
 using Gapotchenko.FX.Threading;
 using System.Diagnostics;
 using System.Security.Cryptography;
@@ -51,13 +52,12 @@ public static class CryptographyPolicy
     {
         return
             CryptoConfig.AllowOnlyFipsAlgorithms || // this alone is not enough for some .NET versions
-            (QueryFips() ?? ProbeFips()); // query the system and fallback to probing if the result is inconclusive
+            (QueryFips() ?? ProbeFips()); // query the OS and fallback to probing if the result is inconclusive
     }
 
     static bool? QueryFips()
     {
-        // TODO
-        return null;
+        return PalServices.Adapter?.QueryFipsPolicy();
     }
 
 #pragma warning disable CA5351 // Do Not Use Broken Cryptographic Algorithms
@@ -103,7 +103,9 @@ public static class CryptographyPolicy
     /// </para>
     /// <para>
     /// This method cannot weaken restrictions imposed by the host environment.
-    /// It is primarily intended for testing and validation of application behavior
+    /// It is primarily intended for enforcing FIPS algorithms at the application level on
+    /// operating systems that do not have system-wide FIPS policy controls.
+    /// Another use case is testing and validation of application behavior
     /// under FIPS-only policy conditions.
     /// </para>
     /// </remarks>
