@@ -31,5 +31,8 @@ public sealed class Arc4Managed : Arc4
     public override ICryptoTransform CreateDecryptor(byte[] rgbKey, byte[]? rgbIV) => new Arc4ManagedTransform(rgbKey);
 
     /// <inheritdoc/>
-    public override void GenerateKey() => KeyValue = Utils.GenerateRandomBytes(KeySizeValue / 8);
+    public override void GenerateKey()
+    {
+        KeyValue = Utils.GenerateRandomBytes(KeySizeValue / 8);
+    }
 }
