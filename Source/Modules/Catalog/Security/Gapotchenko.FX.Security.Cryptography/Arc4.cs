@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
+using Gapotchenko.FX.Security.Cryptography.Properties;
 using System.Diagnostics;
 
 namespace Gapotchenko.FX.Security.Cryptography;
@@ -45,7 +46,8 @@ public abstract class Arc4 : SymmetricAlgorithm
             {
                 throw new CryptographicException(
                     string.Format(
-                        "ARC4 algorithm does not support modes other than {0}.",
+                        Resources.XAlgorithmDoesNotSupportModesExceptY,
+                        Name,
                         nameof(CipherMode.ECB)));
             }
         }
@@ -61,7 +63,8 @@ public abstract class Arc4 : SymmetricAlgorithm
             {
                 throw new CryptographicException(
                     string.Format(
-                        "ARC4 algorithm does not support paddings other than {0}.",
+                        Resources.XAlgorithmDoesNotSupportPaddingsExceptY,
+                        Name,
                         nameof(PaddingMode.None)));
             }
         }
@@ -70,20 +73,31 @@ public abstract class Arc4 : SymmetricAlgorithm
     /// <inheritdoc/>
     public override byte[] IV
     {
-        get => base.IV;
+        get => [];
         set
         {
-            if (value?.Length > 0)
+            ArgumentNullException.ThrowIfNull(value);
+            if (value.Length != 0)
                 ThrowDoesNotSupportIV();
-            base.IV = value!;
         }
     }
 
     /// <inheritdoc/>
-    public override void GenerateIV() => ThrowDoesNotSupportIV();
+    public override void GenerateIV()
+    {
+        ThrowDoesNotSupportIV();
+    }
 
     [DoesNotReturn, StackTraceHidden]
-    static void ThrowDoesNotSupportIV() => throw new CryptographicException("ARC4 algorithm does not support initialization vector.");
+    static void ThrowDoesNotSupportIV()
+    {
+        throw new CryptographicException(string.Format(Resources.XAlgorithmDoesNotSupportIV, Name));
+    }
+
+    /// <summary>
+    /// The display algorithm name.
+    /// </summary>
+    private protected const string Name = "ARC4";
 
     /// <summary>
     /// Creates an instance of the default implementation of ARC4 algorithm.
