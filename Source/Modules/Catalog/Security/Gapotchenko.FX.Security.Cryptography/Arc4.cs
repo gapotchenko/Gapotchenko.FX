@@ -6,7 +6,6 @@
 // Year of introduction: 2022
 
 using System.Diagnostics;
-using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Security.Cryptography;
 
@@ -80,11 +79,11 @@ public abstract class Arc4 : SymmetricAlgorithm
         }
     }
 
-    [DoesNotReturn, StackTraceHidden]
-    static void ThrowDoesNotSupportIV() => throw new CryptographicException("ARC4 algorithm does not support initialization vector.");
-
     /// <inheritdoc/>
     public override void GenerateIV() => ThrowDoesNotSupportIV();
+
+    [DoesNotReturn, StackTraceHidden]
+    static void ThrowDoesNotSupportIV() => throw new CryptographicException("ARC4 algorithm does not support initialization vector.");
 
     /// <summary>
     /// Creates an instance of the default implementation of ARC4 algorithm.

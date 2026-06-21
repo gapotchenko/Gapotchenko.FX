@@ -1,9 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageTag Include="security;rc4;arc4" />
+    <PackageTag Include="security;cryptography;fips;rc4;des" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="System.Security.Cryptography" />
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>

@@ -46,7 +46,7 @@ static class TestVectorReader
                         if (!line.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
                             throw new InvalidDataException("Cannot read key length statement.");
                         string s = line.Substring(prefix.Length).Trim(' ', '.');
-                        var parts = s.Split(' ');
+                        string[] parts = s.Split(' ');
                         if (parts.Length != 2)
                             throw new InvalidDataException("Cannot parse key length statement.");
                         if (!parts[1].Equals("bits", StringComparison.OrdinalIgnoreCase))
@@ -70,7 +70,7 @@ static class TestVectorReader
                         var sr = new StringReader(s);
                         for (; ; )
                         {
-                            var buffer = new char[2];
+                            char[] buffer = new char[2];
                             int count = sr.Read(buffer, 0, 2);
                             if (count == 0)
                                 break;
@@ -89,12 +89,12 @@ static class TestVectorReader
 
                 case State.Chunks:
                     {
-                        var parts = line.Split([':'], 2);
+                        string[] parts = line.Split([':'], 2);
                         if (parts.Length != 2)
                             throw new InvalidDataException("Cannot parse data statement.");
 
-                        var offsetToken = parts[0];
-                        var dataToken = parts[1];
+                        string offsetToken = parts[0];
+                        string dataToken = parts[1];
 
                         parts = offsetToken.Split([' '], StringSplitOptions.RemoveEmptyEntries);
                         if (parts.Length != 4)

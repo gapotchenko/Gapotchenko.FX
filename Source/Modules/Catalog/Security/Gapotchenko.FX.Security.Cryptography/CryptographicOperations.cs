@@ -88,7 +88,6 @@ public static class CryptographicOperations
 #else
 
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 
 [assembly: TypeForwardedTo(typeof(CryptographicOperations))]
 

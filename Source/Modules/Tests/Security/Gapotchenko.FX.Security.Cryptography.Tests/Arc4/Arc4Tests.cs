@@ -5,6 +5,8 @@ using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4;
 
+using Arc4 = Cryptography.Arc4;
+
 [TestClass]
 public class Arc4Tests
 {
@@ -52,16 +54,14 @@ public class Arc4Tests
 
     static void CheckTestVector(TestVector tv)
     {
-        var arc4 = new Arc4Managed
-        {
-            Key = tv.Key
-        };
+        var arc4 = Arc4.Create();
+        arc4.Key = tv.Key;
 
         int dataSize = tv.Chunks.Select(x => x.Offset + x.Data.Length).Max();
         if (dataSize == 0)
             throw new InvalidOperationException("Test vector has no data.");
 
-        var plainData = new byte[dataSize];
+        byte[] plainData = new byte[dataSize];
         var rng = RandomNumberGenerator.Create();
         rng.GetBytes(plainData);
         var plainStream = new MemoryStream(plainData, false);
@@ -93,9 +93,9 @@ public class Arc4Tests
     [TestMethod]
     public void Arc4_DisposableRoundTrip()
     {
-        using var arc4 = new Arc4Managed();
+        using var arc4 = Arc4.Create();
 
-        var plainData = new byte[4096];
+        byte[] plainData = new byte[4096];
         using (var rng = RandomNumberGenerator.Create())
             rng.GetBytes(plainData);
         var plainStream = new MemoryStream(plainData, false);

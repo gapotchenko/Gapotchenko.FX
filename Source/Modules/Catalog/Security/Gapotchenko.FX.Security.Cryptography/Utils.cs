@@ -5,8 +5,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
-using System.Security.Cryptography;
-
 namespace Gapotchenko.FX.Security.Cryptography;
 
 static class Utils
