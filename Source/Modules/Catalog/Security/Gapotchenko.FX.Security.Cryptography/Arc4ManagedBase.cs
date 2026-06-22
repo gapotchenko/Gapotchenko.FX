@@ -26,7 +26,7 @@ abstract class Arc4ManagedBase : Arc4
     /// <inheritdoc/>
     public override void GenerateKey()
     {
-        KeyValue = Utils.GenerateRandomBytes(KeySizeValue / 8);
+        KeyValue = RandomNumberGenerator.GetBytes(KeySizeValue / 8);
     }
 
     /// <inheritdoc/>
