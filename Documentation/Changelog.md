@@ -9,7 +9,7 @@ Release date: not released yet
 - Polyfills:
     - Added polyfill for `System.Security.Cryptography.CryptographicOperations` class
     - Added polyfills for `Fill(Span<byte>)`, `GetBytes(Span<byte>)`, and `GetBytes(int)` methods of `System.Security.Cryptography.RandomNumberGenerator` class
-- Fixed issue with signature of `Process.WaitForExit(int, CancellationToken)` polyfill method that was not returning `bool` result as it should have been
+- Fixed the signature of `Process.WaitForExit(int, CancellationToken)` extension method to return a `bool` result
 
 ### Gapotchenko.FX 2026.7
 
