@@ -12,7 +12,7 @@ using Arc4 = Cryptography.Arc4;
 [TestClass]
 public sealed class Arc4Tests : Arc4TestsBase
 {
-    protected override Arc4 CreateArc4Algorithm()
+    protected override Arc4 CreateAlgorithm()
     {
         if (CryptographyPolicy.AllowOnlyFipsAlgorithms)
             Assert.Inconclusive("ARC4 is not permitted under FIPS policy.");

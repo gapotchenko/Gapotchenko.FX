@@ -12,7 +12,7 @@ using Arc4 = Cryptography.Arc4;
 [TestClass]
 public sealed class Arc4UnapprovedTests : Arc4TestsBase
 {
-    protected override Arc4 CreateArc4Algorithm()
+    protected override Arc4 CreateAlgorithm()
     {
         return Arc4Unapproved.Create();
     }

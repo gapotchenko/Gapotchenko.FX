@@ -14,54 +14,53 @@ namespace Gapotchenko.FX.Security.Cryptography.Tests.SymmetricAlgorithms.Arc4;
 
 using Arc4 = Cryptography.Arc4;
 
-[TestClass]
 public abstract class Arc4TestsBase : SymmetricAlgorithmTestsBase
 {
     [TestMethod]
-    public void Arc4_TV_RFC6229_1() => CheckTestVector(TestVectorReader.Read("RFC6229/01.txt"));
+    public void Arc4_Cipher_TV_RFC6229_1() => CheckTestVector(TestVectorReader.Read("RFC6229/01.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_2() => CheckTestVector(TestVectorReader.Read("RFC6229/02.txt"));
+    public void Arc4_Cipher_TV_RFC6229_2() => CheckTestVector(TestVectorReader.Read("RFC6229/02.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_3() => CheckTestVector(TestVectorReader.Read("RFC6229/03.txt"));
+    public void Arc4_Cipher_TV_RFC6229_3() => CheckTestVector(TestVectorReader.Read("RFC6229/03.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_4() => CheckTestVector(TestVectorReader.Read("RFC6229/04.txt"));
+    public void Arc4_Cipher_TV_RFC6229_4() => CheckTestVector(TestVectorReader.Read("RFC6229/04.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_5() => CheckTestVector(TestVectorReader.Read("RFC6229/05.txt"));
+    public void Arc4_Cipher_TV_RFC6229_5() => CheckTestVector(TestVectorReader.Read("RFC6229/05.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_6() => CheckTestVector(TestVectorReader.Read("RFC6229/06.txt"));
+    public void Arc4_Cipher_TV_RFC6229_6() => CheckTestVector(TestVectorReader.Read("RFC6229/06.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_7() => CheckTestVector(TestVectorReader.Read("RFC6229/07.txt"));
+    public void Arc4_Cipher_TV_RFC6229_7() => CheckTestVector(TestVectorReader.Read("RFC6229/07.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_8() => CheckTestVector(TestVectorReader.Read("RFC6229/08.txt"));
+    public void Arc4_Cipher_TV_RFC6229_8() => CheckTestVector(TestVectorReader.Read("RFC6229/08.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_9() => CheckTestVector(TestVectorReader.Read("RFC6229/09.txt"));
+    public void Arc4_Cipher_TV_RFC6229_9() => CheckTestVector(TestVectorReader.Read("RFC6229/09.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_10() => CheckTestVector(TestVectorReader.Read("RFC6229/10.txt"));
+    public void Arc4_Cipher_TV_RFC6229_10() => CheckTestVector(TestVectorReader.Read("RFC6229/10.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_11() => CheckTestVector(TestVectorReader.Read("RFC6229/11.txt"));
+    public void Arc4_Cipher_TV_RFC6229_11() => CheckTestVector(TestVectorReader.Read("RFC6229/11.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_12() => CheckTestVector(TestVectorReader.Read("RFC6229/12.txt"));
+    public void Arc4_Cipher_TV_RFC6229_12() => CheckTestVector(TestVectorReader.Read("RFC6229/12.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_13() => CheckTestVector(TestVectorReader.Read("RFC6229/13.txt"));
+    public void Arc4_Cipher_TV_RFC6229_13() => CheckTestVector(TestVectorReader.Read("RFC6229/13.txt"));
 
     [TestMethod]
-    public void Arc4_TV_RFC6229_14() => CheckTestVector(TestVectorReader.Read("RFC6229/14.txt"));
+    public void Arc4_Cipher_TV_RFC6229_14() => CheckTestVector(TestVectorReader.Read("RFC6229/14.txt"));
 
     void CheckTestVector(TestVector tv)
     {
-        var arc4 = CreateArc4Algorithm();
+        var arc4 = CreateAlgorithm();
         arc4.Key = tv.Key;
 
         int dataSize = tv.Chunks.Select(x => x.Offset + x.Data.Length).Max();
@@ -98,9 +97,9 @@ public abstract class Arc4TestsBase : SymmetricAlgorithmTestsBase
     }
 
     [TestMethod]
-    public void Arc4_DisposableRoundTrip()
+    public void Arc4_Cipher_RandomRoundTrip()
     {
-        using var arc4 = CreateArc4Algorithm();
+        using var arc4 = CreateAlgorithm();
 
         byte[] plainData = new byte[4096];
         using (var rng = RandomNumberGenerator.Create())
@@ -123,7 +122,9 @@ public abstract class Arc4TestsBase : SymmetricAlgorithmTestsBase
         Assert.IsTrue(plainStream.AsEnumerable().SequenceEqual(decryptedStream.AsEnumerable()));
     }
 
-    protected override SymmetricAlgorithm CreateSymmetricAlgorithm() => CreateArc4Algorithm();
+    // ------------------------------------------------------------------------
 
-    protected abstract Arc4 CreateArc4Algorithm();
+    protected override SymmetricAlgorithm CreateSymmetricAlgorithm() => CreateAlgorithm();
+
+    protected abstract Arc4 CreateAlgorithm();
 }
