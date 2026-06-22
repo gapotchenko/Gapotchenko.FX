@@ -7,15 +7,15 @@
 
 using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Linq;
-using Gapotchenko.FX.Security.Cryptography.Tests.Arc4.TestVectors;
+using Gapotchenko.FX.Security.Cryptography.Tests.SymmetricAlgorithms.Arc4.TestVectors;
 using System.Security.Cryptography;
 
-namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4;
+namespace Gapotchenko.FX.Security.Cryptography.Tests.SymmetricAlgorithms.Arc4;
 
 using Arc4 = Cryptography.Arc4;
 
 [TestClass]
-public abstract class Arc4TestsBase
+public abstract class Arc4TestsBase : SymmetricAlgorithmTestsBase
 {
     [TestMethod]
     public void Arc4_TV_RFC6229_1() => CheckTestVector(TestVectorReader.Read("RFC6229/01.txt"));
@@ -61,7 +61,7 @@ public abstract class Arc4TestsBase
 
     void CheckTestVector(TestVector tv)
     {
-        var arc4 = CreateAlgorithm();
+        var arc4 = CreateArc4Algorithm();
         arc4.Key = tv.Key;
 
         int dataSize = tv.Chunks.Select(x => x.Offset + x.Data.Length).Max();
@@ -100,7 +100,7 @@ public abstract class Arc4TestsBase
     [TestMethod]
     public void Arc4_DisposableRoundTrip()
     {
-        using var arc4 = CreateAlgorithm();
+        using var arc4 = CreateArc4Algorithm();
 
         byte[] plainData = new byte[4096];
         using (var rng = RandomNumberGenerator.Create())
@@ -123,5 +123,7 @@ public abstract class Arc4TestsBase
         Assert.IsTrue(plainStream.AsEnumerable().SequenceEqual(decryptedStream.AsEnumerable()));
     }
 
-    protected abstract Arc4 CreateAlgorithm();
+    protected override SymmetricAlgorithm CreateSymmetricAlgorithm() => CreateArc4Algorithm();
+
+    protected abstract Arc4 CreateArc4Algorithm();
 }

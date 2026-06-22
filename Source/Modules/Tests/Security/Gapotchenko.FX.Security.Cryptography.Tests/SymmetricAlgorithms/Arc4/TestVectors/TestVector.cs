@@ -1,4 +1,4 @@
-﻿namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4.TestVectors;
+﻿namespace Gapotchenko.FX.Security.Cryptography.Tests.SymmetricAlgorithms.Arc4.TestVectors;
 
 /// <summary>
 /// Represents a test vector for Alleged Rivest Cipher 4 (ARC4) algorithm.

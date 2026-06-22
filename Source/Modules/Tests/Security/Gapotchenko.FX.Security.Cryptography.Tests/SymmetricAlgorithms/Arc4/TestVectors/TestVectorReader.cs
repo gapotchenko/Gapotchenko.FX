@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4.TestVectors;
+namespace Gapotchenko.FX.Security.Cryptography.Tests.SymmetricAlgorithms.Arc4.TestVectors;
 
 static class TestVectorReader
 {

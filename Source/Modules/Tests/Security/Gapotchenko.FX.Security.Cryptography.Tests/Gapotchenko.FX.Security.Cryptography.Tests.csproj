@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <EmbeddedResource Include="Arc4\TestVectors\**\*.txt" />
+    <EmbeddedResource Include="SymmetricAlgorithms\Arc4\TestVectors\**\*.txt" />
   </ItemGroup>
 
   <ItemGroup>
