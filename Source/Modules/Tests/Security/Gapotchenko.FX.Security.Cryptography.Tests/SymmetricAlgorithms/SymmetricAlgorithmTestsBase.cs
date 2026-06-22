@@ -28,6 +28,9 @@ public abstract class SymmetricAlgorithmTestsBase
             Assert.IsEmpty(
                 algorithm.IV,
                 "Symmetric algorithm not supporting IV should not actually generate it.");
+
+            algorithm.IV = [];
+            Assert.ThrowsExactly<CryptographicException>(() => algorithm.IV = [0]);
         }
         else
         {
@@ -37,14 +40,18 @@ public abstract class SymmetricAlgorithmTestsBase
 
             algorithm.GenerateIV();
             byte[] iv1 = algorithm.IV;
-            Assert.HasCount(ivRank, iv1, "IV generation function produces an IV of a different length.");
-            CollectionAssert.AreNotEqual(iv0, iv1, "IV generation function produces the same IV.");
+            Assert.HasCount(ivRank, iv1, "IV generation function should produce an IV of the same length.");
+            CollectionAssert.AreNotEqual(iv0, iv1, "IV generation function should not produce the same IV.");
 
             var algorithm2 = CreateSymmetricAlgorithm();
             byte[] iv2 = algorithm.IV;
-            Assert.HasCount(ivRank, iv2, "Symmetric algorithm produces an IV of a different length after creation.");
-            CollectionAssert.AreNotEqual(iv0, iv2, "Symmetric algorithm does not generate unique IV after creation.");
+            Assert.HasCount(ivRank, iv2, "Symmetric algorithm should generate an IV of the same length after creation.");
+            CollectionAssert.AreNotEqual(iv0, iv2, "Symmetric algorithm should generate unique IV after creation.");
+
+            algorithm.IV = RandomNumberGenerator.GetBytes(ivRank);
         }
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => algorithm.IV = null!);
     }
 
     protected abstract SymmetricAlgorithm CreateSymmetricAlgorithm();
