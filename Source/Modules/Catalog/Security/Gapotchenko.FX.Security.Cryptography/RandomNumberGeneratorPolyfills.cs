@@ -13,6 +13,10 @@
 #define TFF_RANDOMNUMBERGENERATOR_GETBYTES_SPAN
 #endif
 
+#if NETCOREAPP3_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#define TFF_RANDOMNUMBERGENERATOR_GETINT32
+#endif
+
 #if NET6_0_OR_GREATER
 #define TFF_RANDOMNUMBERGENERATOR_GETBYTES_INT32
 #endif
@@ -20,6 +24,7 @@
 #endregion
 
 using System.Buffers;
+using System.Buffers.Binary;
 
 namespace Gapotchenko.FX.Security.Cryptography;
 
@@ -34,6 +39,94 @@ public static class RandomNumberGeneratorPolyfills
     /// </summary>
     extension(RandomNumberGenerator)
     {
+        /// <summary>
+        /// Generates a random integer between 0 (inclusive) and a specified exclusive upper bound
+        /// using a cryptographically strong random number generator.
+        /// </summary>
+        /// <param name="toExclusive">The exclusive upper bound of the random range.</param>
+        /// <returns>A random integer between 0 (inclusive) and toExclusive (exclusive).</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// The <paramref name="toExclusive"/> parameter is less than or equal to 0.
+        /// </exception>
+#if TFF_RANDOMNUMBERGENERATOR_GETINT32
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+        public static int GetInt32(int toExclusive)
+        {
+#if TFF_RANDOMNUMBERGENERATOR_GETINT32
+            return RandomNumberGenerator.GetInt32(toExclusive);
+#else
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(toExclusive);
+
+            return GetInt32(0, toExclusive);
+#endif
+        }
+
+        /// <summary>
+        /// Generates a random integer between a specified inclusive lower bound and a specified exclusive upper bound
+        /// using a cryptographically strong random number generator.
+        /// </summary>
+        /// <param name="fromInclusive">The inclusive lower bound of the random range.</param>
+        /// <param name="toExclusive">The exclusive upper bound of the random range.</param>
+        /// <returns>A random integer between <paramref name="fromInclusive"/> (inclusive) and <paramref name="toExclusive"/> (exclusive).</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// The <paramref name="toExclusive"/> parameter is less than or equal to the <paramref name="fromInclusive"/> parameter.
+        /// </exception>
+#if TFF_RANDOMNUMBERGENERATOR_GETINT32
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+        public static int GetInt32(int fromInclusive, int toExclusive)
+        {
+#if TFF_RANDOMNUMBERGENERATOR_GETINT32
+            return RandomNumberGenerator.GetInt32(fromInclusive, toExclusive);
+#else
+            if (fromInclusive >= toExclusive)
+                throw new ArgumentOutOfRangeException("Invalid random range.");
+
+            // The total possible range is [0, 4,294,967,295).
+            // Subtract one to account for zero being an actual possibility.
+            uint range = (uint)toExclusive - (uint)fromInclusive - 1;
+
+            // If there is only one possible choice, nothing random will actually happen, so return
+            // the only possibility.
+            if (range == 0)
+                return fromInclusive;
+
+            // Create a mask for the bits that we care about for the range. The other bits will be
+            // masked away.
+            uint mask = range;
+            mask |= mask >> 1;
+            mask |= mask >> 2;
+            mask |= mask >> 4;
+            mask |= mask >> 8;
+            mask |= mask >> 16;
+
+            uint result;
+
+            var rng = UseRng(out bool disposable);
+            var arrayPool = ArrayPool<byte>.Shared;
+            byte[] oneUintBytes = arrayPool.Rent(4);
+            try
+            {
+                do
+                {
+                    rng.GetBytes(oneUintBytes);
+                    uint oneUint = BinaryPrimitives.ReadUInt32LittleEndian(oneUintBytes);
+                    result = mask & oneUint;
+                }
+                while (result > range);
+            }
+            finally
+            {
+                arrayPool.Return(oneUintBytes);
+                if (disposable)
+                    rng.Dispose();
+            }
+
+            return (int)result + fromInclusive;
+#endif
+        }
+
         /// <summary>
         /// Creates an array of bytes with a cryptographically strong random sequence of values.
         /// </summary>
