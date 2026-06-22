@@ -1,4 +1,11 @@
-﻿using Gapotchenko.FX.IO;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2022
+
+using Gapotchenko.FX.IO;
 using Gapotchenko.FX.Linq;
 using Gapotchenko.FX.Security.Cryptography.Tests.Arc4.TestVectors;
 using System.Security.Cryptography;
@@ -8,7 +15,7 @@ namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4;
 using Arc4 = Cryptography.Arc4;
 
 [TestClass]
-public class Arc4TestsBase
+public abstract class Arc4TestsBase
 {
     [TestMethod]
     public void Arc4_TV_RFC6229_1() => CheckTestVector(TestVectorReader.Read("RFC6229/01.txt"));
@@ -52,9 +59,9 @@ public class Arc4TestsBase
     [TestMethod]
     public void Arc4_TV_RFC6229_14() => CheckTestVector(TestVectorReader.Read("RFC6229/14.txt"));
 
-    static void CheckTestVector(TestVector tv)
+    void CheckTestVector(TestVector tv)
     {
-        var arc4 = Arc4.Create();
+        var arc4 = CreateAlgorithm();
         arc4.Key = tv.Key;
 
         int dataSize = tv.Chunks.Select(x => x.Offset + x.Data.Length).Max();
@@ -93,7 +100,7 @@ public class Arc4TestsBase
     [TestMethod]
     public void Arc4_DisposableRoundTrip()
     {
-        using var arc4 = Arc4.Create();
+        using var arc4 = CreateAlgorithm();
 
         byte[] plainData = new byte[4096];
         using (var rng = RandomNumberGenerator.Create())
@@ -115,4 +122,6 @@ public class Arc4TestsBase
         decryptedStream.Position = 0;
         Assert.IsTrue(plainStream.AsEnumerable().SequenceEqual(decryptedStream.AsEnumerable()));
     }
+
+    protected abstract Arc4 CreateAlgorithm();
 }
