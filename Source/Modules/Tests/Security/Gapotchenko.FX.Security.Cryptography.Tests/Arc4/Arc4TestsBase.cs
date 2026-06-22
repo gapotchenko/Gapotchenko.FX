@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Security.Cryptography.Tests.Arc4;
 using Arc4 = Cryptography.Arc4;
 
 [TestClass]
-public class Arc4Tests
+public class Arc4TestsBase
 {
     [TestMethod]
     public void Arc4_TV_RFC6229_1() => CheckTestVector(TestVectorReader.Read("RFC6229/01.txt"));
