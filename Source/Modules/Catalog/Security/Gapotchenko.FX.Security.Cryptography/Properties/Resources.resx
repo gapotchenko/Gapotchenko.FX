@@ -120,6 +120,9 @@
   <data name="SpecifiedKeyIsNotValidSizeForXAlgorithm" xml:space="preserve">
     <value>Specified key is not a valid size for {0} algorithm.</value>
   </data>
+  <data name="XAlgorithmCannotBeUsedDueFips" xml:space="preserve">
+    <value>{0} algorithm cannot be used because it is not FIPS-compliant.</value>
+  </data>
   <data name="XAlgorithmDoesNotSupportIV" xml:space="preserve">
     <value>{0} algorithm does not support initialization vector.</value>
   </data>

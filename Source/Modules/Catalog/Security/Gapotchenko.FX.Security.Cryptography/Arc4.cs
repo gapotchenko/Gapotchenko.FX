@@ -16,6 +16,17 @@ namespace Gapotchenko.FX.Security.Cryptography;
 public abstract class Arc4 : SymmetricAlgorithm
 {
     /// <summary>
+    /// Creates an instance of the default implementation of ARC4 algorithm.
+    /// </summary>
+    /// <returns>The instance of ARC4 algorithm.</returns>
+    public static new Arc4 Create()
+    {
+#pragma warning disable CS0618 // Type or member is obsolete
+        return new Arc4Managed(true);
+#pragma warning restore CS0618
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Arc4"/> class.
     /// </summary>
     protected Arc4()
@@ -98,15 +109,4 @@ public abstract class Arc4 : SymmetricAlgorithm
     /// The display algorithm name.
     /// </summary>
     private protected const string Name = "ARC4";
-
-    /// <summary>
-    /// Creates an instance of the default implementation of ARC4 algorithm.
-    /// </summary>
-    /// <returns>The instance of ARC4 algorithm.</returns>
-    public static new Arc4 Create()
-    {
-#pragma warning disable CS0618 // Type or member is obsolete
-        return new Arc4Managed();
-#pragma warning restore CS0618
-    }
 }

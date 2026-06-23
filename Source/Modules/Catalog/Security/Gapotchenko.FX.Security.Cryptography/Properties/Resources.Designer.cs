@@ -70,6 +70,15 @@ namespace Gapotchenko.FX.Security.Cryptography.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} algorithm cannot be used because it is not FIPS-compliant..
+        /// </summary>
+        internal static string XAlgorithmCannotBeUsedDueFips {
+            get {
+                return ResourceManager.GetString("XAlgorithmCannotBeUsedDueFips", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} algorithm does not support initialization vector..
         /// </summary>
         internal static string XAlgorithmDoesNotSupportIV {

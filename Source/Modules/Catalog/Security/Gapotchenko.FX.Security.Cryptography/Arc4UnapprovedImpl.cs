@@ -7,10 +7,9 @@
 
 namespace Gapotchenko.FX.Security.Cryptography;
 
+/// <remarks>
+/// This implementation does not enforce policy compliance by design.
+/// </remarks>
 sealed class Arc4UnapprovedImpl : Arc4ManagedBase
 {
-    private protected override void EnforceAlgorithmPolicy()
-    {
-        // Policy compliance is not enforced by design.
-    }
 }

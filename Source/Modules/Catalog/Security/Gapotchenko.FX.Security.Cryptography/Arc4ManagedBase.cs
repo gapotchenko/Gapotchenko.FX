@@ -71,10 +71,6 @@ abstract class Arc4ManagedBase : Arc4
 
     ICryptoTransform CreateTransform(byte[] key)
     {
-        EnforceAlgorithmPolicy();
-
         return new Arc4ManagedTransform(key);
     }
-
-    private protected abstract void EnforceAlgorithmPolicy();
 }
