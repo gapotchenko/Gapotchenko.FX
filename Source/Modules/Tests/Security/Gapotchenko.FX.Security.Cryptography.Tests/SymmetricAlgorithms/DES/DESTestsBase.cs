@@ -418,7 +418,13 @@ public abstract class DESTestsBase : SymmetricAlgorithmTestsBase
 
     protected abstract DES CreateAlgorithm();
 
-    protected abstract bool IsWeakKey(byte[] key);
+    protected virtual bool IsWeakKey(byte[] key)
+    {
+        return DES.IsWeakKey(key);
+    }
 
-    protected abstract bool IsSemiWeakKey(byte[] key);
+    protected virtual bool IsSemiWeakKey(byte[] key)
+    {
+        return DES.IsSemiWeakKey(key);
+    }
 }

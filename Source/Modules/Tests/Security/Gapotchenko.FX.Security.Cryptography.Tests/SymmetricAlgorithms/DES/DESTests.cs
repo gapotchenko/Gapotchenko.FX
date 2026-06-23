@@ -20,16 +20,6 @@ public sealed class DESTests : DESTestsBase
         return DES.Create();
     }
 
-    protected override bool IsWeakKey(byte[] key)
-    {
-        return DES.IsWeakKey(key);
-    }
-
-    protected override bool IsSemiWeakKey(byte[] key)
-    {
-        return DES.IsSemiWeakKey(key);
-    }
-
 #if NETFRAMEWORK
     protected override bool ThrowsCryptographicExceptionOnInvalidCipherArguments => true;
 #endif
