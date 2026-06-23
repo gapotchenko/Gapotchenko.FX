@@ -58,7 +58,7 @@ public abstract class Arc4 : SymmetricAlgorithm
                 throw new CryptographicException(
                     string.Format(
                         Resources.XAlgorithmDoesNotSupportModesExceptY,
-                        Name,
+                        AlgorithmName,
                         nameof(CipherMode.ECB)));
             }
         }
@@ -75,7 +75,7 @@ public abstract class Arc4 : SymmetricAlgorithm
                 throw new CryptographicException(
                     string.Format(
                         Resources.XAlgorithmDoesNotSupportPaddingsExceptY,
-                        Name,
+                        AlgorithmName,
                         nameof(PaddingMode.None)));
             }
         }
@@ -102,11 +102,11 @@ public abstract class Arc4 : SymmetricAlgorithm
     [DoesNotReturn, StackTraceHidden]
     static void ThrowDoesNotSupportIV()
     {
-        throw new CryptographicException(string.Format(Resources.XAlgorithmDoesNotSupportIV, Name));
+        throw new CryptographicException(string.Format(Resources.XAlgorithmDoesNotSupportIV, AlgorithmName));
     }
 
     /// <summary>
-    /// The display algorithm name.
+    /// The display name of the algorithm.
     /// </summary>
-    private protected const string Name = "ARC4";
+    private protected const string AlgorithmName = "ARC4";
 }

@@ -34,7 +34,7 @@ sealed class Arc4Managed : Arc4ManagedBase
         if (enforcePolicies)
         {
             if (CryptographyPolicy.AllowOnlyFipsAlgorithms)
-                throw new CryptographicException(string.Format(Resources.XAlgorithmCannotBeUsedDueFips, Name));
+                throw new CryptographicException(string.Format(Resources.XAlgorithmCannotBeUsedDueFips, AlgorithmName));
         }
         else
         {

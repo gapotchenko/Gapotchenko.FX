@@ -61,7 +61,7 @@ abstract class Arc4ManagedBase : Arc4
         if (keySize > int.MaxValue || !ValidKeySize((int)keySize))
         {
             throw new ArgumentException(
-                string.Format(Resources.SpecifiedKeyIsNotValidSizeForXAlgorithm, Name),
+                string.Format(Resources.SpecifiedKeyIsNotValidSizeForXAlgorithm, AlgorithmName),
                 paramName);
         }
     }
@@ -71,7 +71,7 @@ abstract class Arc4ManagedBase : Arc4
         if (iv?.Length > 0)
         {
             throw new ArgumentException(
-                string.Format(Resources.XAlgorithmDoesNotSupportIV, Name),
+                string.Format(Resources.XAlgorithmDoesNotSupportIV, AlgorithmName),
                 paramName);
         }
     }
