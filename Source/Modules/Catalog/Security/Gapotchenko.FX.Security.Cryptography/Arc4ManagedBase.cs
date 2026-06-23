@@ -57,7 +57,8 @@ abstract class Arc4ManagedBase : Arc4
     {
         ArgumentNullException.ThrowIfNull(key, paramName);
 
-        if (!ValidKeySize(key.Length * 8))
+        long keySize = key.Length * 8;
+        if (keySize > int.MaxValue || !ValidKeySize((int)keySize))
         {
             throw new ArgumentException(
                 string.Format(Resources.SpecifiedKeyIsNotValidSizeForXAlgorithm, Name),
