@@ -2,7 +2,7 @@
 //
 // Copyright © Gapotchenko and Contributors
 // Portions © .NET Foundation and its Licensors
-// Portions © Mono Project
+// Portions © The Mono Project
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
@@ -13,6 +13,18 @@ namespace Gapotchenko.FX.Security.Cryptography.Tests;
 
 static class Helpers
 {
+    public static byte[] Encrypt(this SymmetricAlgorithm algorithm, byte[] plainText, int blockSizeMultiplier = 1)
+    {
+        using var encryptor = algorithm.CreateEncryptor();
+        return encryptor.Transform(plainText, blockSizeMultiplier);
+    }
+
+    public static byte[] Decrypt(this SymmetricAlgorithm algorithm, byte[] cipher, int blockSizeMultiplier = 1)
+    {
+        using var decryptor = algorithm.CreateDecryptor();
+        return decryptor.Transform(cipher, blockSizeMultiplier);
+    }
+
     public static byte[] Transform(this ICryptoTransform transform, byte[] input, int blockSizeMultiplier = 1)
     {
         var output = new List<byte>(input.Length);
