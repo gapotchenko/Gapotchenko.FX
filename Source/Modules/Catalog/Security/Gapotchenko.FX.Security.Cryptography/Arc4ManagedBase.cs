@@ -32,19 +32,25 @@ abstract class Arc4ManagedBase : Arc4
     /// <inheritdoc/>
     public override ICryptoTransform CreateEncryptor(byte[] rgbKey, byte[]? rgbIV)
     {
-        ValidateKeyArgument(rgbKey);
-        ValidateIVArgument(rgbIV);
-
-        return CreateTransform(rgbKey);
+        return CreateTransform(rgbKey, rgbIV);
     }
 
     /// <inheritdoc/>
     public override ICryptoTransform CreateDecryptor(byte[] rgbKey, byte[]? rgbIV)
     {
-        ValidateKeyArgument(rgbKey);
-        ValidateIVArgument(rgbIV);
+        return CreateTransform(rgbKey, rgbIV);
+    }
 
-        return CreateTransform(rgbKey);
+    ICryptoTransform CreateTransform(
+        byte[] key,
+        byte[]? iv,
+        [CallerArgumentExpression(nameof(key))] string? keyParamName = null,
+        [CallerArgumentExpression(nameof(key))] string? ivParamName = null)
+    {
+        ValidateKeyArgument(key, keyParamName);
+        ValidateIVArgument(iv, ivParamName);
+
+        return new Arc4ManagedTransform(key);
     }
 
     void ValidateKeyArgument(byte[] key, [CallerArgumentExpression(nameof(key))] string? paramName = null)
@@ -67,10 +73,5 @@ abstract class Arc4ManagedBase : Arc4
                 string.Format(Resources.XAlgorithmDoesNotSupportIV, Name),
                 paramName);
         }
-    }
-
-    ICryptoTransform CreateTransform(byte[] key)
-    {
-        return new Arc4ManagedTransform(key);
     }
 }
