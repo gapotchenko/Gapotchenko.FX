@@ -7,6 +7,7 @@
 
 using Gapotchenko.FX.Security.Cryptography.Properties;
 using System.Buffers;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Security.Cryptography.Kits;
 
@@ -91,6 +92,8 @@ partial class CryptoTransformKit
                 throw new ArgumentException("The crypto transform must have equal positive input and output block sizes.", nameof(transform));
             m_BlockSize = blockSize;
 
+            m_CanReuseTransform = transform.CanReuseTransform;
+
             if (cipherMode is CipherMode.CBC)
             {
                 ArgumentNullException.ThrowIfNull(iv);
@@ -107,7 +110,7 @@ partial class CryptoTransformKit
             m_Feedback = (byte[]?)m_IV?.Clone();
         }
 
-        public bool CanReuseTransform => GetTransform().CanReuseTransform;
+        public bool CanReuseTransform => m_CanReuseTransform;
 
         // The adapter accepts multi-block input even when the underlying transform
         // only processes one block per TransformBlock call.
@@ -162,7 +165,7 @@ partial class CryptoTransformKit
                 TransformFinalBlockEncrypt(inputBuffer, inputOffset, inputCount) :
                 TransformFinalBlockDecrypt(inputBuffer, inputOffset, inputCount);
 
-            if (CanReuseTransform)
+            if (m_CanReuseTransform)
                 Reset();
 
             return output;
@@ -499,6 +502,9 @@ partial class CryptoTransformKit
         readonly int m_BlockSize;
         readonly CipherMode m_CipherMode;
         readonly PaddingMode m_PaddingMode;
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        readonly bool m_CanReuseTransform;
 
         readonly byte[]? m_IV;
         byte[]? m_Feedback;
