@@ -16,7 +16,7 @@ partial class CryptoTransformKit
     /// Adapts the specified raw block transform to the mode and padding behavior of the specified symmetric algorithm.
     /// </summary>
     /// <remarks>
-    /// This method wraps an underlying ECB transform and adds cipher mode chaining, final-block padding,
+    /// This method wraps an underlying electronic cookbook transform and adds cipher mode chaining, final-block padding,
     /// and initialization vector handling when those features are not implemented by the transform itself.
     /// </remarks>
     /// <param name="algorithm">
@@ -275,7 +275,7 @@ partial class CryptoTransformKit
                 try
                 {
                     Buffer.BlockCopy(inputBuffer, inputOffset, paddedInput, 0, inputCount);
-                    PadBlock(paddedInput.AsSpan(0, paddedInputCount), inputCount, padLength);
+                    PadBlock(paddedInput.AsSpan(inputCount, padLength));
 
                     TransformBlockCore(paddedInput, 0, paddedInputCount, output, 0);
                 }
@@ -351,28 +351,31 @@ partial class CryptoTransformKit
                 };
         }
 
-        void PadBlock(Span<byte> buffer, int inputCount, int padLength)
+        void PadBlock(Span<byte> buffer)
         {
+            int padLength = buffer.Length;
             if (padLength == 0)
                 return;
 
             switch (m_PaddingMode)
             {
                 case PaddingMode.Zeros:
-                    buffer.Slice(inputCount, padLength).Clear();
+                    buffer.Clear();
                     break;
 
                 case PaddingMode.PKCS7:
-                    buffer.Slice(inputCount, padLength).Fill((byte)padLength);
+                    buffer.Fill((byte)padLength);
                     break;
 
                 case PaddingMode.ANSIX923:
+                    if (padLength > 1)
+                        buffer[..(padLength - 1)].Clear();
                     buffer[^1] = (byte)padLength;
                     break;
 
                 case PaddingMode.ISO10126:
                     if (padLength > 1)
-                        RandomNumberGenerator.Fill(buffer.Slice(inputCount, padLength - 1));
+                        RandomNumberGenerator.Fill(buffer[..(padLength - 1)]);
                     buffer[^1] = (byte)padLength;
                     break;
             }
