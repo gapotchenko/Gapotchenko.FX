@@ -6,6 +6,7 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Security.Cryptography.Properties;
+using System.Buffers;
 
 namespace Gapotchenko.FX.Security.Cryptography.Kits;
 
@@ -263,12 +264,27 @@ partial class CryptoTransformKit
 
             byte[] output = new byte[paddedInputCount];
 
-            byte[] paddedInput = new byte[paddedInputCount];
-            Buffer.BlockCopy(inputBuffer, inputOffset, paddedInput, 0, inputCount);
-            PadBlock(paddedInput, inputCount, padLength);
+            if (padLength == 0)
+            {
+                TransformBlockCore(inputBuffer, inputOffset, inputCount, output, 0);
+            }
+            else
+            {
+                var arrayPool = ArrayPool<byte>.Shared;
+                byte[] paddedInput = arrayPool.Rent(paddedInputCount);
+                try
+                {
+                    Buffer.BlockCopy(inputBuffer, inputOffset, paddedInput, 0, inputCount);
+                    PadBlock(paddedInput.AsSpan(0, paddedInputCount), inputCount, padLength);
 
-            TransformBlockCore(paddedInput, 0, paddedInput.Length, output, 0);
-            CryptographicOperations.ZeroMemory(paddedInput);
+                    TransformBlockCore(paddedInput, 0, paddedInputCount, output, 0);
+                }
+                finally
+                {
+                    CryptographicOperations.ZeroMemory(paddedInput);
+                    arrayPool.Return(paddedInput);
+                }
+            }
 
             return output;
         }
@@ -335,7 +351,7 @@ partial class CryptoTransformKit
                 };
         }
 
-        void PadBlock(byte[] buffer, int inputCount, int padLength)
+        void PadBlock(Span<byte> buffer, int inputCount, int padLength)
         {
             if (padLength == 0)
                 return;
@@ -343,10 +359,11 @@ partial class CryptoTransformKit
             switch (m_PaddingMode)
             {
                 case PaddingMode.Zeros:
+                    buffer.Slice(inputCount, padLength).Clear();
                     break;
 
                 case PaddingMode.PKCS7:
-                    Array.Fill(buffer, (byte)padLength, inputCount, padLength);
+                    buffer.Slice(inputCount, padLength).Fill((byte)padLength);
                     break;
 
                 case PaddingMode.ANSIX923:
@@ -355,7 +372,7 @@ partial class CryptoTransformKit
 
                 case PaddingMode.ISO10126:
                     if (padLength > 1)
-                        RandomNumberGenerator.Fill(buffer.AsSpan(inputCount, padLength - 1));
+                        RandomNumberGenerator.Fill(buffer.Slice(inputCount, padLength - 1));
                     buffer[^1] = (byte)padLength;
                     break;
             }
@@ -396,13 +413,22 @@ partial class CryptoTransformKit
             if (m_Feedback is { } feedback)
             {
                 int blockSize = m_BlockSize;
-                byte[] block = new byte[blockSize];
-                for (int i = 0; i < blockSize; ++i)
-                    block[i] = (byte)(inputBuffer[inputOffset + i] ^ feedback[i]);
 
-                TransformEcbBlock(block, 0, outputBuffer, outputOffset);
-                Buffer.BlockCopy(outputBuffer, outputOffset, feedback, 0, blockSize);
-                CryptographicOperations.ZeroMemory(block);
+                var arrayPool = ArrayPool<byte>.Shared;
+                byte[] block = arrayPool.Rent(blockSize);
+                try
+                {
+                    for (int i = 0; i < blockSize; ++i)
+                        block[i] = (byte)(inputBuffer[inputOffset + i] ^ feedback[i]);
+
+                    TransformEcbBlock(block, 0, outputBuffer, outputOffset);
+                    Buffer.BlockCopy(outputBuffer, outputOffset, feedback, 0, blockSize);
+                }
+                finally
+                {
+                    CryptographicOperations.ZeroMemory(block);
+                    arrayPool.Return(block);
+                }
             }
             else
             {
@@ -415,14 +441,23 @@ partial class CryptoTransformKit
             if (m_Feedback is { } feedback)
             {
                 int blockSize = m_BlockSize;
-                byte[] block = new byte[blockSize];
-                TransformEcbBlock(inputBuffer, inputOffset, block, 0);
 
-                for (int i = 0; i < blockSize; ++i)
-                    outputBuffer[outputOffset + i] = (byte)(block[i] ^ feedback[i]);
+                var arrayPool = ArrayPool<byte>.Shared;
+                byte[] block = arrayPool.Rent(blockSize);
+                try
+                {
+                    TransformEcbBlock(inputBuffer, inputOffset, block, 0);
 
-                Buffer.BlockCopy(inputBuffer, inputOffset, feedback, 0, blockSize);
-                CryptographicOperations.ZeroMemory(block);
+                    for (int i = 0; i < blockSize; ++i)
+                        outputBuffer[outputOffset + i] = (byte)(block[i] ^ feedback[i]);
+
+                    Buffer.BlockCopy(inputBuffer, inputOffset, feedback, 0, blockSize);
+                }
+                finally
+                {
+                    CryptographicOperations.ZeroMemory(block);
+                    arrayPool.Return(block);
+                }
             }
             else
             {
