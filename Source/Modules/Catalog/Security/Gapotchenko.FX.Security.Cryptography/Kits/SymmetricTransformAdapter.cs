@@ -1,26 +1,44 @@
+// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2026
+
 namespace Gapotchenko.FX.Security.Cryptography.Kits;
 
 /// <summary>
-/// Provides a way to add cipher modes / cipher padding / IV support to an existing <see cref="ICryptoTransform"/>
-/// of a <see cref="SymmetricAlgorithm"/> that does not implement them natively.
+/// Adapts a ECB symmetric block transform to the <see cref="ICryptoTransform"/> contract expected by
+/// <see cref="SymmetricAlgorithm"/>.
 /// </summary>
-public sealed class CryptoTransformFlavor
+/// <remarks>
+/// This type is intended for implementers of symmetric cryptographic algorithms.
+/// It wraps an underlying ECB transform and adds the selected cipher mode, padding mode, and initialization vector handling
+/// when those features are not implemented by the transform itself.
+/// </remarks>
+[EditorBrowsable(EditorBrowsableState.Advanced)]
+public static class SymmetricTransformAdapter
 {
-    CryptoTransformFlavor()
-    {
-    }
-
     /// <summary>
-    /// Applies a cipher mode, padding mode, and initialization vector to a block transform.
+    /// Creates an <see cref="ICryptoTransform"/> that applies symmetric-algorithm mode and padding behavior
+    /// to an underlying block transform.
     /// </summary>
-    /// <param name="transform">The underlying electronic codebook block transform.</param>
-    /// <param name="encrypting"><see langword="true"/> to encrypt; <see langword="false"/> to decrypt.</param>
+    /// <param name="transform">
+    /// The underlying ECB transform.
+    /// </param>
+    /// <param name="encrypting">
+    /// <see langword="true"/> to create an encrypting transform; <see langword="false"/> to create a decrypting transform.
+    /// </param>
     /// <param name="cipherMode">The cipher mode to apply.</param>
     /// <param name="paddingMode">The padding mode to apply.</param>
-    /// <param name="iv">The initialization vector.</param>
+    /// <param name="iv">
+    /// The initialization vector, or <see langword="null"/> when the selected cipher mode does not require one.
+    /// </param>
     /// <param name="feedbackSize">The feedback size, in bits.</param>
-    /// <returns>The flavored crypto transform.</returns>
-    public static ICryptoTransform Apply(
+    /// <returns>
+    /// An <see cref="ICryptoTransform"/> that combines the underlying block transform with the specified mode and padding behavior.
+    /// </returns>
+    public static ICryptoTransform Create(
         ICryptoTransform transform,
         bool encrypting,
         CipherMode cipherMode,
@@ -29,7 +47,7 @@ public sealed class CryptoTransformFlavor
         int feedbackSize)
     {
         ArgumentNullException.ThrowIfNull(transform);
-        if (cipherMode == CipherMode.CBC)
+        if (cipherMode is CipherMode.CBC)
             ArgumentNullException.ThrowIfNull(iv);
 
         _ = feedbackSize; // TODO: use later for cipher modes that need it
@@ -75,7 +93,7 @@ public sealed class CryptoTransformFlavor
                 throw new ArgumentException("The crypto transform must have equal positive input and output block sizes.", nameof(transform));
             m_BlockSize = blockSize;
 
-            if (cipherMode == CipherMode.CBC)
+            if (cipherMode is CipherMode.CBC)
             {
                 ArgumentNullException.ThrowIfNull(iv);
                 if (iv.Length != blockSize)
@@ -93,6 +111,8 @@ public sealed class CryptoTransformFlavor
 
         public bool CanReuseTransform => GetTransform().CanReuseTransform;
 
+        // The adapter accepts multi-block input even when the underlying transform
+        // only processes one block per TransformBlock call
         public bool CanTransformMultipleBlocks => true;
 
         public int InputBlockSize => BlockSize;
