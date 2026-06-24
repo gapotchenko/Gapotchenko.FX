@@ -141,4 +141,10 @@
   <data name="IVDoesNotMatchXAlgorithmBlockSize" xml:space="preserve">
     <value>Specified initialization vector (IV) does not match the block size for {0} algorithm.</value>
   </data>
+  <data name="InvalidPadding" xml:space="preserve">
+    <value>Invalid padding.</value>
+  </data>
+  <data name="InvalidLengthOfDataToTransform" xml:space="preserve">
+    <value>Length of the data to transform is invalid.</value>
+  </data>
 </root>

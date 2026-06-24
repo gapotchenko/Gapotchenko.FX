@@ -9,7 +9,9 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Security.Cryptography.Kits;
+using Gapotchenko.FX.Security.Cryptography.Properties;
 using System.Buffers.Binary;
+using System.Diagnostics;
 
 namespace Gapotchenko.FX.Security.Cryptography;
 
@@ -47,8 +49,8 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
         for (int i = 0; i < inputCount; i += BlockSize)
         {
             TransformCore(
-                inputBuffer.AsSpan(inputOffset + i),
-                outputBuffer.AsSpan(outputOffset + i));
+                inputBuffer.AsSpan(inputOffset + i, BlockSize),
+                outputBuffer.AsSpan(outputOffset + i, BlockSize));
         }
 
         return inputCount;
@@ -68,8 +70,8 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
         for (int i = 0; i < inputCount; i += BlockSize)
         {
             TransformCore(
-                inputBuffer.AsSpan(inputOffset + i),
-                output.AsSpan(i));
+                inputBuffer.AsSpan(inputOffset + i, BlockSize),
+                output.AsSpan(i, BlockSize));
         }
 
         return output;
@@ -78,13 +80,16 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
     static void ValidateDataLength(int length)
     {
         if ((uint)length % BlockSize != 0)
-            throw new CryptographicException("Length of the data to transform is invalid.");
+            throw new CryptographicException(Resources.InvalidLengthOfDataToTransform);
     }
 
     #region Transform Core
 
     void TransformCore(ReadOnlySpan<byte> input, Span<byte> output)
     {
+        Debug.Assert(input.Length == BlockSize);
+        Debug.Assert(output.Length == BlockSize);
+
         int[] workingKey = GetWorkingKey();
 
         uint hi32 = BinaryPrimitives.ReadUInt32BigEndian(input);
@@ -349,7 +354,7 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
     int[]? m_WorkingKey = CreateWorkingKey(key, encrypting);
 
     /// <remarks>
-    /// Acknowledgements for this routine go to James Gillogly and Phil Karn.
+    /// Acknowledgements: James Gillogly, Phil Karn.
     /// </remarks>
     static int[] CreateWorkingKey(byte[] key, bool encrypting)
     {
@@ -365,16 +370,12 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
 
         for (int i = 0; i < 16; i++)
         {
-            int l, m, n;
+            int m = (encrypting ? i : (15 - i)) << 1;
 
-            if (encrypting)
-                m = i << 1;
-            else
-                m = (15 - i) << 1;
-
-            n = m + 1;
+            int n = m + 1;
             newKey[m] = newKey[n] = 0;
 
+            int l;
             for (int j = 0; j < 28; j++)
             {
                 l = j + m_TotRot[i];
@@ -400,10 +401,8 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
         // Store the processed key
         for (int i = 0; i != 32; i += 2)
         {
-            int i1, i2;
-
-            i1 = newKey[i];
-            i2 = newKey[i + 1];
+            int i1 = newKey[i];
+            int i2 = newKey[i + 1];
 
             newKey[i] = (int)((uint)((i1 & 0x00fc0000) << 6) |
                               (uint)((i1 & 0x00000fc0) << 10) |

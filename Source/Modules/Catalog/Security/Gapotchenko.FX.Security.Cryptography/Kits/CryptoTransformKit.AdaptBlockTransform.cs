@@ -5,6 +5,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Security.Cryptography.Properties;
+
 namespace Gapotchenko.FX.Security.Cryptography.Kits;
 
 partial class CryptoTransformKit
@@ -110,11 +112,9 @@ partial class CryptoTransformKit
         // only processes one block per TransformBlock call
         public bool CanTransformMultipleBlocks => true;
 
-        public int InputBlockSize => BlockSize;
+        public int InputBlockSize => m_BlockSize;
 
-        public int OutputBlockSize => BlockSize;
-
-        int BlockSize => m_BlockSize;
+        public int OutputBlockSize => m_BlockSize;
 
         public void Dispose()
         {
@@ -170,7 +170,7 @@ partial class CryptoTransformKit
         void ValidateDataLength(int length)
         {
             if ((uint)length % m_BlockSize != 0)
-                throw new CryptographicException("Length of the data to transform is invalid.");
+                throw new CryptographicException(Resources.InvalidLengthOfDataToTransform);
         }
 
         void Reset()
@@ -190,7 +190,7 @@ partial class CryptoTransformKit
             if (m_Encrypting || !PaddingRequiresFinalBlock)
                 return inputCount;
 
-            int blockSize = BlockSize;
+            int blockSize = m_BlockSize;
             int blockCount = inputCount / blockSize;
             if (m_DeferredBlock != null)
                 ++blockCount;
@@ -206,14 +206,14 @@ partial class CryptoTransformKit
             int inputEnd = inputOffset + inputCount;
             int initialOutputOffset = outputOffset;
 
-            for (int i = inputOffset; i < inputEnd; i += BlockSize)
+            for (int i = inputOffset; i < inputEnd; i += m_BlockSize)
             {
                 if (m_Encrypting)
                     EncryptBlock(inputBuffer, i, outputBuffer, outputOffset);
                 else
                     DecryptBlock(inputBuffer, i, outputBuffer, outputOffset);
 
-                outputOffset += BlockSize;
+                outputOffset += m_BlockSize;
             }
 
             return outputOffset - initialOutputOffset;
@@ -221,7 +221,7 @@ partial class CryptoTransformKit
 
         int TransformBlockDecryptWithPadding(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
         {
-            int blockSize = BlockSize;
+            int blockSize = m_BlockSize;
             int inputEnd = inputOffset + inputCount;
             int initialOutputOffset = outputOffset;
 
@@ -254,7 +254,7 @@ partial class CryptoTransformKit
 
         byte[] TransformFinalBlockEncrypt(byte[] inputBuffer, int inputOffset, int inputCount)
         {
-            int blockSize = BlockSize;
+            int blockSize = m_BlockSize;
             int padLength = GetPadLength(inputCount, blockSize);
             int paddedInputCount = inputCount + padLength;
 
@@ -275,7 +275,7 @@ partial class CryptoTransformKit
 
         byte[] TransformFinalBlockDecrypt(byte[] inputBuffer, int inputOffset, int inputCount)
         {
-            int blockSize = BlockSize;
+            int blockSize = m_BlockSize;
             bool paddingRequiresFinalBlock = PaddingRequiresFinalBlock;
 
             int outputCount;
@@ -363,11 +363,11 @@ partial class CryptoTransformKit
 
         int GetPaddingLength(byte[] output)
         {
-            int blockSize = BlockSize;
+            int blockSize = m_BlockSize;
             int padLength = output[^1];
 
             if (padLength <= 0 || padLength > blockSize || padLength > output.Length)
-                throw new CryptographicException("Padding is invalid and cannot be removed.");
+                throw new CryptographicException(Resources.InvalidPadding);
 
             switch (m_PaddingMode)
             {
@@ -375,7 +375,7 @@ partial class CryptoTransformKit
                     for (int i = output.Length - padLength; i < output.Length; ++i)
                     {
                         if (output[i] != padLength)
-                            throw new CryptographicException("Padding is invalid and cannot be removed.");
+                            throw new CryptographicException(Resources.InvalidPadding);
                     }
                     break;
 
@@ -383,7 +383,7 @@ partial class CryptoTransformKit
                     for (int i = output.Length - padLength; i < output.Length - 1; ++i)
                     {
                         if (output[i] != 0)
-                            throw new CryptographicException("Padding is invalid and cannot be removed.");
+                            throw new CryptographicException(Resources.InvalidPadding);
                     }
                     break;
             }
@@ -395,7 +395,7 @@ partial class CryptoTransformKit
         {
             if (m_Feedback is { } feedback)
             {
-                int blockSize = BlockSize;
+                int blockSize = m_BlockSize;
                 byte[] block = new byte[blockSize];
                 for (int i = 0; i < blockSize; ++i)
                     block[i] = (byte)(inputBuffer[inputOffset + i] ^ feedback[i]);
@@ -414,7 +414,7 @@ partial class CryptoTransformKit
         {
             if (m_Feedback is { } feedback)
             {
-                int blockSize = BlockSize;
+                int blockSize = m_BlockSize;
                 byte[] block = new byte[blockSize];
                 TransformEcbBlock(inputBuffer, inputOffset, block, 0);
 
@@ -434,8 +434,8 @@ partial class CryptoTransformKit
         {
             var transform = GetTransform();
 
-            int bytesWritten = transform.TransformBlock(inputBuffer, inputOffset, BlockSize, outputBuffer, outputOffset);
-            if (bytesWritten != BlockSize)
+            int bytesWritten = transform.TransformBlock(inputBuffer, inputOffset, m_BlockSize, outputBuffer, outputOffset);
+            if (bytesWritten != m_BlockSize)
                 throw new CryptographicException("The underlying transform produced an invalid block size.");
         }
 

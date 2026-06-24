@@ -61,6 +61,24 @@ namespace Gapotchenko.FX.Security.Cryptography.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Length of the data to transform is invalid..
+        /// </summary>
+        internal static string InvalidLengthOfDataToTransform {
+            get {
+                return ResourceManager.GetString("InvalidLengthOfDataToTransform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid padding..
+        /// </summary>
+        internal static string InvalidPadding {
+            get {
+                return ResourceManager.GetString("InvalidPadding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Specified initialization vector (IV) does not match the block size for {0} algorithm..
         /// </summary>
         internal static string IVDoesNotMatchXAlgorithmBlockSize {
