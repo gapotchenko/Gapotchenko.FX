@@ -104,6 +104,7 @@ sealed class DESUnapprovedImpl : DES
     {
         return CryptoTransformFlavor.Apply(
             new DESManagedTransform(key, encrypting),
+            encrypting,
             cipherMode,
             paddingMode,
             iv,
