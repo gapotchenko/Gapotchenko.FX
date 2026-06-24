@@ -61,6 +61,33 @@ namespace Gapotchenko.FX.Security.Cryptography.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specified initialization vector (IV) does not match the block size for {0} algorithm..
+        /// </summary>
+        internal static string IVDoesNotMatchXAlgorithmBlockSize {
+            get {
+                return ResourceManager.GetString("IVDoesNotMatchXAlgorithmBlockSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specified key is a known semi-weak key for {0} algorithm and cannot be used..
+        /// </summary>
+        internal static string SpecifiedKeyIsKnownSemiWeakForXAlgorithm {
+            get {
+                return ResourceManager.GetString("SpecifiedKeyIsKnownSemiWeakForXAlgorithm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specified key is a known weak key for {0} algorithm and cannot be used..
+        /// </summary>
+        internal static string SpecifiedKeyIsKnownWeakForXAlgorithm {
+            get {
+                return ResourceManager.GetString("SpecifiedKeyIsKnownWeakForXAlgorithm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Specified key is not a valid size for {0} algorithm..
         /// </summary>
         internal static string SpecifiedKeyIsNotValidSizeForXAlgorithm {

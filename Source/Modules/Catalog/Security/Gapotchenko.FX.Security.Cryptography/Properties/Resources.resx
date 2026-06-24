@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="SpecifiedKeyIsKnownWeakForXAlgorithm" xml:space="preserve">
+    <value>Specified key is a known weak key for {0} algorithm and cannot be used.</value>
+  </data>
+  <data name="SpecifiedKeyIsKnownSemiWeakForXAlgorithm" xml:space="preserve">
+    <value>Specified key is a known semi-weak key for {0} algorithm and cannot be used.</value>
+  </data>
   <data name="SpecifiedKeyIsNotValidSizeForXAlgorithm" xml:space="preserve">
     <value>Specified key is not a valid size for {0} algorithm.</value>
   </data>
@@ -131,5 +137,8 @@
   </data>
   <data name="XAlgorithmDoesNotSupportPaddingsExceptY" xml:space="preserve">
     <value>{0} algorithm does not support paddings other than {1}.</value>
+  </data>
+  <data name="IVDoesNotMatchXAlgorithmBlockSize" xml:space="preserve">
+    <value>Specified initialization vector (IV) does not match the block size for {0} algorithm.</value>
   </data>
 </root>
