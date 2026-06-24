@@ -17,41 +17,42 @@ namespace Gapotchenko.FX.Security.Cryptography.Kits;
 public static class CryptoTransformKit
 {
     /// <summary>
-    /// Creates an <see cref="ICryptoTransform"/> that applies symmetric-algorithm mode and padding behavior
-    /// to an underlying block transform.
+    /// Adapts the specified raw block transform to the mode and padding behavior of the specified symmetric algorithm.
     /// </summary>
     /// <remarks>
-    /// The method wraps an underlying ECB transform and adds the selected cipher mode, padding mode, and initialization vector handling
-    /// when those features are not implemented by the transform itself.
+    /// This method wraps an underlying ECB transform and adds cipher mode chaining, final-block padding,
+    /// and initialization vector handling when those features are not implemented by the transform itself.
     /// </remarks>
+    /// <param name="algorithm">
+    /// The symmetric algorithm whose mode, padding, feedback size, and policy constraints are used to adapt
+    /// <paramref name="transform"/>.
+    /// </param>
     /// <param name="transform">
     /// The underlying ECB transform.
     /// </param>
     /// <param name="encrypting">
     /// <see langword="true"/> to create an encrypting transform; <see langword="false"/> to create a decrypting transform.
     /// </param>
-    /// <param name="cipherMode">The cipher mode to apply.</param>
-    /// <param name="paddingMode">The padding mode to apply.</param>
     /// <param name="iv">
-    /// The initialization vector, or <see langword="null"/> when the selected cipher mode does not require one.
+    /// The initialization vector, or <see langword="null"/> when the algorithm's cipher mode does not require one.
     /// </param>
-    /// <param name="feedbackSize">The feedback size, in bits.</param>
     /// <returns>
-    /// An <see cref="ICryptoTransform"/> that combines the underlying block transform with the specified mode and padding behavior.
+    /// An <see cref="ICryptoTransform"/> that combines the underlying block transform with the algorithm's mode and padding behavior.
     /// </returns>
     public static ICryptoTransform AdaptBlockTransform(
+        SymmetricAlgorithm algorithm,
         ICryptoTransform transform,
         bool encrypting,
-        CipherMode cipherMode,
-        PaddingMode paddingMode,
-        byte[]? iv,
-        int feedbackSize)
+        byte[]? iv)
     {
+        ArgumentNullException.ThrowIfNull(algorithm);
         ArgumentNullException.ThrowIfNull(transform);
+
+        var cipherMode = algorithm.Mode;
         if (cipherMode is CipherMode.CBC)
             ArgumentNullException.ThrowIfNull(iv);
 
-        _ = feedbackSize; // TODO: use later for cipher modes that need it
+        var paddingMode = algorithm.Padding;
 
         return
             (cipherMode, paddingMode) switch

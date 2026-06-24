@@ -59,7 +59,7 @@ sealed class DESUnapprovedImpl : DES
         ValidateKeyArgument(key, keyParamName);
         ValidateIVArgument(iv, ivParamName);
 
-        return CreateTransformCore(Mode, Padding, key, iv, encrypting);
+        return CreateTransformCore(key, iv, encrypting);
     }
 
     void ValidateKeyArgument(byte[] key, [CallerArgumentExpression(nameof(key))] string? paramName = null)
@@ -95,19 +95,15 @@ sealed class DESUnapprovedImpl : DES
     /// </summary>
     const string AlgorithmName = "DES";
 
-    static ICryptoTransform CreateTransformCore(
-        CipherMode cipherMode,
-        PaddingMode paddingMode,
+    ICryptoTransform CreateTransformCore(
         byte[] key,
         byte[]? iv,
         bool encrypting)
     {
         return CryptoTransformKit.AdaptBlockTransform(
+            this,
             new DESManagedTransform(key, encrypting),
             encrypting,
-            cipherMode,
-            paddingMode,
-            iv,
-            0);
+            iv);
     }
 }
