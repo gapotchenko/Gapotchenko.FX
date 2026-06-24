@@ -5,8 +5,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
-using Gapotchenko.FX.Security.Cryptography.Properties;
-
 namespace Gapotchenko.FX.Security.Cryptography;
 
 #if BINARY_COMPATIBILITY || SOURCE_COMPATIBILITY
@@ -32,13 +30,6 @@ sealed class Arc4Managed : Arc4ManagedBase
     internal Arc4Managed(bool enforcePolicies)
     {
         if (enforcePolicies)
-        {
-            if (CryptographyPolicy.AllowOnlyFipsAlgorithms)
-                throw new CryptographicException(string.Format(Resources.XAlgorithmCannotBeUsedDueFips, AlgorithmName));
-        }
-        else
-        {
-            throw new InvalidOperationException();
-        }
+            EnforcePolicies();
     }
 }

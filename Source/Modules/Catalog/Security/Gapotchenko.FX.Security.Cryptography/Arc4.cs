@@ -21,8 +21,10 @@ public abstract class Arc4 : SymmetricAlgorithm
     /// <returns>The instance of ARC4 algorithm.</returns>
     public static new Arc4 Create()
     {
+        EnforcePolicies();
+
 #pragma warning disable CS0618 // Type or member is obsolete
-        return new Arc4Managed(true);
+        return new Arc4Managed(false);
 #pragma warning restore CS0618
     }
 
@@ -105,8 +107,14 @@ public abstract class Arc4 : SymmetricAlgorithm
         throw new CryptographicException(string.Format(Resources.XAlgorithmDoesNotSupportIV, AlgorithmName));
     }
 
+    private protected static void EnforcePolicies()
+    {
+        if (CryptographyPolicy.AllowOnlyFipsAlgorithms)
+            throw new CryptographicException(string.Format(Resources.XAlgorithmCannotBeUsedDueFips, AlgorithmName));
+    }
+
     /// <summary>
-    /// The display name of the algorithm.
+    /// The algorithm display name.
     /// </summary>
     private protected const string AlgorithmName = "ARC4";
 }

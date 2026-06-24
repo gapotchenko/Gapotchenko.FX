@@ -13,7 +13,7 @@ sealed class Arc4ManagedTransform(byte[] key) : ICryptoTransform
     {
         if (m_State is { } state)
         {
-            // Revoke the state reference as quickly as possible to indicate that the object has been disposed.
+            // Revoke the reference as quickly as possible to indicate that the object has been disposed.
             m_State = null;
 
             // Zero the state to avoid cryptographic material leaking.

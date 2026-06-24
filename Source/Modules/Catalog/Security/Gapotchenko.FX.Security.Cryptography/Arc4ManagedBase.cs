@@ -19,7 +19,7 @@ public
 #endif
 abstract class Arc4ManagedBase : Arc4
 {
-    internal Arc4ManagedBase()
+    private protected Arc4ManagedBase()
     {
     }
 
