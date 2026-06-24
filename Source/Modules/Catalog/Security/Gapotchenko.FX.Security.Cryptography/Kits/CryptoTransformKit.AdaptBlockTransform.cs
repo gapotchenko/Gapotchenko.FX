@@ -280,7 +280,7 @@ partial class CryptoTransformKit
                 }
                 finally
                 {
-                    CryptographicOperations.ZeroMemory(paddedInput);
+                    CryptographicOperations.ZeroMemory(paddedInput.AsSpan(0, paddedInputCount));
                     arrayPool.Return(paddedInput);
                 }
             }
@@ -430,7 +430,7 @@ partial class CryptoTransformKit
                 }
                 finally
                 {
-                    CryptographicOperations.ZeroMemory(block);
+                    CryptographicOperations.ZeroMemory(block.AsSpan(0, blockSize));
                     arrayPool.Return(block);
                 }
             }
@@ -459,7 +459,7 @@ partial class CryptoTransformKit
                 }
                 finally
                 {
-                    CryptographicOperations.ZeroMemory(block);
+                    CryptographicOperations.ZeroMemory(block.AsSpan(0, blockSize));
                     arrayPool.Return(block);
                 }
             }
