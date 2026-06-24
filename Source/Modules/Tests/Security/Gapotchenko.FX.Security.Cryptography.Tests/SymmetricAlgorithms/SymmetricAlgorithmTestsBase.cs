@@ -169,20 +169,8 @@ public abstract class SymmetricAlgorithmTestsBase
         using var encryptor = algorithm.CreateEncryptor();
         using var decryptor = algorithm.CreateDecryptor();
 
-        int blockSize1, blockSize2;
-        if (encryptor.CanTransformMultipleBlocks && decryptor.CanTransformMultipleBlocks)
-        {
-            blockSize1 = RandomNumberGenerator.GetInt32(1, 64);
-            blockSize2 = RandomNumberGenerator.GetInt32(1, 64);
-        }
-        else
-        {
-            // Use a fixed block size to transform exactly one block.
-            blockSize1 = blockSize2 = algorithm.BlockSize / 8;
-        }
-
-        byte[] plain1 = RandomNumberGenerator.GetBytes(blockSize1);
-        byte[] plain2 = RandomNumberGenerator.GetBytes(blockSize2);
+        byte[] plain1 = RandomNumberGenerator.GetBytes(RandomNumberGenerator.GetInt32(1, 64));
+        byte[] plain2 = RandomNumberGenerator.GetBytes(RandomNumberGenerator.GetInt32(1, 64));
         byte[]? expectedCipher1 = null;
         byte[]? expectedCipher2 = null;
 
