@@ -1,6 +1,6 @@
 // Gapotchenko.FX
 //
-// Copyright © Gapotchenko and Contributors
+// Copyright Â© Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
@@ -8,21 +8,22 @@
 namespace Gapotchenko.FX.Security.Cryptography.Kits;
 
 /// <summary>
-/// Adapts a ECB symmetric block transform to the <see cref="ICryptoTransform"/> contract expected by
-/// <see cref="SymmetricAlgorithm"/>.
+/// Provides common building blocks for cryptographic transform implementations.
 /// </summary>
 /// <remarks>
-/// This type is intended for implementers of symmetric cryptographic algorithms.
-/// It wraps an underlying ECB transform and adds the selected cipher mode, padding mode, and initialization vector handling
-/// when those features are not implemented by the transform itself.
+/// This type is intended for implementers of <see cref="ICryptoTransform"/> interface.
 /// </remarks>
 [EditorBrowsable(EditorBrowsableState.Advanced)]
-public static class SymmetricTransformAdapter
+public static class CryptoTransformKit
 {
     /// <summary>
     /// Creates an <see cref="ICryptoTransform"/> that applies symmetric-algorithm mode and padding behavior
     /// to an underlying block transform.
     /// </summary>
+    /// <remarks>
+    /// The method wraps an underlying ECB transform and adds the selected cipher mode, padding mode, and initialization vector handling
+    /// when those features are not implemented by the transform itself.
+    /// </remarks>
     /// <param name="transform">
     /// The underlying ECB transform.
     /// </param>
@@ -38,7 +39,7 @@ public static class SymmetricTransformAdapter
     /// <returns>
     /// An <see cref="ICryptoTransform"/> that combines the underlying block transform with the specified mode and padding behavior.
     /// </returns>
-    public static ICryptoTransform Create(
+    public static ICryptoTransform AdaptBlockTransform(
         ICryptoTransform transform,
         bool encrypting,
         CipherMode cipherMode,
@@ -56,14 +57,14 @@ public static class SymmetricTransformAdapter
             (cipherMode, paddingMode) switch
             {
                 (CipherMode.ECB, PaddingMode.None) when iv is null => transform,
-                (CipherMode.ECB or CipherMode.CBC, _) => new Transform(transform, cipherMode, paddingMode, iv, encrypting),
+                (CipherMode.ECB or CipherMode.CBC, _) => new AdapterTransform(transform, cipherMode, paddingMode, iv, encrypting),
                 _ => throw new NotSupportedException(string.Format("{0} cipher mode is not supported.", cipherMode))
             };
     }
 
-    sealed class Transform : ICryptoTransform
+    sealed class AdapterTransform : ICryptoTransform
     {
-        public Transform(
+        public AdapterTransform(
             ICryptoTransform transform,
             CipherMode cipherMode,
             PaddingMode paddingMode,
@@ -228,18 +229,17 @@ public static class SymmetricTransformAdapter
             if (!m_Encrypting && PaddingRequiresFinalBlock)
                 return TransformBlockDecryptWithPadding(inputBuffer, inputOffset, inputCount, outputBuffer, outputOffset);
 
-            int blockSize = BlockSize;
             int inputEnd = inputOffset + inputCount;
             int initialOutputOffset = outputOffset;
 
-            for (int i = inputOffset; i < inputEnd; i += blockSize)
+            for (int i = inputOffset; i < inputEnd; i += BlockSize)
             {
                 if (m_Encrypting)
                     EncryptBlock(inputBuffer, i, outputBuffer, outputOffset);
                 else
                     DecryptBlock(inputBuffer, i, outputBuffer, outputOffset);
 
-                outputOffset += blockSize;
+                outputOffset += BlockSize;
             }
 
             return outputOffset - initialOutputOffset;

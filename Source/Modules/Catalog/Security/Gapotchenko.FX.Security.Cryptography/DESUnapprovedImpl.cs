@@ -102,7 +102,7 @@ sealed class DESUnapprovedImpl : DES
         byte[]? iv,
         bool encrypting)
     {
-        return SymmetricTransformAdapter.Create(
+        return CryptoTransformKit.AdaptBlockTransform(
             new DESManagedTransform(key, encrypting),
             encrypting,
             cipherMode,
