@@ -8,6 +8,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Security.Cryptography.Kits;
 using System.Buffers.Binary;
 
 namespace Gapotchenko.FX.Security.Cryptography;
@@ -38,6 +39,8 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
 
     public int TransformBlock(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
     {
+        CryptoTransformKit.ValidateInputArguments(inputBuffer, inputOffset, inputCount);
+
         if ((uint)inputCount % BlockSize != 0)
             throw new CryptographicException("Length of the data to transform is invalid.");
 
@@ -53,6 +56,8 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
 
     public byte[] TransformFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount)
     {
+        CryptoTransformKit.ValidateInputArguments(inputBuffer, inputOffset, inputCount);
+
         if (inputCount == 0)
             return [];
 
