@@ -8,6 +8,7 @@
 
 #pragma warning disable CA5351 // Do Not Use Broken Cryptographic Algorithms
 
+using Gapotchenko.FX.Security.Cryptography.Kits;
 using Gapotchenko.FX.Security.Cryptography.Properties;
 using System.Runtime.CompilerServices;
 
@@ -101,8 +102,11 @@ sealed class DESUnapprovedImpl : DES
         byte[]? iv,
         bool encrypting)
     {
-        // TODO: wrap in a wrapper transform implementing cipher modes / padding / IV.
-
-        return new DESManagedTransform(key, encrypting);
+        return CryptoTransformFlavor.Apply(
+            new DESManagedTransform(key, encrypting),
+            cipherMode,
+            paddingMode,
+            iv,
+            0);
     }
 }
