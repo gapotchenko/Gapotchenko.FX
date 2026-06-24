@@ -211,6 +211,80 @@ public abstract class SymmetricAlgorithmTestsBase
         }
     }
 
+    [TestMethod]
+    public void SymmetricAlgorithm_Cipher_CanEncryptMultipleBlocks()
+    {
+        using var algorithm = CreateSymmetricAlgorithm();
+        algorithm.Mode = CipherMode.ECB;
+        algorithm.Padding = PaddingMode.None;
+
+        byte[] key = algorithm.Key;
+
+        using var transform = algorithm.CreateEncryptor(key, null);
+        if (!transform.CanTransformMultipleBlocks)
+            return;
+
+        int inputBlockSize = transform.InputBlockSize;
+        int outputBlockSize = transform.OutputBlockSize;
+        const int BlockCount = 3;
+
+        byte[] plain = RandomNumberGenerator.GetBytes(inputBlockSize * BlockCount);
+        byte[] actual = new byte[outputBlockSize * BlockCount];
+
+        int actualCount = transform.TransformBlock(plain, 0, plain.Length, actual, 0);
+        Assert.AreEqual(
+            actual.Length,
+            actualCount,
+            "A transform that advertises multiple-block support should transform all complete input blocks.");
+
+        byte[] expected = new byte[actual.Length];
+        int expectedCount = 0;
+
+        using (var referenceTransform = algorithm.CreateEncryptor(key, null))
+        {
+            for (int i = 0; i < plain.Length; i += inputBlockSize)
+                expectedCount += referenceTransform.TransformBlock(plain, i, inputBlockSize, expected, expectedCount);
+        }
+
+        Assert.AreEqual(expectedCount, actualCount);
+        CollectionAssert.AreEqual(expected, actual);
+    }
+
+    [TestMethod]
+    public void SymmetricAlgorithm_Cipher_CanDecryptMultipleBlocks()
+    {
+        using var algorithm = CreateSymmetricAlgorithm();
+        algorithm.Mode = CipherMode.ECB;
+        algorithm.Padding = PaddingMode.None;
+
+        byte[] key = algorithm.Key;
+
+        using var encryptor = algorithm.CreateEncryptor(key, null);
+        using var transform = algorithm.CreateDecryptor(key, null);
+        if (!transform.CanTransformMultipleBlocks)
+            return;
+
+        int inputBlockSize = transform.InputBlockSize;
+        int outputBlockSize = transform.OutputBlockSize;
+        const int BlockCount = 3;
+
+        byte[] expected = RandomNumberGenerator.GetBytes(outputBlockSize * BlockCount);
+        byte[] cipher = new byte[inputBlockSize * BlockCount];
+        int cipherCount = 0;
+        for (int i = 0; i < expected.Length; i += outputBlockSize)
+            cipherCount += encryptor.TransformBlock(expected, i, outputBlockSize, cipher, cipherCount);
+        Assert.AreEqual(cipher.Length, cipherCount);
+
+        byte[] actual = new byte[expected.Length];
+        int actualCount = transform.TransformBlock(cipher, 0, cipher.Length, actual, 0);
+        Assert.AreEqual(
+            actual.Length,
+            actualCount,
+            "A transform that advertises multiple-block support should transform all complete input blocks.");
+
+        CollectionAssert.AreEqual(expected, actual);
+    }
+
     #endregion
 
     // ------------------------------------------------------------------------
