@@ -110,7 +110,7 @@ partial class CryptoTransformKit
         public bool CanReuseTransform => GetTransform().CanReuseTransform;
 
         // The adapter accepts multi-block input even when the underlying transform
-        // only processes one block per TransformBlock call
+        // only processes one block per TransformBlock call.
         public bool CanTransformMultipleBlocks => true;
 
         public int InputBlockSize => m_BlockSize;
@@ -255,13 +255,11 @@ partial class CryptoTransformKit
 
         byte[] TransformFinalBlockEncrypt(byte[] inputBuffer, int inputOffset, int inputCount)
         {
-            int blockSize = m_BlockSize;
-            int padLength = GetPadLength(inputCount, blockSize);
+            int padLength = GetPadLength(inputCount);
             int paddedInputCount = inputCount + padLength;
 
             if (paddedInputCount == 0)
                 return [];
-
             byte[] output = new byte[paddedInputCount];
 
             if (padLength == 0)
@@ -275,7 +273,7 @@ partial class CryptoTransformKit
                 try
                 {
                     Buffer.BlockCopy(inputBuffer, inputOffset, paddedInput, 0, inputCount);
-                    PadBlock(paddedInput.AsSpan(inputCount, padLength));
+                    WritePadding(paddedInput.AsSpan(inputCount, padLength));
 
                     TransformBlockCore(paddedInput, 0, paddedInputCount, output, 0);
                 }
@@ -301,7 +299,7 @@ partial class CryptoTransformKit
                 if (m_DeferredBlock != null)
                     ++blockCount;
                 if (blockCount == 0)
-                    throw new CryptographicException("Padding is invalid and cannot be removed.");
+                    throw new CryptographicException(Resources.InvalidPadding);
 
                 outputCount = blockCount * blockSize;
             }
@@ -337,21 +335,22 @@ partial class CryptoTransformKit
             return output;
         }
 
-        int GetPadLength(int inputCount, int blockSize)
+        int GetPadLength(int inputCount)
         {
+            int blockSize = m_BlockSize;
             int remainder = inputCount % blockSize;
 
             return
                 m_PaddingMode switch
                 {
                     PaddingMode.None when remainder == 0 => 0,
-                    PaddingMode.None => throw new CryptographicException("Length of the data to encrypt is invalid."),
+                    PaddingMode.None => throw new CryptographicException(Resources.InvalidLengthOfDataToTransform),
                     PaddingMode.Zeros => remainder == 0 ? 0 : blockSize - remainder,
                     _ => blockSize - remainder
                 };
         }
 
-        void PadBlock(Span<byte> buffer)
+        void WritePadding(Span<byte> buffer)
         {
             int padLength = buffer.Length;
             if (padLength == 0)
@@ -472,8 +471,9 @@ partial class CryptoTransformKit
         {
             var transform = GetTransform();
 
-            int bytesWritten = transform.TransformBlock(inputBuffer, inputOffset, m_BlockSize, outputBuffer, outputOffset);
-            if (bytesWritten != m_BlockSize)
+            int blockSize = m_BlockSize;
+            int bytesWritten = transform.TransformBlock(inputBuffer, inputOffset, blockSize, outputBuffer, outputOffset);
+            if (bytesWritten != blockSize)
                 throw new CryptographicException("The underlying transform produced an invalid block size.");
         }
 
