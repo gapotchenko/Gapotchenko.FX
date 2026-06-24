@@ -233,6 +233,7 @@ partial class CryptoTransformKit
 
                 DecryptBlock(deferredBlock, 0, outputBuffer, outputOffset);
                 outputOffset += blockSize;
+
                 m_DeferredBlock = null;
                 CryptographicOperations.ZeroMemory(deferredBlock);
             }
@@ -315,6 +316,7 @@ partial class CryptoTransformKit
             {
                 DecryptBlock(deferredBlock, 0, output, outputOffset);
                 outputOffset += blockSize;
+
                 m_DeferredBlock = null;
                 CryptographicOperations.ZeroMemory(deferredBlock);
             }
