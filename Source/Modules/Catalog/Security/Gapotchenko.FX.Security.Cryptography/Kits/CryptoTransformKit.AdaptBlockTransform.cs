@@ -169,7 +169,7 @@ partial class CryptoTransformKit
 
         void ValidateDataLength(int length)
         {
-            if ((uint)length % BlockSize != 0)
+            if ((uint)length % m_BlockSize != 0)
                 throw new CryptographicException("Length of the data to transform is invalid.");
         }
 

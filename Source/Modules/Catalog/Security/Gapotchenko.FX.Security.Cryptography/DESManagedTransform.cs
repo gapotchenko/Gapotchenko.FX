@@ -40,9 +40,9 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
     public int TransformBlock(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
     {
         CryptoTransformKit.ValidateInputArguments(inputBuffer, inputOffset, inputCount);
+        CryptoTransformKit.ValidateOutputArguments(outputBuffer, outputOffset, inputCount);
 
-        if ((uint)inputCount % BlockSize != 0)
-            throw new CryptographicException("Length of the data to transform is invalid.");
+        ValidateDataLength(inputCount);
 
         for (int i = 0; i < inputCount; i += BlockSize)
         {
@@ -61,8 +61,7 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
         if (inputCount == 0)
             return [];
 
-        if ((uint)inputCount % BlockSize != 0)
-            throw new CryptographicException("Length of the data to transform is invalid.");
+        ValidateDataLength(inputCount);
 
         byte[] output = new byte[inputCount];
 
@@ -74,6 +73,12 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
         }
 
         return output;
+    }
+
+    static void ValidateDataLength(int length)
+    {
+        if ((uint)length % BlockSize != 0)
+            throw new CryptographicException("Length of the data to transform is invalid.");
     }
 
     #region Transform Core
