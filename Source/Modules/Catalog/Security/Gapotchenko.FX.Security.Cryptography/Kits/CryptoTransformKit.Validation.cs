@@ -47,4 +47,39 @@ partial class CryptoTransformKit
                 inputBufferParamName);
         }
     }
+
+    /// <summary>
+    /// Validates output buffer arguments passed to an <see cref="ICryptoTransform"/> operation.
+    /// </summary>
+    /// <param name="outputBuffer">The output buffer to validate.</param>
+    /// <param name="outputOffset">The offset into <paramref name="outputBuffer"/> at which output data begins.</param>
+    /// <param name="requiredOutputCount">The number of bytes of output data required.</param>
+    /// <param name="outputBufferParamName">The name of the <paramref name="outputBuffer"/> parameter.</param>
+    /// <param name="outputOffsetParamName">The name of the <paramref name="outputOffset"/> parameter.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="outputBuffer"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="outputOffset"/> or <paramref name="requiredOutputCount"/> is less than zero.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="outputBuffer"/> does not have enough space for <paramref name="requiredOutputCount"/> bytes
+    /// starting at <paramref name="outputOffset"/>.
+    /// </exception>
+    public static void ValidateOutputArguments(
+        byte[] outputBuffer,
+        int outputOffset,
+        int requiredOutputCount,
+        [CallerArgumentExpression(nameof(outputBuffer))] string? outputBufferParamName = null,
+        [CallerArgumentExpression(nameof(outputOffset))] string? outputOffsetParamName = null)
+    {
+        ArgumentNullException.ThrowIfNull(outputBuffer, outputBufferParamName);
+        ArgumentOutOfRangeException.ThrowIfNegative(outputOffset, outputOffsetParamName);
+        ArgumentOutOfRangeException.ThrowIfNegative(requiredOutputCount);
+
+        if (outputOffset > outputBuffer.Length - requiredOutputCount)
+        {
+            throw new ArgumentOutOfRangeException(
+                outputBufferParamName,
+                "Specified output buffer is too small.");
+        }
+    }
 }

@@ -143,20 +143,9 @@ partial class CryptoTransformKit
         {
             ValidateInputArguments(inputBuffer, inputOffset, inputCount);
 
-            ArgumentNullException.ThrowIfNull(outputBuffer);
-            ArgumentOutOfRangeException.ThrowIfNegative(outputOffset);
-
-            int blockSize = BlockSize;
-            if (inputCount % blockSize != 0)
-                throw new CryptographicException("Length of the data to transform is invalid.");
-
+            ValidateDataLength(inputCount);
             int outputCount = GetTransformBlockOutputCount(inputCount);
-            if (outputOffset > outputBuffer.Length - outputCount)
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(outputBuffer),
-                    "Specified output buffer is too small.");
-            }
+            ValidateOutputArguments(outputBuffer, outputOffset, outputCount);
 
             return TransformBlockCore(inputBuffer, inputOffset, inputCount, outputBuffer, outputOffset);
         }
@@ -165,9 +154,8 @@ partial class CryptoTransformKit
         {
             ValidateInputArguments(inputBuffer, inputOffset, inputCount);
 
-            int blockSize = BlockSize;
-            if (!m_Encrypting && inputCount % blockSize != 0)
-                throw new CryptographicException("Length of the data to decrypt is invalid.");
+            if (!m_Encrypting)
+                ValidateDataLength(inputCount);
 
             byte[] output = m_Encrypting ?
                 TransformFinalBlockEncrypt(inputBuffer, inputOffset, inputCount) :
@@ -177,6 +165,12 @@ partial class CryptoTransformKit
                 Reset();
 
             return output;
+        }
+
+        void ValidateDataLength(int length)
+        {
+            if ((uint)length % BlockSize != 0)
+                throw new CryptographicException("Length of the data to transform is invalid.");
         }
 
         void Reset()
