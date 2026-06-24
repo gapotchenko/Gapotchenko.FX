@@ -14,11 +14,11 @@ namespace Gapotchenko.FX.Security.Cryptography;
 
 sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
 {
-    const int BlockSize = 8;
-
     public int InputBlockSize => BlockSize;
 
     public int OutputBlockSize => BlockSize;
+
+    const int BlockSize = 8;
 
     public bool CanTransformMultipleBlocks => true;
 
@@ -38,11 +38,17 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
 
     public int TransformBlock(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
     {
-        TransformCore(
-            inputBuffer.AsSpan(inputOffset, inputCount),
-            outputBuffer.AsSpan(outputOffset));
+        if ((uint)inputCount % BlockSize != 0)
+            throw new CryptographicException("Length of the data to transform is invalid.");
 
-        return BlockSize;
+        for (int i = 0; i < inputCount; i += BlockSize)
+        {
+            TransformCore(
+                inputBuffer.AsSpan(inputOffset + i),
+                outputBuffer.AsSpan(outputOffset + i));
+        }
+
+        return inputCount;
     }
 
     public byte[] TransformFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount)
@@ -50,8 +56,18 @@ sealed class DESManagedTransform(byte[] key, bool encrypting) : ICryptoTransform
         if (inputCount == 0)
             return [];
 
-        byte[] output = new byte[BlockSize];
-        TransformCore(inputBuffer.AsSpan(inputOffset, inputCount), output);
+        if ((uint)inputCount % BlockSize != 0)
+            throw new CryptographicException("Length of the data to transform is invalid.");
+
+        byte[] output = new byte[inputCount];
+
+        for (int i = 0; i < inputCount; i += BlockSize)
+        {
+            TransformCore(
+                inputBuffer.AsSpan(inputOffset + i),
+                output.AsSpan(i));
+        }
+
         return output;
     }
 
