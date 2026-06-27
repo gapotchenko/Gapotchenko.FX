@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Security.Cryptography.Tests.SymmetricAlgorithms.DES;
 using DES = System.Security.Cryptography.DES;
 
 [TestClass]
-public sealed class DESTests : DESTestsBase
+public sealed class DESTests : DESTest
 {
     protected override DES CreateAlgorithm()
     {

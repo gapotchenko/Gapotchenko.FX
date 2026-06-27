@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Security.Cryptography.Tests.SymmetricAlgorithms.Arc4;
 
 using Arc4 = Cryptography.Arc4;
 
-public abstract class Arc4TestsBase : SymmetricAlgorithmTestsBase
+public abstract class Arc4Test : SymmetricAlgorithmTest
 {
     [TestMethod]
     public void Arc4_Cipher_TV_RFC6229_1() => CheckTestVector(TestVectorReader.Read("RFC6229/01.txt"));
@@ -124,7 +124,7 @@ public abstract class Arc4TestsBase : SymmetricAlgorithmTestsBase
 
     // ------------------------------------------------------------------------
 
-    protected override SymmetricAlgorithm CreateSymmetricAlgorithm() => CreateAlgorithm();
+    protected sealed override SymmetricAlgorithm CreateSymmetricAlgorithm() => CreateAlgorithm();
 
     protected abstract Arc4 CreateAlgorithm();
 }

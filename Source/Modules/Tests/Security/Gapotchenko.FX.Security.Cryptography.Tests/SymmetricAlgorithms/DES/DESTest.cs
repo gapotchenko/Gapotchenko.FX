@@ -2,7 +2,6 @@
 //
 // Copyright © Gapotchenko and Contributors
 // Portions © .NET Foundation and its Licensors
-// Portions © The Mono Project
 //
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
@@ -15,7 +14,7 @@ namespace Gapotchenko.FX.Security.Cryptography.Tests.SymmetricAlgorithms.DES;
 
 using DES = System.Security.Cryptography.DES;
 
-public abstract class DESTestsBase : SymmetricAlgorithmTestsBase
+public abstract class DESTest : SymmetricAlgorithmTest
 {
     #region Keys
 
@@ -414,7 +413,7 @@ public abstract class DESTestsBase : SymmetricAlgorithmTestsBase
 
     // ------------------------------------------------------------------------
 
-    protected override SymmetricAlgorithm CreateSymmetricAlgorithm() => CreateAlgorithm();
+    protected sealed override SymmetricAlgorithm CreateSymmetricAlgorithm() => CreateAlgorithm();
 
     protected abstract DES CreateAlgorithm();
 

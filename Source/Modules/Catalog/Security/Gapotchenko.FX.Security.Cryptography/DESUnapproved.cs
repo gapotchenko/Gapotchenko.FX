@@ -12,11 +12,11 @@ namespace Gapotchenko.FX.Security.Cryptography;
 /// <summary>
 /// Provides factory methods for creating instances of the
 /// Data Encryption Standard (DES) algorithm
-/// classified as unapproved for new applications.
+/// classified as unapproved for new security applications.
 /// </summary>
 /// <remarks>
 /// DES is retained for compatibility with legacy systems and data formats.
-/// New applications should use approved cryptographic algorithms instead.
+/// New security applications should use approved cryptographic algorithms instead.
 /// </remarks>
 public static class DESUnapproved
 {

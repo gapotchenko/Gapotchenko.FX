@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Security.Cryptography.Tests.SymmetricAlgorithms;
 
-public abstract class SymmetricAlgorithmTestsBase
+public abstract class SymmetricAlgorithmTest
 {
     #region Keys
 

@@ -10,7 +10,7 @@ namespace Gapotchenko.FX.Security.Cryptography.Tests.SymmetricAlgorithms.Arc4;
 using Arc4 = Cryptography.Arc4;
 
 [TestClass]
-public sealed class Arc4UnapprovedTests : Arc4TestsBase
+public sealed class Arc4UnapprovedTests : Arc4Test
 {
     protected override Arc4 CreateAlgorithm()
     {
