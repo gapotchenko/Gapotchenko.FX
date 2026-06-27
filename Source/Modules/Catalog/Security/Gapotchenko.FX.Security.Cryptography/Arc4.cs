@@ -7,6 +7,7 @@
 
 using Gapotchenko.FX.Security.Cryptography.Properties;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace Gapotchenko.FX.Security.Cryptography;
 
@@ -21,7 +22,15 @@ public abstract class Arc4 : SymmetricAlgorithm
     /// <returns>The instance of ARC4 algorithm.</returns>
     public static new Arc4 Create()
     {
-        EnforcePolicies();
+        try
+        {
+            EnforcePolicies();
+        }
+        catch (CryptographicException e)
+        {
+            // Match the expected public API contract of .NET cryptography module.
+            throw new TargetInvocationException(e);
+        }
 
 #pragma warning disable CS0618 // Type or member is obsolete
         return new Arc4Managed(false);
