@@ -6,10 +6,10 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
-#pragma warning disable CA5351 // Do Not Use Broken Cryptographic Algorithms
-
 using System.Buffers.Binary;
 using System.Numerics;
+
+#pragma warning disable CA5351 // Do Not Use Broken Cryptographic Algorithms
 
 namespace Gapotchenko.FX.Security.Cryptography;
 
