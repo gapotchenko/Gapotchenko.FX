@@ -29,6 +29,19 @@ public abstract class HashAlgorithmTest
         CollectionAssert.AreEqual(hash1, hash2);
     }
 
+    [TestMethod]
+    public void HashAlgorithm_Dispose()
+    {
+        var algorithm = CreateHashAlgorithm();
+        int blockSize = algorithm.InputBlockSize;
+
+        algorithm.Dispose();
+
+        byte[] block = new byte[blockSize];
+        Assert.ThrowsExactly<ObjectDisposedException>(() => algorithm.TransformBlock(block, 0, block.Length, null, 0));
+        Assert.ThrowsExactly<ObjectDisposedException>(() => algorithm.TransformFinalBlock(block, 0, block.Length));
+    }
+
     // ------------------------------------------------------------------------
 
     protected void Verify(string inputText, string expectedHex)
