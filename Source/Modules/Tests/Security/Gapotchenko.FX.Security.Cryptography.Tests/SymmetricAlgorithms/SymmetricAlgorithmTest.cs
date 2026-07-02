@@ -273,6 +273,53 @@ public abstract class SymmetricAlgorithmTest
         CollectionAssert.AreEqual(expected, actual);
     }
 
+    [TestMethod]
+    public void SymmetricAlgorithm_Cipher_CanDecryptMultipleBlocksInPlace()
+    {
+        using var algorithm = CreateSymmetricAlgorithm();
+
+        byte[] iv = algorithm.IV;
+        if (iv is [])
+            return;
+
+        try
+        {
+            algorithm.Mode = CipherMode.CBC;
+        }
+        catch (CryptographicException)
+        {
+            return;
+        }
+
+        algorithm.Padding = PaddingMode.None;
+
+        int blockSize = algorithm.BlockSize / 8;
+        const int BlockCount = 3;
+
+        byte[] expected = RandomNumberGenerator.GetBytes(blockSize * BlockCount);
+        byte[] cipher;
+
+        using (var encryptor = algorithm.CreateEncryptor(algorithm.Key, iv))
+            cipher = encryptor.TransformFinalBlock(expected, 0, expected.Length);
+
+        byte[] actual = new byte[cipher.Length];
+        using (var decryptor = algorithm.CreateDecryptor(algorithm.Key, iv))
+        {
+            int actualCount = decryptor.TransformBlock(cipher, 0, cipher.Length, actual, 0);
+            Assert.AreEqual(actual.Length, actualCount);
+        }
+
+        byte[] actualInPlace = (byte[])cipher.Clone();
+        using (var decryptor = algorithm.CreateDecryptor(algorithm.Key, iv))
+        {
+            int actualCount = decryptor.TransformBlock(actualInPlace, 0, actualInPlace.Length, actualInPlace, 0);
+            Assert.AreEqual(actualInPlace.Length, actualCount);
+        }
+
+        CollectionAssert.AreEqual(expected, actual);
+        CollectionAssert.AreEqual(expected, actualInPlace);
+    }
+
     #endregion
 
     // ------------------------------------------------------------------------
