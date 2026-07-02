@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2022
 
+using Gapotchenko.FX.Security.Cryptography.Kits;
 using System.Buffers;
 
 namespace Gapotchenko.FX.Security.Cryptography;
@@ -46,7 +47,7 @@ sealed class Arc4ManagedTransform(byte[] key) : ICryptoTransform
                 nameof(outputBuffer));
         }
 
-        if (HasForwardOverlap(inputBuffer, inputOffset, inputCount, outputBuffer, outputOffset))
+        if (CryptoTransformKit.HasForwardOverlap(inputBuffer, inputOffset, inputCount, outputBuffer, outputOffset))
         {
             var arrayPool = ArrayPool<byte>.Shared;
             byte[] inputCopy = arrayPool.Rent(inputCount);
@@ -88,14 +89,6 @@ sealed class Arc4ManagedTransform(byte[] key) : ICryptoTransform
                 "Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.",
                 nameof(inputBuffer));
         }
-    }
-
-    static bool HasForwardOverlap(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
-    {
-        return
-            ReferenceEquals(inputBuffer, outputBuffer) &&
-            outputOffset > inputOffset &&
-            outputOffset < inputOffset + inputCount;
     }
 
     int TransformBlockCore(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
