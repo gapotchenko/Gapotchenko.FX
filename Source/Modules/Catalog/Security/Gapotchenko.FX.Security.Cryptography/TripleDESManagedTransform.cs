@@ -16,14 +16,11 @@ sealed class TripleDESManagedTransform : ManagedBlockTransform
     {
         Debug.Assert(key.Length is 16 or 24);
 
-        var k1 = key[..8];
-        var k2 = key[8..16];
+        var kernel1 = new DESManagedTransformKernel(key[..8], encrypting);
+        m_Kernel2 = new(key[8..16], !encrypting);
+        var kernel3 = key.Length is 16 ? kernel1 : new(key[16..24], encrypting);
 
-        m_Kernel1 = new(k1, encrypting);
-        m_Kernel2 = new(k2, !encrypting);
-        m_Kernel3 = key.Length is 16 ? m_Kernel1 : new(key[16..24], encrypting);
-
-        m_Encrypting = encrypting;
+        (m_Kernel1, m_Kernel3) = encrypting ? (kernel1, kernel3) : (kernel3, kernel1);
     }
 
     public override void Dispose()
@@ -39,23 +36,12 @@ sealed class TripleDESManagedTransform : ManagedBlockTransform
     {
         Span<byte> buffer = stackalloc byte[BlockSize];
 
-        if (m_Encrypting)
-        {
-            m_Kernel1.Transform(input, buffer);
-            m_Kernel2.Transform(buffer, buffer);
-            m_Kernel3.Transform(buffer, output);
-        }
-        else
-        {
-            m_Kernel3.Transform(input, buffer);
-            m_Kernel2.Transform(buffer, buffer);
-            m_Kernel1.Transform(buffer, output);
-        }
+        m_Kernel1.Transform(input, buffer);
+        m_Kernel2.Transform(buffer, buffer);
+        m_Kernel3.Transform(buffer, output);
     }
 
     const int BlockSize = 8;
 
     readonly DESManagedTransformKernel m_Kernel1, m_Kernel2, m_Kernel3;
-
-    readonly bool m_Encrypting;
 }
