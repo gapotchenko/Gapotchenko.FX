@@ -17,7 +17,7 @@ readonly struct DESManagedTransformKernel : IDisposable
 {
     public DESManagedTransformKernel(ReadOnlySpan<byte> key, bool encrypting)
     {
-        Debug.Assert(key.Length == 8);
+        Debug.Assert(key.Length == KeySize);
 
         m_WorkingKey = CreateWorkingKey(key, encrypting);
     }
@@ -365,7 +365,7 @@ readonly struct DESManagedTransformKernel : IDisposable
     // Use the key schedule specified in the Standard (ANSI X3.92-1981).
     static readonly byte[] m_PC1 =
     [
-        56, 48, 40, 32, 24, 16,  8,  0, 57, 49, 41, 33, 25, 17,
+        56, 48, 40, 32, 24, 16,  8,   0, 57, 49, 41, 33, 25, 17,
         9,  1,  58, 50, 42, 34, 26,  18, 10,  2, 59, 51, 43, 35,
         62, 54, 46, 38, 30, 22, 14,   6, 61, 53, 45, 37, 29, 21,
         13,  5, 60, 52, 44, 36, 28,  20, 12,  4, 27, 19, 11,  3
@@ -387,5 +387,6 @@ readonly struct DESManagedTransformKernel : IDisposable
 
     #endregion
 
+    const int KeySize = 8;
     const int BlockSize = 8;
 }

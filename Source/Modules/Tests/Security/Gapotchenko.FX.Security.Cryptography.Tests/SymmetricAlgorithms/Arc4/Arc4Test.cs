@@ -101,9 +101,7 @@ public abstract class Arc4Test : SymmetricAlgorithmTest
     {
         using var arc4 = CreateAlgorithm();
 
-        byte[] plainData = new byte[4096];
-        using (var rng = RandomNumberGenerator.Create())
-            rng.GetBytes(plainData);
+        byte[] plainData = RandomNumberGenerator.GetBytes(4096);
         var plainStream = new MemoryStream(plainData, false);
 
         var encryptedStream = new MemoryStream();
