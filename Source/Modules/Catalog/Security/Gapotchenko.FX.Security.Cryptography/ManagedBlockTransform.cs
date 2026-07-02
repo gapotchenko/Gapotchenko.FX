@@ -42,7 +42,7 @@ abstract class ManagedBlockTransform(int blockSize) : ICryptoTransform
             try
             {
                 Buffer.BlockCopy(inputBuffer, inputOffset, inputCopy, 0, inputCount);
-                return TransformBlockCore(inputCopy, 0, inputCount, outputBuffer, outputOffset);
+                return DoTransformBlock(inputCopy, 0, inputCount, outputBuffer, outputOffset);
             }
             finally
             {
@@ -52,11 +52,11 @@ abstract class ManagedBlockTransform(int blockSize) : ICryptoTransform
         }
         else
         {
-            return TransformBlockCore(inputBuffer, inputOffset, inputCount, outputBuffer, outputOffset);
+            return DoTransformBlock(inputBuffer, inputOffset, inputCount, outputBuffer, outputOffset);
         }
     }
 
-    int TransformBlockCore(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
+    int DoTransformBlock(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
     {
         for (int i = 0; i < inputCount; i += blockSize)
         {
@@ -67,6 +67,8 @@ abstract class ManagedBlockTransform(int blockSize) : ICryptoTransform
 
         return inputCount;
     }
+
+    protected virtual bool AvoidForwardOverlap => CanTransformMultipleBlocks;
 
     public byte[] TransformFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount)
     {
@@ -105,6 +107,4 @@ abstract class ManagedBlockTransform(int blockSize) : ICryptoTransform
     bool m_Disposed;
 
     protected abstract void TransformBlockCore(ReadOnlySpan<byte> input, Span<byte> output);
-
-    protected virtual bool AvoidForwardOverlap => false;
 }

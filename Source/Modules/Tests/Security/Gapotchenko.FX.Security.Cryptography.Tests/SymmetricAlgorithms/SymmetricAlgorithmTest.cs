@@ -344,52 +344,94 @@ public abstract class SymmetricAlgorithmTest
 
         algorithm.Padding = PaddingMode.None;
 
-        using var encryptor = algorithm.CreateEncryptor(key, iv);
-        if (!encryptor.CanTransformMultipleBlocks)
-            return;
-
         const int BlockCount = 3;
-        byte[] plain = RandomNumberGenerator.GetBytes(encryptor.InputBlockSize * BlockCount);
 
-        byte[] expectedCipher = TransformBlock(encryptor, plain);
-        byte[] actualCipher = TransformBlockWithForwardOverlap(algorithm.CreateEncryptor(key, iv), plain);
+        byte[] plain;
+        byte[] expectedCipher;
+
+        using (var encryptor = algorithm.CreateEncryptor(key, iv))
+        {
+            if (!encryptor.CanTransformMultipleBlocks)
+                return;
+
+            plain = RandomNumberGenerator.GetBytes(encryptor.InputBlockSize * BlockCount);
+
+            expectedCipher = TransformBlock(encryptor, plain);
+        }
+
+        byte[] actualCipher;
+        using (var encryptor = algorithm.CreateEncryptor(key, iv))
+            actualCipher = TransformBlockWithForwardOverlap(encryptor, plain);
+
         CollectionAssert.AreEqual(expectedCipher, actualCipher);
 
-        byte[] expectedPlain = TransformBlock(algorithm.CreateDecryptor(key, iv), expectedCipher);
-        byte[] actualPlain = TransformBlockWithForwardOverlap(algorithm.CreateDecryptor(key, iv), expectedCipher);
+        byte[] expectedPlain;
+        using (var decryptor = algorithm.CreateDecryptor(key, iv))
+            expectedPlain = TransformBlock(decryptor, expectedCipher);
+
+        byte[] actualPlain;
+        using (var decryptor = algorithm.CreateDecryptor(key, iv))
+            actualPlain = TransformBlockWithForwardOverlap(decryptor, expectedCipher);
 
         CollectionAssert.AreEqual(plain, expectedPlain);
         CollectionAssert.AreEqual(plain, actualPlain);
 
         static byte[] TransformBlock(ICryptoTransform transform, byte[] input)
         {
-            using (transform)
-            {
-                int outputCount = input.Length / transform.InputBlockSize * transform.OutputBlockSize;
-                byte[] output = new byte[outputCount];
-                int actualCount = transform.TransformBlock(input, 0, input.Length, output, 0);
-                Assert.AreEqual(output.Length, actualCount);
-                return output;
-            }
+            int outputCount = input.Length / transform.InputBlockSize * transform.OutputBlockSize;
+            byte[] output = new byte[outputCount];
+            int actualCount = transform.TransformBlock(input, 0, input.Length, output, 0);
+            Assert.AreEqual(output.Length, actualCount);
+            return output;
         }
+    }
 
-        static byte[] TransformBlockWithForwardOverlap(ICryptoTransform transform, byte[] input)
+    [TestMethod]
+    public void SymmetricAlgorithm_Cipher_CanTransformEcbMultipleBlocksWithForwardOverlap()
+    {
+        using var algorithm = CreateSymmetricAlgorithm();
+
+        try
         {
-            using (transform)
-            {
-                int outputCount = input.Length / transform.InputBlockSize * transform.OutputBlockSize;
-                int outputOffset = transform.OutputBlockSize;
-                byte[] buffer = new byte[input.Length + outputOffset + outputCount];
-                Buffer.BlockCopy(input, 0, buffer, 0, input.Length);
-
-                int actualCount = transform.TransformBlock(buffer, 0, input.Length, buffer, outputOffset);
-                Assert.AreEqual(outputCount, actualCount);
-
-                byte[] output = new byte[outputCount];
-                Buffer.BlockCopy(buffer, outputOffset, output, 0, output.Length);
-                return output;
-            }
+            algorithm.Mode = CipherMode.ECB;
         }
+        catch (CryptographicException)
+        {
+            return;
+        }
+
+        algorithm.Padding = PaddingMode.None;
+
+        byte[] key = algorithm.Key;
+        using var encryptor = algorithm.CreateEncryptor(key, null);
+        if (!encryptor.CanTransformMultipleBlocks)
+            return;
+
+        const int BlockCount = 3;
+        byte[] plain = RandomNumberGenerator.GetBytes(encryptor.InputBlockSize * BlockCount);
+
+        byte[] expectedCipher = encryptor.TransformFinalBlock(plain, 0, plain.Length);
+
+        byte[] actualCipher;
+        using (var transform = algorithm.CreateEncryptor(key, null))
+            actualCipher = TransformBlockWithForwardOverlap(transform, plain);
+
+        CollectionAssert.AreEqual(expectedCipher, actualCipher);
+    }
+
+    static byte[] TransformBlockWithForwardOverlap(ICryptoTransform transform, byte[] input)
+    {
+        int outputCount = input.Length / transform.InputBlockSize * transform.OutputBlockSize;
+        int outputOffset = transform.OutputBlockSize;
+        byte[] buffer = new byte[input.Length + outputOffset + outputCount];
+        Buffer.BlockCopy(input, 0, buffer, 0, input.Length);
+
+        int actualCount = transform.TransformBlock(buffer, 0, input.Length, buffer, outputOffset);
+        Assert.AreEqual(outputCount, actualCount);
+
+        byte[] output = new byte[outputCount];
+        Buffer.BlockCopy(buffer, outputOffset, output, 0, output.Length);
+        return output;
     }
 
     #endregion
