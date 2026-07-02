@@ -50,7 +50,7 @@ sealed class DESUnapprovedImpl : DES
         byte[]? iv,
         bool encrypting,
         [CallerArgumentExpression(nameof(key))] string? keyParamName = null,
-        [CallerArgumentExpression(nameof(key))] string? ivParamName = null)
+        [CallerArgumentExpression(nameof(iv))] string? ivParamName = null)
     {
         ValidateKeyArgument(key, keyParamName);
         ValidateIVArgument(iv, ivParamName);
@@ -96,7 +96,7 @@ sealed class DESUnapprovedImpl : DES
         byte[]? iv,
         bool encrypting)
     {
-        return CryptoTransformKit.AdaptBlockTransform(
+        return CryptoTransformKit.AdaptEcbTransform(
             this,
             new DESManagedTransform(key, encrypting),
             encrypting,

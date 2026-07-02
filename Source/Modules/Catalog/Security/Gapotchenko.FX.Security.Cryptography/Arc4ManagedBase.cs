@@ -45,7 +45,7 @@ abstract class Arc4ManagedBase : Arc4
         byte[] key,
         byte[]? iv,
         [CallerArgumentExpression(nameof(key))] string? keyParamName = null,
-        [CallerArgumentExpression(nameof(key))] string? ivParamName = null)
+        [CallerArgumentExpression(nameof(iv))] string? ivParamName = null)
     {
         ValidateKeyArgument(key, keyParamName);
         ValidateIVArgument(iv, ivParamName);

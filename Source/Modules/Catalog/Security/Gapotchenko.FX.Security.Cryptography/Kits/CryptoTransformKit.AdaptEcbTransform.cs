@@ -14,10 +14,10 @@ namespace Gapotchenko.FX.Security.Cryptography.Kits;
 partial class CryptoTransformKit
 {
     /// <summary>
-    /// Adapts the specified raw block transform to the mode and padding behavior of the specified symmetric algorithm.
+    /// Adapts the specified ECB transform to the mode and padding behavior of the specified symmetric algorithm.
     /// </summary>
     /// <remarks>
-    /// This method wraps an underlying electronic cookbook transform and adds cipher mode chaining, final-block padding,
+    /// This method wraps an underlying ECB transform and adds cipher mode chaining, final-block padding,
     /// and initialization vector handling when those features are not implemented by the transform itself.
     /// </remarks>
     /// <param name="algorithm">
@@ -34,9 +34,9 @@ partial class CryptoTransformKit
     /// The initialization vector, or <see langword="null"/> when the algorithm's cipher mode does not require one.
     /// </param>
     /// <returns>
-    /// An <see cref="ICryptoTransform"/> that combines the underlying block transform with the algorithm's mode and padding behavior.
+    /// An <see cref="ICryptoTransform"/> that combines the underlying ECB transform with the algorithm's mode and padding behavior.
     /// </returns>
-    public static ICryptoTransform AdaptBlockTransform(
+    public static ICryptoTransform AdaptEcbTransform(
         SymmetricAlgorithm algorithm,
         ICryptoTransform transform,
         bool encrypting,
@@ -55,14 +55,14 @@ partial class CryptoTransformKit
             (cipherMode, paddingMode) switch
             {
                 (CipherMode.ECB, PaddingMode.None) when iv is null => transform,
-                (CipherMode.ECB or CipherMode.CBC, _) => new AdaptedBlockTransform(transform, cipherMode, paddingMode, iv, encrypting),
+                (CipherMode.ECB or CipherMode.CBC, _) => new AdaptedEcbTransform(transform, cipherMode, paddingMode, iv, encrypting),
                 _ => throw new NotSupportedException(string.Format("{0} cipher mode is not supported.", cipherMode))
             };
     }
 
-    sealed class AdaptedBlockTransform : ICryptoTransform
+    sealed class AdaptedEcbTransform : ICryptoTransform
     {
-        public AdaptedBlockTransform(
+        public AdaptedEcbTransform(
             ICryptoTransform transform,
             CipherMode cipherMode,
             PaddingMode paddingMode,
