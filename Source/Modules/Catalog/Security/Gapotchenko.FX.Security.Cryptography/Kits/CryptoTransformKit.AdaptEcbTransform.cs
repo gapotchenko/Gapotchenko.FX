@@ -151,7 +151,25 @@ partial class CryptoTransformKit
             int outputCount = GetTransformBlockOutputCount(inputCount);
             ValidateOutputArguments(outputBuffer, outputOffset, outputCount);
 
-            return TransformBlockCore(inputBuffer, inputOffset, inputCount, outputBuffer, outputOffset);
+            if (HasForwardOverlap(inputBuffer, inputOffset, inputCount, outputBuffer, outputOffset))
+            {
+                var arrayPool = ArrayPool<byte>.Shared;
+                byte[] inputCopy = arrayPool.Rent(inputCount);
+                try
+                {
+                    Buffer.BlockCopy(inputBuffer, inputOffset, inputCopy, 0, inputCount);
+                    return TransformBlockCore(inputCopy, 0, inputCount, outputBuffer, outputOffset);
+                }
+                finally
+                {
+                    CryptographicOperations.ZeroMemory(inputCopy.AsSpan(0, inputCount));
+                    arrayPool.Return(inputCopy);
+                }
+            }
+            else
+            {
+                return TransformBlockCore(inputBuffer, inputOffset, inputCount, outputBuffer, outputOffset);
+            }
         }
 
         public byte[] TransformFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount)

@@ -7,6 +7,7 @@
 
 using Gapotchenko.FX.Security.Cryptography.Kits;
 using Gapotchenko.FX.Security.Cryptography.Properties;
+using System.Buffers;
 
 namespace Gapotchenko.FX.Security.Cryptography;
 
@@ -34,6 +35,29 @@ abstract class ManagedBlockTransform(int blockSize) : ICryptoTransform
 
         EnsureNotDisposed();
 
+        if (AvoidForwardOverlap && CryptoTransformKit.HasForwardOverlap(inputBuffer, inputOffset, inputCount, outputBuffer, outputOffset))
+        {
+            var arrayPool = ArrayPool<byte>.Shared;
+            byte[] inputCopy = arrayPool.Rent(inputCount);
+            try
+            {
+                Buffer.BlockCopy(inputBuffer, inputOffset, inputCopy, 0, inputCount);
+                return TransformBlockCore(inputCopy, 0, inputCount, outputBuffer, outputOffset);
+            }
+            finally
+            {
+                CryptographicOperations.ZeroMemory(inputCopy.AsSpan(0, inputCount));
+                arrayPool.Return(inputCopy);
+            }
+        }
+        else
+        {
+            return TransformBlockCore(inputBuffer, inputOffset, inputCount, outputBuffer, outputOffset);
+        }
+    }
+
+    int TransformBlockCore(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
+    {
         for (int i = 0; i < inputCount; i += blockSize)
         {
             TransformBlockCore(
@@ -81,4 +105,6 @@ abstract class ManagedBlockTransform(int blockSize) : ICryptoTransform
     bool m_Disposed;
 
     protected abstract void TransformBlockCore(ReadOnlySpan<byte> input, Span<byte> output);
+
+    protected virtual bool AvoidForwardOverlap => false;
 }

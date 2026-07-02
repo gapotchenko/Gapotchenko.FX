@@ -19,6 +19,18 @@ public static partial class CryptoTransformKit
     // This type is partial.
     // For the rest of the implementation, please take a look at the neighboring source files.
 
+    /// <summary>
+    /// Determines whether an output range overlaps unread input bytes at a higher offset in the same buffer.
+    /// </summary>
+    /// <param name="inputBuffer">The input buffer.</param>
+    /// <param name="inputOffset">The offset into <paramref name="inputBuffer"/> at which input data begins.</param>
+    /// <param name="inputCount">The number of bytes of input data.</param>
+    /// <param name="outputBuffer">The output buffer.</param>
+    /// <param name="outputOffset">The offset into <paramref name="outputBuffer"/> at which output data begins.</param>
+    /// <returns>
+    /// <see langword="true"/> when writing output forward can overwrite input bytes that have not been read yet;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
     public static bool HasForwardOverlap(byte[] inputBuffer, int inputOffset, int inputCount, byte[] outputBuffer, int outputOffset)
     {
         return
