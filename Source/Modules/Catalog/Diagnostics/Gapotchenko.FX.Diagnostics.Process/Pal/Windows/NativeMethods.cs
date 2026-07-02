@@ -189,6 +189,13 @@ static class NativeMethods
 
     // ------------------------------------------------------------------------
 
+#if !TFF_ENVIRONMENT_PROCESSID
+
+    [DllImport("kernel32.dll", ExactSpelling = true)]
+    public static extern int GetCurrentProcessId();
+
+#endif
+
 #if !TFF_ENVIRONMENT_PROCESSPATH
 
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]

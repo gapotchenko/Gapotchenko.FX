@@ -130,8 +130,19 @@ sealed class PalAdapter : IPalAdapter
         return false;
     }
 
+#if !TFF_ENVIRONMENT_PROCESSID
+
+    public int GetCurrentProcessId()
+    {
+        return NativeMethods.getpid();
+    }
+
+#endif
+
 #if !TFF_ENVIRONMENT_PROCESSPATH
+
     public string? GetProcessPath() => null;
+
 #endif
 }
 

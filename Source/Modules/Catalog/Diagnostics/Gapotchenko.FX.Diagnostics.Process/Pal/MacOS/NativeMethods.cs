@@ -71,6 +71,13 @@ static class NativeMethods
 
     [DllImport("libc")]
     public static extern int kill(int pid, int signal);
+
+#if !TFF_ENVIRONMENT_PROCESSID
+
+    [DllImport("libc")]
+    public static extern int getpid();
+
+#endif
 }
 
 #endif

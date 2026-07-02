@@ -12,13 +12,43 @@ using System.Diagnostics;
 namespace Gapotchenko.FX.Diagnostics;
 
 /// <summary>
-/// Provides polyfill extension methods for <see cref="Environment"/> class.
+/// Provides polyfill extension members for <see cref="Environment"/> class.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class EnvironmentPolyfills
 {
     extension(Environment)
     {
+        /// <summary>
+        /// Gets the unique identifier for the current process.
+        /// </summary>
+        /// <value>
+        /// A number that represents the unique identifier for the current process.
+        /// </value>
+        /// <remarks>
+        /// This is a polyfill provided by Gapotchenko.FX.
+        /// </remarks>
+#if TFF_ENVIRONMENT_PROCESSID
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+        public static int ProcessId
+        {
+            get
+            {
+#if TFF_ENVIRONMENT_PROCESSID
+                return Environment.ProcessId;
+#else
+                int processId = m_CachedProcessId;
+                if (processId == -1)
+                {
+                    m_CachedProcessId = processId = GetProcessIdCore();
+                    Debug.Assert(processId != -1);
+                }
+                return processId;
+#endif
+            }
+        }
+
         /// <summary>
         /// Returns the path of the executable that started the currently executing process.
         /// Returns <see langword="null"/> when the path is not available.
@@ -42,6 +72,25 @@ public static class EnvironmentPolyfills
             Empty.Nullify(m_CachedProcessPath ??= (GetProcessPathCore() ?? string.Empty));
 #endif
     }
+
+#if !TFF_ENVIRONMENT_PROCESSID
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    static int m_CachedProcessId = -1;
+
+    static int GetProcessIdCore()
+    {
+        return
+            PalServices.AdapterOrDefault?.GetCurrentProcessId() ??
+            GetProcessIdFallback();
+    }
+
+    static int GetProcessIdFallback()
+    {
+        return Process.GetCurrentProcess().Id;
+    }
+
+#endif
 
 #if !TFF_ENVIRONMENT_PROCESSPATH
 

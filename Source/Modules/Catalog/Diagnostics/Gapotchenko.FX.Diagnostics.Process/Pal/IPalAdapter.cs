@@ -21,6 +21,10 @@ interface IPalAdapter
 
     Task<bool> TryInterruptProcessAsync(Process process, CancellationToken cancellationToken);
 
+#if !TFF_ENVIRONMENT_PROCESSID
+    int GetCurrentProcessId();
+#endif
+
 #if !TFF_ENVIRONMENT_PROCESSPATH
     string? GetProcessPath();
 #endif
