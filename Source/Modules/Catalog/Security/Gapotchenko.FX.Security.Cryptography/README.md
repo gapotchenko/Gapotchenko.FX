@@ -52,6 +52,19 @@ using (var arc4 = Arc4.Create())
 }
 ```
 
+## Unapproved Algorithms
+
+Some cryptographic algorithms are retained for compatibility with legacy systems and data formats even though they are no longer approved for general-purpose cryptographic use.
+The module provides corresponding `Unapproved` classes for such cases:
+
+- `Arc4Unapproved`
+- `DESUnapproved`
+- `MD5Unapproved`
+- `TripleDESUnapproved`
+
+These algorithms are intended for scenarios where old data, protocols, or formats must still be processed.
+They may be used in FIPS-restricted environments when the user explicitly permits such usage for compatibility purposes.
+
 ## Usage
 
 `Gapotchenko.FX.Security.Cryptography` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Security.Cryptography):
