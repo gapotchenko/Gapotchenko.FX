@@ -32,12 +32,10 @@ readonly struct DESManagedTransformKernel : IDisposable
         Debug.Assert(input.Length == BlockSize);
         Debug.Assert(output.Length == BlockSize);
 
-        int[] workingKey = m_WorkingKey;
-
         uint hi32 = BinaryPrimitives.ReadUInt32BigEndian(input[..4]);
         uint lo32 = BinaryPrimitives.ReadUInt32BigEndian(input[4..8]);
 
-        DesFunc(workingKey, ref hi32, ref lo32);
+        DesFunc(m_WorkingKey, ref hi32, ref lo32);
 
         BinaryPrimitives.WriteUInt32BigEndian(output[..4], hi32);
         BinaryPrimitives.WriteUInt32BigEndian(output[4..8], lo32);
@@ -52,16 +50,16 @@ readonly struct DESManagedTransformKernel : IDisposable
 
         uint work = ((left >> 4) ^ right) & 0x0f0f0f0f;
         right ^= work;
-        left ^= (work << 4);
+        left ^= work << 4;
         work = ((left >> 16) ^ right) & 0x0000ffff;
         right ^= work;
-        left ^= (work << 16);
+        left ^= work << 16;
         work = ((right >> 2) ^ left) & 0x33333333;
         left ^= work;
-        right ^= (work << 2);
+        right ^= work << 2;
         work = ((right >> 8) ^ left) & 0x00ff00ff;
         left ^= work;
-        right ^= (work << 8);
+        right ^= work << 8;
         right = (right << 1) | (right >> 31);
         work = (left ^ right) & 0xaaaaaaaa;
         left ^= work;
@@ -103,16 +101,16 @@ readonly struct DESManagedTransformKernel : IDisposable
         left = (left << 31) | (left >> 1);
         work = ((left >> 8) ^ right) & 0x00ff00ff;
         right ^= work;
-        left ^= (work << 8);
+        left ^= work << 8;
         work = ((left >> 2) ^ right) & 0x33333333;
         right ^= work;
-        left ^= (work << 2);
+        left ^= work << 2;
         work = ((right >> 16) ^ left) & 0x0000ffff;
         left ^= work;
-        right ^= (work << 16);
+        right ^= work << 16;
         work = ((right >> 4) ^ left) & 0x0f0f0f0f;
         left ^= work;
-        right ^= (work << 4);
+        right ^= work << 4;
 
         hi32 = right;
         lo32 = left;

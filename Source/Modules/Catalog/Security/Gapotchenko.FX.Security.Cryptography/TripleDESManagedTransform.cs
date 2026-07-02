@@ -41,14 +41,14 @@ sealed class TripleDESManagedTransform : ManagedBlockTransform
 
         if (m_Encrypting)
         {
-            m_Kernel1.Transform(input, output);
-            m_Kernel2.Transform(output, buffer);
+            m_Kernel1.Transform(input, buffer);
+            m_Kernel2.Transform(buffer, buffer);
             m_Kernel3.Transform(buffer, output);
         }
         else
         {
-            m_Kernel3.Transform(input, output);
-            m_Kernel2.Transform(output, buffer);
+            m_Kernel3.Transform(input, buffer);
+            m_Kernel2.Transform(buffer, buffer);
             m_Kernel1.Transform(buffer, output);
         }
     }
