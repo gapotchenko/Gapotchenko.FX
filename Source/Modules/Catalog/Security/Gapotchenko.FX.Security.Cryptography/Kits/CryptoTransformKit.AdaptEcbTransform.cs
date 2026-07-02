@@ -450,18 +450,35 @@ partial class CryptoTransformKit
                 int blockSize = m_BlockSize;
 
                 var arrayPool = ArrayPool<byte>.Shared;
+                byte[]? cipherBlock = null;
                 byte[] block = arrayPool.Rent(blockSize);
                 try
                 {
+                    byte[] feedbackSource = inputBuffer;
+                    int feedbackSourceOffset = inputOffset;
+                    if (ReferenceEquals(inputBuffer, outputBuffer))
+                    {
+                        cipherBlock = arrayPool.Rent(blockSize);
+                        Buffer.BlockCopy(inputBuffer, inputOffset, cipherBlock, 0, blockSize);
+                        feedbackSource = cipherBlock;
+                        feedbackSourceOffset = 0;
+                    }
+
                     TransformEcbBlock(inputBuffer, inputOffset, block, 0);
 
                     for (int i = 0; i < blockSize; ++i)
                         outputBuffer[outputOffset + i] = (byte)(block[i] ^ feedback[i]);
 
-                    Buffer.BlockCopy(inputBuffer, inputOffset, feedback, 0, blockSize);
+                    Buffer.BlockCopy(feedbackSource, feedbackSourceOffset, feedback, 0, blockSize);
                 }
                 finally
                 {
+                    if (cipherBlock != null)
+                    {
+                        CryptographicOperations.ZeroMemory(cipherBlock.AsSpan(0, blockSize));
+                        arrayPool.Return(cipherBlock);
+                    }
+
                     CryptographicOperations.ZeroMemory(block.AsSpan(0, blockSize));
                     arrayPool.Return(block);
                 }
