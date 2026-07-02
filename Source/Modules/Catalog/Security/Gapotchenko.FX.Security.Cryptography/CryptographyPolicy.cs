@@ -41,7 +41,7 @@ public static class CryptographyPolicy
     /// </para>
     /// </remarks>
     public static bool AllowOnlyFipsAlgorithms =>
-        m_EnforceFipsAlgorithmsOnly ||
+        m_EnforceOnlyFipsAlgorithms ||
         m_CachedAllowOnlyFipsAlgorithms.Value;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -107,10 +107,10 @@ public static class CryptographyPolicy
     /// under FIPS-only policy conditions.
     /// </para>
     /// </remarks>
-    public static void EnforceFipsAlgorithmsOnly()
+    public static void EnforceOnlyFipsAlgorithms()
     {
-        m_EnforceFipsAlgorithmsOnly = true;
+        m_EnforceOnlyFipsAlgorithms = true;
     }
 
-    static bool m_EnforceFipsAlgorithmsOnly;
+    static bool m_EnforceOnlyFipsAlgorithms;
 }
