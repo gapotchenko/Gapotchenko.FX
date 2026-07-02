@@ -321,6 +321,69 @@ public abstract class SymmetricAlgorithmTest
     }
 
     [TestMethod]
+    [Ignore("Algorithms provided by .NET BCL demonstrate this behavior as well.")]
+    public void SymmetricAlgorithm_Cipher_CanDecryptPaddedBlocksInPlace()
+    {
+        using var algorithm = CreateSymmetricAlgorithm();
+
+        byte[] iv = algorithm.IV;
+        if (iv is [])
+            return;
+
+        try
+        {
+            algorithm.Mode = CipherMode.CBC;
+        }
+        catch (CryptographicException)
+        {
+            return;
+        }
+
+        algorithm.Padding = PaddingMode.PKCS7;
+
+        byte[] key = algorithm.Key;
+        int blockSize = algorithm.BlockSize / 8;
+        byte[] expected = RandomNumberGenerator.GetBytes(blockSize * 2);
+        byte[] cipher;
+
+        using (var encryptor = algorithm.CreateEncryptor(key, iv))
+            cipher = encryptor.TransformFinalBlock(expected, 0, expected.Length);
+
+        byte[] actual = new byte[expected.Length];
+        using (var decryptor = algorithm.CreateDecryptor(key, iv))
+        {
+            int actualCount = decryptor.TransformBlock(cipher, 0, blockSize, actual, 0);
+            Assert.AreEqual(0, actualCount);
+
+            actualCount += decryptor.TransformBlock(cipher, blockSize, cipher.Length - blockSize, actual, 0);
+            byte[] finalBlock = decryptor.TransformFinalBlock([], 0, 0);
+            Buffer.BlockCopy(finalBlock, 0, actual, actualCount, finalBlock.Length);
+            actualCount += finalBlock.Length;
+
+            Assert.AreEqual(expected.Length, actualCount);
+        }
+
+        byte[] actualInPlace = (byte[])cipher.Clone();
+        int actualInPlaceCount;
+        using (var decryptor = algorithm.CreateDecryptor(key, iv))
+        {
+            actualInPlaceCount = decryptor.TransformBlock(actualInPlace, 0, blockSize, actualInPlace, 0);
+            Assert.AreEqual(0, actualInPlaceCount);
+
+            actualInPlaceCount += decryptor.TransformBlock(actualInPlace, blockSize, actualInPlace.Length - blockSize, actualInPlace, blockSize);
+            byte[] finalBlock = decryptor.TransformFinalBlock([], 0, 0);
+            Buffer.BlockCopy(finalBlock, 0, actualInPlace, actualInPlaceCount, finalBlock.Length);
+            actualInPlaceCount += finalBlock.Length;
+        }
+
+        byte[] actualInPlacePlain = new byte[actualInPlaceCount];
+        Buffer.BlockCopy(actualInPlace, 0, actualInPlacePlain, 0, actualInPlacePlain.Length);
+
+        CollectionAssert.AreEqual(expected, actual);
+        CollectionAssert.AreEqual(expected, actualInPlacePlain);
+    }
+
+    [TestMethod]
     public void SymmetricAlgorithm_Cipher_CanTransformMultipleBlocksWithForwardOverlap()
     {
         using var algorithm = CreateSymmetricAlgorithm();
