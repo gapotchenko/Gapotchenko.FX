@@ -6,7 +6,7 @@
 
 Release date: not released yet
 
-- Added DES and MD5 algorithm implementations that can be used for compatibility with legacy systems and data formats
+- Added MD5, DES and 3DES algorithm implementations that can be used for compatibility with legacy systems and data formats
 - Polyfills:
     - Added polyfill for `System.Environment.ProcessId` property
     - Added polyfill for `System.Security.Cryptography.CryptographicOperations` class

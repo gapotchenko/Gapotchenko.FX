@@ -17,6 +17,8 @@ readonly struct DESManagedTransformKernel : IDisposable
 {
     public DESManagedTransformKernel(ReadOnlySpan<byte> key, bool encrypting)
     {
+        Debug.Assert(key.Length == 8);
+
         m_WorkingKey = CreateWorkingKey(key, encrypting);
     }
 
@@ -32,13 +34,13 @@ readonly struct DESManagedTransformKernel : IDisposable
 
         int[] workingKey = m_WorkingKey;
 
-        uint hi32 = BinaryPrimitives.ReadUInt32BigEndian(input);
-        uint lo32 = BinaryPrimitives.ReadUInt32BigEndian(input[4..]);
+        uint hi32 = BinaryPrimitives.ReadUInt32BigEndian(input[..4]);
+        uint lo32 = BinaryPrimitives.ReadUInt32BigEndian(input[4..8]);
 
         DesFunc(workingKey, ref hi32, ref lo32);
 
-        BinaryPrimitives.WriteUInt32BigEndian(output, hi32);
-        BinaryPrimitives.WriteUInt32BigEndian(output[4..], lo32);
+        BinaryPrimitives.WriteUInt32BigEndian(output[..4], hi32);
+        BinaryPrimitives.WriteUInt32BigEndian(output[4..8], lo32);
     }
 
     #region Transform Core
