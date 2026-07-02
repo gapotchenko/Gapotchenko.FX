@@ -65,6 +65,42 @@ The module provides corresponding `Unapproved` classes for such cases:
 These algorithms are intended for scenarios where old data, protocols, or formats must still be processed.
 They may be used in FIPS-restricted environments when the user explicitly permits such usage for compatibility purposes.
 
+## Cryptography Policy
+
+`CryptographyPolicy` class provides information about the effective cryptographic policy of the current environment.
+Its `AllowOnlyFipsAlgorithms` property indicates whether only FIPS-approved cryptographic algorithms are allowed by the host operating system, runtime environment, cryptographic providers, or by the application itself.
+
+An application can call `CryptographyPolicy.EnforceOnlyFipsAlgorithms()` to opt into a FIPS-only policy for the lifetime of the current process.
+This is useful for gradual FIPS conformity: the application can use approved algorithms by default, while still routing explicitly approved legacy compatibility operations through `Unapproved` algorithm factories.
+
+Example:
+
+``` C#
+using Gapotchenko.FX.Security.Cryptography;
+using System.Security.Cryptography;
+
+// The application opts into FIPS-only behavior.
+CryptographyPolicy.EnforceOnlyFipsAlgorithms();
+
+byte[] data = ...;
+bool userPermitsLegacyMd5 = ...;
+
+byte[] digest;
+
+if (userPermitsLegacyMd5)
+{
+    // Compatibility path for old data formats that require MD5.
+    using var md5 = MD5Unapproved.Create();
+    digest = md5.ComputeHash(data);
+}
+else
+{
+    // FIPS-approved default path.
+    using var sha256 = SHA256.Create();
+    digest = sha256.ComputeHash(data);
+}
+```
+
 ## Usage
 
 `Gapotchenko.FX.Security.Cryptography` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Security.Cryptography):
