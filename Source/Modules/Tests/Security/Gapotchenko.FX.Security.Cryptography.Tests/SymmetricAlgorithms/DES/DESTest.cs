@@ -34,6 +34,9 @@ public abstract class DESTest : SymmetricAlgorithmTest
 
         Assert.ThrowsExactly<CryptographicException>(() => IsWeakKey(null!));
         Assert.ThrowsExactly<CryptographicException>(() => IsWeakKey(KnownShortKey));
+
+        using var algorithm = CreateAlgorithm();
+        Assert.ThrowsExactly<CryptographicException>(() => algorithm.Key = key);
     }
 
     const string KnownSemiWeakKeyHex = "1f011f010e010e01";
@@ -60,6 +63,9 @@ public abstract class DESTest : SymmetricAlgorithmTest
 
         Assert.ThrowsExactly<CryptographicException>(() => IsSemiWeakKey(null!));
         Assert.ThrowsExactly<CryptographicException>(() => IsSemiWeakKey(KnownShortKey));
+
+        using var algorithm = CreateAlgorithm();
+        Assert.ThrowsExactly<CryptographicException>(() => algorithm.Key = key);
     }
 
     const string KnownGoodKeyHex = "87ff0737f868378f";
@@ -72,6 +78,9 @@ public abstract class DESTest : SymmetricAlgorithmTest
         byte[] key = Base16.GetBytes(s);
         Assert.IsFalse(IsWeakKey(key));
         Assert.IsFalse(IsSemiWeakKey(key));
+
+        using var algorithm = CreateAlgorithm();
+        algorithm.Key = key;
     }
 
     protected static readonly byte[] KnownShortKey = Base16.GetBytes("00");
@@ -79,11 +88,15 @@ public abstract class DESTest : SymmetricAlgorithmTest
     [TestMethod]
     public void DES_Key_Size()
     {
-        using var des = CreateAlgorithm();
-        Assert.AreEqual(64, des.KeySize);
+        using var algorithm = CreateAlgorithm();
+        Assert.AreEqual(64, algorithm.KeySize);
 
-        Assert.ThrowsExactly<CryptographicException>(() => des.KeySize = 64 - 8);
-        Assert.ThrowsExactly<CryptographicException>(() => des.KeySize = 64 + 8);
+        // 64 bits is a permitted key size.
+        algorithm.KeySize = 64;
+        Assert.AreEqual(64, algorithm.KeySize);
+
+        Assert.ThrowsExactly<CryptographicException>(() => algorithm.KeySize = 64 - 8);
+        Assert.ThrowsExactly<CryptographicException>(() => algorithm.KeySize = 64 + 8);
     }
 
     #endregion
@@ -93,14 +106,14 @@ public abstract class DESTest : SymmetricAlgorithmTest
     [TestMethod]
     public void DES_Block_Size()
     {
-        using var des = CreateAlgorithm();
-        Assert.AreEqual(64, des.KeySize);
+        using var algorithm = CreateAlgorithm();
+        Assert.AreEqual(64, algorithm.BlockSize);
 
-        des.BlockSize = 64;
-        Assert.AreEqual(64, des.BlockSize);
+        algorithm.BlockSize = 64;
+        Assert.AreEqual(64, algorithm.BlockSize);
 
-        Assert.ThrowsExactly<CryptographicException>(() => des.BlockSize = 63);
-        Assert.ThrowsExactly<CryptographicException>(() => des.BlockSize = 65);
+        Assert.ThrowsExactly<CryptographicException>(() => algorithm.BlockSize = 63);
+        Assert.ThrowsExactly<CryptographicException>(() => algorithm.BlockSize = 65);
     }
 
     #endregion
@@ -110,24 +123,24 @@ public abstract class DESTest : SymmetricAlgorithmTest
     [TestMethod]
     public void DES_Cipher_Key()
     {
-        using var des = CreateAlgorithm();
+        using var algorithm = CreateAlgorithm();
 
         if (ThrowsCryptographicExceptionOnInvalidCipherArguments)
         {
-            Assert.ThrowsExactly<CryptographicException>(() => des.CreateDecryptor(KnownShortKey, des.IV));
-            Assert.ThrowsExactly<CryptographicException>(() => des.CreateEncryptor(KnownShortKey, des.IV));
+            Assert.ThrowsExactly<CryptographicException>(() => algorithm.CreateDecryptor(KnownShortKey, algorithm.IV));
+            Assert.ThrowsExactly<CryptographicException>(() => algorithm.CreateEncryptor(KnownShortKey, algorithm.IV));
         }
         else
         {
-            Assert.ThrowsExactly<ArgumentException>(() => des.CreateDecryptor(KnownShortKey, des.IV));
-            Assert.ThrowsExactly<ArgumentException>(() => des.CreateEncryptor(KnownShortKey, des.IV));
+            Assert.ThrowsExactly<ArgumentException>(() => algorithm.CreateDecryptor(KnownShortKey, algorithm.IV));
+            Assert.ThrowsExactly<ArgumentException>(() => algorithm.CreateEncryptor(KnownShortKey, algorithm.IV));
         }
 
-        Assert.ThrowsExactly<CryptographicException>(() => des.CreateDecryptor(KnownWeakKey, des.IV));
-        Assert.ThrowsExactly<CryptographicException>(() => des.CreateDecryptor(KnownSemiWeakKey, des.IV));
+        Assert.ThrowsExactly<CryptographicException>(() => algorithm.CreateDecryptor(KnownWeakKey, algorithm.IV));
+        Assert.ThrowsExactly<CryptographicException>(() => algorithm.CreateDecryptor(KnownSemiWeakKey, algorithm.IV));
 
-        Assert.ThrowsExactly<CryptographicException>(() => des.CreateEncryptor(KnownWeakKey, des.IV));
-        Assert.ThrowsExactly<CryptographicException>(() => des.CreateEncryptor(KnownSemiWeakKey, des.IV));
+        Assert.ThrowsExactly<CryptographicException>(() => algorithm.CreateEncryptor(KnownWeakKey, algorithm.IV));
+        Assert.ThrowsExactly<CryptographicException>(() => algorithm.CreateEncryptor(KnownSemiWeakKey, algorithm.IV));
     }
 
     static readonly byte[] m_MultiBlockString = Encoding.ASCII.GetBytes("This is a sentence that is longer than a block, it ensures that multi-block functions work.");
