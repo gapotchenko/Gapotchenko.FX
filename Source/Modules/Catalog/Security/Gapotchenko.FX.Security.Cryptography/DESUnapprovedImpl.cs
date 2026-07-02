@@ -16,7 +16,6 @@ namespace Gapotchenko.FX.Security.Cryptography;
 
 sealed class DESUnapprovedImpl : DES
 {
-    /// <inheritdoc/>
     public override void GenerateKey()
     {
         byte[] key = new byte[8];
@@ -31,19 +30,16 @@ sealed class DESUnapprovedImpl : DES
         KeyValue = key;
     }
 
-    /// <inheritdoc/>
     public override void GenerateIV()
     {
         IVValue = RandomNumberGenerator.GetBytes(8);
     }
 
-    /// <inheritdoc/>
     public override ICryptoTransform CreateDecryptor(byte[] rgbKey, byte[]? rgbIV)
     {
         return CreateTransform(rgbKey, rgbIV, false);
     }
 
-    /// <inheritdoc/>
     public override ICryptoTransform CreateEncryptor(byte[] rgbKey, byte[]? rgbIV)
     {
         return CreateTransform(rgbKey, rgbIV, true);
