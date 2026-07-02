@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Catalog\Data\Encoding\Gapotchenko.FX.Data.Encoding\Gapotchenko.FX.Data.Encoding.csproj" />
     <ProjectReference Include="..\..\..\..\Catalog\Data\Encoding\Gapotchenko.FX.Data.Encoding.Base16\Gapotchenko.FX.Data.Encoding.Base16.csproj" />
+    <ProjectReference Include="..\..\..\..\Catalog\Security\Gapotchenko.FX.Security.Cryptography\Gapotchenko.FX.Security.Cryptography.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using Gapotchenko.FX.Security.Cryptography;
+using System.Numerics;
 using System.Security.Cryptography;
 
 namespace Gapotchenko.FX.Data.Encoding.Tests.Bench;
@@ -34,7 +35,7 @@ public static class TextDataEncodingTestBench
         // Data preparation
         // -----------------------------------------------------------------
 
-        var rawBytes = textEncoding.GetBytes(raw);
+        byte[] rawBytes = textEncoding.GetBytes(raw);
 
         // -----------------------------------------------------------------
 
@@ -65,7 +66,7 @@ public static class TextDataEncodingTestBench
         // Data preparation
         // -----------------------------------------------------------------
 
-        var encodedBytes = textEncoding.GetBytes(encoded);
+        byte[] encodedBytes = textEncoding.GetBytes(encoded);
 
         // -----------------------------------------------------------------
         // Check text-based data encoding API
@@ -74,7 +75,7 @@ public static class TextDataEncodingTestBench
         string actualEncoded = dataEncoding.GetString(raw, options);
         Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
-        var actualDecoded = dataEncoding.GetBytes(actualEncoded.AsSpan(), options);
+        byte[] actualDecoded = dataEncoding.GetBytes(actualEncoded.AsSpan(), options);
         if (!raw.SequenceEqual(actualDecoded))
         {
             Assert.AreEqual(
@@ -87,7 +88,7 @@ public static class TextDataEncodingTestBench
         // Check case options
         // -----------------------------------------------------------------
 
-        var rawArray = raw.ToArray();
+        byte[] rawArray = raw.ToArray();
 
         // "Lowercase" and "Uppercase" data encoding options cannot be used simultaneously.
         Assert.ThrowsExactly<ArgumentException>(() =>
@@ -128,7 +129,7 @@ public static class TextDataEncodingTestBench
         // Check padding operations
         // -----------------------------------------------------------------
 
-        var actualEncodedUnpadded = dataEncoding.Unpad(actualEncoded.AsSpan()).ToString();
+        string actualEncodedUnpadded = dataEncoding.Unpad(actualEncoded.AsSpan()).ToString();
         string actualEncodedRepadded = dataEncoding.Pad(actualEncodedUnpadded.AsSpan());
 
         bool prefersPadding = dataEncoding.PrefersPadding;
@@ -159,10 +160,10 @@ public static class TextDataEncodingTestBench
         // Check the general data encoding API
         // -----------------------------------------------------------------
 
-        var actualEncodedBytes = dataEncoding.EncodeData(raw, options);
+        byte[] actualEncodedBytes = dataEncoding.EncodeData(raw, options);
         Assert.IsTrue(encodedBytes.SequenceEqual(actualEncodedBytes));
 
-        var actualDecodedBytes = dataEncoding.DecodeData(actualEncodedBytes, options);
+        byte[] actualDecodedBytes = dataEncoding.DecodeData(actualEncodedBytes, options);
         Assert.IsTrue(raw.SequenceEqual(actualDecodedBytes));
 
         // -----------------------------------------------------------------
@@ -207,7 +208,7 @@ public static class TextDataEncodingTestBench
 
         static void VerifyDecoding(ITextDataEncoding encoding, ReadOnlySpan<byte> raw, string encoded, DataEncodingOptions options)
         {
-            var actualDecoded = encoding.GetBytes(encoded.AsSpan(), options);
+            byte[] actualDecoded = encoding.GetBytes(encoded.AsSpan(), options);
 
             if (!raw.SequenceEqual(actualDecoded))
             {
@@ -229,7 +230,7 @@ public static class TextDataEncodingTestBench
 
     public static void RoundTrip(ITextDataEncoding encoding, string s, Encoding stringEncoding, DataEncodingOptions options = default)
     {
-        var raw = stringEncoding.GetBytes(s);
+        byte[] raw = stringEncoding.GetBytes(s);
 
         RoundTrip(encoding, raw, options);
 
@@ -245,14 +246,14 @@ public static class TextDataEncodingTestBench
 
     public static void RandomRoundTrip(ITextDataEncoding encoding, int maxByteCount, int iterations, DataEncodingOptions options = default)
     {
-        var buffer = new byte[maxByteCount];
+        byte[] buffer = new byte[maxByteCount];
 
         for (int i = 0; i < iterations; ++i)
         {
-            int n = RandomNumberGeneratorPolyfill.GetInt32(buffer.Length + 1);
+            int n = RandomNumberGenerator.GetInt32(buffer.Length + 1);
             var span = buffer.AsSpan(0, n);
 
-            RandomNumberGeneratorPolyfill.Fill(span);
+            RandomNumberGenerator.Fill(span);
             RoundTrip(encoding, span, options);
         }
     }
@@ -265,7 +266,7 @@ public static class TextDataEncodingTestBench
 
     static uint GetUInt32(RandomNumberGenerator rng)
     {
-        var bytes = new byte[4];
+        byte[] bytes = new byte[4];
         rng.GetBytes(bytes);
         return LittleEndianBitConverter.ToUInt32(bytes);
     }
@@ -290,7 +291,7 @@ public static class TextDataEncodingTestBench
         string actualEncoded = encoding.GetString(raw, options);
         Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
-        var actualDecoded = encoding.GetInt32(actualEncoded.AsSpan(), options);
+        int actualDecoded = encoding.GetInt32(actualEncoded.AsSpan(), options);
         Assert.AreEqual(raw, actualDecoded, "Decoding error.");
     }
 
@@ -351,7 +352,7 @@ public static class TextDataEncodingTestBench
         string actualEncoded = encoding.GetString(raw, options);
         Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
-        var actualDecoded = encoding.GetUInt32(actualEncoded.AsSpan(), options);
+        uint actualDecoded = encoding.GetUInt32(actualEncoded.AsSpan(), options);
         Assert.AreEqual(raw, actualDecoded, "Decoding error.");
     }
 
@@ -382,7 +383,7 @@ public static class TextDataEncodingTestBench
         for (int i = 0; i < iterations;)
         {
             double k = GetDouble(rng);
-            var value = (uint)(from * (1.0 - k) + to * k);
+            uint value = (uint)(from * (1.0 - k) + to * k);
 
             if (value < from || value > to)
                 continue;
@@ -412,7 +413,7 @@ public static class TextDataEncodingTestBench
         string actualEncoded = encoding.GetString(raw, options);
         Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
-        var actualDecoded = encoding.GetInt64(actualEncoded.AsSpan(), options);
+        long actualDecoded = encoding.GetInt64(actualEncoded.AsSpan(), options);
         Assert.AreEqual(raw, actualDecoded, "Decoding error.");
     }
 
@@ -473,7 +474,7 @@ public static class TextDataEncodingTestBench
         string actualEncoded = encoding.GetString(raw, options);
         Assert.AreEqual(encoded, actualEncoded, "Encoding error.");
 
-        var actualDecoded = encoding.GetUInt64(actualEncoded.AsSpan(), options);
+        ulong actualDecoded = encoding.GetUInt64(actualEncoded.AsSpan(), options);
         Assert.AreEqual(raw, actualDecoded, "Decoding error.");
     }
 
@@ -504,7 +505,7 @@ public static class TextDataEncodingTestBench
         for (int i = 0; i < iterations;)
         {
             double k = GetDouble(rng);
-            var value = (ulong)(from * (1.0 - k) + to * k);
+            ulong value = (ulong)(from * (1.0 - k) + to * k);
 
             if (value < from || value > to)
                 continue;
@@ -562,14 +563,14 @@ public static class TextDataEncodingTestBench
 
         int maxByteCount = Math.Max(GetByteCount(from), GetByteCount(to));
 
-        var buffer = new byte[maxByteCount];
+        byte[] buffer = new byte[maxByteCount];
 
         for (int i = 0; i < iterations;)
         {
-            int n = RandomNumberGeneratorPolyfill.GetInt32(buffer.Length + 1);
+            int n = RandomNumberGenerator.GetInt32(buffer.Length + 1);
             var span = buffer.AsSpan(0, n);
 
-            RandomNumberGeneratorPolyfill.Fill(span);
+            RandomNumberGenerator.Fill(span);
 
             BigInteger value;
 #if NETSTANDARD2_1_OR_GREATER
