@@ -2,9 +2,9 @@
 
 ## 2026
 
-### Gapotchenko.FX 2026.8 (Beta)
+### Gapotchenko.FX 2026.8
 
-Release date: not released yet
+Release date: July 10, 2026
 
 - Added MD5, DES and 3DES algorithm implementations that can be used for compatibility with legacy systems and data formats
 - Polyfills:

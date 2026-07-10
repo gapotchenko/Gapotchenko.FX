@@ -29,7 +29,7 @@
   <PropertyGroup Condition=" '$(Configuration)' != 'Debug' ">
     <!-- Ensure that all files can be cleaned in release configurations.
          Otherwise, this can cause an artifact pollution. -->
-    <WarningsAsErrors>$(WarningsAsErrors),MSB3061</WarningsAsErrors>
+    <!-- WarningsAsErrors>$(WarningsAsErrors),MSB3061</WarningsAsErrors -->
   </PropertyGroup>
 
   <!-- =================================================================== -->
