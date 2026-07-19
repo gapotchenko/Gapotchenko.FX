@@ -1,4 +1,13 @@
-﻿using Gapotchenko.FX.Runtime.CompilerServices;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+// Portions © Sean Eron Anderson
+// Portions © .NET Foundation and its Licensors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using Gapotchenko.FX.Runtime.CompilerServices;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -37,13 +46,21 @@ public static class BitOperations
     /// Returns the integer (floor) base 2 logarithm of a specified number.
     /// </summary>
     /// <remarks>
-    /// Log2(0) returns an undefined value since such operation is undefined.
-    /// The behavior corresponds to <c>BSR</c> instruction from Intel x86 instruction set.
+    /// By convention, input value <c>0</c> returns <c>0</c> since <c>Log2(0)</c> is undefined.
     /// </remarks>
     /// <param name="value">A number whose integer (floor) base 2 logarithm is to be found.</param>
     [CLSCompliant(false)]
+    [MachineCodeIntrinsic(
+        Architecture.X86,
+        // The 0 -> 0 contract is fulfilled by setting the LSB to 1.
+        // Log2(1) is 0, and setting the LSB for values > 1 does not change the log2 result.
+        0x83, 0xc9, 0x01,   // OR ECX,1
+        0x0f, 0xbd, 0xc1)]  // BSR EAX,ECX
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x83, 0xc9, 0x01,   // OR ECX,1
+        0x0f, 0xbd, 0xc1)]  // BSR EAX,ECX
     [MethodImpl(MethodImplOptions.NoInlining)]
-    [MachineCodeIntrinsic(Architecture.X64, 0x0f, 0xbd, 0xc1)]  // BSR EAX, ECX
     public static int Log2(uint value)
     {
         // Round down to one less than a power of 2.
@@ -53,8 +70,24 @@ public static class BitOperations
         value |= value >> 8;
         value |= value >> 16;
 
-        uint index = (value * 0x07C4ACDDU) >> 27;
+        uint index = (value * 0x07c4acddU) >> 27;
         return m_Log2DeBruijn32[index];
+    }
+
+    /// <inheritdoc cref="Log2(uint)"/>
+    [CLSCompliant(false)]
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x48, 0x83, 0xc9, 0x01,   // OR RCX,1
+        0x48, 0x0f, 0xbd, 0xc1)]  // BSR RAX,RCX
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int Log2(ulong value)
+    {
+        uint hi = (uint)(value >> 32);
+        if (hi == 0)
+            return Log2((uint)value);
+        else
+            return 32 + Log2(hi);
     }
 
     /// <summary>
@@ -68,7 +101,7 @@ public static class BitOperations
         // TODO: Implement POPCNT machine code intrinsic for x64.
         // https://en.wikipedia.org/wiki/SSE4#POPCNT_and_LZCNT
 
-        var x = value;
+        uint x = value;
         x -= (x >> 1) & 0x55555555;
         x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
         x = (x + (x >> 4)) & 0x0f0f0f0f;
@@ -87,8 +120,9 @@ public static class BitOperations
     {
         const ulong Mask01010101 = 0x5555555555555555UL;
         const ulong Mask00110011 = 0x3333333333333333UL;
-        const ulong Mask00001111 = 0x0F0F0F0F0F0F0F0FUL;
+        const ulong Mask00001111 = 0x0f0f0f0f0f0f0f0fUL;
         const ulong Mask00000001 = 0x0101010101010101UL;
+
         value -= (value >> 1) & Mask01010101;
         value = (value & Mask00110011) + ((value >> 2) & Mask00110011);
         return (int)(unchecked(((value + (value >> 4)) & Mask00001111) * Mask00000001) >> 56);

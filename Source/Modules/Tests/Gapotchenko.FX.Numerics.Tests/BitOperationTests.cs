@@ -7,18 +7,40 @@ public class BitOperationTests
 {
     [TestMethod]
     // Convention.
-    [DataRow(0U, 0)]
+    [DataRow(0x0U, 0)]
     // Sanity checks.
-    [DataRow(1U, 0)]
-    [DataRow(2U, 1)]
+    [DataRow(0x1U, 0)]
+    [DataRow(0x2U, 1)]
     [DataRow(uint.MaxValue, 31)]
     // Verification.
-    [DataRow(32U, 5)]
-    [DataRow(127U, 6)]
-    [DataRow(128U, 7)]
-    [DataRow(255U, 7)]
-    [DataRow(256U, 8)]
+    [DataRow(0x20U, 5)]
+    [DataRow(0x7fU, 6)]
+    [DataRow(0x80U, 7)]
+    [DataRow(0xffU, 7)]
+    [DataRow(0x100U, 8)]
     public void BitOperations_Log2_UInt32(uint value, int log)
+    {
+        Assert.AreEqual(log, BitOperations.Log2(value));
+    }
+
+    [TestMethod]
+    // Convention.
+    [DataRow(0x0UL, 0)]
+    // Sanity checks.
+    [DataRow(0x1UL, 0)]
+    [DataRow(0x2UL, 1)]
+    [DataRow(ulong.MaxValue, 63)]
+    // Verification.
+    [DataRow(0x20UL, 5)]
+    [DataRow(0x7fUL, 6)]
+    [DataRow(0x80UL, 7)]
+    [DataRow(0xffUL, 7)]
+    [DataRow(0x100UL, 8)]
+    [DataRow(0xffffffffUL, 31)]
+    [DataRow(0x100000000UL, 32)]
+    [DataRow(0x1ffffffffUL, 32)]
+    [DataRow(0x200000000UL, 33)]
+    public void BitOperations_Log2_UInt64(ulong value, int log)
     {
         Assert.AreEqual(log, BitOperations.Log2(value));
     }

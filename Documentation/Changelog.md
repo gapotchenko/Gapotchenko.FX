@@ -6,7 +6,8 @@
 
 Release date: not released yet
 
-- TODO
+- Added polyfill for `BitOperations.Log2(UInt64)` method
+- Fixed issue with `BitOperations.Log2(UInt32)` polyfill method that returned a non-zero value for zero argument on x64 processor architecture
 
 ### Gapotchenko.FX 2026.8
 
