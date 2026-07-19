@@ -53,7 +53,7 @@ public static class BitOperations
         value |= value >> 8;
         value |= value >> 16;
 
-        var index = (value * 0x07C4ACDDU) >> 27;
+        uint index = (value * 0x07C4ACDDU) >> 27;
         return m_Log2DeBruijn32[index];
     }
 

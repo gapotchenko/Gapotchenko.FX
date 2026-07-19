@@ -6,23 +6,25 @@ namespace Gapotchenko.FX.Numerics.Tests;
 public class BitOperationTests
 {
     [TestMethod]
-    public void BitOps_Log2()
+    // Convention.
+    [DataRow(0U, 0)]
+    // Sanity checks.
+    [DataRow(1U, 0)]
+    [DataRow(2U, 1)]
+    [DataRow(uint.MaxValue, 31)]
+    // Verification.
+    [DataRow(32U, 5)]
+    [DataRow(127U, 6)]
+    [DataRow(128U, 7)]
+    [DataRow(255U, 7)]
+    [DataRow(256U, 8)]
+    public void BitOperations_Log2_UInt32(uint value, int log)
     {
-        // Sanity checks.
-        Assert.AreEqual(0, BitOperations.Log2(1));
-        Assert.AreEqual(1, BitOperations.Log2(2));
-        Assert.AreEqual(31, BitOperations.Log2(uint.MaxValue));
-
-        // Verification.
-        Assert.AreEqual(5, BitOperations.Log2(32));
-        Assert.AreEqual(6, BitOperations.Log2(127));
-        Assert.AreEqual(7, BitOperations.Log2(128));
-        Assert.AreEqual(7, BitOperations.Log2(255));
-        Assert.AreEqual(8, BitOperations.Log2(256));
+        Assert.AreEqual(log, BitOperations.Log2(value));
     }
 
     [TestMethod]
-    public void BitOps_PopCount()
+    public void BitOperations_PopCount()
     {
         // Sanity checks.
         Assert.AreEqual(0, BitOperations.PopCount(0));
