@@ -7,7 +7,7 @@
 
 set dotenv-load := true
 set working-directory := "Source"
-set windows-shell := ["gnu-tk", "-i", "-c"]
+set shell := ["gnu-tk", "-i", "-c"]
 set script-interpreter := ["gnu-tk", "-i", "-l", "/bin/sh", "-eu"]
 
 # -----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ format:
     echo 'Formatting **/*.sh...'
     fd -e sh -x shfmt -l -w
     echo 'Formatting **/justfile...'
-    fd --glob justfile -x just --unstable --fmt --justfile
+    fd --glob justfile -x just --fmt --justfile
     (cd Mastering; just format)
 
 # -----------------------------------------------------------------------------
