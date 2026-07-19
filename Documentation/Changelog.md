@@ -6,7 +6,7 @@
 
 Release date: not released yet
 
-- Added polyfill for `BitOperations.Log2(UInt64)` method
+- Added polyfills for `LeadingZeroCount(UInt32)`, `LeadingZeroCount(UInt64)`, and `Log2(UInt64)` methods of `BitOperations` class
 - Fixed issue with `BitOperations.Log2(UInt32)` polyfill method that returned a non-zero value for zero argument on x64 processor architecture
 
 ### Gapotchenko.FX 2026.8

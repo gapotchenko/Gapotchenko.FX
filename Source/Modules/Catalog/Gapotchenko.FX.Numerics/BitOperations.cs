@@ -29,7 +29,10 @@ namespace System.Numerics;
 /// </summary>
 public static class BitOperations
 {
-    static BitOperations() => Intrinsics.InitializeType(typeof(BitOperations));
+    static BitOperations()
+    {
+        Intrinsics.InitializeType(typeof(BitOperations));
+    }
 
     // Some routines use techniques from the "Bit Twiddling Hacks" by Sean Eron Anderson:
     // http://graphics.stanford.edu/~seander/bithacks.html
@@ -88,6 +91,28 @@ public static class BitOperations
             return Log2((uint)value);
         else
             return 32 + Log2(hi);
+    }
+
+    /// <summary>
+    /// Counts the number of leading zero bits in an unsigned 32-bit integer mask.
+    /// </summary>
+    /// <param name="value">The mask.</param>
+    /// <returns>The number of leading zero bits in a mask.</returns>
+    [CLSCompliant(false)]
+    public static int LeadingZeroCount(uint value)
+    {
+        return (31 ^ Log2(value)) + (value == 0 ? 1 : 0);
+    }
+
+    /// <summary>
+    /// Counts the number of leading zero bits in an unsigned 64-bit integer mask.
+    /// </summary>
+    /// <param name="value">The mask.</param>
+    /// <returns>The number of leading zero bits in a mask.</returns>
+    [CLSCompliant(false)]
+    public static int LeadingZeroCount(ulong value)
+    {
+        return (63 ^ Log2(value)) + (value == 0 ? 1 : 0);
     }
 
     /// <summary>
