@@ -40,6 +40,15 @@ public static unsafe class Intrinsics
                 {
                     patchResult = patcher.PatchMethod(method, attr.Code);
                 }
+                catch (ArgumentException e)
+                {
+                    Log.TraceSource.TraceEvent(
+                        TraceEventType.Error,
+                        1932901006,
+                        string.Format("Error occurred during compilation of intrinsic method '{0}'.", method) + Environment.NewLine + e);
+
+                    continue;
+                }
                 catch (Exception e) when (!e.IsControlFlowException())
                 {
                     // Give up on code patching if an error occurs.
@@ -99,6 +108,9 @@ public static unsafe class Intrinsics
             {
                 case Architecture.X64:
                     return new Pal.Windows.PatcherWindowsX64();
+
+                case Architecture.Arm64:
+                    return new Pal.Windows.PatcherWindowsArm64();
 
                 default:
                     Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901004, "Intrinsic compiler does not support {0} architecture for {1} host platform.", arch, "Windows");

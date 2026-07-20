@@ -5,7 +5,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
 #if NET
 [SupportedOSPlatform("windows")]
 #endif
-static class NativeMethods
+static unsafe class NativeMethods
 {
     [Flags]
     public enum Page : uint
@@ -25,8 +25,14 @@ static class NativeMethods
 
     [DllImport("kernel32.dll", SetLastError = true)]
     public static extern bool VirtualProtect(
-        IntPtr lpAddress,
-        IntPtr dwSize,
+        void* lpAddress,
+        nuint dwSize,
         Page flNewProtect,
         out Page lpflOldProtect);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern bool FlushInstructionCache(
+        IntPtr hProcess,
+        void* lpBaseAddress,
+        nuint dwSize);
 }
