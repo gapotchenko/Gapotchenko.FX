@@ -105,6 +105,9 @@ public static unsafe class Intrinsics
             var arch = RuntimeInformation.ProcessArchitecture;
             switch (arch)
             {
+                case Architecture.X86:
+                    return new Pal.Windows.PatcherWindowsX86();
+
                 case Architecture.X64:
                     return new Pal.Windows.PatcherWindowsX64();
 
