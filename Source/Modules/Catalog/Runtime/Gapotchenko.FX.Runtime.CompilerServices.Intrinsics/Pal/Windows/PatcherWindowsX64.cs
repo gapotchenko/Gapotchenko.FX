@@ -1,4 +1,11 @@
-﻿using System.Reflection;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
@@ -14,8 +21,8 @@ sealed unsafe class PatcherWindowsX64 : Patcher
     public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
         byte* p = GetPointerToMethodInstructions(method);
-        if (!IsSupportedPrologue(m_SupportedPrologues, p))
-            return PatchResult.UnexpectedEpilogue;
+        if (!IsSupportedPrologue(new ReadOnlySpan<byte>(p, int.MaxValue)))
+            return PatchResult.UnexpectedPrologue;
 
 #if TFF_CER
         // Ensure that code changes are atomic by using the constrained execution region.
@@ -44,6 +51,16 @@ sealed unsafe class PatcherWindowsX64 : Patcher
         }
 
         return PatchResult.Success;
+    }
+
+    static bool IsSupportedPrologue(ReadOnlySpan<byte> instructions)
+    {
+        foreach (byte[] prologue in m_SupportedPrologues)
+        {
+            if (instructions.StartsWith(prologue))
+                return true;
+        }
+        return false;
     }
 
     static readonly byte[][] m_SupportedPrologues =

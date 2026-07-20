@@ -27,7 +27,7 @@ sealed unsafe class PatcherWindowsArm64 : Patcher
 
         uint* p = GetPointerToMethodInstructions(method);
         if (!IsSupportedPrologue(p))
-            return PatchResult.UnexpectedEpilogue;
+            return PatchResult.UnexpectedPrologue;
 
 #if TFF_CER
         // Ensure that code changes are atomic by using the constrained execution region.
