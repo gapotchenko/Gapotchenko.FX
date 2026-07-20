@@ -15,7 +15,7 @@ abstract unsafe class Patcher
         InvalidAlignment
     }
 
-    public abstract PatchResult PatchMethod(MethodInfo method, byte[] code);
+    public abstract PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code);
 
     protected static bool IsSupportedPrologue(byte[][] supportedPrologues, byte* buffer)
     {
@@ -37,13 +37,5 @@ abstract unsafe class Patcher
         }
 
         return false;
-    }
-
-    protected static byte* Write(byte* dest, params byte[] data)
-    {
-        int size = data.Length;
-        fixed (byte* src = data)
-            MemoryOperations.BlockCopy(src, dest, size);
-        return dest + size;
     }
 }

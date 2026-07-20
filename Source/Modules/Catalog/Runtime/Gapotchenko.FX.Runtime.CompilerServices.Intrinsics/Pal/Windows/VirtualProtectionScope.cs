@@ -1,4 +1,11 @@
-﻿using System.Runtime.InteropServices;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
 
@@ -22,12 +29,21 @@ readonly unsafe struct VirtualProtectionScope : IDisposable
         NativeMethods.VirtualProtect(m_Address, (nuint)m_Size, m_OldProtect, out _);
     }
 
+    public int Size => m_Size;
+
     public Span<T> GetSpan<T>() where T : struct
     {
         return new Span<T>(m_Address, m_Size);
     }
 
-    public int Size => m_Size;
+    /// <summary>
+    /// Makes the newly written instructions visible to the processor.
+    /// </summary>
+    public void FlushInstructions()
+    {
+        if (!NativeMethods.FlushInstructionCache(new IntPtr(-1), m_Address, (nuint)m_Size))
+            throw new Win32Exception(Marshal.GetLastWin32Error());
+    }
 
     readonly void* m_Address;
     readonly int m_Size;

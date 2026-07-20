@@ -11,13 +11,11 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
 #endif
 sealed unsafe class PatcherWindowsX64 : Patcher
 {
-    public override PatchResult PatchMethod(MethodInfo method, byte[] code)
+    public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
         byte* p = GetPointerToMethodInstructions(method);
         if (!IsSupportedPrologue(m_SupportedPrologues, p))
             return PatchResult.UnexpectedEpilogue;
-
-        int codeSize = code.Length;
 
 #if TFF_CER
         // Ensure that code changes are atomic by using the constrained execution region.
@@ -29,13 +27,20 @@ sealed unsafe class PatcherWindowsX64 : Patcher
 #endif
         {
             // Temporarily allow memory modification in order to apply the intrinsic code.
-            using var scope = new VirtualProtectionScope(p, codeSize + 1, NativeMethods.PageProtect.ExecuteReadWrite);
+            using var scope = new VirtualProtectionScope(
+                p,
+                code.Length + 1 /* RET */,
+                NativeMethods.PageProtect.ExecuteReadWrite);
+
+            var body = scope.GetSpan<byte>();
 
             // Put the intrinsic code.
-            p = Write(p, code);
+            code.CopyTo(body);
 
-            // End method with a 'ret' instruction.
-            Write(p, 0xc3);
+            // End the method with a RET instruction.
+            body[code.Length] = 0xc3;
+
+            scope.FlushInstructions();
         }
 
         return PatchResult.Success;
@@ -60,15 +65,15 @@ sealed unsafe class PatcherWindowsX64 : Patcher
 
         // Get pointer to the first instruction.
         byte* p = (byte*)method.MethodHandle.GetFunctionPointer();
-        p = SkipJumps(p);
+        p = SkipBranches(p);
         return p;
 
-        static byte* SkipJumps(byte* p)
+        static byte* SkipBranches(byte* p)
         {
             while (*p == 0xe9)
             {
-                int delta = *(int*)(p + 1) + 5;
-                p += delta;
+                int displacement = *(int*)(p + 1) + 5;
+                p += displacement;
             }
             return p;
         }

@@ -19,10 +19,8 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
 #endif
 sealed unsafe class PatcherWindowsArm64 : Patcher
 {
-    public override PatchResult PatchMethod(MethodInfo method, byte[] code)
+    public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
-        ArgumentNullException.ThrowIfNull(code);
-
         // Every ARM64 instruction is four bytes long.
         if ((code.Length & (InstructionSize - 1)) != 0)
             return PatchResult.InvalidAlignment;
@@ -55,10 +53,7 @@ sealed unsafe class PatcherWindowsArm64 : Patcher
             // End the method with a RET instruction.
             body[codeInstructions.Length] = 0xd65f03c0;
 
-            // ARM64 has non-coherent data and instruction caches. Make the newly written
-            // instructions visible to the processor before making the page read-only again.
-            if (!NativeMethods.FlushInstructionCache(new IntPtr(-1), p, (nuint)scope.Size))
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+            scope.FlushInstructions();
         }
 
         return PatchResult.Success;
