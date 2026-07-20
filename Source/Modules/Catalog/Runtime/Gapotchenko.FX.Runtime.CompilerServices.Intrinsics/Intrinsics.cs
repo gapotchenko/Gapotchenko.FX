@@ -35,17 +35,20 @@ public static class Intrinsics
         var methods = type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
         foreach (var method in methods)
         {
-            foreach (var attr in method.GetCustomAttributes<MachineCodeIntrinsicAttribute>(false))
-            {
-                if (attr.Architecture != arch)
-                    continue;
+            var intrinsicAttributes =
+                method.GetCustomAttributes<MachineCodeIntrinsicAttribute>(false)
+                .Where(x => x.Architecture == arch)
+                .OrderBy(x => x.Priority)
+                .Where(x => x.RequiredFeatures.All(IsFeatureSupported));
 
+            foreach (var intrinsicAttribute in intrinsicAttributes)
+            {
                 ValidateMethod(method);
 
                 Adapter.PatchResult patchResult;
                 try
                 {
-                    patchResult = adapter.PatchMethod(method, attr.Code);
+                    patchResult = adapter.PatchMethod(method, intrinsicAttribute.Code);
                 }
                 catch (Exception e) when (!e.IsControlFlowException())
                 {
@@ -55,7 +58,7 @@ public static class Intrinsics
                     Log.TraceSource.TraceEvent(
                         TraceEventType.Error,
                         1932901002,
-                        string.Format("Unexpected error occurred during compilation of intrinsic method '{0}'. Giving up on intrinsics for the current environment.", method) + Environment.NewLine + e);
+                        string.Format("Unexpected error occurred during compilation of intrinsic method '{0}'. Giving up on intrinsic methods for the current environment.", method) + Environment.NewLine + e);
 
                     return;
                 }
@@ -75,7 +78,7 @@ public static class Intrinsics
                         break;
 
                     case Adapter.PatchResult.NoSpace:
-                        Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901006, "Not enough available space in intrinsic method '{0}'. Compilation discarded.", method);
+                        Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901006, "Not enough available space for intrinsic instructions in method '{0}'. Compilation discarded.", method);
                         break;
                 }
 

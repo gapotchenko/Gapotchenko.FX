@@ -50,7 +50,7 @@ public sealed class MachineCodeIntrinsicAttribute : Attribute
     /// Gets or initializes the intrinsic priority.
     /// </summary>
     /// <remarks>
-    /// The higher the priority values the more preferred the intrinsic.
+    /// The lower the priority value the more preferred the intrinsic.
     /// </remarks>
     public int Priority { get; init; }
 }
