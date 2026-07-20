@@ -16,6 +16,28 @@ abstract unsafe class Patcher
 
     public abstract PatchResult PatchMethod(MethodInfo method, byte[] code);
 
+    protected static bool IsSupportedPrologue(byte[][] supportedPrologues, byte* buffer)
+    {
+        foreach (byte[] prologue in supportedPrologues)
+        {
+            bool match = true;
+
+            for (int i = 0; i < prologue.Length; i++)
+            {
+                if (buffer[i] != prologue[i])
+                {
+                    match = false;
+                    break;
+                }
+            }
+
+            if (match)
+                return true;
+        }
+
+        return false;
+    }
+
     protected static byte* Write(byte* dest, params byte[] data)
     {
         int size = data.Length;
