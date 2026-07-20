@@ -20,9 +20,15 @@ sealed unsafe class PatcherWindowsX64 : Patcher
 {
     public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
-        byte* p = GetPointerToMethodInstructions(method);
-        if (!IsSupportedPrologue(new ReadOnlySpan<byte>(p, int.MaxValue)))
+        var instructions = GetMethodInstructions(method);
+        if (!IsSupportedPrologue(instructions))
             return PatchResult.UnexpectedPrologue;
+
+        int patchSize = code.Length + 1 /* RET */;
+        if (patchSize > instructions.Length)
+            return PatchResult.NoSpace;
+
+        instructions = instructions[..patchSize];
 
 #if TFF_CER
         // Ensure that code changes are atomic by using the constrained execution region.
@@ -34,18 +40,13 @@ sealed unsafe class PatcherWindowsX64 : Patcher
 #endif
         {
             // Temporarily allow memory modification in order to apply the intrinsic code.
-            using var scope = new VirtualProtectionScope(
-                p,
-                code.Length + 1 /* RET */,
-                NativeMethods.PageProtect.ExecuteReadWrite);
-
-            var body = scope.GetSpan<byte>();
+            using var scope = VirtualProtectionScope.Create(instructions, NativeMethods.PageProtect.ExecuteReadWrite);
 
             // Put the intrinsic code.
-            code.CopyTo(body);
+            code.CopyTo(instructions);
 
             // End the method with a RET instruction.
-            body[code.Length] = 0xc3;
+            instructions[code.Length] = 0xc3;
 
             scope.FlushInstructions();
         }
@@ -75,7 +76,7 @@ sealed unsafe class PatcherWindowsX64 : Patcher
         [0x57, 0x56, 0x48, 0x83, 0xec, 0x28], // Windows 10 x64, NGen 4.7.2
     ];
 
-    static byte* GetPointerToMethodInstructions(MethodInfo method)
+    static Span<byte> GetMethodInstructions(MethodInfo method)
     {
         // Compile the method.
         RuntimeHelpers.PrepareMethod(method.MethodHandle);
@@ -83,7 +84,8 @@ sealed unsafe class PatcherWindowsX64 : Patcher
         // Get pointer to the first instruction.
         byte* p = (byte*)method.MethodHandle.GetFunctionPointer();
         p = SkipBranches(p);
-        return p;
+
+        return new(p, int.MaxValue);
 
         static byte* SkipBranches(byte* p)
         {

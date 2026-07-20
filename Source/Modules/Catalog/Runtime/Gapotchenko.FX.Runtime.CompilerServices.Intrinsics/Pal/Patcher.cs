@@ -20,6 +20,7 @@ abstract class Patcher
     {
         Success,
         UnexpectedPrologue,
-        InvalidAlignment
+        InvalidAlignment,
+        NoSpace
     }
 }

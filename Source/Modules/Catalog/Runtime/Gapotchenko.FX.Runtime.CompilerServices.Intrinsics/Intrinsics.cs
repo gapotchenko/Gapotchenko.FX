@@ -66,6 +66,10 @@ public static unsafe class Intrinsics
                     case Patcher.PatchResult.InvalidAlignment:
                         Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901006, "Unexpected machine code alignment encountered in intrinsic method '{0}'. Compilation discarded.", method);
                         break;
+
+                    case Patcher.PatchResult.NoSpace:
+                        Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901006, "Not enough available space in intrinsic method '{0}'. Compilation discarded.", method);
+                        break;
                 }
 
                 break;

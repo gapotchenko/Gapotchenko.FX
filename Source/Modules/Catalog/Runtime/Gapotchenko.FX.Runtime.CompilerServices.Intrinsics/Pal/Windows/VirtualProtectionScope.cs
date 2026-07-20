@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2019
 
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
@@ -14,6 +15,14 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
 #endif
 readonly unsafe struct VirtualProtectionScope : IDisposable
 {
+    public static VirtualProtectionScope Create<T>(Span<T> span, NativeMethods.PageProtect protect)
+    {
+        return new(
+            Unsafe.AsPointer(ref MemoryMarshal.GetReference(span)),
+            span.Length,
+            protect);
+    }
+
     public VirtualProtectionScope(void* address, int size, NativeMethods.PageProtect protect)
     {
         m_Address = address;
