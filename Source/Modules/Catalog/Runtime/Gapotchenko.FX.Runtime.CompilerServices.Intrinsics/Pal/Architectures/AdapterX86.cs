@@ -47,10 +47,24 @@ abstract class AdapterX86 : Adapter
         public static unsafe (int Eax, int Ebx, int Ecx, int Edx) Cpuid(int functionId, int subFunctionId)
         {
             int* cpuInfo = stackalloc int[4];
-            Cpuid(cpuInfo, functionId, subFunctionId);
+            CallCpuid(cpuInfo, functionId, subFunctionId);
             return (cpuInfo[0], cpuInfo[1], cpuInfo[2], cpuInfo[3]);
         }
 
+        [MachineCodeIntrinsic(
+            Architecture.X86,
+            0x53,                    // PUSH EBX
+            0x56,                    // PUSH ESI
+            0x8b, 0xf1,              // MOV ESI, ECX
+            0x8b, 0xc2,              // MOV EAX, EDX
+            0x8b, 0x4c, 0x24, 0x0c,  // MOV ECX, [ESP+12]
+            0x0f, 0xa2,              // CPUID
+            0x89, 0x06,              // MOV [ESI], EAX
+            0x89, 0x5e, 0x04,        // MOV [ESI+4], EBX
+            0x89, 0x4e, 0x08,        // MOV [ESI+8], ECX
+            0x89, 0x56, 0x0c,        // MOV [ESI+12], EDX
+            0x5e,                    // POP ESI
+            0x5b)]                   // POP EBX
         [MachineCodeIntrinsic(
             Architecture.X64,
             0x53,                    // PUSH RBX
@@ -64,7 +78,7 @@ abstract class AdapterX86 : Adapter
             0x41, 0x89, 0x51, 0x0c,  // MOV [R9+12], EDX
             0x5b)]                   // POP RBX
         [MethodImpl(MethodImplOptions.NoInlining)]
-        static unsafe void Cpuid(int* cpuInfo, int functionId, int subFunctionId)
+        static unsafe void CallCpuid(int* cpuInfo, int functionId, int subFunctionId)
         {
             cpuInfo[0] = 0;
             cpuInfo[1] = 0;
