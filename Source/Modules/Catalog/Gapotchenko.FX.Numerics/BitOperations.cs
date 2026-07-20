@@ -63,6 +63,11 @@ public static class BitOperations
         Architecture.X64,
         0x83, 0xc9, 0x01,   // OR ECX,1
         0x0f, 0xbd, 0xc1)]  // BSR EAX,ECX
+    [MachineCodeIntrinsic(
+        Architecture.Arm64,
+        0x00, 0x00, 0x00, 0x32,   // ORR W0,W0,#1
+        0x00, 0x10, 0xc0, 0x5a,   // CLZ W0,W0
+        0x00, 0x10, 0x00, 0x52)]  // EOR W0,W0,#31
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Log2(uint value)
     {
@@ -83,6 +88,11 @@ public static class BitOperations
         Architecture.X64,
         0x48, 0x83, 0xc9, 0x01,   // OR RCX,1
         0x48, 0x0f, 0xbd, 0xc1)]  // BSR RAX,RCX
+    [MachineCodeIntrinsic(
+        Architecture.Arm64,
+        0x00, 0x00, 0x40, 0xb2,   // ORR X0,X0,#1
+        0x00, 0x10, 0xc0, 0xda,   // CLZ X0,X0
+        0x00, 0x14, 0x40, 0xd2)]  // EOR X0,X0,#63
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Log2(ulong value)
     {
@@ -99,6 +109,10 @@ public static class BitOperations
     /// <param name="value">The mask.</param>
     /// <returns>The number of leading zero bits in a mask.</returns>
     [CLSCompliant(false)]
+    [MachineCodeIntrinsic(
+        Architecture.Arm64,
+        0x00, 0x10, 0xc0, 0x5a)]  // CLZ W0,W0
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int LeadingZeroCount(uint value)
     {
         return (31 ^ Log2(value)) + (value == 0 ? 1 : 0);
@@ -110,6 +124,10 @@ public static class BitOperations
     /// <param name="value">The mask.</param>
     /// <returns>The number of leading zero bits in a mask.</returns>
     [CLSCompliant(false)]
+    [MachineCodeIntrinsic(
+        Architecture.Arm64,
+        0x00, 0x10, 0xc0, 0xda)]  // CLZ X0,X0
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int LeadingZeroCount(ulong value)
     {
         return (63 ^ Log2(value)) + (value == 0 ? 1 : 0);
@@ -121,6 +139,14 @@ public static class BitOperations
     /// </summary>
     /// <param name="value">The value.</param>
     [CLSCompliant(false)]
+    // Advanced SIMD is a baseline requirement for Windows on ARM64.
+    [MachineCodeIntrinsic(
+        Architecture.Arm64,
+        0x00, 0x00, 0x27, 0x1e,   // FMOV S0,W0
+        0x00, 0x58, 0x20, 0x0e,   // CNT V0.8B,V0.8B
+        0x00, 0xb8, 0x31, 0x0e,   // ADDV B0,V0.8B
+        0x00, 0x3c, 0x01, 0x0e)]  // UMOV W0,V0.B[0]
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int PopCount(uint value)
     {
         // TODO: Implement POPCNT machine code intrinsic for x64.
@@ -141,6 +167,14 @@ public static class BitOperations
     /// </summary>
     /// <param name="value">The value.</param>
     [CLSCompliant(false)]
+    // Advanced SIMD is a baseline requirement for Windows on ARM64.
+    [MachineCodeIntrinsic(
+        Architecture.Arm64,
+        0x00, 0x00, 0x67, 0x9e,   // FMOV D0,X0
+        0x00, 0x58, 0x20, 0x0e,   // CNT V0.8B,V0.8B
+        0x00, 0xb8, 0x31, 0x0e,   // ADDV B0,V0.8B
+        0x00, 0x3c, 0x01, 0x0e)]  // UMOV W0,V0.B[0]
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public static int PopCount(ulong value)
     {
         const ulong Mask01010101 = 0x5555555555555555UL;

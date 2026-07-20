@@ -11,7 +11,8 @@ abstract unsafe class Patcher
     public enum PatchResult
     {
         Success,
-        UnexpectedEpilogue
+        UnexpectedEpilogue,
+        InvalidAlignment
     }
 
     public abstract PatchResult PatchMethod(MethodInfo method, byte[] code);

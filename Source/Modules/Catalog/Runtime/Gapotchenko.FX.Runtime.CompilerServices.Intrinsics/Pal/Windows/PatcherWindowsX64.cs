@@ -29,7 +29,7 @@ sealed unsafe class PatcherWindowsX64 : Patcher
 #endif
         {
             // Temporarily allow memory modification in order to apply the intrinsic code.
-            using var scope = new VirtualProtectionScope(p, codeSize + 1, NativeMethods.Page.ExecuteReadWrite);
+            using var scope = new VirtualProtectionScope(p, codeSize + 1, NativeMethods.PageProtect.ExecuteReadWrite);
 
             // Put the intrinsic code.
             p = Write(p, code);

@@ -40,15 +40,6 @@ public static unsafe class Intrinsics
                 {
                     patchResult = patcher.PatchMethod(method, attr.Code);
                 }
-                catch (ArgumentException e)
-                {
-                    Log.TraceSource.TraceEvent(
-                        TraceEventType.Error,
-                        1932901006,
-                        string.Format("Error occurred during compilation of intrinsic method '{0}'.", method) + Environment.NewLine + e);
-
-                    continue;
-                }
                 catch (Exception e) when (!e.IsControlFlowException())
                 {
                     // Give up on code patching if an error occurs.
@@ -70,6 +61,10 @@ public static unsafe class Intrinsics
 
                     case Patcher.PatchResult.UnexpectedEpilogue:
                         Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901001, "Unexpected machine code epilogue encountered in intrinsic method '{0}'. Compilation discarded.", method);
+                        break;
+
+                    case Patcher.PatchResult.InvalidAlignment:
+                        Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901006, "Unexpected machine code alignment encountered in intrinsic method '{0}'. Compilation discarded.", method);
                         break;
                 }
 

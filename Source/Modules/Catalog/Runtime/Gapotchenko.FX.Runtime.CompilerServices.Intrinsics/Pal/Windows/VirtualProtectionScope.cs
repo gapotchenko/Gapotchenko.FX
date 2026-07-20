@@ -7,7 +7,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
 #endif
 readonly unsafe struct VirtualProtectionScope : IDisposable
 {
-    public VirtualProtectionScope(void* address, int size, NativeMethods.Page protect)
+    public VirtualProtectionScope(void* address, int size, NativeMethods.PageProtect protect)
     {
         m_Address = address;
         m_Size = size;
@@ -27,7 +27,9 @@ readonly unsafe struct VirtualProtectionScope : IDisposable
         return new Span<T>(m_Address, m_Size);
     }
 
+    public int Size => m_Size;
+
     readonly void* m_Address;
     readonly int m_Size;
-    readonly NativeMethods.Page m_OldProtect;
+    readonly NativeMethods.PageProtect m_OldProtect;
 }

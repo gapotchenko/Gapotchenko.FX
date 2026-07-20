@@ -8,7 +8,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
 static unsafe class NativeMethods
 {
     [Flags]
-    public enum Page : uint
+    public enum PageProtect : uint
     {
         NoAccess = 0x01,
         ReadOnly = 0x02,
@@ -23,16 +23,9 @@ static unsafe class NativeMethods
         WriteCombine = 0x400
     }
 
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern bool VirtualProtect(
-        void* lpAddress,
-        nuint dwSize,
-        Page flNewProtect,
-        out Page lpflOldProtect);
+    [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+    public static extern bool VirtualProtect(void* lpAddress, nuint dwSize, PageProtect flNewProtect, out PageProtect lpflOldProtect);
 
-    [DllImport("kernel32.dll", SetLastError = true)]
-    public static extern bool FlushInstructionCache(
-        IntPtr hProcess,
-        void* lpBaseAddress,
-        nuint dwSize);
+    [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+    public static extern bool FlushInstructionCache(IntPtr hProcess, void* lpBaseAddress, nuint dwSize);
 }

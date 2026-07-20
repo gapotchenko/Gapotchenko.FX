@@ -25,13 +25,11 @@ sealed unsafe class PatcherWindowsArm64 : Patcher
 
         // Every ARM64 instruction is four bytes long.
         if ((code.Length & (InstructionSize - 1)) != 0)
-            throw new ArgumentException("ARM64 machine code must consist of complete 4-byte instructions.", nameof(code));
+            return PatchResult.InvalidAlignment;
 
         uint* p = GetPointerToMethodInstructions(method);
-        if (!IsSupportedPrologue(*p))
+        if (!IsSupportedPrologue(p))
             return PatchResult.UnexpectedEpilogue;
-
-        int patchSize = checked(code.Length + InstructionSize /* RET */);
 
 #if TFF_CER
         // Ensure that code changes are atomic by using the constrained execution region.
@@ -43,7 +41,10 @@ sealed unsafe class PatcherWindowsArm64 : Patcher
 #endif
         {
             // Temporarily allow memory modification in order to apply the intrinsic code.
-            using var scope = new VirtualProtectionScope(p, patchSize, NativeMethods.Page.ExecuteReadWrite);
+            using var scope = new VirtualProtectionScope(
+                p,
+                code.Length + InstructionSize /* RET */,
+                NativeMethods.PageProtect.ExecuteReadWrite);
 
             var body = scope.GetSpan<uint>();
 
@@ -56,7 +57,7 @@ sealed unsafe class PatcherWindowsArm64 : Patcher
 
             // ARM64 has non-coherent data and instruction caches. Make the newly written
             // instructions visible to the processor before making the page read-only again.
-            if (!NativeMethods.FlushInstructionCache(new IntPtr(-1), p, (nuint)patchSize))
+            if (!NativeMethods.FlushInstructionCache(new IntPtr(-1), p, (nuint)scope.Size))
                 throw new Win32Exception(Marshal.GetLastWin32Error());
         }
 
@@ -65,14 +66,14 @@ sealed unsafe class PatcherWindowsArm64 : Patcher
 
     const int InstructionSize = sizeof(uint);
 
-    static bool IsSupportedPrologue(uint instruction)
+    static bool IsSupportedPrologue(uint* instructions)
     {
-        // STP X29, X30, [SP, #-imm]!
-        if ((instruction & 0xffc07fff) == 0xa9807bfd)
-            return true;
-
-        // SUB SP, SP, #imm{, LSL #12}
-        return (instruction & 0xff8003ff) == 0xd10003ff;
+        uint instruction = *instructions;
+        return
+            // STP X29, X30, [SP, #-imm]!
+            (instruction & 0xffc07fff) == 0xa9807bfd ||
+            // SUB SP, SP, #imm{, LSL #12}
+            (instruction & 0xff8003ff) == 0xd10003ff;
     }
 
     static uint* GetPointerToMethodInstructions(MethodInfo method)
