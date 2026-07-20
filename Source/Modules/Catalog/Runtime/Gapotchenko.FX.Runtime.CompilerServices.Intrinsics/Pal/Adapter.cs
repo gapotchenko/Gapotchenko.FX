@@ -12,8 +12,10 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal;
 /// <summary>
 /// Intrinsic patcher base.
 /// </summary>
-abstract class Patcher
+abstract class Adapter
 {
+    public virtual bool IsFeatureSupported(MachineCodeIntrinsicFeature feature) => false;
+
     public abstract PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code);
 
     public enum PatchResult

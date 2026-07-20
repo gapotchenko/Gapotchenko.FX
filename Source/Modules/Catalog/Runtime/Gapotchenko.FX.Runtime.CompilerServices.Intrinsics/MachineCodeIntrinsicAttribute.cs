@@ -1,4 +1,11 @@
-﻿using System.Runtime.InteropServices;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices;
 
@@ -21,12 +28,29 @@ public sealed class MachineCodeIntrinsicAttribute : Attribute
     }
 
     /// <summary>
-    /// Gets processor architecture.
+    /// Gets the processor architecture.
     /// </summary>
     public Architecture Architecture { get; }
 
     /// <summary>
-    /// Gets machine code.
+    /// Gets the machine code.
     /// </summary>
     public byte[] Code { get; }
+
+    /// <summary>
+    /// Gets or initializes the processor features required to execute the machine code.
+    /// </summary>
+    /// <remarks>
+    /// An empty array indicates that the machine code has no requirements
+    /// beyond those implied by <see cref="Architecture"/>.
+    /// </remarks>
+    public MachineCodeIntrinsicFeature[] RequiredFeatures { get; init; } = [];
+
+    /// <summary>
+    /// Gets or initializes the intrinsic priority.
+    /// </summary>
+    /// <remarks>
+    /// The higher the priority values the more preferred the intrinsic.
+    /// </remarks>
+    public int Priority { get; init; }
 }

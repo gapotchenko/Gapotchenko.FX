@@ -57,7 +57,7 @@ class BitOperations
         value |= value >> 8;
         value |= value >> 16;
 
-        var index = (value * 0x07C4ACDDU) >> 27;
+        var index = (value * 0x07c4acddU) >> 27;
         return m_Log2DeBruijn32[index];
     }
 }

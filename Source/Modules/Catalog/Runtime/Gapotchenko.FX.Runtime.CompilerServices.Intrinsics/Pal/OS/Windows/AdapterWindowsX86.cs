@@ -5,10 +5,11 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
 /// <summary>
 /// Intrinsic patcher for Windows OS and Intel-based 32-bit processor architecture.
@@ -16,7 +17,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
 #if NET
 [SupportedOSPlatform("windows")]
 #endif
-sealed class PatcherWindowsX86 : Patcher
+sealed class AdapterWindowsX86 : AdapterX86
 {
     public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {

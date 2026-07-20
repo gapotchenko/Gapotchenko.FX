@@ -8,7 +8,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
 #if NET
 [SupportedOSPlatform("windows")]

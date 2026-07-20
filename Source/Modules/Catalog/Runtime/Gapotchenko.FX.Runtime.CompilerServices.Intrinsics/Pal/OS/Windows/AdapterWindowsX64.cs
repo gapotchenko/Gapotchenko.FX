@@ -1,35 +1,31 @@
-// Gapotchenko.FX
+﻿// Gapotchenko.FX
 //
 // Copyright © Gapotchenko and Contributors
 //
 // File introduced by: Oleksiy Gapotchenko
-// Year of introduction: 2026
+// Year of introduction: 2019
 
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
 /// <summary>
-/// Intrinsic patcher for Windows OS and ARM-based 64-bit processor architecture.
+/// Intrinsic patcher for Windows OS and AMD-based 64-bit processor architecture.
 /// </summary>
 #if NET
 [SupportedOSPlatform("windows")]
 #endif
-sealed class PatcherWindowsArm64 : Patcher
+sealed class AdapterWindowsX64 : AdapterX64
 {
     public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
-        // Every ARM64 instruction is four bytes long.
-        if ((code.Length & (sizeof(uint) - 1)) != 0)
-            return PatchResult.InvalidAlignment;
-
         var methodInstructions = GetMethodInstructions(method);
         if (!IsSupportedPrologue(methodInstructions))
             return PatchResult.UnexpectedPrologue;
 
-        var patchInstructions = MemoryMarshal.Cast<byte, uint>(code);
+        var patchInstructions = code;
 
         int patchSize = patchInstructions.Length + 1 /* RET */;
         if (patchSize > methodInstructions.Length)
@@ -53,7 +49,7 @@ sealed class PatcherWindowsArm64 : Patcher
             patchInstructions.CopyTo(methodInstructions);
 
             // End the method with a RET instruction.
-            methodInstructions[patchInstructions.Length] = 0xd65f03c0;
+            methodInstructions[code.Length] = 0xc3;
 
             scope.FlushInstructions();
         }
@@ -61,38 +57,45 @@ sealed class PatcherWindowsArm64 : Patcher
         return PatchResult.Success;
     }
 
-    static bool IsSupportedPrologue(ReadOnlySpan<uint> instructions)
+    static bool IsSupportedPrologue(ReadOnlySpan<byte> instructions)
     {
-        if (instructions.Length < 1)
-            return false;
-
-        uint instruction = instructions[0];
-        return
-            // STP X29, X30, [SP, #-imm]!
-            (instruction & 0xffc07fff) == 0xa9807bfd ||
-            // SUB SP, SP, #imm{, LSL #12}
-            (instruction & 0xff8003ff) == 0xd10003ff;
+        foreach (byte[] prologue in m_SupportedPrologues)
+        {
+            if (instructions.StartsWith(prologue))
+                return true;
+        }
+        return false;
     }
 
-    static unsafe Span<uint> GetMethodInstructions(MethodInfo method)
+    static readonly byte[][] m_SupportedPrologues =
+    [
+        [0x48, 0x83, 0xec, 0x18, 0x48, 0x89, 0x34, 0x24], // Mono 5.18.1, x64
+        [0x48, 0x83, 0xec, 0x28],
+        [0x48, 0x89, 0x54, 0x24],
+        [0x53, 0x48, 0x83, 0xec, 0x20],
+        [0x55, 0x48, 0x83, 0xec, 0x20],
+        [0x55, 0x57, 0x56, 0x48, 0x83, 0xec, 0x30],
+        [0x56, 0x48, 0x83, 0xec, 0x20],
+        [0x57, 0x56, 0x48, 0x83, 0xec, 0x28], // Windows 10 x64, NGen 4.7.2
+    ];
+
+    static unsafe Span<byte> GetMethodInstructions(MethodInfo method)
     {
         // Compile the method.
         RuntimeHelpers.PrepareMethod(method.MethodHandle);
 
         // Get pointer to the first instruction.
-        uint* p = (uint*)method.MethodHandle.GetFunctionPointer();
+        byte* p = (byte*)method.MethodHandle.GetFunctionPointer();
         p = SkipBranches(p);
 
         return new(p, int.MaxValue);
 
-        static uint* SkipBranches(uint* p)
+        static byte* SkipBranches(byte* p)
         {
-            // B label: the signed imm26 operand is measured in four-byte instructions.
-            while ((*p & 0xfc000000) == 0x14000000)
+            while (*p == 0xe9)
             {
-                // Sign-extend the operand and scale it by four to obtain a byte displacement in one go.
-                int displacement = (int)(*p << 6) >> 4;
-                p = (uint*)((byte*)p + displacement);
+                int displacement = *(int*)(p + 1) + 5;
+                p += displacement;
             }
             return p;
         }

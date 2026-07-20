@@ -1,4 +1,11 @@
-﻿using Gapotchenko.FX.Runtime.CompilerServices.Pal;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+using Gapotchenko.FX.Runtime.CompilerServices.Pal;
 using Gapotchenko.FX.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Reflection;
@@ -9,7 +16,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices;
 /// <summary>
 /// Provides intrinsic compilation services.
 /// </summary>
-public static unsafe class Intrinsics
+public static class Intrinsics
 {
     /// <summary>
     /// Initializes intrinsic methods of the specified type.
@@ -19,8 +26,8 @@ public static unsafe class Intrinsics
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        var patcher = m_Patcher;
-        if (patcher == null)
+        var adapter = m_Adapter;
+        if (adapter == null || m_GiveUpOnPatching)
             return;
 
         var arch = RuntimeInformation.ProcessArchitecture;
@@ -35,15 +42,15 @@ public static unsafe class Intrinsics
 
                 ValidateMethod(method);
 
-                Patcher.PatchResult patchResult;
+                Adapter.PatchResult patchResult;
                 try
                 {
-                    patchResult = patcher.PatchMethod(method, attr.Code);
+                    patchResult = adapter.PatchMethod(method, attr.Code);
                 }
                 catch (Exception e) when (!e.IsControlFlowException())
                 {
                     // Give up on code patching if an error occurs.
-                    m_Patcher = null;
+                    m_GiveUpOnPatching = true;
 
                     Log.TraceSource.TraceEvent(
                         TraceEventType.Error,
@@ -55,19 +62,19 @@ public static unsafe class Intrinsics
 
                 switch (patchResult)
                 {
-                    case Patcher.PatchResult.Success:
+                    case Adapter.PatchResult.Success:
                         Log.TraceSource.TraceEvent(TraceEventType.Information, 1932901000, "Intrinsic method '{0}' compiled successfully.", method);
                         break;
 
-                    case Patcher.PatchResult.UnexpectedPrologue:
+                    case Adapter.PatchResult.UnexpectedPrologue:
                         Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901001, "Unexpected machine code prologue encountered in intrinsic method '{0}'. Compilation discarded.", method);
                         break;
 
-                    case Patcher.PatchResult.InvalidAlignment:
+                    case Adapter.PatchResult.InvalidAlignment:
                         Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901006, "Unexpected machine code alignment encountered in intrinsic method '{0}'. Compilation discarded.", method);
                         break;
 
-                    case Patcher.PatchResult.NoSpace:
+                    case Adapter.PatchResult.NoSpace:
                         Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901006, "Not enough available space in intrinsic method '{0}'. Compilation discarded.", method);
                         break;
                 }
@@ -90,9 +97,29 @@ public static unsafe class Intrinsics
         }
     }
 
-    static Patcher? m_Patcher = CreatePatcher();
+    static bool m_GiveUpOnPatching;
 
-    static Patcher? CreatePatcher()
+    /// <summary>
+    /// Determines whether a specified machine-code intrinsic feature is available to the current process.
+    /// </summary>
+    /// <param name="feature">The machine-code intrinsic feature to test.</param>
+    /// <returns>
+    /// <see langword="true"/> if <paramref name="feature"/> is supported by the current execution environment;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <remarks>
+    /// The result accounts for processor support and, where applicable,
+    /// the operating system support required to use the feature.
+    /// Unrecognized feature values are considered unsupported.
+    /// </remarks>    
+    public static bool IsFeatureSupported(MachineCodeIntrinsicFeature feature)
+    {
+        return m_Adapter?.IsFeatureSupported(feature) ?? false;
+    }
+
+    static readonly Adapter? m_Adapter = CreateAdapter();
+
+    static Adapter? CreateAdapter()
     {
         if (!CodeSafetyStrategy.UnsafeCodeRecommended)
         {
@@ -106,13 +133,13 @@ public static unsafe class Intrinsics
             switch (arch)
             {
                 case Architecture.X86:
-                    return new Pal.Windows.PatcherWindowsX86();
+                    return new Pal.OS.Windows.AdapterWindowsX86();
 
                 case Architecture.X64:
-                    return new Pal.Windows.PatcherWindowsX64();
+                    return new Pal.OS.Windows.AdapterWindowsX64();
 
                 case Architecture.Arm64:
-                    return new Pal.Windows.PatcherWindowsArm64();
+                    return new Pal.OS.Windows.AdapterWindowsArm64();
 
                 default:
                     Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901004, "Intrinsic compiler does not support {0} architecture for {1} host platform.", arch, "Windows");
