@@ -33,6 +33,11 @@ public sealed class MachineCodeIntrinsicAttribute : Attribute
     public Architecture Architecture { get; }
 
     /// <summary>
+    /// Gets or initializes the additional processor architectures.
+    /// </summary>
+    public Architecture[] AdditionalArchitectures { get; init; } = [];
+
+    /// <summary>
     /// Gets the machine code.
     /// </summary>
     public byte[] Code { get; }

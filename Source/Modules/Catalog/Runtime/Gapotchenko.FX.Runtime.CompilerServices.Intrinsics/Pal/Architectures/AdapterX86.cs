@@ -24,8 +24,10 @@ abstract class AdapterX86 : Adapter
         {
 #if NET
             MachineCodeIntrinsicFeature.Popcnt => Popcnt.IsSupported,
+            MachineCodeIntrinsicFeature.Lzcnt => Lzcnt.IsSupported,
 #else
             MachineCodeIntrinsicFeature.Popcnt => (FeatureDetection.Cpuid_01h_Ecx & (1 << 23)) != 0,
+            MachineCodeIntrinsicFeature.Lzcnt => (FeatureDetection.Cpuid_80000001h_Ecx & (1 << 5)) != 0,
 #endif
             _ => base.IsFeatureSupported(feature)
         };
@@ -40,9 +42,15 @@ abstract class AdapterX86 : Adapter
             Intrinsics.InitializeType(typeof(FeatureDetection));
 
             (_, _, Cpuid_01h_Ecx, _) = Cpuid(1, 0);
+
+            uint maxExtendedFunctionId = (uint)Cpuid(unchecked((int)0x80000000), 0).Eax;
+            if (maxExtendedFunctionId >= 0x80000001)
+                (_, _, Cpuid_80000001h_Ecx, _) = Cpuid(unchecked((int)0x80000001), 0);
         }
 
         public static int Cpuid_01h_Ecx { get; }
+
+        public static int Cpuid_80000001h_Ecx { get; }
 
         public static unsafe (int Eax, int Ebx, int Ecx, int Edx) Cpuid(int functionId, int subFunctionId)
         {

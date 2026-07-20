@@ -22,5 +22,13 @@ public enum MachineCodeIntrinsicFeature
     /// <remarks>
     /// Hardware indication: <c>CPUID.01H:ECX[23]</c>.
     /// </remarks>
-    Popcnt = 1
+    Popcnt = 1,
+
+    /// <summary>
+    /// x86/x64 <c>LZCNT</c> instruction.
+    /// </summary>
+    /// <remarks>
+    /// Hardware indication: <c>CPUID.80000001H:ECX[5]</c>.
+    /// </remarks>
+    Lzcnt
 }
