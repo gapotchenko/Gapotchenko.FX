@@ -57,12 +57,17 @@ public static class BitOperations
         Architecture.X86,
         // The 0 -> 0 contract is fulfilled by setting the LSB to 1.
         // Log2(1) is 0, and setting the LSB for values > 1 does not change the log2 result.
-        0x83, 0xc9, 0x01,   // OR ECX,1
-        0x0f, 0xbd, 0xc1)]  // BSR EAX,ECX
+        0x83, 0xc9, 0x01,  // OR ECX,1
+        0x0f, 0xbd, 0xc1,  // BSR EAX,ECX
+        AdditionalArchitectures = [Architecture.X64])]
     [MachineCodeIntrinsic(
-        Architecture.X64,
-        0x83, 0xc9, 0x01,   // OR ECX,1
-        0x0f, 0xbd, 0xc1)]  // BSR EAX,ECX
+        Architecture.X86,
+        0x83, 0xc9, 0x01,        // OR ECX,1
+        0xf3, 0x0f, 0xbd, 0xc1,  // LZCNT EAX,ECX
+        0x83, 0xf0, 0x1f,        // XOR EAX,31
+        AdditionalArchitectures = [Architecture.X64],
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        Priority = -10)]         // LZCNT is faster than BSR on AMD processors
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x00, 0x32,   // ORR W0,W0,#1
@@ -89,6 +94,13 @@ public static class BitOperations
         0x48, 0x83, 0xc9, 0x01,   // OR RCX,1
         0x48, 0x0f, 0xbd, 0xc1)]  // BSR RAX,RCX
     [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x48, 0x83, 0xc9, 0x01,        // OR RCX,1
+        0xf3, 0x48, 0x0f, 0xbd, 0xc1,  // LZCNT RAX,RCX
+        0x48, 0x83, 0xf0, 0x3f,        // XOR RAX,63
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        Priority = -10)]               // LZCNT is faster than BSR on AMD processors
+    [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x40, 0xb2,   // ORR X0,X0,#1
         0x00, 0x10, 0xc0, 0xda,   // CLZ X0,X0
@@ -110,6 +122,10 @@ public static class BitOperations
     /// <returns>The number of leading zero bits in a mask.</returns>
     [CLSCompliant(false)]
     [MachineCodeIntrinsic(
+        Architecture.X64,
+        0xf3, 0x0f, 0xbd, 0xc1,  // LZCNT EAX,ECX
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt])]
+    [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x10, 0xc0, 0x5a)]  // CLZ W0,W0
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -125,6 +141,10 @@ public static class BitOperations
     /// <returns>The number of leading zero bits in a mask.</returns>
     [CLSCompliant(false)]
     [MachineCodeIntrinsic(
+        Architecture.X64,
+        0xf3, 0x48, 0x0f, 0xbd, 0xc1,  // LZCNT RAX,RCX
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt])]
+    [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x10, 0xc0, 0xda)]  // CLZ X0,X0
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -139,9 +159,13 @@ public static class BitOperations
     /// </summary>
     /// <param name="value">The value.</param>
     [CLSCompliant(false)]
-    // Advanced SIMD is a baseline requirement for Windows on ARM64.
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0xf3, 0x0f, 0xb8, 0xc1,  // POPCNT EAX,ECX
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
+        // Advanced SIMD is a baseline requirement for Windows on ARM64.
         0x00, 0x00, 0x27, 0x1e,   // FMOV S0,W0
         0x00, 0x58, 0x20, 0x0e,   // CNT V0.8B,V0.8B
         0x00, 0xb8, 0x31, 0x0e,   // ADDV B0,V0.8B
@@ -149,9 +173,6 @@ public static class BitOperations
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int PopCount(uint value)
     {
-        // TODO: Implement POPCNT machine code intrinsic for x64.
-        // https://en.wikipedia.org/wiki/SSE4#POPCNT_and_LZCNT
-
         uint x = value;
         x -= (x >> 1) & 0x55555555;
         x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
@@ -167,9 +188,13 @@ public static class BitOperations
     /// </summary>
     /// <param name="value">The value.</param>
     [CLSCompliant(false)]
-    // Advanced SIMD is a baseline requirement for Windows on ARM64.
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0xf3, 0x48, 0x0f, 0xb8, 0xc1,  // POPCNT RAX,RCX
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
+        // Advanced SIMD is a baseline requirement for Windows on ARM64.
         0x00, 0x00, 0x67, 0x9e,   // FMOV D0,X0
         0x00, 0x58, 0x20, 0x0e,   // CNT V0.8B,V0.8B
         0x00, 0xb8, 0x31, 0x0e,   // ADDV B0,V0.8B
