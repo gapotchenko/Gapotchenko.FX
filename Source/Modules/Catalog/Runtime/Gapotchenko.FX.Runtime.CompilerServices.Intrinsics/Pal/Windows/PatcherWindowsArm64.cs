@@ -17,17 +17,25 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
 #if NET
 [SupportedOSPlatform("windows")]
 #endif
-sealed unsafe class PatcherWindowsArm64 : Patcher
+sealed class PatcherWindowsArm64 : Patcher
 {
     public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
         // Every ARM64 instruction is four bytes long.
-        if ((code.Length & (InstructionSize - 1)) != 0)
+        if ((code.Length & (sizeof(uint) - 1)) != 0)
             return PatchResult.InvalidAlignment;
 
-        uint* p = GetPointerToMethodInstructions(method);
-        if (!IsSupportedPrologue(p))
+        var methodInstructions = GetMethodInstructions(method);
+        if (!IsSupportedPrologue(methodInstructions))
             return PatchResult.UnexpectedPrologue;
+
+        var patchInstructions = MemoryMarshal.Cast<byte, uint>(code);
+
+        int patchSize = patchInstructions.Length + 1 /* RET */;
+        if (patchSize > methodInstructions.Length)
+            return PatchResult.NoSpace;
+
+        methodInstructions = methodInstructions[..patchSize];
 
 #if TFF_CER
         // Ensure that code changes are atomic by using the constrained execution region.
@@ -39,19 +47,13 @@ sealed unsafe class PatcherWindowsArm64 : Patcher
 #endif
         {
             // Temporarily allow memory modification in order to apply the intrinsic code.
-            using var scope = new VirtualProtectionScope(
-                p,
-                code.Length + InstructionSize /* RET */,
-                NativeMethods.PageProtect.ExecuteReadWrite);
-
-            var body = scope.GetSpan<uint>();
+            using var scope = VirtualProtectionScope.Create(methodInstructions, NativeMethods.PageProtect.ExecuteReadWrite);
 
             // Put the intrinsic code.
-            var codeInstructions = MemoryMarshal.Cast<byte, uint>(code);
-            codeInstructions.CopyTo(body);
+            patchInstructions.CopyTo(methodInstructions);
 
             // End the method with a RET instruction.
-            body[codeInstructions.Length] = 0xd65f03c0;
+            methodInstructions[patchInstructions.Length] = 0xd65f03c0;
 
             scope.FlushInstructions();
         }
@@ -59,11 +61,12 @@ sealed unsafe class PatcherWindowsArm64 : Patcher
         return PatchResult.Success;
     }
 
-    const int InstructionSize = sizeof(uint);
-
-    static bool IsSupportedPrologue(uint* instructions)
+    static bool IsSupportedPrologue(ReadOnlySpan<uint> instructions)
     {
-        uint instruction = *instructions;
+        if (instructions.Length < 1)
+            return false;
+
+        uint instruction = instructions[0];
         return
             // STP X29, X30, [SP, #-imm]!
             (instruction & 0xffc07fff) == 0xa9807bfd ||
@@ -71,7 +74,7 @@ sealed unsafe class PatcherWindowsArm64 : Patcher
             (instruction & 0xff8003ff) == 0xd10003ff;
     }
 
-    static uint* GetPointerToMethodInstructions(MethodInfo method)
+    static unsafe Span<uint> GetMethodInstructions(MethodInfo method)
     {
         // Compile the method.
         RuntimeHelpers.PrepareMethod(method.MethodHandle);
@@ -79,7 +82,8 @@ sealed unsafe class PatcherWindowsArm64 : Patcher
         // Get pointer to the first instruction.
         uint* p = (uint*)method.MethodHandle.GetFunctionPointer();
         p = SkipBranches(p);
-        return p;
+
+        return new(p, int.MaxValue);
 
         static uint* SkipBranches(uint* p)
         {

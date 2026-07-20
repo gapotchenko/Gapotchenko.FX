@@ -16,19 +16,21 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Windows;
 #if NET
 [SupportedOSPlatform("windows")]
 #endif
-sealed unsafe class PatcherWindowsX64 : Patcher
+sealed class PatcherWindowsX64 : Patcher
 {
     public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
-        var instructions = GetMethodInstructions(method);
-        if (!IsSupportedPrologue(instructions))
+        var methodInstructions = GetMethodInstructions(method);
+        if (!IsSupportedPrologue(methodInstructions))
             return PatchResult.UnexpectedPrologue;
 
-        int patchSize = code.Length + 1 /* RET */;
-        if (patchSize > instructions.Length)
+        var patchInstructions = code;
+
+        int patchSize = patchInstructions.Length + 1 /* RET */;
+        if (patchSize > methodInstructions.Length)
             return PatchResult.NoSpace;
 
-        instructions = instructions[..patchSize];
+        methodInstructions = methodInstructions[..patchSize];
 
 #if TFF_CER
         // Ensure that code changes are atomic by using the constrained execution region.
@@ -40,13 +42,13 @@ sealed unsafe class PatcherWindowsX64 : Patcher
 #endif
         {
             // Temporarily allow memory modification in order to apply the intrinsic code.
-            using var scope = VirtualProtectionScope.Create(instructions, NativeMethods.PageProtect.ExecuteReadWrite);
+            using var scope = VirtualProtectionScope.Create(methodInstructions, NativeMethods.PageProtect.ExecuteReadWrite);
 
             // Put the intrinsic code.
-            code.CopyTo(instructions);
+            patchInstructions.CopyTo(methodInstructions);
 
             // End the method with a RET instruction.
-            instructions[code.Length] = 0xc3;
+            methodInstructions[code.Length] = 0xc3;
 
             scope.FlushInstructions();
         }
@@ -76,7 +78,7 @@ sealed unsafe class PatcherWindowsX64 : Patcher
         [0x57, 0x56, 0x48, 0x83, 0xec, 0x28], // Windows 10 x64, NGen 4.7.2
     ];
 
-    static Span<byte> GetMethodInstructions(MethodInfo method)
+    static unsafe Span<byte> GetMethodInstructions(MethodInfo method)
     {
         // Compile the method.
         RuntimeHelpers.PrepareMethod(method.MethodHandle);

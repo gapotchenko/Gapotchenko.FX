@@ -19,30 +19,23 @@ readonly unsafe struct VirtualProtectionScope : IDisposable
     {
         return new(
             Unsafe.AsPointer(ref MemoryMarshal.GetReference(span)),
-            span.Length,
+            (nuint)span.Length,
             protect);
     }
 
-    public VirtualProtectionScope(void* address, int size, NativeMethods.PageProtect protect)
+    VirtualProtectionScope(void* address, nuint size, NativeMethods.PageProtect protect)
     {
         m_Address = address;
         m_Size = size;
 
-        if (!NativeMethods.VirtualProtect(m_Address, (nuint)m_Size, protect, out m_OldProtect))
+        if (!NativeMethods.VirtualProtect(m_Address, m_Size, protect, out m_OldProtect))
             throw new Win32Exception(Marshal.GetLastWin32Error());
     }
 
     public void Dispose()
     {
         // Restore the original memory protection at the end of the scope.
-        NativeMethods.VirtualProtect(m_Address, (nuint)m_Size, m_OldProtect, out _);
-    }
-
-    public int Size => m_Size;
-
-    public Span<T> GetSpan<T>() where T : struct
-    {
-        return new Span<T>(m_Address, m_Size);
+        NativeMethods.VirtualProtect(m_Address, m_Size, m_OldProtect, out _);
     }
 
     /// <summary>
@@ -50,11 +43,11 @@ readonly unsafe struct VirtualProtectionScope : IDisposable
     /// </summary>
     public void FlushInstructions()
     {
-        if (!NativeMethods.FlushInstructionCache(new IntPtr(-1), m_Address, (nuint)m_Size))
+        if (!NativeMethods.FlushInstructionCache(new IntPtr(-1), m_Address, m_Size))
             throw new Win32Exception(Marshal.GetLastWin32Error());
     }
 
     readonly void* m_Address;
-    readonly int m_Size;
+    readonly nuint m_Size;
     readonly NativeMethods.PageProtect m_OldProtect;
 }
