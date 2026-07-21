@@ -22,6 +22,22 @@ static unsafe class NativeMethods
         public uint UnwindData;
     }
 
+    public struct MemoryBasicInformation
+    {
+        public void* BaseAddress;
+        public void* AllocationBase;
+        public PageProtect AllocationProtect;
+        public nuint RegionSize;
+        public PageState State;
+        public PageProtect Protect;
+        public uint Type;
+    }
+
+    public enum PageState : uint
+    {
+        MemCommit = 0x1000
+    }
+
     [Flags]
     public enum PageProtect : uint
     {
@@ -40,6 +56,9 @@ static unsafe class NativeMethods
 
     [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
     public static extern bool VirtualProtect(void* lpAddress, nuint dwSize, PageProtect flNewProtect, out PageProtect lpflOldProtect);
+
+    [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+    public static extern nuint VirtualQuery(void* lpAddress, out MemoryBasicInformation lpBuffer, nuint dwLength);
 
     [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
     public static extern bool FlushInstructionCache(IntPtr hProcess, void* lpBaseAddress, nuint dwSize);

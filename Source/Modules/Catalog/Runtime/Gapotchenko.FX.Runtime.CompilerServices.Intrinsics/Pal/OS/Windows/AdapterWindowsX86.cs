@@ -88,6 +88,24 @@ sealed class AdapterWindowsX86 : AdapterX86
         byte* p = (byte*)method.MethodHandle.GetFunctionPointer();
         p = SkipBranches(p);
 
-        return new(p, int.MaxValue);
+        // It is impossible to determine the exact method instruction boundaries for x86 architecture.
+        // Instead, use memory region information as a crude approximation.
+        if (NativeMethods.VirtualQuery(p, out var memoryInfo, (nuint)sizeof(NativeMethods.MemoryBasicInformation)) == 0 ||
+            memoryInfo.State != NativeMethods.PageState.MemCommit ||
+            (memoryInfo.Protect & (NativeMethods.PageProtect.NoAccess | NativeMethods.PageProtect.Guard)) != 0)
+        {
+            return [];
+        }
+
+        byte* regionStart = (byte*)memoryInfo.BaseAddress;
+        byte* regionEnd = regionStart + memoryInfo.RegionSize;
+        if (p < regionStart || p >= regionEnd)
+            return [];
+
+        nuint regionLength = (nuint)(regionEnd - p);
+        if (regionLength > int.MaxValue)
+            return [];
+
+        return new(p, (int)regionLength);
     }
 }
