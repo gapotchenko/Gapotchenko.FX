@@ -8,10 +8,16 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 static unsafe class NativeMethods
 {
 #pragma warning disable CS0649 // Field is never assigned to
-    public struct RuntimeFunction
+    public struct RuntimeFunctionX64
     {
         public uint BeginAddress;
         public uint EndAddress;
+        public uint UnwindData;
+    }
+
+    public struct RuntimeFunctionArm64
+    {
+        public uint BeginAddress;
         public uint UnwindData;
     }
 #pragma warning restore CS0649 // Field is never assigned to
@@ -39,5 +45,5 @@ static unsafe class NativeMethods
     public static extern bool FlushInstructionCache(IntPtr hProcess, void* lpBaseAddress, nuint dwSize);
 
     [DllImport("kernel32.dll", ExactSpelling = true)]
-    public static extern RuntimeFunction* RtlLookupFunctionEntry(void* controlPc, out void* imageBase, void* historyTable);
+    public static extern void* RtlLookupFunctionEntry(void* controlPc, out void* imageBase, void* historyTable);
 }

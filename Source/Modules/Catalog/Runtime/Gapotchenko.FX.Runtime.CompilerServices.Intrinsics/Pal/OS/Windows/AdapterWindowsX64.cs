@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
 /// <summary>
-/// Intrinsic patcher for Windows OS and AMD-based 64-bit processor architecture.
+/// Intrinsic adapter for Windows OS and AMD-based 64-bit processor architecture.
 /// </summary>
 #if NET
 [SupportedOSPlatform("windows")]
@@ -88,7 +88,8 @@ sealed class AdapterWindowsX64 : AdapterX64
         byte* p = (byte*)method.MethodHandle.GetFunctionPointer();
         p = SkipBranches(p);
 
-        var runtimeFunction = NativeMethods.RtlLookupFunctionEntry(p, out void* imageBase, null);
+        // Get instruction boundaries.
+        var runtimeFunction = (NativeMethods.RuntimeFunctionX64*)NativeMethods.RtlLookupFunctionEntry(p, out void* imageBase, null);
         if (runtimeFunction == null)
             return [];
 

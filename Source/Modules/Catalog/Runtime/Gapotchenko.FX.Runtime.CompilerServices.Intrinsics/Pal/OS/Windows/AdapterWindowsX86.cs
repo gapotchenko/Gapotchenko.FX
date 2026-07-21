@@ -12,7 +12,7 @@ using System.Runtime.CompilerServices;
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
 /// <summary>
-/// Intrinsic patcher for Windows OS and Intel-based 32-bit processor architecture.
+/// Intrinsic adapter for Windows OS and Intel-based 32-bit processor architecture.
 /// </summary>
 #if NET
 [SupportedOSPlatform("windows")]

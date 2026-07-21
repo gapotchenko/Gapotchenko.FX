@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
 /// <summary>
-/// Intrinsic patcher for Windows OS and ARM-based 64-bit processor architecture.
+/// Intrinsic adapter for Windows OS and ARM-based 64-bit processor architecture.
 /// </summary>
 #if NET
 [SupportedOSPlatform("windows")]
@@ -94,18 +94,32 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         uint* p = (uint*)method.MethodHandle.GetFunctionPointer();
         p = SkipBranches(p);
 
-        return new(p, int.MaxValue);
+        // Get instruction boundaries.
+        var runtimeFunction = (NativeMethods.RuntimeFunctionArm64*)NativeMethods.RtlLookupFunctionEntry(p, out void* imageBase, null);
+        if (runtimeFunction == null)
+            return [];
 
-        static uint* SkipBranches(uint* p)
-        {
-            // B label: the signed imm26 operand is measured in four-byte instructions.
-            while ((*p & 0xfc000000) == 0x14000000)
+        uint unwindData = runtimeFunction->UnwindData;
+        uint functionLength =
+            (unwindData & 3) switch
             {
-                // Sign-extend the operand and scale it by four to obtain a byte displacement in one go.
-                int displacement = (int)(*p << 6) >> 4;
-                p = (uint*)((byte*)p + displacement);
-            }
-            return p;
-        }
+                // Unpacked .xdata format 0
+                0 => *(uint*)((byte*)imageBase + unwindData) & 0x3ffff,
+
+                // Packed unwind formats 1 and 2
+                1 or 2 => (unwindData >> 2) & 0x7ff,
+
+                _ => 0
+            };
+
+        if (functionLength > int.MaxValue)
+            return [];
+
+        byte* functionStart = (byte*)imageBase + runtimeFunction->BeginAddress;
+        byte* functionEnd = functionStart + (functionLength << 2);
+        if ((byte*)p < functionStart || (byte*)p >= functionEnd)
+            return [];
+
+        return new(p, (int)functionLength);
     }
 }
