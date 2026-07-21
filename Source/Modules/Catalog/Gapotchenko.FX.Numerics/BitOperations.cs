@@ -167,11 +167,11 @@ public static class BitOperations
         RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
-        // Advanced SIMD is a baseline requirement for Windows on ARM64.
         0x00, 0x00, 0x27, 0x1e,   // FMOV S0,W0
         0x00, 0x58, 0x20, 0x0e,   // CNT V0.8B,V0.8B
         0x00, 0xb8, 0x31, 0x0e,   // ADDV B0,V0.8B
-        0x00, 0x3c, 0x01, 0x0e)]  // UMOV W0,V0.B[0]
+        0x00, 0x3c, 0x01, 0x0e,   // UMOV W0,V0.B[0]
+        RequiredFeatures = [MachineCodeIntrinsicFeature.AdvSimd])]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int PopCount(uint value)
     {
@@ -203,11 +203,11 @@ public static class BitOperations
         RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
-        // Advanced SIMD is a baseline requirement for Windows on ARM64.
         0x00, 0x00, 0x67, 0x9e,   // FMOV D0,X0
         0x00, 0x58, 0x20, 0x0e,   // CNT V0.8B,V0.8B
         0x00, 0xb8, 0x31, 0x0e,   // ADDV B0,V0.8B
-        0x00, 0x3c, 0x01, 0x0e)]  // UMOV W0,V0.B[0]
+        0x00, 0x3c, 0x01, 0x0e,   // UMOV W0,V0.B[0]
+        RequiredFeatures = [MachineCodeIntrinsicFeature.AdvSimd])]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int PopCount(ulong value)
     {
