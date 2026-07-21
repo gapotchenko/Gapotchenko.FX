@@ -1,5 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 
+#pragma warning disable CS0649 // Field is never assigned to
+
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
 #if NET
@@ -7,7 +9,6 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #endif
 static unsafe class NativeMethods
 {
-#pragma warning disable CS0649 // Field is never assigned to
     public struct RuntimeFunctionX64
     {
         public uint BeginAddress;
@@ -20,7 +21,6 @@ static unsafe class NativeMethods
         public uint BeginAddress;
         public uint UnwindData;
     }
-#pragma warning restore CS0649 // Field is never assigned to
 
     [Flags]
     public enum PageProtect : uint
