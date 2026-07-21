@@ -28,12 +28,12 @@ public sealed class MachineCodeIntrinsicAttribute : Attribute
     }
 
     /// <summary>
-    /// Gets the processor architecture.
+    /// Gets the processor architecture targeted by the machine code.
     /// </summary>
     public Architecture Architecture { get; }
 
     /// <summary>
-    /// Gets or initializes the additional processor architectures.
+    /// Gets or initializes the additional processor architectures targeted by the machine code.
     /// </summary>
     public Architecture[] AdditionalArchitectures { get; init; } = [];
 
