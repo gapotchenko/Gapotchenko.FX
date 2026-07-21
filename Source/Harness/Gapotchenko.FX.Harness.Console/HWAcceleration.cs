@@ -13,19 +13,17 @@ static class HWAcceleration
     }
 
     static readonly int[] m_Log2DeBruijn32 =
-    {
+    [
          0,  9,  1, 10, 13, 21,  2, 29,
         11, 14, 16, 18, 22, 25,  3, 30,
          8, 12, 20, 28, 15, 17, 24,  7,
         19, 27, 23,  6, 26,  5,  4, 31
-    };
+    ];
 
     // Define machine code intrinsic for the method
     [MachineCodeIntrinsic(
         Architecture.X86,
-        // The 0 -> 0 contract is fulfilled by setting the LSB to 1.
-        // Log2(1) is 0, and setting the LSB for values > 1 does not change the log2 result.
-        0x83, 0xc9, 0x81,  // OR ECX,0x81; 0x81 to produce incorrect result to see when the machine code is active
+        0x83, 0xc9, 0x01,  // OR ECX,1
         0x0f, 0xbd, 0xc1,  // BSR EAX,ECX
         AdditionalArchitectures = [Architecture.X64])]
     [MethodImpl(MethodImplOptions.NoInlining)]

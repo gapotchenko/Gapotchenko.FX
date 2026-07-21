@@ -6,12 +6,20 @@
 // Year of introduction: 2019
 
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Numerics.Tests;
 
 [TestClass]
 public class BitOperationTests
 {
+    public BitOperationTests()
+    {
+        // Ensure that even the first call of a type method will have an intrinsic code version.
+        // This allows us to ensure that all calls are covered by the tests.
+        RuntimeHelpers.RunClassConstructor(typeof(BitOperations).TypeHandle);
+    }
+
     [TestMethod]
     // Contract
     [DataRow(0x0U, 0)]

@@ -38,6 +38,9 @@ class Program
     {
         InitializeLogging();
 
+        // Ensure that even the first call of a type method will have an intrinsic code version.
+        RuntimeHelpers.RunClassConstructor(typeof(HWAcceleration).TypeHandle);
+
         Run(args);
     }
 
@@ -128,6 +131,7 @@ class Program
         Console.WriteLine("OS: {0}", RuntimeInformation.OSArchitecture);
 
         Console.WriteLine(BitOperations.Log2(32));
+        Console.WriteLine(HWAcceleration.Log2_Intrinsic(0));
         Console.WriteLine(HWAcceleration.Log2_Intrinsic(0));
 
         var process = Process.GetProcessesByName("notepad2").FirstOrDefault();
