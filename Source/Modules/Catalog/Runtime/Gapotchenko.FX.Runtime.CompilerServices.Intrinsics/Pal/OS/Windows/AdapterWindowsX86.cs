@@ -89,25 +89,5 @@ sealed class AdapterWindowsX86 : AdapterX86
         p = SkipBranches(p);
 
         return new(p, int.MaxValue);
-
-        static byte* SkipBranches(byte* p)
-        {
-            for (; ; )
-            {
-                switch (*p)
-                {
-                    case 0xe9: // JMP rel32
-                        p += *(int*)(p + 1) + 5;
-                        break;
-
-                    case 0xeb: // JMP rel8
-                        p += *(sbyte*)(p + 1) + 2;
-                        break;
-
-                    default:
-                        return p;
-                }
-            }
-        }
     }
 }

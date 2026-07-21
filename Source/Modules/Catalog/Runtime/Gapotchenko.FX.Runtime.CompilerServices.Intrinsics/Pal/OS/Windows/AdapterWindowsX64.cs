@@ -98,20 +98,10 @@ sealed class AdapterWindowsX64 : AdapterX64
         if (p < functionStart || p >= functionEnd)
             return [];
 
-        nuint length = (nuint)(functionEnd - p);
-        if (length > int.MaxValue)
+        nuint functionLength = (nuint)(functionEnd - p);
+        if (functionLength > int.MaxValue)
             return [];
 
-        return new(p, (int)length);
-
-        static byte* SkipBranches(byte* p)
-        {
-            while (*p == 0xe9)
-            {
-                int displacement = *(int*)(p + 1) + 5;
-                p += displacement;
-            }
-            return p;
-        }
+        return new(p, (int)functionLength);
     }
 }
