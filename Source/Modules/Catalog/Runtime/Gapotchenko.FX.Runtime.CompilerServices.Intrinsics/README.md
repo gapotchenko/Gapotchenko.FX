@@ -40,14 +40,6 @@ class BitOperations
     // "Bit Twiddling Hacks" by Sean Eron Anderson:
     // http://graphics.stanford.edu/~seander/bithacks.html
 
-    static readonly int[] m_Log2DeBruijn32 =
-    {
-         0,  9,  1, 10, 13, 21,  2, 29,
-        11, 14, 16, 18, 22, 25,  3, 30,
-         8, 12, 20, 28, 15, 17, 24,  7,
-        19, 27, 23,  6, 26,  5,  4, 31
-    };
-
     public static int Log2_DeBruijn(uint value)
     {
         // Round down to one less than a power of 2.
@@ -57,9 +49,17 @@ class BitOperations
         value |= value >> 8;
         value |= value >> 16;
 
-        var index = (value * 0x07c4acddU) >> 27;
+        uint index = (value * 0x07c4acddU) >> 27;
         return m_Log2DeBruijn32[index];
     }
+
+    static readonly int[] m_Log2DeBruijn32 =
+    [
+         0,  9,  1, 10, 13, 21,  2, 29,
+        11, 14, 16, 18, 22, 25,  3, 30,
+         8, 12, 20, 28, 15, 17, 24,  7,
+        19, 27, 23,  6, 26,  5,  4, 31
+    ];
 }
 ```
 
@@ -79,7 +79,8 @@ Chances are that your machine runs on a descendant of that influential CPU, be i
 So how can we use the low-level `BSR` instruction from high-level .NET?
 
 This is why `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics` class exists.
-It provides the ability to define an intrinsic implementation of a method with `MachineCodeIntrinsicAttribute`.
+It allows you to define intrinsic implementations of a method
+using machine code tailored to a particular processor architecture.
 Let's see how:
 
 ``` C#
@@ -89,19 +90,25 @@ using System.Runtime.InteropServices;
 
 class BitOperations
 {
-    // Use static constructor to ensure that intrinsic methods are initialized (compiled) before they can be used
-    static BitOperations() => Intrinsics.InitializeType(typeof(BitOperations));
-
-    static readonly int[] m_Log2DeBruijn32 =
+    static BitOperations()
     {
-         0,  9,  1, 10, 13, 21,  2, 29,
-        11, 14, 16, 18, 22, 25,  3, 30,
-         8, 12, 20, 28, 15, 17, 24,  7,
-        19, 27, 23,  6, 26,  5,  4, 31
-    };
+        // Ensure that intrinsic methods are initialized (compiled) before they can be used.
+        Intrinsics.InitializeType(typeof(BitOperations));
+    }
 
-    // Define machine code intrinsic for the method
-    [MachineCodeIntrinsic(Architecture.X64, 0x0f, 0xbd, 0xc1)]  // BSR EAX, ECX
+    // Define machine code intrinsics for the method
+    [MachineCodeIntrinsic(
+        Architecture.X86,
+        // The 0 -> 0 contract is fulfilled by setting the LSB to 1.
+        // Log2(1) is 0, and setting the LSB for values > 1 does not change the log2 result.
+        0x83, 0xc9, 0x01,  // OR ECX,1
+        0x0f, 0xbd, 0xc1,  // BSR EAX,ECX
+        AdditionalArchitectures = [Architecture.X64])]
+    [MachineCodeIntrinsic(
+        Architecture.Arm64,
+        0x00, 0x00, 0x00, 0x32,   // ORR W0,W0,#1
+        0x00, 0x10, 0xc0, 0x5a,   // CLZ W0,W0
+        0x00, 0x10, 0x00, 0x52)]  // EOR W0,W0,#31
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Log2_Intrinsic(uint value)
     {
@@ -111,9 +118,17 @@ class BitOperations
         value |= value >> 8;
         value |= value >> 16;
 
-        var index = (value * 0x07C4ACDDU) >> 27;
+        uint index = (value * 0x07c4acddU) >> 27;
         return m_Log2DeBruijn32[index];
     }
+
+    static readonly int[] m_Log2DeBruijn32 =
+    [
+         0,  9,  1, 10, 13, 21,  2, 29,
+        11, 14, 16, 18, 22, 25,  3, 30,
+         8, 12, 20, 28, 15, 17, 24,  7,
+        19, 27, 23,  6, 26,  5,  4, 31
+    ];
 }
 ```
 
@@ -123,7 +138,7 @@ Machine code is tied to CPU architecture and this is reflected in the attribute 
 Please note that besides using `MachineCodeIntrinsicAttribute` to define method intrinsic implementations,
 `BitOperations` class **should** use a static constructor to ensure that the corresponding methods are initialized (compiled) before they are called.
 
-Here are the execution times of all three implementations (lower is better):
+Here are the execution times of all three implementations benchmarked on a x64 system (lower is better):
 
 |         Method |     Mean |     Error |    StdDev |
 |--------------- |---------:|----------:|----------:|
