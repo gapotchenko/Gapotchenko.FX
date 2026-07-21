@@ -111,6 +111,13 @@ abstract class AdapterX86 : Adapter
                     p += *(sbyte*)(p + 1) + 2;
                     break;
 
+                case 0xff when p[1] == 0x25: // JMP r/m (absolute on x86, RIP-relative on x64)
+                    if (IntPtr.Size == 8)
+                        p = *(byte**)(p + *(int*)(p + 2) + 6);
+                    else
+                        p = **(byte***)(p + 2);
+                    break;
+
                 default:
                     return p;
             }
