@@ -46,7 +46,7 @@ public sealed class MachineCodeIntrinsicAttribute : Attribute
     /// Gets or initializes the processor features required to execute the machine code.
     /// </summary>
     /// <remarks>
-    /// An empty array indicates that the machine code has no requirements
+    /// An empty array indicates that the machine code has no processor requirements
     /// beyond those implied by <see cref="Architecture"/>.
     /// </remarks>
     public MachineCodeIntrinsicFeature[] RequiredFeatures { get; init; } = [];
