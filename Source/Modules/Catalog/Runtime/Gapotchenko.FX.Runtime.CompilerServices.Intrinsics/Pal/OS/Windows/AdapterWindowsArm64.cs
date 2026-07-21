@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -17,8 +18,18 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #if NET
 [SupportedOSPlatform("windows")]
 #endif
-sealed class AdapterWindowsArm64 : Adapter
+sealed class AdapterWindowsArm64 : AdapterArm64
 {
+    public override bool IsFeatureSupported(MachineCodeIntrinsicFeature feature)
+    {
+        return feature switch
+        {
+            // Advanced SIMD is a baseline requirement for Windows on ARM64.
+            MachineCodeIntrinsicFeature.AdvSimd => true,
+            _ => base.IsFeatureSupported(feature)
+        };
+    }
+
     public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
         // Every ARM64 instruction is four bytes long.

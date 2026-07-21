@@ -30,5 +30,10 @@ public enum MachineCodeIntrinsicFeature
     /// <remarks>
     /// Hardware indication: <c>CPUID.80000001H:ECX[5]</c>.
     /// </remarks>
-    Lzcnt
+    Lzcnt,
+
+    /// <summary>
+    /// ARM Advanced SIMD instruction set.
+    /// </summary>
+    AdvSimd
 }
