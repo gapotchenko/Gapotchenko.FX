@@ -122,8 +122,9 @@ public static class BitOperations
     /// <returns>The number of leading zero bits in a mask.</returns>
     [CLSCompliant(false)]
     [MachineCodeIntrinsic(
-        Architecture.X64,
+        Architecture.X86,
         0xf3, 0x0f, 0xbd, 0xc1,  // LZCNT EAX,ECX
+        AdditionalArchitectures = [Architecture.X64],
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
@@ -160,8 +161,9 @@ public static class BitOperations
     /// <param name="value">The value.</param>
     [CLSCompliant(false)]
     [MachineCodeIntrinsic(
-        Architecture.X64,
+        Architecture.X86,
         0xf3, 0x0f, 0xb8, 0xc1,  // POPCNT EAX,ECX
+        AdditionalArchitectures = [Architecture.X64],
         RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
@@ -188,6 +190,13 @@ public static class BitOperations
     /// </summary>
     /// <param name="value">The value.</param>
     [CLSCompliant(false)]
+    [MachineCodeIntrinsic(
+        Architecture.X86,
+        0xf3, 0x0f, 0xb8, 0x44, 0x24, 0x04,  // POPCNT EAX,[ESP+4]
+        0xf3, 0x0f, 0xb8, 0x4c, 0x24, 0x08,  // POPCNT ECX,[ESP+8]
+        0x03, 0xc1,                          // ADD EAX,ECX
+        0xc2, 0x08, 0x00,                    // RET 8
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt])]
     [MachineCodeIntrinsic(
         Architecture.X64,
         0xf3, 0x48, 0x0f, 0xb8, 0xc1,  // POPCNT RAX,RCX
