@@ -23,6 +23,7 @@ using Gapotchenko.FX.Math.Metrics;
 using Gapotchenko.FX.Versioning;
 using Gapotchenko.FX.Data.Archives.Zip;
 using Gapotchenko.FX.IO.Vfs;
+using System.Runtime.CompilerServices;
 #endregion
 
 #nullable enable
@@ -33,6 +34,13 @@ using Console = System.Console;
 
 class Program
 {
+    static void Main(string[] args)
+    {
+        InitializeLogging();
+
+        Run(args);
+    }
+
     static void Main2()
     {
         try
@@ -61,7 +69,8 @@ class Program
         }
     }
 
-    static void Main(string[] args)
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    static void Run(IReadOnlyList<string> args)
     {
         //File.AppendAllTextAsync()
         //FileSystemView.Local.ReadFileLines
@@ -81,7 +90,7 @@ class Program
             Console.WriteLine("----------------------");
             Console.WriteLine("DONE");
 
-            if (args.Length == 1)
+            if (args.Count == 1)
             {
                 int pid = int.Parse(args[0]);
                 var process = Process.GetProcessById(pid);
@@ -119,6 +128,7 @@ class Program
         Console.WriteLine("OS: {0}", RuntimeInformation.OSArchitecture);
 
         Console.WriteLine(BitOperations.Log2(32));
+        Console.WriteLine(HWAcceleration.Log2_Intrinsic(0));
 
         var process = Process.GetProcessesByName("notepad2").FirstOrDefault();
         if (process != null)
@@ -372,5 +382,27 @@ class Program
 
         //if (lockable.IsLocked)
         //    throw new InvalidOperationException("F5");
+    }
+
+    static void InitializeLogging()
+    {
+#if NET
+        var consoleListener = new ConsoleTraceListener
+        {
+            Name = "console"
+        };
+
+        TraceSource.Initializing += (_, e) =>
+        {
+            var source = e.TraceSource;
+
+            if (source.Name is "Gapotchenko.FX.Runtime.CompilerServices.Intrinsics")
+            {
+                source.Switch.Level = SourceLevels.Verbose;
+                source.Listeners.Add(consoleListener);
+                e.WasInitialized = true;
+            }
+        };
+#endif
     }
 }
