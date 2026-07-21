@@ -92,16 +92,6 @@ abstract class AdapterX86 : Adapter
             cpuInfo[1] = 0;
             cpuInfo[2] = 0;
             cpuInfo[3] = 0;
-
-            // Reserve space for the intrinsic code.
-            Fn.Ignore(Fn.Empty);
-            Fn.Ignore(Fn.Empty);
-            Fn.Ignore(Fn.Empty);
-            Fn.Ignore(Fn.Empty);
-            Fn.Ignore(Fn.Empty);
-            Fn.Ignore(Fn.Empty);
-            Fn.Ignore(Fn.Empty);
-            Fn.Ignore(Fn.Empty);
         }
     }
 

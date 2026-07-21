@@ -88,7 +88,20 @@ sealed class AdapterWindowsX64 : AdapterX64
         byte* p = (byte*)method.MethodHandle.GetFunctionPointer();
         p = SkipBranches(p);
 
-        return new(p, int.MaxValue);
+        var runtimeFunction = NativeMethods.RtlLookupFunctionEntry(p, out void* imageBase, null);
+        if (runtimeFunction == null)
+            return [];
+
+        byte* functionStart = (byte*)imageBase + runtimeFunction->BeginAddress;
+        byte* functionEnd = (byte*)imageBase + runtimeFunction->EndAddress;
+        if (p < functionStart || p >= functionEnd)
+            return [];
+
+        nuint length = (nuint)(functionEnd - p);
+        if (length > int.MaxValue)
+            return [];
+
+        return new(p, (int)length);
 
         static byte* SkipBranches(byte* p)
         {
