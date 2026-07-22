@@ -23,7 +23,7 @@ partial class ArrayEqualityComparer
             return HashOperations.GetHashCode(obj, elementComparer);
         }
 
-        public override bool Equals(object? obj) => obj is ArrayEqualityComparer<T>;
+        public override bool Equals(object? obj) => obj is DefaultArrayComparer<T>;
 
         public override int GetHashCode() => GetType().Name.GetHashCode();
     }
