@@ -60,7 +60,7 @@ public static partial class MemoryEqualityComparer
                     TypeCode.Boolean => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<bool>.Instance,
                     TypeCode.Char => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<char>.Instance,
                     TypeCode.Decimal => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<decimal>.Instance,
-                    _ => new EquatableMemoryComparer<T>(),
+                    _ => DefaultMemoryComparer<T>.Instance
                 };
         }
         else

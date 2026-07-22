@@ -12,7 +12,7 @@ namespace Gapotchenko.FX.Memory;
 
 partial class MemoryEqualityComparer
 {
-    sealed class ByteMemoryComparer : EquatableMemoryComparer<byte>
+    sealed class ByteMemoryComparer : DefaultMemoryComparerBase<byte>
     {
         public static ByteMemoryComparer Instance = new();
 
@@ -24,9 +24,13 @@ partial class MemoryEqualityComparer
         {
             return HashOperations.GetHashCode(obj.Span);
         }
+
+        public override bool Equals(object? obj) => obj is ByteMemoryComparer;
+
+        public override int GetHashCode() => GetType().Name.GetHashCode();
     }
 
-    sealed class StructMemoryComparer<T> : EquatableMemoryComparer<T>
+    sealed class StructMemoryComparer<T> : DefaultMemoryComparerBase<T>
         where T : struct
     {
         public static StructMemoryComparer<T> Instance = new();
@@ -39,5 +43,9 @@ partial class MemoryEqualityComparer
         {
             return HashOperations.GetHashCode(MemoryMarshal.AsBytes(obj.Span));
         }
+
+        public override bool Equals(object? obj) => obj is StructMemoryComparer<T>;
+
+        public override int GetHashCode() => GetType().Name.GetHashCode();
     }
 }

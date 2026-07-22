@@ -29,5 +29,9 @@ partial class MemoryEqualityComparer
         {
             return HashOperations.GetHashCode(obj.Span, elementComparer);
         }
+
+        public override bool Equals(object? obj) => obj is CustomMemoryComparer<T>;
+
+        public override int GetHashCode() => GetType().Name.GetHashCode();
     }
 }
