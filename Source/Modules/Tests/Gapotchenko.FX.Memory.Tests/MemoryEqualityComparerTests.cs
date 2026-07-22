@@ -11,8 +11,8 @@ public class MemoryEqualityComparerTests
 
         var map = new Dictionary<ReadOnlyMemory<byte>, string>(MemoryEqualityComparer<byte>.Default)
         {
-            [memory.Slice(0, 3)] = "A",
-            [memory.Slice(3, 3)] = "B"
+            [memory[0..3]] = "A",
+            [memory[3..6]] = "B"
         };
 
         Assert.AreEqual("A", map[new byte[] { 1, 2, 3 }]);
@@ -20,5 +20,24 @@ public class MemoryEqualityComparerTests
 
         Assert.IsFalse(map.ContainsKey(new byte[] { 1, 2 }));
         Assert.IsFalse(map.ContainsKey(new byte[] { 3, 4 }));
+    }
+
+    [TestMethod]
+    public void MemoryEqualityComparer_2()
+    {
+        string?[] strings = ["1", null, "3", "4", null, "6"];
+        var memory = strings.AsMemory();
+
+        var map = new Dictionary<ReadOnlyMemory<string?>, string>(MemoryEqualityComparer<string?>.Default)
+        {
+            [memory[0..3]] = "A",
+            [memory[3..6]] = "B"
+        };
+
+        Assert.AreEqual("A", map[new[] { "1", null, "3" }]);
+        Assert.AreEqual("B", map[new[] { "4", null, "6" }]);
+
+        Assert.IsFalse(map.ContainsKey(new[] { "1", "2" }));
+        Assert.IsFalse(map.ContainsKey(new[] { "3", "4" }));
     }
 }
