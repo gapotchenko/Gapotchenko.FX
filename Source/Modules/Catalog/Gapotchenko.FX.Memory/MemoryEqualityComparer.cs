@@ -44,20 +44,17 @@ public static partial class MemoryEqualityComparer
     {
         if (Empty.Nullify(elementComparer) is null)
         {
-            var type = typeof(T);
-
-            switch (Type.GetTypeCode(type))
-            {
-                case TypeCode.Byte:
-                    return (new ByteComparer() as MemoryEqualityComparer<T>)!;
-                case TypeCode.Int32:
-                    return (new Int32Comparer() as MemoryEqualityComparer<T>)!;
-            }
-
-            if (typeof(IEquatable<T>).IsAssignableFrom(type))
-                return new EquatableComparer<T>();
+            return
+                Type.GetTypeCode(typeof(T)) switch
+                {
+                    TypeCode.Byte => (new ByteComparer() as MemoryEqualityComparer<T>)!,
+                    TypeCode.Int32 => (new Int32Comparer() as MemoryEqualityComparer<T>)!,
+                    _ => new EquatableComparer<T>(),
+                };
         }
-
-        return new DefaultComparer<T>(elementComparer);
+        else
+        {
+            return new DefaultComparer<T>(elementComparer);
+        }
     }
 }
