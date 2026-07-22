@@ -44,5 +44,7 @@
   <Import Project="Optimization.props" Condition=" Exists('Optimization.props') " />
   <Import Project="AssemblySignature.props" />
   <Import Project="AuthenticodeSignature.props" />
+  <Import Project="Publish.props" />
+  <Import Project="AOT.props" />
 
 </Project>

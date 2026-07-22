@@ -22,7 +22,13 @@ public static class Intrinsics
     /// Initializes intrinsic methods of the specified type.
     /// </summary>
     /// <param name="type">The type with intrinsic methods to initialize.</param>
-    public static void InitializeType(Type type)
+    public static void InitializeType(
+#if NET
+        [DynamicallyAccessedMembers(
+            DynamicallyAccessedMemberTypes.PublicMethods |
+            DynamicallyAccessedMemberTypes.NonPublicMethods)]
+#endif
+        Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
 

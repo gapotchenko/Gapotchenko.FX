@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <PackageDescription>Provides data structures and primitives for working with intervals.</PackageDescription>
+    <!-- TODO: there are some warnings to work through -->
+    <IsAotCompatible>false</IsAotCompatible>
   </PropertyGroup>
 
   <ItemGroup>

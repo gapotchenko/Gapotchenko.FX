@@ -43,7 +43,7 @@ public static partial class MemoryEqualityComparer
                     (new ByteComparer() as MemoryEqualityComparer<T>)!,
 
                 _ when typeof(IEquatable<T>).IsAssignableFrom(type) && IsDefaultComparer(elementComparer) =>
-                    (MemoryEqualityComparer<T>)Activator.CreateInstance(typeof(EquatableComparer<>).MakeGenericType(type))!,
+                    new EquatableComparer<T>(),
 
                 _ => new DefaultComparer<T>(elementComparer)
             };
