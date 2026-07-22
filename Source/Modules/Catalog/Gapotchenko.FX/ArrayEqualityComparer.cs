@@ -103,8 +103,10 @@ public static partial class ArrayEqualityComparer
 
         var elementEqualityComparer = EqualityComparer<object>.Default;
         for (int i = 0; i != n; ++i)
+        {
             if (!elementEqualityComparer.Equals(arrayX.GetValue(i), arrayY.GetValue(i)))
                 return false;
+        }
 
         return true;
 
@@ -117,12 +119,37 @@ public static partial class ArrayEqualityComparer
     /// <typeparam name="T">The type of array elements.</typeparam>
     /// <param name="elementComparer">The equality comparer for array elements.</param>
     /// <returns>The equality comparer for one-dimensional array with elements of type <typeparamref name="T"/>.</returns>
-    public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer) =>
-        Type.GetTypeCode(typeof(T)) switch
+    public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer)
+    {
+        if (Empty.Nullify(elementComparer) is null)
         {
-            TypeCode.Byte when IsDefaultComparer(elementComparer) => (ArrayEqualityComparer<T>)(object)ByteRank1Comparer.Instance,
-            _ => new DefaultArrayEqualityComparer<T>(elementComparer),
-        };
+            switch (Type.GetTypeCode(typeof(T)))
+            {
+                case TypeCode.Byte:
+                    return (ArrayEqualityComparer<T>)(object)ByteArrayComparer.Instance;
+                case TypeCode.SByte:
+                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<sbyte>.Instance;
+                case TypeCode.Int16:
+                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<short>.Instance;
+                case TypeCode.UInt16:
+                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<ushort>.Instance;
+                case TypeCode.Int32:
+                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<int>.Instance;
+                case TypeCode.UInt32:
+                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<uint>.Instance;
+                case TypeCode.Int64:
+                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<long>.Instance;
+                case TypeCode.UInt64:
+                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<ulong>.Instance;
+                case TypeCode.Boolean:
+                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<bool>.Instance;
+                case TypeCode.Char:
+                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<char>.Instance;
+                case TypeCode.Decimal:
+                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<decimal>.Instance;
+            }
+        }
 
-    static bool IsDefaultComparer<T>(IEqualityComparer<T>? comparer) => Empty.Nullify(comparer) == null;
+        return new DefaultArrayComparer<T>(elementComparer);
+    }
 }
