@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Runtime.InteropServices;
+using System.IO.Hashing;
 
 namespace Gapotchenko.FX;
 
@@ -28,38 +29,7 @@ partial class ArrayEqualityComparer
         {
             ArgumentNullException.ThrowIfNull(obj);
 
-            // FNV-1a
-            // The fastest hash function for byte arrays with lowest collision rate so far (10/2014).
-            // https://en.wikipedia.org/wiki/Fowler-Noll-Vo_hash_function
-
-            if (CodeSafetyStrategy.UnsafeCodeRecommended)
-                return GetHashCodeUnsafeCore(obj);
-            else
-                return GetHashCodeSafeCore(obj);
-        }
-
-        static int GetHashCodeSafeCore(byte[] obj)
-        {
-            uint hash = 2166136261;
-            foreach (var i in obj)
-                hash = (hash ^ i) * 16777619;
-            return (int)hash;
-        }
-
-        static unsafe int GetHashCodeUnsafeCore(byte[] obj)
-        {
-            uint hash = 2166136261;
-            fixed (byte* buffer = obj)
-            {
-                byte* p = buffer;
-                byte* p_end = p + obj.Length;
-                while (p < p_end)
-                {
-                    hash = (hash ^ *p) * 16777619;
-                    ++p;
-                }
-            }
-            return (int)hash;
+            return (int)XxHash3.HashToUInt64(obj);
         }
 
         public override bool Equals(object? obj) => obj is ByteRank1Comparer;

@@ -5,6 +5,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2020
 
+using System.IO.Hashing;
+using System.Runtime.InteropServices;
+
 namespace Gapotchenko.FX.Memory;
 
 partial class MemoryEqualityComparer
@@ -36,11 +39,14 @@ partial class MemoryEqualityComparer
         {
             var elementComparer = m_ElementComparer;
 
-            // FNV-1a
-            uint hash = 2166136261;
+            var hash = new XxHash3();
+            Span<int> buffer = stackalloc int[1];
             foreach (var i in obj.Span)
-                hash = (hash ^ (uint)GetElementHashCode(i, elementComparer)) * 16777619;
-            return (int)hash;
+            {
+                buffer[0] = GetElementHashCode(i, elementComparer);
+                hash.Append(MemoryMarshal.AsBytes(buffer));
+            }
+            return (int)hash.GetCurrentHashAsUInt64();
 
             static int GetElementHashCode(T value, IEqualityComparer<T> comparer)
             {

@@ -5,6 +5,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2020
 
+using System.IO.Hashing;
+using System.Runtime.InteropServices;
+
 namespace Gapotchenko.FX.Memory;
 
 partial class MemoryEqualityComparer
@@ -13,11 +16,7 @@ partial class MemoryEqualityComparer
     {
         public override int GetHashCode(ReadOnlyMemory<byte> obj)
         {
-            // FNV-1a
-            uint hash = 2166136261;
-            foreach (byte i in obj.Span)
-                hash = (hash ^ i) * 16777619;
-            return (int)hash;
+            return (int)XxHash3.HashToUInt64(obj.Span);
         }
     }
 
@@ -25,11 +24,7 @@ partial class MemoryEqualityComparer
     {
         public override int GetHashCode(ReadOnlyMemory<int> obj)
         {
-            // FNV-1a
-            uint hash = 2166136261;
-            foreach (int i in obj.Span)
-                hash = (hash ^ (uint)i) * 16777619;
-            return (int)hash;
+            return (int)XxHash3.HashToUInt64(MemoryMarshal.AsBytes(obj.Span));
         }
     }
 }

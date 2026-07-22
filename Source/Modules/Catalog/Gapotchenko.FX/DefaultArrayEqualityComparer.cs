@@ -1,4 +1,7 @@
-﻿namespace Gapotchenko.FX;
+﻿using System.IO.Hashing;
+using System.Runtime.InteropServices;
+
+namespace Gapotchenko.FX;
 
 sealed class DefaultArrayEqualityComparer<T>(IEqualityComparer<T>? elementComparer) : ArrayEqualityComparer<T>
 {
@@ -37,16 +40,19 @@ sealed class DefaultArrayEqualityComparer<T>(IEqualityComparer<T>? elementCompar
 
         var elementComparer = m_ElementComparer;
 
-        // FNV-1a
-        uint hash = 2166136261;
+        var hash = new XxHash3();
+        Span<int> buffer = stackalloc int[1];
         foreach (var i in obj)
-            hash = (hash ^ (uint)GetNullSafeHashCode(i, elementComparer)) * 16777619;
-        return (int)hash;
+        {
+            buffer[0] = GetElementHashCode(i, elementComparer);
+            hash.Append(MemoryMarshal.AsBytes(buffer));
+        }
+        return (int)hash.GetCurrentHashAsUInt64();
     }
 
     readonly IEqualityComparer<T> m_ElementComparer = elementComparer ?? EqualityComparer<T>.Default;
 
-    static int GetNullSafeHashCode(T value, IEqualityComparer<T> comparer) => value is null ? 0 : comparer.GetHashCode(value);
+    static int GetElementHashCode(T value, IEqualityComparer<T> comparer) => value is null ? 0 : comparer.GetHashCode(value);
 
     /// <summary>
     /// Determines whether the specified <see cref="Object"/> is equal to the current <see cref="ArrayEqualityComparer{T}"/>.
