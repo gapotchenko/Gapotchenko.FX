@@ -250,6 +250,9 @@ public sealed class AssemblyLoadPal
     /// </summary>
     /// <param name="assemblyFile">The assembly file path.</param>
     /// <returns>The loaded assembly.</returns>
+#if NET
+    [RequiresUnreferencedCode("Types and members the loaded assembly depends on might be removed.")]
+#endif
     public Assembly LoadFrom(string assemblyFile)
     {
 #if TFF_ASSEMBLYLOADCONTEXT
