@@ -5,6 +5,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2020
 
+using System.Diagnostics;
+
 namespace Gapotchenko.FX.Memory;
 
 /// <summary>
@@ -47,14 +49,24 @@ public static partial class MemoryEqualityComparer
             return
                 Type.GetTypeCode(typeof(T)) switch
                 {
-                    TypeCode.Byte => (new ByteComparer() as MemoryEqualityComparer<T>)!,
-                    TypeCode.Int32 => (new Int32Comparer() as MemoryEqualityComparer<T>)!,
-                    _ => new EquatableComparer<T>(),
+                    TypeCode.Byte => (MemoryEqualityComparer<T>)(object)ByteMemoryComparer.Instance,
+                    TypeCode.SByte => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<sbyte>.Instance,
+                    TypeCode.UInt16 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<ushort>.Instance,
+                    TypeCode.Int16 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<short>.Instance,
+                    TypeCode.UInt32 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<uint>.Instance,
+                    TypeCode.Int32 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<int>.Instance,
+                    TypeCode.Int64 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<long>.Instance,
+                    TypeCode.UInt64 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<ulong>.Instance,
+                    TypeCode.Boolean => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<bool>.Instance,
+                    TypeCode.Char => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<char>.Instance,
+                    TypeCode.Decimal => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<decimal>.Instance,
+                    _ => new EquatableMemoryComparer<T>(),
                 };
         }
         else
         {
-            return new DefaultComparer<T>(elementComparer);
+            Debug.Assert(elementComparer != null);
+            return new CustomMemoryComparer<T>(elementComparer);
         }
     }
 }

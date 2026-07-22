@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.Memory;
 
 partial class MemoryEqualityComparer
 {
-    class EquatableComparer<T> : MemoryEqualityComparer<T>
+    class EquatableMemoryComparer<T> : MemoryEqualityComparer<T>
     {
         public sealed override bool Equals(ReadOnlyMemory<T> x, ReadOnlyMemory<T> y) => x.Span.SequenceEqual(y.Span);
 

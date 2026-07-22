@@ -11,7 +11,7 @@ namespace Gapotchenko.FX.Memory;
 
 partial class MemoryEqualityComparer
 {
-    sealed class DefaultComparer<T>(IEqualityComparer<T>? elementComparer) : MemoryEqualityComparer<T>
+    sealed class CustomMemoryComparer<T>(IEqualityComparer<T> elementComparer) : MemoryEqualityComparer<T>
     {
         public override bool Equals(ReadOnlyMemory<T> x, ReadOnlyMemory<T> y)
         {
@@ -22,23 +22,12 @@ partial class MemoryEqualityComparer
             if (x.Equals(y))
                 return true;
 
-            var xs = x.Span;
-            var ys = y.Span;
-
-            for (int i = 0; i < n; ++i)
-            {
-                if (!m_ElementComparer.Equals(xs[i], ys[i]))
-                    return false;
-            }
-
-            return true;
+            return x.Span.SequenceEqual(y.Span, elementComparer);
         }
 
         public override int GetHashCode(ReadOnlyMemory<T> obj)
         {
-            return HashOperations.GetHashCode(obj.Span, m_ElementComparer);
+            return HashOperations.GetHashCode(obj.Span, elementComparer);
         }
-
-        readonly IEqualityComparer<T> m_ElementComparer = elementComparer ?? EqualityComparer<T>.Default;
     }
 }
