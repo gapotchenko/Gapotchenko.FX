@@ -31,9 +31,12 @@ class ProbingPathAssemblyLoaderBackend : IAssemblyLoaderBackend
     protected readonly AssemblyLoadPal AssemblyLoadPal;
     readonly IReadOnlyList<string> m_ProbingPaths;
 
-    static IEnumerable<string> EnumerateAssemblies(string directoryPath) =>
-        Directory.EnumerateFiles(directoryPath, "*.dll")
-        .Concat(Directory.EnumerateFiles(directoryPath, "*.exe"));
+    static IEnumerable<string> EnumerateAssemblies(string directoryPath)
+    {
+        return
+            Directory.EnumerateFiles(directoryPath, "*.dll")
+            .Concat(Directory.EnumerateFiles(directoryPath, "*.exe"));
+    }
 
     List<KeyValuePair<string, AssemblyName>>? m_CachedProbingList;
 
@@ -129,7 +132,10 @@ class ProbingPathAssemblyLoaderBackend : IAssemblyLoaderBackend
 
     protected virtual bool IsAssemblyResolutionInhibited(Assembly? requestingAssembly) => false;
 
-    protected virtual Assembly LoadAssembly(string filePath, AssemblyName name) => AssemblyLoadPal.LoadFrom(filePath);
+    protected virtual Assembly LoadAssembly(string filePath, AssemblyName name)
+    {
+        return AssemblyLoadPal.LoadFrom(filePath);
+    }
 
     public string? ResolveAssemblyPath(AssemblyName assemblyName)
     {
