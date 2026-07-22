@@ -10,44 +10,61 @@ using System.IO.Hashing;
 namespace Gapotchenko.FX.Runtime.InteropServices;
 
 /// <summary>
-/// Provides process-local hashing functions.
+/// Provides operations for calculating process-local hash codes.
 /// </summary>
 /// <remarks>
-/// The functions provided by this type calculate process-local hash values which is not guaranteed to be stable outside of the currently running process.
+/// <para>
+/// Hash codes produced by this type are intended for use only within the
+/// currently running process.
+/// </para>
+/// <para>
+/// The values are not guaranteed to remain stable across process executions,
+/// runtime versions, operating systems, processor architectures, or library
+/// versions, and therefore should not be persisted or used as external
+/// identifiers.
+/// </para>
 /// </remarks>
 public static class HashOperations
 {
     /// <summary>
-    /// Calculates a 32-bit hash value for the specified span of bytes.
+    /// Calculates a 32-bit process-local hash code for a sequence of bytes.
     /// </summary>
+    /// <param name="source">The byte sequence to hash.</param>
+    /// <returns>A 32-bit hash code for <paramref name="source"/>.</returns>
     /// <remarks>
-    /// The function calculates a process-local hash value which is not guaranteed to be stable outside of the currently running process.
+    /// The returned value is not guaranteed to be stable outside the
+    /// currently running process and should not be persisted.
     /// </remarks>
-    /// <param name="source">The span of bytes.</param>
-    /// <returns>A calculated 32-bit hash value.</returns>
     public static int GetHashCode(ReadOnlySpan<byte> source)
     {
+#if NET
+        // On 32-bit processes, XXHash32 is faster for short inputs.
+        // Benchmarks show the crossover with XXHash3 at approximately 384 bytes.
+        if (IntPtr.Size >= 8 || source.Length >= 384)
+            return (int)XxHash3.HashToUInt64(source);
+        else
+            return (int)XxHash32.HashToUInt32(source);
+#else
+        // On .NET Framework, XXHash3 is the fastest according to benchmarks.
         return (int)XxHash3.HashToUInt64(source);
+#endif
     }
 
     /// <summary>
-    /// Calculates a 32-bit hash value for the specified span of elements.
+    /// Calculates a 32-bit process-local hash code for a sequence of elements.
     /// </summary>
-    /// <remarks>
-    /// The function calculates a process-local hash value which is not guaranteed to be stable outside of the currently running process.
-    /// </remarks>
-    /// <typeparam name="T">The element type.</typeparam>
-    /// <param name="source">The span of elements.</param>
-    /// <param name="comparer">The comparer used to obtain the element hash code.</param>
-    /// <returns>A calculated 32-bit hash value.</returns>
+    /// <typeparam name="T">The type of elements in the sequence.</typeparam>
+    /// <param name="source">The sequence of elements to hash.</param>
+    /// <param name="comparer">The equality comparer used to obtain element hash codes.</param>
+    /// <returns>A 32-bit hash code for <paramref name="source"/>.</returns>
     public static int GetHashCode<T>(ReadOnlySpan<T> source, IEqualityComparer<T>? comparer = null)
     {
-        // The function is dominated by obtaining hash codes from the elements.
-        // Any attempt to use a hash function tailored for processing of contiguous memory blocks
-        // is going to be slower than a simple streaming hash algorithm.
-        // Buffer preparation is going to eat up all potential benefits.
+        // Obtaining hash codes from individual elements generally dominates
+        // this operation. Buffering those hash codes for a block-oriented hash
+        // algorithm adds memory traffic and overhead without a corresponding
+        // throughput benefit.
 
-        // Uses a simple custom hash algorithm inspired by FNV-1a.
+        // Use a simple custom hash algorithm inspired by FNV-1a.
 
         uint hash = 2166136261;
 
