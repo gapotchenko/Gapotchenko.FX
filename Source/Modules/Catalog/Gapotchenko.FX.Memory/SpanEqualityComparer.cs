@@ -1,6 +1,5 @@
-﻿using System.IO.Hashing;
+﻿using Gapotchenko.FX.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Memory;
 
@@ -65,14 +64,7 @@ public static class SpanEqualityComparer
         if (span == null)
             return 0;
 
-        var hash = new XxHash3();
-        Span<int> buffer = stackalloc int[1];
-        foreach (var i in span)
-        {
-            buffer[0] = i?.GetHashCode() ?? 0;
-            hash.Append(MemoryMarshal.AsBytes(buffer));
-        }
-        return (int)hash.GetCurrentHashAsUInt64();
+        return HashOperations.GetHashCode(span);
     }
 
     /// <summary>
@@ -93,6 +85,6 @@ public static class SpanEqualityComparer
         if (span == null)
             return 0;
 
-        return (int)XxHash3.HashToUInt64(span);
+        return HashOperations.GetHashCode(span);
     }
 }

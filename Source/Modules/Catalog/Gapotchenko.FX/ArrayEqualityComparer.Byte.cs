@@ -1,5 +1,4 @@
 ﻿using Gapotchenko.FX.Runtime.InteropServices;
-using System.IO.Hashing;
 
 namespace Gapotchenko.FX;
 
@@ -29,7 +28,7 @@ partial class ArrayEqualityComparer
         {
             ArgumentNullException.ThrowIfNull(obj);
 
-            return (int)XxHash3.HashToUInt64(obj);
+            return HashOperations.GetHashCode(obj);
         }
 
         public override bool Equals(object? obj) => obj is ByteRank1Comparer;

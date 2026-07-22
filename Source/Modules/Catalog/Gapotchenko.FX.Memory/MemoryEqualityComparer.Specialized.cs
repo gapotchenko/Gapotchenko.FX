@@ -5,7 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2020
 
-using System.IO.Hashing;
+using Gapotchenko.FX.Runtime.InteropServices;
 using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Memory;
@@ -16,7 +16,7 @@ partial class MemoryEqualityComparer
     {
         public override int GetHashCode(ReadOnlyMemory<byte> obj)
         {
-            return (int)XxHash3.HashToUInt64(obj.Span);
+            return HashOperations.GetHashCode(obj.Span);
         }
     }
 
@@ -24,7 +24,7 @@ partial class MemoryEqualityComparer
     {
         public override int GetHashCode(ReadOnlyMemory<int> obj)
         {
-            return (int)XxHash3.HashToUInt64(MemoryMarshal.AsBytes(obj.Span));
+            return HashOperations.GetHashCode(MemoryMarshal.AsBytes(obj.Span));
         }
     }
 }
