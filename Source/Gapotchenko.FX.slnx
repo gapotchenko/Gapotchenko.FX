@@ -199,6 +199,7 @@
   </Folder>
   <Folder Name="/03. Misc/Mastering/Configuration/">
     <File Path="Mastering/Targeting.props" />
+    <File Path="Mastering/Targeting.targets" />
     <File Path="Mastering/Version.props" />
   </Folder>
 </Solution>
