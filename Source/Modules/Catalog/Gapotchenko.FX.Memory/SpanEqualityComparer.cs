@@ -62,7 +62,10 @@ public static class SpanEqualityComparer
     public static int GetHashCode<T>(ReadOnlySpan<T> span) where T : IEquatable<T>
     {
         if (span == null)
+        {
+            // Return zero for a span representing null to distinguish it from empty span.
             return 0;
+        }
 
         return HashOperations.GetHashCode(span);
     }
