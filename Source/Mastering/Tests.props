@@ -1,0 +1,8 @@
+﻿<Project>
+
+  <PropertyGroup>
+    <!-- Suppress "No test is available in ..." warnings in "Test Explorer" window of Visual Studio. -->
+    <IsTestProject Condition=" ('$(MasteringProjectKind)' != 'none' AND '$(MasteringProjectKind)' != 'test') OR '$(MasteringTestKind)' == 'harness' ">false</IsTestProject>
+  </PropertyGroup>
+
+</Project>
