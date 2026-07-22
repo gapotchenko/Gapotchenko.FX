@@ -1,4 +1,11 @@
-﻿namespace Gapotchenko.FX.Memory;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+namespace Gapotchenko.FX.Memory;
 
 /// <summary>
 /// Equality comparer for contiguous regions of memory represented by <see cref="ReadOnlyMemory{T}"/> type.

@@ -1,21 +1,20 @@
-﻿namespace Gapotchenko.FX.Memory;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+namespace Gapotchenko.FX.Memory;
 
 partial class MemoryEqualityComparer
 {
-    sealed class DefaultComparer<T> : MemoryEqualityComparer<T>
+    sealed class DefaultComparer<T>(IEqualityComparer<T>? elementComparer) : MemoryEqualityComparer<T>
     {
-        internal DefaultComparer(IEqualityComparer<T>? elementComparer)
-        {
-            m_ElementComparer = elementComparer ?? EqualityComparer<T>.Default;
-        }
-
-        readonly IEqualityComparer<T> m_ElementComparer;
-
         public override bool Equals(ReadOnlyMemory<T> x, ReadOnlyMemory<T> y)
         {
             int n = x.Length;
-
-            if (y.Length != n)
+            if (n != y.Length)
                 return false;
 
             if (x.Equals(y))
@@ -25,17 +24,16 @@ partial class MemoryEqualityComparer
             var ys = y.Span;
 
             for (int i = 0; i < n; ++i)
+            {
                 if (!m_ElementComparer.Equals(xs[i], ys[i]))
                     return false;
+            }
 
             return true;
         }
 
         public override int GetHashCode(ReadOnlyMemory<T> obj)
         {
-            if (obj.IsEmpty)
-                return 0;
-
             var elementComparer = m_ElementComparer;
 
             // FNV-1a
@@ -48,8 +46,11 @@ partial class MemoryEqualityComparer
             {
                 if (value is null)
                     return 0;
-                return comparer.GetHashCode(value);
+                else
+                    return comparer.GetHashCode(value);
             }
         }
+
+        readonly IEqualityComparer<T> m_ElementComparer = elementComparer ?? EqualityComparer<T>.Default;
     }
 }

@@ -1,4 +1,11 @@
-﻿namespace Gapotchenko.FX.Memory;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2020
+
+namespace Gapotchenko.FX.Memory;
 
 /// <summary>
 /// Equality comparer for contiguous regions of memory represented by <see cref="ReadOnlyMemory{T}"/> type.
@@ -35,19 +42,22 @@ public static partial class MemoryEqualityComparer
     /// <returns>A new equality comparer for contiguous regions of memory with elements of type <typeparamref name="T"/>.</returns>
     public static MemoryEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer)
     {
-        var type = typeof(T);
-        return
-            Type.GetTypeCode(type) switch
+        if (Empty.Nullify(elementComparer) is null)
+        {
+            var type = typeof(T);
+
+            switch (Type.GetTypeCode(type))
             {
-                TypeCode.Byte when IsDefaultComparer(elementComparer) =>
-                    (new ByteComparer() as MemoryEqualityComparer<T>)!,
+                case TypeCode.Byte:
+                    return (new ByteComparer() as MemoryEqualityComparer<T>)!;
+                case TypeCode.Int32:
+                    return (new Int32Comparer() as MemoryEqualityComparer<T>)!;
+            }
 
-                _ when typeof(IEquatable<T>).IsAssignableFrom(type) && IsDefaultComparer(elementComparer) =>
-                    new EquatableComparer<T>(),
+            if (typeof(IEquatable<T>).IsAssignableFrom(type))
+                return new EquatableComparer<T>();
+        }
 
-                _ => new DefaultComparer<T>(elementComparer)
-            };
+        return new DefaultComparer<T>(elementComparer);
     }
-
-    static bool IsDefaultComparer<T>(IEqualityComparer<T>? comparer) => Empty.Nullify(comparer) is null;
 }
