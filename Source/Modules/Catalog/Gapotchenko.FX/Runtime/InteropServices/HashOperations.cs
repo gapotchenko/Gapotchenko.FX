@@ -45,7 +45,7 @@ public static class HashOperations
         else
             return (int)XxHash32.HashToUInt32(source);
 #else
-        // On .NET Framework, XXHash3 is the fastest according to benchmarks.
+        // On .NET Framework, XXHash3 is the fastest hash function according to benchmarks.
         return (int)XxHash3.HashToUInt64(source);
 #endif
     }
