@@ -20,7 +20,7 @@ public static partial class SpanEqualityComparer
     /// Determines whether two spans are equal
     /// by comparing the elements using <see cref="IEqualityComparer{T}"/>.
     /// </summary>
-    /// <typeparam name="T">The type of elements in the span.</typeparam>
+    /// <typeparam name="T">The type of elements in the spans.</typeparam>
     /// <param name="x">The first span to compare.</param>
     /// <param name="y">The second span to compare.</param>
     /// <param name="comparer">
@@ -43,7 +43,7 @@ public static partial class SpanEqualityComparer
     /// Determines whether two spans are equal
     /// by comparing the elements using <see cref="IEquatable{T}.Equals(T)"/>.
     /// </summary>
-    /// <typeparam name="T">The type of elements in the span.</typeparam>
+    /// <typeparam name="T">The type of elements in the spans.</typeparam>
     /// <param name="x">The first span to compare.</param>
     /// <param name="y">The second span to compare.</param>
     /// <returns>
