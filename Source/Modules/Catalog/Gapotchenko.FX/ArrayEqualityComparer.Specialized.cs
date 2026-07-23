@@ -25,12 +25,12 @@ partial class ArrayEqualityComparer
         public override int GetHashCode() => GetType().Name.GetHashCode();
     }
 
-    sealed class StructArrayComparer<T> : EquatableArrayComparer<T>
+    sealed class BitwiseArrayComparer<T> : EquatableArrayComparer<T>
         where T : struct, IEquatable<T>
     {
-        public static StructArrayComparer<T> Instance = new();
+        public static BitwiseArrayComparer<T> Instance = new();
 
-        StructArrayComparer()
+        BitwiseArrayComparer()
         {
         }
 
@@ -41,7 +41,7 @@ partial class ArrayEqualityComparer
             return HashOperations.GetHashCode(MemoryMarshal.AsBytes(obj));
         }
 
-        public override bool Equals(object? obj) => obj is StructArrayComparer<T>;
+        public override bool Equals(object? obj) => obj is BitwiseArrayComparer<T>;
 
         public override int GetHashCode() => GetType().Name.GetHashCode();
     }

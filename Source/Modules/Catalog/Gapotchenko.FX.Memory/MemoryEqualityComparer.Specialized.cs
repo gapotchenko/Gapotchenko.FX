@@ -27,12 +27,12 @@ partial class MemoryEqualityComparer
         public override int GetHashCode() => GetType().Name.GetHashCode();
     }
 
-    sealed class StructMemoryComparer<T> : EquatableMemoryComparer<T>
+    sealed class BitwiseMemoryComparer<T> : EquatableMemoryComparer<T>
         where T : struct, IEquatable<T>
     {
-        public static StructMemoryComparer<T> Instance = new();
+        public static BitwiseMemoryComparer<T> Instance = new();
 
-        StructMemoryComparer()
+        BitwiseMemoryComparer()
         {
         }
 
@@ -41,7 +41,7 @@ partial class MemoryEqualityComparer
             return GetBitwiseHashCodeCore(obj);
         }
 
-        public override bool Equals(object? obj) => obj is StructMemoryComparer<T>;
+        public override bool Equals(object? obj) => obj is BitwiseMemoryComparer<T>;
 
         public override int GetHashCode() => GetType().Name.GetHashCode();
     }

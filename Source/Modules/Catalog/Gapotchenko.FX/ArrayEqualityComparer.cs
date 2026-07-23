@@ -128,18 +128,15 @@ public static partial class ArrayEqualityComparer
                 Type.GetTypeCode(typeof(T)) switch
                 {
                     TypeCode.Byte => (ArrayEqualityComparer<T>)(object)ByteArrayComparer.Instance,
-                    TypeCode.SByte => (ArrayEqualityComparer<T>)(object)StructArrayComparer<sbyte>.Instance,
-                    TypeCode.Int16 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<short>.Instance,
-                    TypeCode.UInt16 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<ushort>.Instance,
-                    TypeCode.Int32 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<int>.Instance,
-                    TypeCode.UInt32 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<uint>.Instance,
-                    TypeCode.Int64 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<long>.Instance,
-                    TypeCode.UInt64 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<ulong>.Instance,
-                    TypeCode.Single => (ArrayEqualityComparer<T>)(object)StructArrayComparer<float>.Instance,
-                    TypeCode.Double => (ArrayEqualityComparer<T>)(object)StructArrayComparer<double>.Instance,
-                    TypeCode.Decimal => (ArrayEqualityComparer<T>)(object)StructArrayComparer<decimal>.Instance,
-                    TypeCode.Boolean => (ArrayEqualityComparer<T>)(object)StructArrayComparer<bool>.Instance,
-                    TypeCode.Char => (ArrayEqualityComparer<T>)(object)StructArrayComparer<char>.Instance,
+                    TypeCode.SByte => (ArrayEqualityComparer<T>)(object)BitwiseArrayComparer<sbyte>.Instance,
+                    TypeCode.Int16 => (ArrayEqualityComparer<T>)(object)BitwiseArrayComparer<short>.Instance,
+                    TypeCode.UInt16 => (ArrayEqualityComparer<T>)(object)BitwiseArrayComparer<ushort>.Instance,
+                    TypeCode.Int32 => (ArrayEqualityComparer<T>)(object)BitwiseArrayComparer<int>.Instance,
+                    TypeCode.UInt32 => (ArrayEqualityComparer<T>)(object)BitwiseArrayComparer<uint>.Instance,
+                    TypeCode.Int64 => (ArrayEqualityComparer<T>)(object)BitwiseArrayComparer<long>.Instance,
+                    TypeCode.UInt64 => (ArrayEqualityComparer<T>)(object)BitwiseArrayComparer<ulong>.Instance,
+                    TypeCode.Boolean => (ArrayEqualityComparer<T>)(object)BitwiseArrayComparer<bool>.Instance,
+                    TypeCode.Char => (ArrayEqualityComparer<T>)(object)BitwiseArrayComparer<char>.Instance,
                     _ => DefaultArrayComparer<T>.Instance
                 };
         }

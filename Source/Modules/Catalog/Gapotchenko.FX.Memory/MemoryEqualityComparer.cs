@@ -154,18 +154,15 @@ public abstract partial class MemoryEqualityComparer :
                 Type.GetTypeCode(typeof(T)) switch
                 {
                     TypeCode.Byte => (MemoryEqualityComparer<T>)(object)ByteMemoryComparer.Instance,
-                    TypeCode.SByte => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<sbyte>.Instance,
-                    TypeCode.Int16 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<short>.Instance,
-                    TypeCode.UInt16 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<ushort>.Instance,
-                    TypeCode.Int32 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<int>.Instance,
-                    TypeCode.UInt32 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<uint>.Instance,
-                    TypeCode.Int64 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<long>.Instance,
-                    TypeCode.UInt64 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<ulong>.Instance,
-                    TypeCode.Single => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<float>.Instance,
-                    TypeCode.Double => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<double>.Instance,
-                    TypeCode.Decimal => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<decimal>.Instance,
-                    TypeCode.Boolean => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<bool>.Instance,
-                    TypeCode.Char => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<char>.Instance,
+                    TypeCode.SByte => (MemoryEqualityComparer<T>)(object)BitwiseMemoryComparer<sbyte>.Instance,
+                    TypeCode.Int16 => (MemoryEqualityComparer<T>)(object)BitwiseMemoryComparer<short>.Instance,
+                    TypeCode.UInt16 => (MemoryEqualityComparer<T>)(object)BitwiseMemoryComparer<ushort>.Instance,
+                    TypeCode.Int32 => (MemoryEqualityComparer<T>)(object)BitwiseMemoryComparer<int>.Instance,
+                    TypeCode.UInt32 => (MemoryEqualityComparer<T>)(object)BitwiseMemoryComparer<uint>.Instance,
+                    TypeCode.Int64 => (MemoryEqualityComparer<T>)(object)BitwiseMemoryComparer<long>.Instance,
+                    TypeCode.UInt64 => (MemoryEqualityComparer<T>)(object)BitwiseMemoryComparer<ulong>.Instance,
+                    TypeCode.Boolean => (MemoryEqualityComparer<T>)(object)BitwiseMemoryComparer<bool>.Instance,
+                    TypeCode.Char => (MemoryEqualityComparer<T>)(object)BitwiseMemoryComparer<char>.Instance,
                     _ => DefaultMemoryComparer<T>.Instance
                 };
         }
