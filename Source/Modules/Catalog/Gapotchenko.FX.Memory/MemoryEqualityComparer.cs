@@ -127,7 +127,7 @@ public abstract partial class MemoryEqualityComparer :
         return SpanEqualityComparer.GetHashCode(memory.Span, comparer);
     }
 
-    static int GetBlittableStructHashCodeCore<T>(in ReadOnlyMemory<T> memory) where T : struct
+    static int GetBitwiseHashCodeCore<T>(in ReadOnlyMemory<T> memory) where T : struct
     {
         return SpanEqualityComparer.GetHashCode(MemoryMarshal.AsBytes(memory.Span));
     }

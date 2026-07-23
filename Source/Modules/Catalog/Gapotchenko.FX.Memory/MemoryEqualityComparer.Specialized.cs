@@ -38,7 +38,7 @@ partial class MemoryEqualityComparer
 
         public override int GetHashCode(ReadOnlyMemory<T> obj)
         {
-            return GetBlittableStructHashCodeCore(obj);
+            return GetBitwiseHashCodeCore(obj);
         }
 
         public override bool Equals(object? obj) => obj is StructMemoryComparer<T>;
