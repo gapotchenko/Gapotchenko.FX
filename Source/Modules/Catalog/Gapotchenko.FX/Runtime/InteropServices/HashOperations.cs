@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Runtime.CompilerServices;
 using System.IO.Hashing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -54,7 +55,7 @@ public static class HashOperations
         comparer = Empty.Nullify(comparer);
         if (comparer is null)
         {
-            if (CodeSafetyStrategy.UnsafeCodeAllowed && typeof(T).IsPrimitive)
+            if (CodeSafetyStrategy.UnsafeCodeAllowed && TypeTraits<T>.IsBitwiseEquatable)
             {
                 // Process blittable types using an accelerated path.
                 return GetBitwiseHashCodeCore(source);
@@ -84,9 +85,12 @@ public static class HashOperations
 
     static unsafe int GetBitwiseHashCodeCore<T>(ReadOnlySpan<T> source)
     {
+        int byteLength = checked(source.Length * Unsafe.SizeOf<T>());
+
         var bytes = new ReadOnlySpan<byte>(
             Unsafe.AsPointer(ref MemoryMarshal.GetReference(source)),
-            checked(source.Length * Marshal.SizeOf<T>()));
+            byteLength);
+
         return GetHashCode(bytes);
     }
 
