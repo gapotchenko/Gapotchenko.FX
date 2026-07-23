@@ -135,10 +135,12 @@ public static partial class ArrayEqualityComparer
                     TypeCode.UInt32 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<uint>.Instance,
                     TypeCode.Int64 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<long>.Instance,
                     TypeCode.UInt64 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<ulong>.Instance,
+                    TypeCode.Single => (ArrayEqualityComparer<T>)(object)StructArrayComparer<float>.Instance,
+                    TypeCode.Double => (ArrayEqualityComparer<T>)(object)StructArrayComparer<double>.Instance,
+                    TypeCode.Decimal => (ArrayEqualityComparer<T>)(object)StructArrayComparer<decimal>.Instance,
                     TypeCode.Boolean => (ArrayEqualityComparer<T>)(object)StructArrayComparer<bool>.Instance,
                     TypeCode.Char => (ArrayEqualityComparer<T>)(object)StructArrayComparer<char>.Instance,
-                    TypeCode.Decimal => (ArrayEqualityComparer<T>)(object)StructArrayComparer<decimal>.Instance,
-                    _ => DefaultArrayComparer<T>.Instance,
+                    _ => DefaultArrayComparer<T>.Instance
                 };
         }
         else

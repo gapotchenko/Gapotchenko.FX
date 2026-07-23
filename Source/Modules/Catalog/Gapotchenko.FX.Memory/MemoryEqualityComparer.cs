@@ -5,8 +5,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2020
 
-using System.Diagnostics;
-
 namespace Gapotchenko.FX.Memory;
 
 /// <summary>
@@ -52,15 +50,17 @@ public static partial class MemoryEqualityComparer
                 {
                     TypeCode.Byte => (MemoryEqualityComparer<T>)(object)ByteMemoryComparer.Instance,
                     TypeCode.SByte => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<sbyte>.Instance,
-                    TypeCode.UInt16 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<ushort>.Instance,
                     TypeCode.Int16 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<short>.Instance,
-                    TypeCode.UInt32 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<uint>.Instance,
+                    TypeCode.UInt16 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<ushort>.Instance,
                     TypeCode.Int32 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<int>.Instance,
+                    TypeCode.UInt32 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<uint>.Instance,
                     TypeCode.Int64 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<long>.Instance,
                     TypeCode.UInt64 => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<ulong>.Instance,
+                    TypeCode.Single => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<float>.Instance,
+                    TypeCode.Double => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<double>.Instance,
+                    TypeCode.Decimal => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<decimal>.Instance,
                     TypeCode.Boolean => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<bool>.Instance,
                     TypeCode.Char => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<char>.Instance,
-                    TypeCode.Decimal => (MemoryEqualityComparer<T>)(object)StructMemoryComparer<decimal>.Instance,
                     _ => DefaultMemoryComparer<T>.Instance
                 };
         }
