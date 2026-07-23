@@ -28,7 +28,8 @@ public static class TypeTraits<T>
     public static readonly bool IsValueType;
 
     /// <summary>
-    /// Gets a value indicating whether <typeparamref name="T"/> type is bitwise equatable.
+    /// Gets a value indicating whether <typeparamref name="T"/> type is bitwise equatable
+    /// in terms of default equality semantics and managed in-memory representation.
     /// </summary>
     public static bool IsBitwiseEquatable { get; }
 }
