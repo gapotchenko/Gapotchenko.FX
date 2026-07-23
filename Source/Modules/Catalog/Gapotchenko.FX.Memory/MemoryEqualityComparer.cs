@@ -24,6 +24,11 @@ public abstract partial class MemoryEqualityComparer :
 
     #region Equals
 
+    /// <inheritdoc/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("MemoryEqualityComparer.Equals(object, object) method cannot be used. Use MemoryEqualityComparer.Equals<T>(ReadOnlyMemory<T>, ReadOnlyMemory<T>) method instead.", true)]
+    public static new bool Equals(object? objA, object? objB) => throw new NotSupportedException();
+
     /// <summary>
     /// Determines whether two memory regions are equal
     /// by comparing the elements using <see cref="IEqualityComparer{T}"/>.
@@ -55,17 +60,12 @@ public abstract partial class MemoryEqualityComparer :
     /// <see langword="true"/> if the two memory regions are equal; 
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool Equals<T>(ReadOnlyMemory<T> x, ReadOnlyMemory<T> y) where T : IEquatable<T>
+    public static bool Equals<T>(ReadOnlyMemory<T> x, ReadOnlyMemory<T> y) where T : IEquatable<T>?
     {
         return EqualsCore(x, y);
     }
 
-    /// <inheritdoc/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("MemoryEqualityComparer.Equals(object, object) method cannot be used. Use MemoryEqualityComparer.Equals<T>(ReadOnlyMemory<T>, ReadOnlyMemory<T>) method instead.", true)]
-    public static new bool Equals(object? objA, object? objB) => throw new NotSupportedException();
-
-    static bool EqualsCore<T>(in ReadOnlyMemory<T> x, in ReadOnlyMemory<T> y) where T : IEquatable<T>
+    static bool EqualsCore<T>(in ReadOnlyMemory<T> x, in ReadOnlyMemory<T> y) where T : IEquatable<T>?
     {
         return
             DistinguishableEquals(x, y) ??
