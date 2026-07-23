@@ -44,7 +44,8 @@ public static partial class MemoryEqualityComparer
     /// <returns>A new equality comparer for contiguous regions of memory with elements of type <typeparamref name="T"/>.</returns>
     public static MemoryEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer)
     {
-        if (Empty.Nullify(elementComparer) is null)
+        elementComparer = Empty.Nullify(elementComparer);
+        if (elementComparer is null)
         {
             return
                 Type.GetTypeCode(typeof(T)) switch
@@ -65,7 +66,6 @@ public static partial class MemoryEqualityComparer
         }
         else
         {
-            Debug.Assert(elementComparer != null);
             return new CustomMemoryComparer<T>(elementComparer);
         }
     }

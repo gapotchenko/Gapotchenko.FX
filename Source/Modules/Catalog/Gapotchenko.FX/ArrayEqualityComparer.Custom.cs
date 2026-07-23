@@ -4,7 +4,7 @@ namespace Gapotchenko.FX;
 
 partial class ArrayEqualityComparer
 {
-    sealed class DefaultArrayComparer<T>(IEqualityComparer<T>? elementComparer) : ArrayEqualityComparer<T>
+    sealed class CustomArrayComparer<T>(IEqualityComparer<T>? elementComparer) : ArrayEqualityComparer<T>
     {
         public override bool Equals(T[]? x, T[]? y)
         {
@@ -23,7 +23,7 @@ partial class ArrayEqualityComparer
             return HashOperations.GetHashCode(obj, elementComparer);
         }
 
-        public override bool Equals(object? obj) => obj is DefaultArrayComparer<T>;
+        public override bool Equals(object? obj) => obj is CustomArrayComparer<T>;
 
         public override int GetHashCode() => GetType().Name.GetHashCode();
     }

@@ -150,6 +150,6 @@ public static partial class ArrayEqualityComparer
             }
         }
 
-        return new DefaultArrayComparer<T>(elementComparer);
+        return new CustomArrayComparer<T>(elementComparer);
     }
 }
