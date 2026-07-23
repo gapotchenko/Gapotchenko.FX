@@ -13,16 +13,10 @@ public static class TypeTraits<T>
         var type = typeof(T);
 
         IsValueType = type.IsValueType;
-        IsPrimitive = type.IsPrimitive;
     }
 
     /// <summary>
     /// Gets a value indicating whether <typeparamref name="T"/> type is a value type.
     /// </summary>
     public static readonly bool IsValueType;
-
-    /// <summary>
-    /// Gets a value indicating whether <typeparamref name="T"/> type is primitive.
-    /// </summary>
-    public static bool IsPrimitive { get; }
 }
