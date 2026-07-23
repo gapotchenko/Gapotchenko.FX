@@ -23,6 +23,10 @@ namespace Gapotchenko.FX.Reflection;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public abstract class _CompatibleAssemblyAutoLoader
 {
+    private protected _CompatibleAssemblyAutoLoader()
+    {
+    }
+
     /// <inheritdoc cref="AssemblyAutoLoader.AddAssembly(Assembly)"/>
     [Obsolete("Use AssemblyAutoLoader.Default.AddAssembly instead.", true)]
     [EditorBrowsable(EditorBrowsableState.Never)]

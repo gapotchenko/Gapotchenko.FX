@@ -26,11 +26,11 @@ namespace Gapotchenko.FX.Reflection;
 /// </summary>
 #pragma warning disable CS3009 // Base type is not CLS-compliant
 public class AssemblyAutoLoader :
-#pragma warning restore CS3009
+#pragma warning restore CS3009 // Base type is not CLS-compliant
 #if BINARY_COMPATIBILITY
 #pragma warning disable CS0618 // Type or member is obsolete
     _CompatibleAssemblyAutoLoader,
-#pragma warning restore CS0618
+#pragma warning restore CS0618 // Type or member is obsolete
 #endif
     IDisposable
 {
