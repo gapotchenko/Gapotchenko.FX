@@ -121,35 +121,63 @@ public static partial class ArrayEqualityComparer
     /// <returns>The equality comparer for one-dimensional array with elements of type <typeparamref name="T"/>.</returns>
     public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer)
     {
-        if (Empty.Nullify(elementComparer) is null)
+        elementComparer = Empty.Nullify(elementComparer);
+        if (elementComparer is null)
         {
-            switch (Type.GetTypeCode(typeof(T)))
-            {
-                case TypeCode.Byte:
-                    return (ArrayEqualityComparer<T>)(object)ByteArrayComparer.Instance;
-                case TypeCode.SByte:
-                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<sbyte>.Instance;
-                case TypeCode.Int16:
-                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<short>.Instance;
-                case TypeCode.UInt16:
-                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<ushort>.Instance;
-                case TypeCode.Int32:
-                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<int>.Instance;
-                case TypeCode.UInt32:
-                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<uint>.Instance;
-                case TypeCode.Int64:
-                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<long>.Instance;
-                case TypeCode.UInt64:
-                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<ulong>.Instance;
-                case TypeCode.Boolean:
-                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<bool>.Instance;
-                case TypeCode.Char:
-                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<char>.Instance;
-                case TypeCode.Decimal:
-                    return (ArrayEqualityComparer<T>)(object)StructArrayComparer<decimal>.Instance;
-            }
+            return
+                Type.GetTypeCode(typeof(T)) switch
+                {
+                    TypeCode.Byte => (ArrayEqualityComparer<T>)(object)ByteArrayComparer.Instance,
+                    TypeCode.SByte => (ArrayEqualityComparer<T>)(object)StructArrayComparer<sbyte>.Instance,
+                    TypeCode.Int16 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<short>.Instance,
+                    TypeCode.UInt16 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<ushort>.Instance,
+                    TypeCode.Int32 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<int>.Instance,
+                    TypeCode.UInt32 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<uint>.Instance,
+                    TypeCode.Int64 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<long>.Instance,
+                    TypeCode.UInt64 => (ArrayEqualityComparer<T>)(object)StructArrayComparer<ulong>.Instance,
+                    TypeCode.Boolean => (ArrayEqualityComparer<T>)(object)StructArrayComparer<bool>.Instance,
+                    TypeCode.Char => (ArrayEqualityComparer<T>)(object)StructArrayComparer<char>.Instance,
+                    TypeCode.Decimal => (ArrayEqualityComparer<T>)(object)StructArrayComparer<decimal>.Instance,
+                    _ => DefaultArrayComparer<T>.Instance,
+                };
+        }
+        else
+        {
+            return new CustomArrayComparer<T>(elementComparer);
+        }
+    }
+
+    static bool EqualsCore<T>(T[]? x, T[]? y, IEqualityComparer<T>? comparer = null)
+    {
+        if (x == y)
+            return true;
+        if (x is null || y is null)
+            return false;
+
+#if NET
+        return x.SequenceEqual(y, comparer);
+#else
+        if (x.Length != y.Length)
+            return false;
+
+        comparer ??= EqualityComparer<T>.Default;
+        for (int i = 0; i < x.Length; i++)
+        {
+            if (!comparer.Equals(x[i], y[i]))
+                return false;
         }
 
-        return new CustomArrayComparer<T>(elementComparer);
+        return true;
+#endif
+    }
+
+    static bool EqualsCore<T>(T[]? x, T[]? y) where T : IEquatable<T>
+    {
+        if (x == y)
+            return true;
+        if (x is null || y is null)
+            return false;
+
+        return x.SequenceEqual(y);
     }
 }

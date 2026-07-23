@@ -11,17 +11,17 @@ namespace Gapotchenko.FX.Memory;
 
 partial class MemoryEqualityComparer
 {
-    abstract class DefaultMemoryComparerBase<T> : MemoryEqualityComparer<T>
-    {
-        public sealed override bool Equals(ReadOnlyMemory<T> x, ReadOnlyMemory<T> y) => x.Span.SequenceEqual(y.Span);
-    }
-
-    sealed class DefaultMemoryComparer<T> : DefaultMemoryComparerBase<T>
+    sealed class DefaultMemoryComparer<T> : MemoryEqualityComparer<T>
     {
         public static DefaultMemoryComparer<T> Instance = new();
 
         DefaultMemoryComparer()
         {
+        }
+
+        public override bool Equals(ReadOnlyMemory<T> x, ReadOnlyMemory<T> y)
+        {
+            return x.Span.SequenceEqual(y.Span);
         }
 
         public override int GetHashCode(ReadOnlyMemory<T> obj)

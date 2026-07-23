@@ -5,22 +5,12 @@ namespace Gapotchenko.FX;
 
 partial class ArrayEqualityComparer
 {
-    sealed class ByteArrayComparer : ArrayEqualityComparer<byte>
+    sealed class ByteArrayComparer : EquatableArrayComparer<byte>
     {
         public static ByteArrayComparer Instance = new();
 
         ByteArrayComparer()
         {
-        }
-
-        public override bool Equals(byte[]? x, byte[]? y)
-        {
-            if (x == y)
-                return true;
-            if (x is null || y is null)
-                return false;
-
-            return x.SequenceEqual(y);
         }
 
         public override int GetHashCode(byte[] obj)
@@ -35,23 +25,13 @@ partial class ArrayEqualityComparer
         public override int GetHashCode() => GetType().Name.GetHashCode();
     }
 
-    sealed class StructArrayComparer<T> : ArrayEqualityComparer<T>
-        where T : struct
+    sealed class StructArrayComparer<T> : EquatableArrayComparer<T>
+        where T : struct, IEquatable<T>
     {
         public static StructArrayComparer<T> Instance = new();
 
         StructArrayComparer()
         {
-        }
-
-        public override bool Equals(T[]? x, T[]? y)
-        {
-            if (x == y)
-                return true;
-            if (x is null || y is null)
-                return false;
-
-            return x.SequenceEqual(y);
         }
 
         public override int GetHashCode(T[] obj)
@@ -64,5 +44,14 @@ partial class ArrayEqualityComparer
         public override bool Equals(object? obj) => obj is StructArrayComparer<T>;
 
         public override int GetHashCode() => GetType().Name.GetHashCode();
+    }
+
+    abstract class EquatableArrayComparer<T> : ArrayEqualityComparer<T>
+        where T : IEquatable<T>
+    {
+        public sealed override bool Equals(T[]? x, T[]? y)
+        {
+            return EqualsCore(x, y);
+        }
     }
 }

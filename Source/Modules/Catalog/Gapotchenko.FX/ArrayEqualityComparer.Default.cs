@@ -4,21 +4,27 @@ namespace Gapotchenko.FX;
 
 partial class ArrayEqualityComparer
 {
-    sealed class CustomArrayComparer<T>(IEqualityComparer<T> elementComparer) : ArrayEqualityComparer<T>
+    sealed class DefaultArrayComparer<T> : ArrayEqualityComparer<T>
     {
+        public static DefaultArrayComparer<T> Instance = new();
+
+        DefaultArrayComparer()
+        {
+        }
+
         public override bool Equals(T[]? x, T[]? y)
         {
-            return EqualsCore(x, y, elementComparer);
+            return EqualsCore(x, y);
         }
 
         public override int GetHashCode(T[] obj)
         {
             ArgumentNullException.ThrowIfNull(obj);
 
-            return HashOperations.GetHashCode(obj, elementComparer);
+            return HashOperations.GetHashCode(obj);
         }
 
-        public override bool Equals(object? obj) => obj is CustomArrayComparer<T>;
+        public override bool Equals(object? obj) => obj is DefaultArrayComparer<T>;
 
         public override int GetHashCode() => GetType().Name.GetHashCode();
     }
