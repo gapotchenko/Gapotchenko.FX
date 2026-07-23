@@ -18,7 +18,7 @@ public static class TypeTraits<T>
         IsBitwiseEquatable =
             isValueType &&
             (type.IsEnum ||
-            type.IsPrimitive && Type.GetTypeCode(type) is not (TypeCode.Single or TypeCode.Double or TypeCode.Decimal) ||
+            type.IsPrimitive && Type.GetTypeCode(type) is not (TypeCode.Single or TypeCode.Double) ||
             type == typeof(Guid));
     }
 
