@@ -5,8 +5,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2020
 
-using Gapotchenko.FX.Runtime.InteropServices;
-
 namespace Gapotchenko.FX.Memory;
 
 partial class MemoryEqualityComparer
@@ -21,12 +19,12 @@ partial class MemoryEqualityComparer
 
         public override bool Equals(ReadOnlyMemory<T> x, ReadOnlyMemory<T> y)
         {
-            return x.Span.SequenceEqual(y.Span);
+            return EqualsCore(x, y);
         }
 
         public override int GetHashCode(ReadOnlyMemory<T> obj)
         {
-            return HashOperations.GetHashCode(obj.Span);
+            return GetHashCodeCore(obj);
         }
 
         public override bool Equals(object? obj) => obj is DefaultMemoryComparer<T>;

@@ -5,9 +5,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2020
 
-using Gapotchenko.FX.Runtime.InteropServices;
-using System.Runtime.InteropServices;
-
 namespace Gapotchenko.FX.Memory;
 
 partial class MemoryEqualityComparer
@@ -22,7 +19,7 @@ partial class MemoryEqualityComparer
 
         public override int GetHashCode(ReadOnlyMemory<byte> obj)
         {
-            return HashOperations.GetHashCode(obj.Span);
+            return GetHashCodeCore(obj);
         }
 
         public override bool Equals(object? obj) => obj is ByteMemoryComparer;
@@ -41,7 +38,7 @@ partial class MemoryEqualityComparer
 
         public override int GetHashCode(ReadOnlyMemory<T> obj)
         {
-            return HashOperations.GetHashCode(MemoryMarshal.AsBytes(obj.Span));
+            return GetBlittableStructHashCodeCore(obj);
         }
 
         public override bool Equals(object? obj) => obj is StructMemoryComparer<T>;
@@ -54,7 +51,7 @@ partial class MemoryEqualityComparer
     {
         public sealed override bool Equals(ReadOnlyMemory<T> x, ReadOnlyMemory<T> y)
         {
-            return System.MemoryExtensions.SequenceEqual(x.Span, y.Span);
+            return EqualsCore(x, y);
         }
     }
 }
