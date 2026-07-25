@@ -58,7 +58,7 @@ public static class HashOperations
             if (CodeSafetyStrategy.UnsafeCodeAllowed && TypeTraits<T>.IsBitwiseEquatable)
             {
                 // Process blittable types using an accelerated path.
-                return GetBitwiseHashCodeCore(source);
+                return GetBitwiseHashCode(source);
             }
             else
             {
@@ -68,7 +68,7 @@ public static class HashOperations
                     int hashCode = i?.GetHashCode() ?? 0;
                     hash = (hash ^ (uint)hashCode) * 16777619;
                 }
-                return (int)hash;
+                return (int)hash ^ m_Seed;
             }
         }
         else
@@ -79,11 +79,11 @@ public static class HashOperations
                 int hashCode = i is null ? 0 : comparer.GetHashCode(i);
                 hash = (hash ^ (uint)hashCode) * 16777619;
             }
-            return (int)hash;
+            return (int)hash ^ m_Seed;
         }
     }
 
-    static unsafe int GetBitwiseHashCodeCore<T>(ReadOnlySpan<T> source)
+    static unsafe int GetBitwiseHashCode<T>(ReadOnlySpan<T> source)
     {
         int byteLength = checked(source.Length * Unsafe.SizeOf<T>());
 
@@ -109,12 +109,17 @@ public static class HashOperations
         // On 32-bit processes, XXHash32 is faster for short inputs.
         // Benchmarks show the crossover with XXHash3 at approximately 384 bytes.
         if (IntPtr.Size >= 8 || source.Length >= 384)
-            return (int)XxHash3.HashToUInt64(source);
+            return (int)XxHash3.HashToUInt64(source, m_Seed);
         else
-            return (int)XxHash32.HashToUInt32(source);
+            return (int)XxHash32.HashToUInt32(source, m_Seed);
 #else
         // On .NET Framework, XXHash3 is the fastest hash function according to benchmarks.
-        return (int)XxHash3.HashToUInt64(source);
+        return (int)XxHash3.HashToUInt64(source, m_Seed);
 #endif
     }
+
+    /// <summary>
+    /// A process-local seed to ensure that different process runs produce different results.
+    /// </summary>
+    static readonly int m_Seed = HashCode.Combine(0x7eb74921);
 }
