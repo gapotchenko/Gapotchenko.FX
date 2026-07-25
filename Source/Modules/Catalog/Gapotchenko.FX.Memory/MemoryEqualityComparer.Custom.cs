@@ -13,16 +13,28 @@ partial class MemoryEqualityComparer
     {
         public override bool Equals(ReadOnlyMemory<T> x, ReadOnlyMemory<T> y)
         {
-            return EqualsCore(x, y, elementComparer);
+            return EqualsCore(x, y, m_ElementComparer);
         }
 
         public override int GetHashCode(ReadOnlyMemory<T> obj)
         {
-            return GetHashCodeCore(obj, elementComparer);
+            return GetHashCodeCore(obj, m_ElementComparer);
         }
 
-        public override bool Equals(object? obj) => obj is CustomMemoryComparer<T>;
+        public override bool Equals(object? obj)
+        {
+            return
+                obj is CustomMemoryComparer<T> other &&
+                m_ElementComparer.Equals(other.m_ElementComparer);
+        }
 
-        public override int GetHashCode() => GetType().Name.GetHashCode();
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(
+                0x1d2f8650,
+                m_ElementComparer.GetHashCode());
+        }
+
+        readonly IEqualityComparer<T> m_ElementComparer = elementComparer;
     }
 }

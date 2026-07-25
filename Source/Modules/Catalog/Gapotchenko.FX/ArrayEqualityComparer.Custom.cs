@@ -8,18 +8,30 @@ partial class ArrayEqualityComparer
     {
         public override bool Equals(T[]? x, T[]? y)
         {
-            return EqualsCore(x, y, elementComparer);
+            return EqualsCore(x, y, m_ElementComparer);
         }
 
         public override int GetHashCode(T[] obj)
         {
             ArgumentNullException.ThrowIfNull(obj);
 
-            return HashOperations.GetHashCode(obj, elementComparer);
+            return HashOperations.GetHashCode(obj, m_ElementComparer);
         }
 
-        public override bool Equals(object? obj) => obj is CustomArrayComparer<T>;
+        public override bool Equals(object? obj)
+        {
+            return
+                obj is CustomArrayComparer<T> other &&
+                m_ElementComparer.Equals(other.m_ElementComparer);
+        }
 
-        public override int GetHashCode() => GetType().Name.GetHashCode();
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(
+                0x593ab91c,
+                m_ElementComparer.GetHashCode());
+        }
+
+        readonly IEqualityComparer<T> m_ElementComparer = elementComparer;
     }
 }
