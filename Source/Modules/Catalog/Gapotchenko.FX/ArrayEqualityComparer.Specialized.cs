@@ -7,7 +7,7 @@ partial class ArrayEqualityComparer
 {
     sealed class ByteArrayComparer : EquatableArrayComparer<byte>
     {
-        public static ByteArrayComparer Instance = new();
+        public static ByteArrayComparer Instance { get; } = new();
 
         ByteArrayComparer()
         {
@@ -28,7 +28,7 @@ partial class ArrayEqualityComparer
     sealed class BitwiseArrayComparer<T> : EquatableArrayComparer<T>
         where T : struct, IEquatable<T>
     {
-        public static BitwiseArrayComparer<T> Instance = new();
+        public static BitwiseArrayComparer<T> Instance { get; } = new();
 
         BitwiseArrayComparer()
         {

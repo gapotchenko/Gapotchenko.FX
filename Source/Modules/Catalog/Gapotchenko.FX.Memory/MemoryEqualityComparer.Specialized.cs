@@ -11,7 +11,7 @@ partial class MemoryEqualityComparer
 {
     sealed class ByteMemoryComparer : EquatableMemoryComparer<byte>
     {
-        public static ByteMemoryComparer Instance = new();
+        public static ByteMemoryComparer Instance { get; } = new();
 
         ByteMemoryComparer()
         {
@@ -30,7 +30,7 @@ partial class MemoryEqualityComparer
     sealed class BitwiseMemoryComparer<T> : EquatableMemoryComparer<T>
         where T : struct, IEquatable<T>
     {
-        public static BitwiseMemoryComparer<T> Instance = new();
+        public static BitwiseMemoryComparer<T> Instance { get; } = new();
 
         BitwiseMemoryComparer()
         {

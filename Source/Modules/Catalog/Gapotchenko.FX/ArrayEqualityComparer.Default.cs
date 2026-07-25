@@ -6,7 +6,7 @@ partial class ArrayEqualityComparer
 {
     sealed class DefaultArrayComparer<T> : ArrayEqualityComparer<T>
     {
-        public static DefaultArrayComparer<T> Instance = new();
+        public static DefaultArrayComparer<T> Instance { get; } = new();
 
         DefaultArrayComparer()
         {

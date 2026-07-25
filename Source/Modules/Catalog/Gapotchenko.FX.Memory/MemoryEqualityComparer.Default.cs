@@ -11,7 +11,7 @@ partial class MemoryEqualityComparer
 {
     sealed class DefaultMemoryComparer<T> : MemoryEqualityComparer<T>
     {
-        public static DefaultMemoryComparer<T> Instance = new();
+        public static DefaultMemoryComparer<T> Instance { get; } = new();
 
         DefaultMemoryComparer()
         {
