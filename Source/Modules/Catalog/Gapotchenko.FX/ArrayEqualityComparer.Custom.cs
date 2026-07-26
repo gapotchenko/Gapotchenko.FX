@@ -34,9 +34,7 @@ partial class ArrayEqualityComparer
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(
-                0x593ab91c,
-                m_ElementComparer.GetHashCode());
+            return HashCode.Combine(0x593ab91c, m_ElementComparer.GetHashCode());
         }
 
         readonly IEqualityComparer<T> m_ElementComparer = elementComparer;
