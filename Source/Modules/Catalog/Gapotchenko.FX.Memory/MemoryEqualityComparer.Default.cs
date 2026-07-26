@@ -29,6 +29,6 @@ partial class MemoryEqualityComparer
 
         public override bool Equals(object? obj) => obj is DefaultMemoryComparer<T>;
 
-        public override int GetHashCode() => GetType().Name.GetHashCode();
+        public override int GetHashCode() => HashCode.Combine(0x85c7fae6, typeof(T).GetHashCode());
     }
 }

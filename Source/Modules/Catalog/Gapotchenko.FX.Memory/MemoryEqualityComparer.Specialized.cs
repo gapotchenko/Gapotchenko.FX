@@ -24,7 +24,7 @@ partial class MemoryEqualityComparer
 
         public override bool Equals(object? obj) => obj is ByteMemoryComparer;
 
-        public override int GetHashCode() => GetType().Name.GetHashCode();
+        public override int GetHashCode() => HashCode.Combine(0xa6f8af60);
     }
 
     sealed class BitwiseMemoryComparer<T> : EquatableMemoryComparer<T>
@@ -43,7 +43,7 @@ partial class MemoryEqualityComparer
 
         public override bool Equals(object? obj) => obj is BitwiseMemoryComparer<T>;
 
-        public override int GetHashCode() => GetType().Name.GetHashCode();
+        public override int GetHashCode() => HashCode.Combine(0x3863f10f, typeof(T).GetHashCode());
     }
 
     abstract class EquatableMemoryComparer<T> : MemoryEqualityComparer<T>

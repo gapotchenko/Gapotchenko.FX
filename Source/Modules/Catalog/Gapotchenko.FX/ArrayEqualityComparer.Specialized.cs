@@ -22,7 +22,7 @@ partial class ArrayEqualityComparer
 
         public override bool Equals(object? obj) => obj is ByteArrayComparer;
 
-        public override int GetHashCode() => GetType().Name.GetHashCode();
+        public override int GetHashCode() => HashCode.Combine(0xf0b6b327);
     }
 
     sealed class BitwiseArrayComparer<T> : EquatableArrayComparer<T>
@@ -43,7 +43,7 @@ partial class ArrayEqualityComparer
 
         public override bool Equals(object? obj) => obj is BitwiseArrayComparer<T>;
 
-        public override int GetHashCode() => GetType().Name.GetHashCode();
+        public override int GetHashCode() => HashCode.Combine(0x4e282909, typeof(T).GetHashCode());
     }
 
     abstract class EquatableArrayComparer<T> : ArrayEqualityComparer<T>

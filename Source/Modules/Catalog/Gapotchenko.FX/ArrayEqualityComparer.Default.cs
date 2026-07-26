@@ -26,6 +26,6 @@ partial class ArrayEqualityComparer
 
         public override bool Equals(object? obj) => obj is DefaultArrayComparer<T>;
 
-        public override int GetHashCode() => GetType().Name.GetHashCode();
+        public override int GetHashCode() => HashCode.Combine(0xbba6c00f, typeof(T).GetHashCode());
     }
 }
