@@ -1,4 +1,11 @@
-﻿#pragma warning disable CA1000 // Do not declare static members on generic types
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2019
+
+#pragma warning disable CA1000 // Do not declare static members on generic types
 
 namespace Gapotchenko.FX;
 
