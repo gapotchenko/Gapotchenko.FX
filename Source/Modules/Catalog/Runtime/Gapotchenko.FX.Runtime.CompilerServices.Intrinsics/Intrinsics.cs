@@ -171,6 +171,9 @@ public static class Intrinsics
                 case Architecture.X64:
                     return new Pal.OS.Linux.AdapterLinuxX64();
 
+                case Architecture.Arm64:
+                    return new Pal.OS.Linux.AdapterLinuxArm64();
+
                 default:
                     LogUnsupportedArchitecture(architecture, "Linux");
                     break;

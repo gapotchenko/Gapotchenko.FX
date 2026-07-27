@@ -25,4 +25,7 @@ static unsafe class NativeMethods
 
     [DllImport("libc", SetLastError = true, ExactSpelling = true)]
     public static extern int mprotect(void* address, nuint length, MemoryProtection protection);
+
+    [DllImport("libgcc_s.so.1", EntryPoint = "__clear_cache", ExactSpelling = true)]
+    public static extern void ClearInstructionCache(void* begin, void* end);
 }

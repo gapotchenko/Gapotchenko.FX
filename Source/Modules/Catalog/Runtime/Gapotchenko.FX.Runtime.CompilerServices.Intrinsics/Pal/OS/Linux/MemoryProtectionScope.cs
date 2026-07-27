@@ -49,6 +49,14 @@ readonly unsafe struct MemoryProtectionScope : IDisposable
         _ = NativeMethods.mprotect(m_Address, m_Size, m_OldProtection);
     }
 
+    /// <summary>
+    /// Makes the newly written instructions visible to the processor.
+    /// </summary>
+    public void FlushInstructions()
+    {
+        NativeMethods.ClearInstructionCache(m_Address, (byte*)m_Address + m_Size);
+    }
+
     readonly void* m_Address;
     readonly nuint m_Size;
     readonly NativeMethods.MemoryProtection m_OldProtection;
