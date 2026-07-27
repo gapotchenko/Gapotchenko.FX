@@ -17,10 +17,9 @@ readonly unsafe struct VirtualProtectionScope : IDisposable
 {
     public static VirtualProtectionScope Create<T>(Span<T> span, NativeMethods.PageProtect protect)
     {
-        return new(
-            Unsafe.AsPointer(ref MemoryMarshal.GetReference(span)),
-            (nuint)span.Length,
-            protect);
+        void* address = Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
+        nuint size = checked((nuint)span.Length * (nuint)Unsafe.SizeOf<T>());
+        return new(address, size, protect);
     }
 
     VirtualProtectionScope(void* address, nuint size, NativeMethods.PageProtect protect)
@@ -35,7 +34,7 @@ readonly unsafe struct VirtualProtectionScope : IDisposable
     public void Dispose()
     {
         // Restore the original memory protection at the end of the scope.
-        NativeMethods.VirtualProtect(m_Address, m_Size, m_OldProtect, out _);
+        _ = NativeMethods.VirtualProtect(m_Address, m_Size, m_OldProtect, out _);
     }
 
     /// <summary>
