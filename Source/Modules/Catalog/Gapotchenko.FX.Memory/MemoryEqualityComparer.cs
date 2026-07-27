@@ -142,13 +142,18 @@ public abstract partial class MemoryEqualityComparer :
     /// <summary>
     /// Creates a new equality comparer for contiguous regions of memory with a specified comparer for memory elements.
     /// </summary>
-    /// <typeparam name="T">The type of memory elements.</typeparam>
-    /// <param name="elementComparer">The equality comparer for memory elements.</param>
-    /// <returns>A new equality comparer for contiguous regions of memory with elements of type <typeparamref name="T"/>.</returns>
-    public static MemoryEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer)
+    /// <typeparam name="T">The type of elements in contiguous regions of memory.</typeparam>
+    /// <param name="comparer">
+    /// The <see cref="IEqualityComparer{T}"/> implementation to use when computing hash codes for elements,
+    /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> for the type of an element.
+    /// </param>
+    /// <returns>
+    /// A new equality comparer for contiguous regions of memory with elements of type <typeparamref name="T"/>.
+    /// </returns>
+    public static MemoryEqualityComparer<T> Create<T>(IEqualityComparer<T>? comparer)
     {
-        elementComparer = Empty.Nullify(elementComparer);
-        if (elementComparer is null)
+        comparer = Empty.Nullify(comparer);
+        if (comparer is null)
         {
             return
                 Type.GetTypeCode(typeof(T)) switch
@@ -168,7 +173,7 @@ public abstract partial class MemoryEqualityComparer :
         }
         else
         {
-            return new CustomMemoryComparer<T>(elementComparer);
+            return new CustomMemoryComparer<T>(comparer);
         }
     }
 }

@@ -211,13 +211,18 @@ public static partial class ArrayEqualityComparer
     /// <summary>
     /// Retrieves an equality comparer for one-dimensional array with a specified comparer for elements.
     /// </summary>
-    /// <typeparam name="T">The type of array elements.</typeparam>
-    /// <param name="elementComparer">The equality comparer for array elements.</param>
-    /// <returns>The equality comparer for one-dimensional array with elements of type <typeparamref name="T"/>.</returns>
-    public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T>? elementComparer)
+    /// <typeparam name="T">The type of elements in the array.</typeparam>
+    /// <param name="comparer">
+    /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing elements,
+    /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> for the type of an element.
+    /// </param>
+    /// <returns>
+    /// The equality comparer for one-dimensional array with elements of type <typeparamref name="T"/>.
+    /// </returns>
+    public static ArrayEqualityComparer<T> Create<T>(IEqualityComparer<T>? comparer)
     {
-        elementComparer = Empty.Nullify(elementComparer);
-        if (elementComparer is null)
+        comparer = Empty.Nullify(comparer);
+        if (comparer is null)
         {
             return
                 Type.GetTypeCode(typeof(T)) switch
@@ -237,7 +242,7 @@ public static partial class ArrayEqualityComparer
         }
         else
         {
-            return new CustomArrayComparer<T>(elementComparer);
+            return new CustomArrayComparer<T>(comparer);
         }
     }
 }
