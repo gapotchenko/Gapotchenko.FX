@@ -36,17 +36,17 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         if ((code.Length & (sizeof(uint) - 1)) != 0)
             return PatchResult.InvalidAlignment;
 
-        var methodInstructions = GetMethodInstructions(method);
-        if (!IsSupportedPrologue(methodInstructions))
+        var instructions = GetMethodInstructions(method);
+        if (!IsSupportedPrologue(instructions))
             return PatchResult.UnexpectedPrologue;
 
-        var patchInstructions = MemoryMarshal.Cast<byte, uint>(code);
+        var patchCode = MemoryMarshal.Cast<byte, uint>(code);
 
-        int patchSize = patchInstructions.Length + 1 /* RET */;
-        if (patchSize > methodInstructions.Length)
+        int patchSize = patchCode.Length + 1 /* RET */;
+        if (patchSize > instructions.Length)
             return PatchResult.NoSpace;
 
-        methodInstructions = methodInstructions[..patchSize];
+        instructions = instructions[..patchSize];
 
 #if TFF_CER
         // Ensure that code changes are atomic by using the constrained execution region.
@@ -58,13 +58,13 @@ sealed class AdapterWindowsArm64 : AdapterArm64
 #endif
         {
             // Temporarily allow memory modification in order to apply the intrinsic code.
-            using var scope = VirtualProtectionScope.Create(methodInstructions, NativeMethods.PageProtect.ExecuteReadWrite);
+            using var scope = VirtualProtectionScope.Create(instructions, NativeMethods.PageProtect.ExecuteReadWrite);
 
             // Put the intrinsic code.
-            patchInstructions.CopyTo(methodInstructions);
+            patchCode.CopyTo(instructions);
 
             // End the method with a RET instruction.
-            methodInstructions[patchInstructions.Length] = 0xd65f03c0;
+            instructions[patchCode.Length] = 0xd65f03c0;
 
             scope.FlushInstructions();
         }

@@ -21,17 +21,15 @@ sealed class AdapterWindowsX64 : AdapterX64
 {
     public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
-        var methodInstructions = GetMethodInstructions(method);
-        if (!Util.HasPrologue(methodInstructions, m_SupportedPrologues))
+        var instructions = GetMethodInstructions(method);
+        if (!Util.HasPrologue(instructions, m_SupportedPrologues))
             return PatchResult.UnexpectedPrologue;
 
-        var patchInstructions = code;
-
-        int patchSize = patchInstructions.Length + 1 /* RET */;
-        if (patchSize > methodInstructions.Length)
+        int patchSize = code.Length + 1 /* RET */;
+        if (patchSize > instructions.Length)
             return PatchResult.NoSpace;
 
-        methodInstructions = methodInstructions[..patchSize];
+        instructions = instructions[..patchSize];
 
 #if TFF_CER
         // Ensure that code changes are atomic by using the constrained execution region.
@@ -43,13 +41,13 @@ sealed class AdapterWindowsX64 : AdapterX64
 #endif
         {
             // Temporarily allow memory modification in order to apply the intrinsic code.
-            using var scope = VirtualProtectionScope.Create(methodInstructions, NativeMethods.PageProtect.ExecuteReadWrite);
+            using var scope = VirtualProtectionScope.Create(instructions, NativeMethods.PageProtect.ExecuteReadWrite);
 
             // Put the intrinsic code.
-            patchInstructions.CopyTo(methodInstructions);
+            code.CopyTo(instructions);
 
             // End the method with a RET instruction.
-            methodInstructions[code.Length] = 0xc3;
+            instructions[code.Length] = 0xc3;
 
             scope.FlushInstructions();
         }
