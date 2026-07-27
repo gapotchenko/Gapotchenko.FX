@@ -54,7 +54,7 @@ partial class ArrayEqualityComparer
     }
 
     abstract class EquatableArrayComparer<T> : ArrayEqualityComparer<T>
-        where T : IEquatable<T>
+        where T : IEquatable<T>?
     {
         public sealed override bool Equals(T[]? x, T[]? y)
         {

@@ -6,6 +6,7 @@
 // Year of introduction: 2019
 
 using Gapotchenko.FX.Properties;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX;
 
@@ -14,25 +15,62 @@ namespace Gapotchenko.FX;
 /// </summary>
 public static partial class ArrayEqualityComparer
 {
-    /// <summary>
-    /// Determines whether the specified arrays are equal.
-    /// </summary>
-    /// <typeparam name="T">The array element type.</typeparam>
-    /// <param name="x">The first array to compare.</param>
-    /// <param name="y">The second array to compare.</param>
-    /// <returns><see langword="true"/> if the specified arrays are equal; otherwise, <see langword="false"/>.</returns>
-    public static bool Equals<T>(T[]? x, T[]? y) => ArrayEqualityComparer<T>.Default.Equals(x, y);
+    #region Equals
 
     /// <summary>
-    /// Returns a hash code for the specified array.
+    /// Determines whether two arrays are equal
+    /// by comparing the elements using <see cref="IEqualityComparer{T}"/>.
     /// </summary>
-    /// <typeparam name="T">The array element type.</typeparam>
-    /// <param name="array">The array.</param>
-    /// <returns>A hash code for the specified array.</returns>
-    public static int GetHashCode<T>(T[]? array) =>
-        array is null ?
-            0 :
-            ArrayEqualityComparer<T>.Default.GetHashCode(array);
+    /// <typeparam name="T">The type of elements in the arrays.</typeparam>
+    /// <param name="x">The first array to compare.</param>
+    /// <param name="y">The second array to compare.</param>
+    /// <param name="comparer">
+    /// The <see cref="IEqualityComparer{T}"/> implementation to use when comparing elements,
+    /// or <see langword="null"/> to use the default <see cref="IEqualityComparer{T}"/> for the type of an element.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if the two arrays are equal;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool Equals<T>(T[]? x, T[]? y, IEqualityComparer<T>? comparer = null)
+    {
+        if (comparer is null)
+        {
+            // This path provides accelerated comparison to cover the cases
+            // that would be normally covered by "Equals<T>(T[]? x, T[]? y) where T : IEquatable<T>?"
+            // overload.
+            return ArrayEqualityComparer<T>.Default.Equals(x, y);
+        }
+        else
+        {
+            return EqualsCore(x, y, comparer);
+        }
+    }
+
+    /// <summary>
+    /// Determines whether two arrays are equal.
+    /// </summary>
+    /// <typeparam name="T">The type of elements in the arrays.</typeparam>
+    /// <param name="x">The first array to compare.</param>
+    /// <param name="y">The second array to compare.</param>
+    /// <returns>
+    /// <see langword="true"/> if the two arrays are equal; 
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+#if BINARY_COMPATIBILITY // 2026
+    // Ideally, this method should have been introduced with T : IEquatable<T>? constraint from the get go.
+    // It cannot be changed now as it would break the binary API which was in use during 2019-2026.
+    // Deprioritizing the method in favor of a more common overload for now
+    // so that the API might have a chance to be revisited in the future.
+    [OverloadResolutionPriority(-10)]
+#endif
+    public static bool Equals<T>(T[]? x, T[]? y)
+#if !BINARY_COMPATIBILITY // 2026
+        where T : IEquatable<T>?
+#endif
+    {
+        return ArrayEqualityComparer<T>.Default.Equals(x, y);
+    }
 
     /// <summary>
     /// Determines whether the specified arrays are equal.
@@ -49,10 +87,10 @@ public static partial class ArrayEqualityComparer
         var arrayX = x as Array;
         var arrayY = y as Array;
 
-        if (arrayX == null && arrayY == null)
+        if (arrayX is null && arrayY is null)
             throw new ArgumentException(Resources.Argument_InvalidComparison);
 
-        if (arrayX == null || arrayY == null)
+        if (arrayX is null || arrayY is null)
             return false;
 
         if (arrayX.Rank != 1 && arrayY.Rank != 1)
@@ -117,8 +155,58 @@ public static partial class ArrayEqualityComparer
 
         return true;
 
-        static bool TypedEquals<T>(T[] x, object y) => Equals(x, y as T[]);
+        static bool TypedEquals<T>(T[] x, object y) => EqualsCore(x, y as T[]);
     }
+
+    static bool EqualsCore<T>(T[]? x, T[]? y, IEqualityComparer<T>? comparer = null)
+    {
+        if (x == y)
+            return true;
+        if (x is null || y is null)
+            return false;
+
+#if NET
+        return x.SequenceEqual(y, comparer);
+#else
+        if (x.Length != y.Length)
+            return false;
+
+        comparer ??= EqualityComparer<T>.Default;
+        for (int i = 0; i < x.Length; i++)
+        {
+            if (!comparer.Equals(x[i], y[i]))
+                return false;
+        }
+
+        return true;
+#endif
+    }
+
+    static bool EqualsCore<T>(T[]? x, T[]? y) where T : IEquatable<T>?
+    {
+        if (x == y)
+            return true;
+        if (x is null || y is null)
+            return false;
+
+        return x.SequenceEqual(y);
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Returns a hash code for the specified array.
+    /// </summary>
+    /// <typeparam name="T">The array element type.</typeparam>
+    /// <param name="array">The array.</param>
+    /// <returns>A hash code for the specified array.</returns>
+    public static int GetHashCode<T>(T[]? array)
+    {
+        return array is null ?
+            0 :
+            ArrayEqualityComparer<T>.Default.GetHashCode(array);
+    }
+
 
     /// <summary>
     /// Retrieves an equality comparer for one-dimensional array with a specified comparer for elements.
@@ -151,39 +239,5 @@ public static partial class ArrayEqualityComparer
         {
             return new CustomArrayComparer<T>(elementComparer);
         }
-    }
-
-    static bool EqualsCore<T>(T[]? x, T[]? y, IEqualityComparer<T>? comparer = null)
-    {
-        if (x == y)
-            return true;
-        if (x is null || y is null)
-            return false;
-
-#if NET
-        return x.SequenceEqual(y, comparer);
-#else
-        if (x.Length != y.Length)
-            return false;
-
-        comparer ??= EqualityComparer<T>.Default;
-        for (int i = 0; i < x.Length; i++)
-        {
-            if (!comparer.Equals(x[i], y[i]))
-                return false;
-        }
-
-        return true;
-#endif
-    }
-
-    static bool EqualsCore<T>(T[]? x, T[]? y) where T : IEquatable<T>
-    {
-        if (x == y)
-            return true;
-        if (x is null || y is null)
-            return false;
-
-        return x.SequenceEqual(y);
     }
 }
