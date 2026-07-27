@@ -69,7 +69,7 @@ public static class BitOperations
         AdditionalArchitectures = [Architecture.X64],
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
         SupportedOSPlatforms = ["windows"],
-        Priority = -10)]         // LZCNT is faster than BSR on AMD processors
+        Priority = 10)]         // LZCNT is faster than BSR on AMD processors
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x00, 0x32,   // ORR W0,W0,#1
@@ -104,7 +104,7 @@ public static class BitOperations
         0x48, 0x83, 0xf0, 0x3f,        // XOR RAX,63
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
         SupportedOSPlatforms = ["windows"],
-        Priority = -10)]               // LZCNT is faster than BSR on AMD processors
+        Priority = 10)]               // LZCNT is faster than BSR on AMD processors
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x40, 0xb2,   // ORR X0,X0,#1

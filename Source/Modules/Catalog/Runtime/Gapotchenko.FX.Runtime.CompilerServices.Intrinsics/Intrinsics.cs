@@ -44,7 +44,7 @@ public static class Intrinsics
             var intrinsicAttribute =
                 method.GetCustomAttributes<MachineCodeIntrinsicAttribute>(false)
                 .Where(x => x.Architecture == arch || x.AdditionalArchitectures.Contains(arch))
-                .OrderBy(x => x.Priority)
+                .OrderByDescending(x => x.Priority)
                 .FirstOrDefault(x =>
                     x.RequiredFeatures.All(IsFeatureSupported) &&
                     (x.SupportedOSPlatforms is [] || x.SupportedOSPlatforms.Any(IsOSPlatform)));
