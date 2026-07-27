@@ -52,6 +52,14 @@ public sealed class MachineCodeIntrinsicAttribute : Attribute
     public MachineCodeIntrinsicFeature[] RequiredFeatures { get; init; } = [];
 
     /// <summary>
+    /// Gets or initializes the platforms or operating systems supported by the machine code.
+    /// </summary>
+    /// <remarks>
+    /// An empty array (default) indicates that the machine code supports all platforms and operating systems.
+    /// </remarks>
+    public string[] SupportedOSPlatforms { get; init; } = [];
+
+    /// <summary>
     /// Gets or initializes the intrinsic priority.
     /// </summary>
     /// <remarks>

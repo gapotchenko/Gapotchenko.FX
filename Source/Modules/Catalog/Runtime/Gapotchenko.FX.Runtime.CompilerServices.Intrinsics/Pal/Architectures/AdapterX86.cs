@@ -72,7 +72,8 @@ abstract class AdapterX86 : Adapter
             0x89, 0x4e, 0x08,        // MOV [ESI+8], ECX
             0x89, 0x56, 0x0c,        // MOV [ESI+12], EDX
             0x5e,                    // POP ESI
-            0x5b)]                   // POP EBX
+            0x5b,                    // POP EBX
+            SupportedOSPlatforms = ["windows"])]
         [MachineCodeIntrinsic(
             Architecture.X64,
             0x53,                    // PUSH RBX
@@ -84,7 +85,8 @@ abstract class AdapterX86 : Adapter
             0x41, 0x89, 0x59, 0x04,  // MOV [R9+4], EBX
             0x41, 0x89, 0x49, 0x08,  // MOV [R9+8], ECX
             0x41, 0x89, 0x51, 0x0c,  // MOV [R9+12], EDX
-            0x5b)]                   // POP RBX
+            0x5b,                    // POP RBX
+            SupportedOSPlatforms = ["windows"])]
         [MethodImpl(MethodImplOptions.NoInlining)]
         static unsafe void CallCpuid(int* cpuInfo, int functionId, int subFunctionId)
         {

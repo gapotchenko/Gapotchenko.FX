@@ -59,7 +59,8 @@ public static class BitOperations
         // Log2(1) is 0, and setting the LSB for values > 1 does not change the log2 result.
         0x83, 0xc9, 0x01,  // OR ECX,1
         0x0f, 0xbd, 0xc1,  // BSR EAX,ECX
-        AdditionalArchitectures = [Architecture.X64])]
+        AdditionalArchitectures = [Architecture.X64],
+        SupportedOSPlatforms = ["windows"])]
     [MachineCodeIntrinsic(
         Architecture.X86,
         0x83, 0xc9, 0x01,        // OR ECX,1
@@ -67,12 +68,14 @@ public static class BitOperations
         0x83, 0xf0, 0x1f,        // XOR EAX,31
         AdditionalArchitectures = [Architecture.X64],
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["windows"],
         Priority = -10)]         // LZCNT is faster than BSR on AMD processors
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x00, 0x32,   // ORR W0,W0,#1
         0x00, 0x10, 0xc0, 0x5a,   // CLZ W0,W0
-        0x00, 0x10, 0x00, 0x52)]  // EOR W0,W0,#31
+        0x00, 0x10, 0x00, 0x52,   // EOR W0,W0,#31
+        SupportedOSPlatforms = ["windows"])]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Log2(uint value)
     {
@@ -92,19 +95,22 @@ public static class BitOperations
     [MachineCodeIntrinsic(
         Architecture.X64,
         0x48, 0x83, 0xc9, 0x01,   // OR RCX,1
-        0x48, 0x0f, 0xbd, 0xc1)]  // BSR RAX,RCX
+        0x48, 0x0f, 0xbd, 0xc1,   // BSR RAX,RCX
+        SupportedOSPlatforms = ["windows"])]
     [MachineCodeIntrinsic(
         Architecture.X64,
         0x48, 0x83, 0xc9, 0x01,        // OR RCX,1
         0xf3, 0x48, 0x0f, 0xbd, 0xc1,  // LZCNT RAX,RCX
         0x48, 0x83, 0xf0, 0x3f,        // XOR RAX,63
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["windows"],
         Priority = -10)]               // LZCNT is faster than BSR on AMD processors
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x40, 0xb2,   // ORR X0,X0,#1
         0x00, 0x10, 0xc0, 0xda,   // CLZ X0,X0
-        0x00, 0x14, 0x40, 0xd2)]  // EOR X0,X0,#63
+        0x00, 0x14, 0x40, 0xd2,   // EOR X0,X0,#63
+        SupportedOSPlatforms = ["windows"])]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Log2(ulong value)
     {
@@ -125,10 +131,12 @@ public static class BitOperations
         Architecture.X86,
         0xf3, 0x0f, 0xbd, 0xc1,  // LZCNT EAX,ECX
         AdditionalArchitectures = [Architecture.X64],
-        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt])]
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["windows"])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
-        0x00, 0x10, 0xc0, 0x5a)]  // CLZ W0,W0
+        0x00, 0x10, 0xc0, 0x5a,  // CLZ W0,W0
+        SupportedOSPlatforms = ["windows"])]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int LeadingZeroCount(uint value)
     {
@@ -144,10 +152,12 @@ public static class BitOperations
     [MachineCodeIntrinsic(
         Architecture.X64,
         0xf3, 0x48, 0x0f, 0xbd, 0xc1,  // LZCNT RAX,RCX
-        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt])]
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["windows"])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
-        0x00, 0x10, 0xc0, 0xda)]  // CLZ X0,X0
+        0x00, 0x10, 0xc0, 0xda,  // CLZ X0,X0
+        SupportedOSPlatforms = ["windows"])]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int LeadingZeroCount(ulong value)
     {
@@ -164,14 +174,16 @@ public static class BitOperations
         Architecture.X86,
         0xf3, 0x0f, 0xb8, 0xc1,  // POPCNT EAX,ECX
         AdditionalArchitectures = [Architecture.X64],
-        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt])]
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt],
+        SupportedOSPlatforms = ["windows"])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x27, 0x1e,   // FMOV S0,W0
         0x00, 0x58, 0x20, 0x0e,   // CNT V0.8B,V0.8B
         0x00, 0xb8, 0x31, 0x0e,   // ADDV B0,V0.8B
         0x00, 0x3c, 0x01, 0x0e,   // UMOV W0,V0.B[0]
-        RequiredFeatures = [MachineCodeIntrinsicFeature.AdvSimd])]
+        RequiredFeatures = [MachineCodeIntrinsicFeature.AdvSimd],
+        SupportedOSPlatforms = ["windows"])]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int PopCount(uint value)
     {
@@ -196,18 +208,21 @@ public static class BitOperations
         0xf3, 0x0f, 0xb8, 0x4c, 0x24, 0x08,  // POPCNT ECX,[ESP+8]
         0x03, 0xc1,                          // ADD EAX,ECX
         0xc2, 0x08, 0x00,                    // RET 8
-        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt])]
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt],
+        SupportedOSPlatforms = ["windows"])]
     [MachineCodeIntrinsic(
         Architecture.X64,
         0xf3, 0x48, 0x0f, 0xb8, 0xc1,  // POPCNT RAX,RCX
-        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt])]
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt],
+        SupportedOSPlatforms = ["windows"])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x67, 0x9e,   // FMOV D0,X0
         0x00, 0x58, 0x20, 0x0e,   // CNT V0.8B,V0.8B
         0x00, 0xb8, 0x31, 0x0e,   // ADDV B0,V0.8B
         0x00, 0x3c, 0x01, 0x0e,   // UMOV W0,V0.B[0]
-        RequiredFeatures = [MachineCodeIntrinsicFeature.AdvSimd])]
+        RequiredFeatures = [MachineCodeIntrinsicFeature.AdvSimd],
+        SupportedOSPlatforms = ["windows"])]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int PopCount(ulong value)
     {

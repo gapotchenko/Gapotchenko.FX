@@ -25,7 +25,8 @@ static class HWAcceleration
         Architecture.X86,
         0x83, 0xc9, 0x01,  // OR ECX,1
         0x0f, 0xbd, 0xc1,  // BSR EAX,ECX
-        AdditionalArchitectures = [Architecture.X64])]
+        AdditionalArchitectures = [Architecture.X64],
+        SupportedOSPlatforms = ["windows"])]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Log2_Intrinsic(uint value)
     {

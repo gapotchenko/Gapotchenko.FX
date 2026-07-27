@@ -45,7 +45,9 @@ public static class Intrinsics
                 method.GetCustomAttributes<MachineCodeIntrinsicAttribute>(false)
                 .Where(x => x.Architecture == arch || x.AdditionalArchitectures.Contains(arch))
                 .OrderBy(x => x.Priority)
-                .FirstOrDefault(x => x.RequiredFeatures.All(IsFeatureSupported));
+                .FirstOrDefault(x =>
+                    x.RequiredFeatures.All(IsFeatureSupported) &&
+                    (x.SupportedOSPlatforms is [] || x.SupportedOSPlatforms.Any(IsOSPlatform)));
 
             if (intrinsicAttribute is null)
                 continue;
@@ -105,6 +107,11 @@ public static class Intrinsics
     }
 
     static bool m_GiveUpOnPatching;
+
+    static bool IsOSPlatform(string osPlatform)
+    {
+        return RuntimeInformation.IsOSPlatform(OSPlatform.Create(osPlatform));
+    }
 
     /// <summary>
     /// Determines whether a specified machine-code intrinsic feature is available to the current process.
