@@ -16,11 +16,6 @@ public static partial class SpanEqualityComparer
 {
     #region Equals
 
-    /// <inheritdoc/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("SpanEqualityComparer.Equals(object, object) method cannot be used. Use SpanEqualityComparer.Equals<T>(ReadOnlySpan<T>, ReadOnlySpan<T>) method instead.", true)]
-    public static new bool Equals(object? objA, object? objB) => throw new NotSupportedException();
-
     /// <summary>
     /// Determines whether two spans are equal
     /// by comparing the elements using <see cref="IEqualityComparer{T}"/>.
@@ -71,6 +66,11 @@ public static partial class SpanEqualityComparer
 
         return null;
     }
+
+    /// <inheritdoc/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("SpanEqualityComparer.Equals(object, object) method cannot be used. Use SpanEqualityComparer.Equals<T>(ReadOnlySpan<T>, ReadOnlySpan<T>) method instead.", true)]
+    public static new bool Equals(object? objA, object? objB) => throw new NotSupportedException();
 
     #endregion
 

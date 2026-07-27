@@ -24,11 +24,6 @@ public abstract partial class MemoryEqualityComparer :
 
     #region Equals
 
-    /// <inheritdoc/>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("MemoryEqualityComparer.Equals(object, object) method cannot be used. Use MemoryEqualityComparer.Equals<T>(ReadOnlyMemory<T>, ReadOnlyMemory<T>) method instead.", true)]
-    public static new bool Equals(object? objA, object? objB) => throw new NotSupportedException();
-
     /// <summary>
     /// Determines whether two memory regions are equal
     /// by comparing the elements using <see cref="IEqualityComparer{T}"/>.
@@ -65,18 +60,18 @@ public abstract partial class MemoryEqualityComparer :
         return EqualsCore(x, y);
     }
 
-    static bool EqualsCore<T>(in ReadOnlyMemory<T> x, in ReadOnlyMemory<T> y) where T : IEquatable<T>?
-    {
-        return
-            DistinguishableEquals(x, y) ??
-            SpanEqualityComparer.Equals(x.Span, y.Span);
-    }
-
     static bool EqualsCore<T>(in ReadOnlyMemory<T> x, in ReadOnlyMemory<T> y, IEqualityComparer<T>? comparer = null)
     {
         return
             DistinguishableEquals(x, y) ??
             SpanEqualityComparer.Equals(x.Span, y.Span, comparer);
+    }
+
+    static bool EqualsCore<T>(in ReadOnlyMemory<T> x, in ReadOnlyMemory<T> y) where T : IEquatable<T>?
+    {
+        return
+            DistinguishableEquals(x, y) ??
+            SpanEqualityComparer.Equals(x.Span, y.Span);
     }
 
     static bool? DistinguishableEquals<T>(in ReadOnlyMemory<T> x, in ReadOnlyMemory<T> y)
@@ -96,6 +91,11 @@ public abstract partial class MemoryEqualityComparer :
         // Inconclusive.
         return null;
     }
+
+    /// <inheritdoc/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("MemoryEqualityComparer.Equals(object, object) method cannot be used. Use MemoryEqualityComparer.Equals<T>(ReadOnlyMemory<T>, ReadOnlyMemory<T>) method instead.", true)]
+    public static new bool Equals(object? objA, object? objB) => throw new NotSupportedException();
 
     #endregion
 
