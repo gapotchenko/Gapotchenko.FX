@@ -143,8 +143,8 @@ public static class Intrinsics
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            var arch = RuntimeInformation.ProcessArchitecture;
-            switch (arch)
+            var architecture = RuntimeInformation.ProcessArchitecture;
+            switch (architecture)
             {
                 case Architecture.X86:
                     return new Pal.OS.Windows.AdapterWindowsX86();
@@ -156,7 +156,23 @@ public static class Intrinsics
                     return new Pal.OS.Windows.AdapterWindowsArm64();
 
                 default:
-                    Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901004, "Intrinsic compiler does not support {0} architecture for {1} host platform.", arch, "Windows");
+                    LogUnsupportedArchitecture(architecture, "Windows");
+                    break;
+            }
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            var architecture = RuntimeInformation.ProcessArchitecture;
+            switch (architecture)
+            {
+                case Architecture.X86:
+                    return new Pal.OS.Linux.AdapterLinuxX86();
+
+                case Architecture.X64:
+                    return new Pal.OS.Linux.AdapterLinuxX64();
+
+                default:
+                    LogUnsupportedArchitecture(architecture, "Linux");
                     break;
             }
         }
@@ -166,5 +182,15 @@ public static class Intrinsics
         }
 
         return null;
+    }
+
+    static void LogUnsupportedArchitecture(Architecture architecture, string platform)
+    {
+        Log.TraceSource.TraceEvent(
+            TraceEventType.Verbose,
+            1932901004,
+            "Intrinsic compiler does not support {0} architecture for {1} host platform.",
+            architecture,
+            platform);
     }
 }

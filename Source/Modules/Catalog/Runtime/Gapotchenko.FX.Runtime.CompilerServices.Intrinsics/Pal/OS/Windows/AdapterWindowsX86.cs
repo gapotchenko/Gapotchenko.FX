@@ -22,7 +22,7 @@ sealed class AdapterWindowsX86 : AdapterX86
     public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
         var methodInstructions = GetMethodInstructions(method);
-        if (!IsSupportedPrologue(methodInstructions))
+        if (!Util.HasPrologue(methodInstructions, m_SupportedPrologues))
             return PatchResult.UnexpectedPrologue;
 
         var patchInstructions = code;
@@ -55,16 +55,6 @@ sealed class AdapterWindowsX86 : AdapterX86
         }
 
         return PatchResult.Success;
-    }
-
-    static bool IsSupportedPrologue(ReadOnlySpan<byte> instructions)
-    {
-        foreach (byte[] prologue in m_SupportedPrologues)
-        {
-            if (instructions.StartsWith(prologue))
-                return true;
-        }
-        return false;
     }
 
     static readonly byte[][] m_SupportedPrologues =
