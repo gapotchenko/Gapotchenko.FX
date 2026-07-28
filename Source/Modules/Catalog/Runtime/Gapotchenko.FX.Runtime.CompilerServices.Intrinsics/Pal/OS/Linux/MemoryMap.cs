@@ -16,7 +16,7 @@ static unsafe class MemoryMap
 {
     public static bool TryGetRegion(void* address, out Region region)
     {
-        ulong value = (ulong)(nuint)address;
+        nuint value = (nuint)address;
 
         foreach (string line in File.ReadLines("/proc/self/maps"))
         {
@@ -25,8 +25,9 @@ static unsafe class MemoryMap
             if (rangeSeparator < 0 || rangeEnd < 0 || rangeSeparator >= rangeEnd)
                 continue;
 
-            if (!ulong.TryParse(line[..rangeSeparator], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ulong start) ||
-                !ulong.TryParse(line[(rangeSeparator + 1)..rangeEnd], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ulong end))
+            var s = line.AsSpan();
+            if (!TryParseAddress(s[..rangeSeparator], out nuint start) ||
+                !TryParseAddress(s[(rangeSeparator + 1)..rangeEnd], out nuint end))
             {
                 continue;
             }
@@ -46,12 +47,40 @@ static unsafe class MemoryMap
             if (line[permissionsStart + 2] == 'x')
                 protection |= NativeMethods.MemoryProtection.Execute;
 
-            region = new((byte*)(nuint)start, (byte*)(nuint)end, protection);
+            region = new((byte*)start, (byte*)end, protection);
             return true;
         }
 
         region = default;
         return false;
+    }
+
+    static bool TryParseAddress(ReadOnlySpan<char> s, out nuint result)
+    {
+        const NumberStyles style = NumberStyles.HexNumber;
+        var provider = CultureInfo.InvariantCulture;
+#if NET
+        return nuint.TryParse(s, style, provider, out result);
+#else
+        if (ulong.TryParse(s.ToString(), style, provider, out ulong value))
+        {
+            try
+            {
+                result = checked((nuint)value);
+            }
+            catch (OverflowException)
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+        else
+        {
+            result = default;
+            return false;
+        }
+#endif
     }
 
     public readonly struct Region(byte* start, byte* end, NativeMethods.MemoryProtection protection)

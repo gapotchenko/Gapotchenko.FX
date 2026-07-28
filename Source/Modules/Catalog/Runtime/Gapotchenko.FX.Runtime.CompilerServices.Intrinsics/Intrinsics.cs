@@ -110,7 +110,17 @@ public static class Intrinsics
 
     static bool IsOSPlatform(string osPlatform)
     {
-        return RuntimeInformation.IsOSPlatform(OSPlatform.Create(osPlatform));
+        OSPlatform platform;
+        if (string.Equals(osPlatform, "windows", StringComparison.OrdinalIgnoreCase))
+            platform = OSPlatform.Windows;
+        else if (string.Equals(osPlatform, "linux", StringComparison.OrdinalIgnoreCase))
+            platform = OSPlatform.Linux;
+        else if (string.Equals(osPlatform, "macos", StringComparison.OrdinalIgnoreCase))
+            platform = OSPlatform.OSX;
+        else
+            platform = OSPlatform.Create(osPlatform);
+
+        return RuntimeInformation.IsOSPlatform(platform);
     }
 
     /// <summary>

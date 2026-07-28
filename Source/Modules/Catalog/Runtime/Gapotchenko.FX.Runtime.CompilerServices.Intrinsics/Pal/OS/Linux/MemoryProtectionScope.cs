@@ -25,12 +25,12 @@ readonly unsafe struct MemoryProtectionScope : IDisposable
     MemoryProtectionScope(void* address, nuint size, NativeMethods.MemoryProtection protection)
     {
         if (!MemoryMap.TryGetRegion(address, out var region))
-            throw new InvalidOperationException("Cannot determine the memory region containing the method instructions.");
+            throw new InvalidOperationException("Cannot determine the memory region containing the memory scope.");
 
         nuint start = (nuint)address;
         nuint end = checked(start + size);
         if (end > (nuint)region.End)
-            throw new InvalidOperationException("The method patch crosses a memory-region boundary.");
+            throw new InvalidOperationException("The memory scope crosses a memory-region boundary.");
 
         nuint pageSize = (nuint)Environment.SystemPageSize;
         nuint pageStart = start / pageSize * pageSize;
