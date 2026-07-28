@@ -59,6 +59,7 @@ abstract class AdapterX86 : Adapter
             return (cpuInfo[0], cpuInfo[1], cpuInfo[2], cpuInfo[3]);
         }
 
+        // x86
         [MachineCodeIntrinsic(
             Architecture.X86,
             0x53,                    // PUSH EBX
@@ -75,19 +76,6 @@ abstract class AdapterX86 : Adapter
             0x5b,                    // POP EBX
             SupportedOSPlatforms = ["windows"])]
         [MachineCodeIntrinsic(
-            Architecture.X64,
-            0x53,                    // PUSH RBX
-            0x49, 0x89, 0xc9,        // MOV R9, RCX
-            0x89, 0xd0,              // MOV EAX, EDX
-            0x44, 0x89, 0xc1,        // MOV ECX, R8D
-            0x0f, 0xa2,              // CPUID
-            0x41, 0x89, 0x01,        // MOV [R9], EAX
-            0x41, 0x89, 0x59, 0x04,  // MOV [R9+4], EBX
-            0x41, 0x89, 0x49, 0x08,  // MOV [R9+8], ECX
-            0x41, 0x89, 0x51, 0x0c,  // MOV [R9+12], EDX
-            0x5b,                    // POP RBX
-            SupportedOSPlatforms = ["windows"])]
-        [MachineCodeIntrinsic(
             Architecture.X86,
             0x53,                    // PUSH EBX
             0x56,                    // PUSH ESI
@@ -102,6 +90,20 @@ abstract class AdapterX86 : Adapter
             0x5e,                    // POP ESI
             0x5b,                    // POP EBX
             SupportedOSPlatforms = ["linux"])]
+        // x64
+        [MachineCodeIntrinsic(
+            Architecture.X64,
+            0x53,                    // PUSH RBX
+            0x49, 0x89, 0xc9,        // MOV R9, RCX
+            0x89, 0xd0,              // MOV EAX, EDX
+            0x44, 0x89, 0xc1,        // MOV ECX, R8D
+            0x0f, 0xa2,              // CPUID
+            0x41, 0x89, 0x01,        // MOV [R9], EAX
+            0x41, 0x89, 0x59, 0x04,  // MOV [R9+4], EBX
+            0x41, 0x89, 0x49, 0x08,  // MOV [R9+8], ECX
+            0x41, 0x89, 0x51, 0x0c,  // MOV [R9+12], EDX
+            0x5b,                    // POP RBX
+            SupportedOSPlatforms = ["windows"])]
         [MachineCodeIntrinsic(
             Architecture.X64,
             0x53,                    // PUSH RBX

@@ -108,19 +108,19 @@ public static class Intrinsics
 
     static bool m_GiveUpOnPatching;
 
-    static bool IsOSPlatform(string osPlatform)
+    static bool IsOSPlatform(string platform)
     {
-        OSPlatform platform;
-        if (string.Equals(osPlatform, "windows", StringComparison.OrdinalIgnoreCase))
-            platform = OSPlatform.Windows;
-        else if (string.Equals(osPlatform, "linux", StringComparison.OrdinalIgnoreCase))
-            platform = OSPlatform.Linux;
-        else if (string.Equals(osPlatform, "macos", StringComparison.OrdinalIgnoreCase))
-            platform = OSPlatform.OSX;
+        OSPlatform osPlatform;
+        if (string.Equals(platform, "windows", StringComparison.OrdinalIgnoreCase))
+            osPlatform = OSPlatform.Windows;
+        else if (string.Equals(platform, "linux", StringComparison.OrdinalIgnoreCase))
+            osPlatform = OSPlatform.Linux;
+        else if (string.Equals(platform, "macos", StringComparison.OrdinalIgnoreCase))
+            osPlatform = OSPlatform.OSX;
         else
-            platform = OSPlatform.Create(osPlatform);
+            osPlatform = OSPlatform.Create(platform);
 
-        return RuntimeInformation.IsOSPlatform(platform);
+        return RuntimeInformation.IsOSPlatform(osPlatform);
     }
 
     /// <summary>
