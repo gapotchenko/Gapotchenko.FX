@@ -192,6 +192,19 @@ public static class Intrinsics
                     break;
             }
         }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            var architecture = RuntimeInformation.ProcessArchitecture;
+            switch (architecture)
+            {
+                case Architecture.Arm64:
+                    return new Pal.OS.MacOS.AdapterMacOSArm64();
+
+                default:
+                    LogUnsupportedArchitecture(architecture, "macOS");
+                    break;
+            }
+        }
         else
         {
             Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901005, "Intrinsic compiler does not support the current host platform '{0}'.", RuntimeInformation.OSDescription);
