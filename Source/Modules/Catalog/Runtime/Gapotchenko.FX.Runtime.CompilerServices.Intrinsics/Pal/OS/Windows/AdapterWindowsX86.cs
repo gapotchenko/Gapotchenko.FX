@@ -49,7 +49,7 @@ sealed class AdapterWindowsX86 : AdapterX86
             patchInstructions.CopyTo(methodInstructions);
 
             // End the method with a RET instruction.
-            methodInstructions[code.Length] = 0xc3;
+            methodInstructions[code.Length] = RET;
 
             scope.FlushInstructions();
         }

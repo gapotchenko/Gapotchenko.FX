@@ -155,4 +155,6 @@ abstract class AdapterX86 : Adapter
             }
         }
     }
+
+    protected const byte RET = 0xc3;
 }
