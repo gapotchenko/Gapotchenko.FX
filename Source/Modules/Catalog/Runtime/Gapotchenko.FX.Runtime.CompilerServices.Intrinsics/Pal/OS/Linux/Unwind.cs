@@ -14,7 +14,7 @@ static class Unwind
 {
     public static unsafe Span<byte> GetMethodInstructions(byte* p)
     {
-        if (!MemoryMap.TryGetRegion(p, out var region) ||
+        if (MemoryMap.TryGetRegion(p) is not { } region ||
             (region.Protection & NativeMethods.MemoryProtection.Execute) == 0)
         {
             return [];

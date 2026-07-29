@@ -14,7 +14,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 #endif
 static unsafe class MemoryMap
 {
-    public static bool TryGetRegion(void* address, out Region region)
+    public static Region? TryGetRegion(void* address)
     {
         nuint value = (nuint)address;
 
@@ -47,12 +47,10 @@ static unsafe class MemoryMap
             if (line[permissionsStart + 2] == 'x')
                 protection |= NativeMethods.MemoryProtection.Execute;
 
-            region = new((byte*)start, (byte*)end, protection);
-            return true;
+            return new Region((byte*)start, (byte*)end, protection);
         }
 
-        region = default;
-        return false;
+        return null;
     }
 
     static bool TryParseAddress(ReadOnlySpan<char> s, out nuint result)

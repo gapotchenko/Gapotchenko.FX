@@ -50,7 +50,7 @@ sealed class AdapterLinuxArm64 : AdapterArm64
             patchCode.CopyTo(instructions);
 
             // End the method with a RET instruction.
-            instructions[patchCode.Length] = 0xd65f03c0; // RET
+            instructions[patchCode.Length] = RET;
 
             scope.FlushInstructions();
         }

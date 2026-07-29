@@ -24,7 +24,7 @@ readonly unsafe struct MemoryProtectionScope : IDisposable
 
     MemoryProtectionScope(void* address, nuint size, NativeMethods.MemoryProtection protection)
     {
-        if (!MemoryMap.TryGetRegion(address, out var region))
+        if (MemoryMap.TryGetRegion(address) is not { } region)
             throw new InvalidOperationException("Cannot determine the memory region containing the memory scope.");
 
         nuint start = (nuint)address;
