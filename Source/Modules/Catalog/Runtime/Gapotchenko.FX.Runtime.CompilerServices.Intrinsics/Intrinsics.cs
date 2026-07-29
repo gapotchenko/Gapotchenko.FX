@@ -175,6 +175,9 @@ public static class Intrinsics
             var architecture = RuntimeInformation.ProcessArchitecture;
             switch (architecture)
             {
+                case Architecture.Arm:
+                    return new Pal.OS.Linux.AdapterLinuxArm32();
+
                 case Architecture.X86:
                     return new Pal.OS.Linux.AdapterLinuxX86();
 
