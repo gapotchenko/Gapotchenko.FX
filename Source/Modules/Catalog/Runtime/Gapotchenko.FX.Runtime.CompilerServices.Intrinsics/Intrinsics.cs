@@ -197,6 +197,9 @@ public static class Intrinsics
             var architecture = RuntimeInformation.ProcessArchitecture;
             switch (architecture)
             {
+                case Architecture.X64:
+                    return new Pal.OS.MacOS.AdapterMacOSX64();
+
                 case Architecture.Arm64:
                     return new Pal.OS.MacOS.AdapterMacOSArm64();
 
