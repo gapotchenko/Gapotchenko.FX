@@ -26,7 +26,7 @@ abstract class AdapterArm32 : AdapterArm
             // B label: the signed imm11 operand is measured in two-byte instructions.
             else if ((p[0] & 0xf800) == 0xe000)
             {
-                int displacement = ((int)(p[0] & 0x07ff) << 21 >> 20) + 4;
+                int displacement = ((p[0] & 0x07ff) << 21 >> 20) + 4;
                 p = (ushort*)((byte*)p + displacement);
             }
             else
@@ -35,4 +35,6 @@ abstract class AdapterArm32 : AdapterArm
             }
         }
     }
+
+    protected const ushort BX_LR = 0x4770;
 }

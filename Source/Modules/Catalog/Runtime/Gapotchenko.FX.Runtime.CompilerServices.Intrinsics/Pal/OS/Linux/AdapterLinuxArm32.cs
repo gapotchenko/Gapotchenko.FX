@@ -8,6 +8,7 @@
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 
@@ -26,7 +27,9 @@ sealed class AdapterLinuxArm32 : AdapterArm32
         if (!IsSupportedPrologue(instructions))
             return PatchResult.UnexpectedPrologue;
 
-        int patchSize = code.Length + sizeof(ushort) /* BX LR */;
+        var patchCode = MemoryMarshal.Cast<byte, ushort>(code);
+
+        int patchSize = patchCode.Length + 1 /* BX LR */;
         if (patchSize > instructions.Length)
             return PatchResult.NoSpace;
 
@@ -44,11 +47,10 @@ sealed class AdapterLinuxArm32 : AdapterArm32
             using var scope = MemoryProtectionScope.Create(instructions, NativeMethods.MemoryProtection.Read | NativeMethods.MemoryProtection.Write | NativeMethods.MemoryProtection.Execute);
 
             // Put the intrinsic code.
-            code.CopyTo(instructions);
+            patchCode.CopyTo(instructions);
 
             // End the method with a BX LR instruction.
-            instructions[code.Length] = 0x70;     // BX LR
-            instructions[code.Length + 1] = 0x47;
+            instructions[patchCode.Length] = BX_LR;
 
             scope.FlushInstructions();
         }
@@ -56,22 +58,22 @@ sealed class AdapterLinuxArm32 : AdapterArm32
         return PatchResult.Success;
     }
 
-    static bool IsSupportedPrologue(ReadOnlySpan<byte> instructions)
+    static bool IsSupportedPrologue(ReadOnlySpan<ushort> instructions)
     {
-        if (instructions.Length < sizeof(ushort))
+        if (instructions.Length < 1)
             return false;
 
-        ushort instruction = (ushort)(instructions[0] | instructions[1] << 8);
+        ushort instruction = instructions[0];
         return
             // PUSH {..., LR}
             (instruction & 0xff00) == 0xb500 ||
             // PUSH.W {..., LR}
-            (instruction == 0xe92d && instructions.Length >= 4 && (instructions[3] & 0x40) != 0) ||
+            (instruction == 0xe92d && instructions.Length >= 2 && (instructions[1] & 0x4000) != 0) ||
             // SUB SP, #imm
             (instruction & 0xff80) == 0xb080;
     }
 
-    static unsafe Span<byte> GetMethodInstructions(MethodInfo method)
+    static unsafe Span<ushort> GetMethodInstructions(MethodInfo method)
     {
         RuntimeHelpers.PrepareMethod(method.MethodHandle);
         ushort* p = SkipBranches((ushort*)method.MethodHandle.GetFunctionPointer());
@@ -79,6 +81,7 @@ sealed class AdapterLinuxArm32 : AdapterArm32
         if (((nuint)p & (sizeof(ushort) - 1)) != 0)
             return [];
 
-        return Unwind.GetMethodInstructions((byte*)p);
+        var bytes = Unwind.GetMethodInstructions((byte*)p);
+        return MemoryMarshal.Cast<byte, ushort>(bytes);
     }
 }
