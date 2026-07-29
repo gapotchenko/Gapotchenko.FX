@@ -37,10 +37,15 @@ abstract class AdapterArm64 : Adapter
                 int displacement = (int)(*p << 6) >> 4;
                 p = (uint*)((byte*)p + displacement);
             }
-            // LDR X16, #8; BR X16; <64-bit target address>
-            else if (p[0] == 0x58000050 && p[1] == 0xd61f0200)
+            // LDR Xt, label; BR Xt
+            else if (
+                (p[0] & 0xff000000) == 0x58000000 &&
+                (p[1] & 0xfffffc1f) == 0xd61f0000 &&
+                (p[0] & 0x1f) == ((p[1] >> 5) & 0x1f))
             {
-                p = *(uint**)(p + 2);
+                // Sign-extend the imm19 operand and scale it by four.
+                int displacement = ((int)((p[0] >> 5) & 0x7ffff) << 13 >> 13) << 2;
+                p = *(uint**)((byte*)p + displacement);
             }
             else
             {
