@@ -18,6 +18,17 @@ static unsafe class MemoryMap
     {
         nuint value = (nuint)address;
 
+        foreach (var region in GetRegions())
+        {
+            if (value >= (nuint)region.Start && value < (nuint)region.End)
+                return region;
+        }
+
+        return null;
+    }
+
+    public static IEnumerable<Region> GetRegions()
+    {
         foreach (string line in File.ReadLines("/proc/self/maps"))
         {
             int rangeSeparator = line.IndexOf('-');
@@ -32,12 +43,9 @@ static unsafe class MemoryMap
                 continue;
             }
 
-            if (value < start || value >= end)
-                continue;
-
             int permissionsStart = rangeEnd + 1;
             if (line.Length < permissionsStart + 4)
-                break;
+                continue;
 
             var protection = NativeMethods.MemoryProtection.None;
             if (line[permissionsStart] == 'r')
@@ -47,10 +55,8 @@ static unsafe class MemoryMap
             if (line[permissionsStart + 2] == 'x')
                 protection |= NativeMethods.MemoryProtection.Execute;
 
-            return new Region((byte*)start, (byte*)end, protection);
+            yield return new Region(start, end, protection);
         }
-
-        return null;
     }
 
     static bool TryParseAddress(ReadOnlySpan<char> s, out nuint result)
@@ -81,10 +87,10 @@ static unsafe class MemoryMap
 #endif
     }
 
-    public readonly struct Region(byte* start, byte* end, NativeMethods.MemoryProtection protection)
+    public readonly struct Region(nuint start, nuint end, NativeMethods.MemoryProtection protection)
     {
-        public byte* Start { get; } = start;
-        public byte* End { get; } = end;
+        public byte* Start { get; } = (byte*)start;
+        public byte* End { get; } = (byte*)end;
         public NativeMethods.MemoryProtection Protection { get; } = protection;
     }
 }
