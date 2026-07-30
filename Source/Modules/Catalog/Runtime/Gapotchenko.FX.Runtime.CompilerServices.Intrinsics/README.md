@@ -103,12 +103,14 @@ class BitOperations
         // Log2(1) is 0, and setting the LSB for values > 1 does not change the log2 result.
         0x83, 0xc9, 0x01,  // OR ECX,1
         0x0f, 0xbd, 0xc1,  // BSR EAX,ECX
-        AdditionalArchitectures = [Architecture.X64])]
+        AdditionalArchitectures = [Architecture.X64],
+        SupportedOSPlatforms = ["windows"])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x00, 0x32,   // ORR W0,W0,#1
         0x00, 0x10, 0xc0, 0x5a,   // CLZ W0,W0
-        0x00, 0x10, 0x00, 0x52)]  // EOR W0,W0,#31
+        0x00, 0x10, 0x00, 0x52,   // EOR W0,W0,#31
+        SupportedOSPlatforms = ["windows"])]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Log2_Intrinsic(uint value)
     {
@@ -133,7 +135,8 @@ class BitOperations
 ```
 
 `Log2_Intrinsic` method defines a custom attribute that provides a machine code for `BSR EAX, ECX` instruction.
-Machine code is tied to CPU architecture and this is reflected in the attribute as well.
+Machine code is tied to CPU architecture and calling conventions of an operating system,
+and these requirements are reflected in the attributes as well.
 
 Please note that besides using `MachineCodeIntrinsicAttribute` to define method intrinsic implementations,
 `BitOperations` class **should** use a static constructor to ensure that the corresponding methods are initialized (compiled) before they are called.
