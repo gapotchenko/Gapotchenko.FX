@@ -151,6 +151,22 @@ Here are the execution times of all three implementations benchmarked on a x64 s
 The intrinsic compiler may or may not apply machine code to a method depending on the current app host environment.
 When intrinsic is not applied, the original method implementation is used, thus providing a graceful, albeit less performant, fallback.
 
+## Supported Architectures
+
+The intrinsic compiler supports the following processor architecture and operating system combinations:
+
+| Processor Architecture | Windows | Linux | macOS |
+|------------------------|:-------:|:-----:|:-----:|
+| x86                    | ✓       | ✓     |       |
+| x64                    | ✓       | ✓     | ✓     |
+| ARM                    |         | ✓     |       |
+| ARM64                  | ✓       | ✓     | ✓     |
+
+The table describes intrinsic compiler support for the current process architecture.
+An individual intrinsic is applied only when it provides machine code for that architecture and its other requirements
+such as processor features and operating system constraints are satisfied.
+When a combination or requirement is unsupported, the original managed method implementation remains in use.
+
 ## Native AOT Compatibility
 
 The methods defined using intrinsic machine code are fully compatible with native ahead-of-time compilation provided by .NET.
