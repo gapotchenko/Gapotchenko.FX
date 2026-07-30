@@ -21,20 +21,32 @@ abstract class AdapterArm64 : AdapterArm
                 p = (uint*)((byte*)p + displacement);
             }
             // LDR Xt, label; BR Xt
-            else if (
-                (p[0] & 0xff000000) == 0x58000000 &&
-                (p[1] & 0xfffffc1f) == 0xd61f0000 &&
-                (p[0] & 0x1f) == ((p[1] >> 5) & 0x1f))
+            else if (TryGetIndirectBranchTargetSlot(p, out nuint* targetSlot))
             {
-                // Sign-extend the imm19 operand and scale it by four.
-                int displacement = ((int)((p[0] >> 5) & 0x7ffff) << 13 >> 13) << 2;
-                p = *(uint**)((byte*)p + displacement);
+                p = (uint*)*targetSlot;
             }
             else
             {
                 return p;
             }
         }
+    }
+
+    protected static unsafe bool TryGetIndirectBranchTargetSlot(uint* p, out nuint* targetSlot)
+    {
+        if (
+            (p[0] & 0xff000000) == 0x58000000 &&
+            (p[1] & 0xfffffc1f) == 0xd61f0000 &&
+            (p[0] & 0x1f) == ((p[1] >> 5) & 0x1f))
+        {
+            // Sign-extend the imm19 operand and scale it by four.
+            int displacement = ((int)((p[0] >> 5) & 0x7ffff) << 13 >> 13) << 2;
+            targetSlot = (nuint*)((byte*)p + displacement);
+            return true;
+        }
+
+        targetSlot = null;
+        return false;
     }
 
     protected const uint Ret = 0xd65f03c0;

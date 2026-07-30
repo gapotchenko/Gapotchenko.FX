@@ -23,7 +23,7 @@ sealed class AdapterLinuxArm64 : AdapterArm64
         if ((code.Length & (sizeof(uint) - 1)) != 0)
             return PatchResult.InvalidAlignment;
 
-        var instructions = GetMethodInstructions(method);
+        var instructions = GetMethodInstructions(method, out var entryPoint, out var entryPointTarget);
         int patchablePrologueSize = GetPatchablePrologueSize(instructions);
         if (patchablePrologueSize < 0)
             return PatchResult.UnexpectedPrologue;
@@ -42,7 +42,7 @@ sealed class AdapterLinuxArm64 : AdapterArm64
         finally
 #endif
         {
-            result = ApplyPatch(instructions, patchCode);
+            result = ApplyPatch(instructions, entryPoint, entryPointTarget, patchCode);
         }
         return result;
     }
@@ -59,10 +59,19 @@ sealed class AdapterLinuxArm64 : AdapterArm64
         return supported ? 3 : -1; // Prologue, shortest matching restoration, RET
     }
 
-    static unsafe Span<uint> GetMethodInstructions(MethodInfo method)
+    static unsafe Span<uint> GetMethodInstructions(
+        MethodInfo method,
+        out Span<uint> entryPoint,
+        out Span<nuint> entryPointTarget)
     {
         RuntimeHelpers.PrepareMethod(method.MethodHandle);
-        uint* p = SkipBranches((uint*)method.MethodHandle.GetFunctionPointer());
+        uint* p0 = (uint*)method.MethodHandle.GetFunctionPointer();
+        uint* p = SkipBranches(p0);
+        entryPoint = p0 != p ? new(p0, 1) : [];
+        entryPointTarget =
+            p0 != p && TryGetIndirectBranchTargetSlot(p0, out nuint* targetSlot) ?
+            new(targetSlot, 1) :
+            [];
 
         if (((nuint)p & (sizeof(uint) - 1)) != 0)
             return [];
@@ -71,7 +80,11 @@ sealed class AdapterLinuxArm64 : AdapterArm64
         return MemoryMarshal.Cast<byte, uint>(bytes);
     }
 
-    static unsafe PatchResult ApplyPatch(Span<uint> instructions, ReadOnlySpan<uint> code)
+    static unsafe PatchResult ApplyPatch(
+        Span<uint> instructions,
+        Span<uint> entryPoint,
+        Span<nuint> entryPointTarget,
+        ReadOnlySpan<uint> code)
     {
         int patchSize = checked(code.Length + 1 /* RET */);
 
@@ -79,21 +92,32 @@ sealed class AdapterLinuxArm64 : AdapterArm64
         uint branchDisplacement = 0;
         if (patchSize > instructions.Length)
         {
-            ref uint instruction = ref MemoryMarshal.GetReference(instructions);
-            void* target = Unsafe.AsPointer(ref instruction);
-
-            if (!TrampolineAllocator.TryAllocateNear(
-                target,
-                patchSize,
-                (nuint)BranchMaximumDistance,
-                out trampoline))
+            var redirection = entryPoint.IsEmpty ? instructions[..1] : entryPoint;
+            if (entryPointTarget.IsEmpty)
             {
-                return PatchResult.NoSpace;
-            }
+                ref uint instruction = ref MemoryMarshal.GetReference(instructions);
+                void* target = Unsafe.AsPointer(ref instruction);
 
-            nint offset = Unsafe.ByteOffset(ref instruction, ref MemoryMarshal.GetReference(trampoline));
-            if (!TryEncodeBranch(offset, out branchDisplacement))
-                return PatchResult.NoSpace;
+                if (!TrampolineAllocator.TryAllocateNear(
+                    target,
+                    patchSize,
+                    (nuint)BranchMaximumDistance,
+                    out trampoline))
+                {
+                    return PatchResult.NoSpace;
+                }
+
+                nint offset = Unsafe.ByteOffset(
+                    ref MemoryMarshal.GetReference(redirection),
+                    ref MemoryMarshal.GetReference(trampoline));
+                if (!TryEncodeBranch(offset, out branchDisplacement))
+                    return PatchResult.NoSpace;
+            }
+            else
+            {
+                trampoline = MemoryMarshal.Cast<byte, uint>(
+                    TrampolineAllocator.Allocate(checked(patchSize * sizeof(uint))));
+            }
 
             using (var trampolineScope = MemoryProtectionScope.Create(
                 trampoline,
@@ -104,7 +128,18 @@ sealed class AdapterLinuxArm64 : AdapterArm64
                 trampolineScope.FlushInstructions();
             }
 
-            instructions = instructions[..1];
+            if (entryPointTarget.IsEmpty)
+            {
+                instructions = redirection;
+            }
+            else
+            {
+                using var targetScope = MemoryProtectionScope.Create(
+                    entryPointTarget,
+                    NativeMethods.MemoryProtection.Read | NativeMethods.MemoryProtection.Write | NativeMethods.MemoryProtection.Execute);
+                entryPointTarget[0] = (nuint)Unsafe.AsPointer(ref MemoryMarshal.GetReference(trampoline));
+                return PatchResult.Success;
+            }
         }
         else
         {
