@@ -169,18 +169,4 @@ sealed class AdapterWindowsArm64 : AdapterArm64
 
         return PatchResult.Success;
     }
-
-    static bool TryEncodeBranch(nint offset, out uint displacement)
-    {
-        if ((offset & (sizeof(uint) - 1)) != 0 || offset < -BranchMaximumDistance || offset >= BranchMaximumDistance)
-        {
-            displacement = 0;
-            return false;
-        }
-
-        displacement = (uint)(offset >> 2) & 0x03ffffff;
-        return true;
-    }
-
-    const nint BranchMaximumDistance = 1 << 27;
 }

@@ -33,6 +33,19 @@ static unsafe class NativeMethods
         public uint Type;
     }
 
+    public struct MemoryAddressRequirements
+    {
+        public void* LowestStartingAddress;
+        public void* HighestEndingAddress;
+        public nuint Alignment;
+    }
+
+    public struct MemoryExtendedParameter
+    {
+        public ulong Type;
+        public void* Pointer;
+    }
+
     public enum PageState : uint
     {
         MemCommit = 0x1000
@@ -66,6 +79,16 @@ static unsafe class NativeMethods
 
     [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
     public static extern void* VirtualAlloc(void* lpAddress, nuint dwSize, VirtualAllocationType flAllocationType, PageProtect flProtect);
+
+    [DllImport("KernelBase.dll", SetLastError = true, ExactSpelling = true)]
+    public static extern void* VirtualAlloc2(
+        IntPtr process,
+        void* baseAddress,
+        nuint size,
+        VirtualAllocationType allocationType,
+        PageProtect pageProtection,
+        MemoryExtendedParameter* extendedParameters,
+        uint parameterCount);
 
     [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
     public static extern nuint VirtualQuery(void* lpAddress, out MemoryBasicInformation lpBuffer, nuint dwLength);

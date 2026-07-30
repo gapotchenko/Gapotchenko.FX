@@ -39,4 +39,18 @@ abstract class AdapterArm64 : AdapterArm
 
     protected const uint Ret = 0xd65f03c0;
     protected const uint B = 0x14000000;
+
+    protected static bool TryEncodeBranch(nint offset, out uint displacement)
+    {
+        if ((offset & (sizeof(uint) - 1)) != 0 || offset < -BranchMaximumDistance || offset >= BranchMaximumDistance)
+        {
+            displacement = 0;
+            return false;
+        }
+
+        displacement = (uint)(offset >> 2) & 0x03ffffff;
+        return true;
+    }
+
+    protected const nint BranchMaximumDistance = 1 << 27;
 }

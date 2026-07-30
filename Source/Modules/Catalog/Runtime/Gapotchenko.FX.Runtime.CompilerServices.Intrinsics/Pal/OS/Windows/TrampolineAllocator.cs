@@ -18,6 +18,8 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #endif
 static unsafe class TrampolineAllocator
 {
+    #region Global Allocation
+
     public static Span<T> Allocate<T>(int count) where T : struct
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
@@ -38,54 +40,21 @@ static unsafe class TrampolineAllocator
 
     static Span<byte> AllocateCore(int size)
     {
-        lock (m_SyncRoot)
+        int allocationSize = Align(size);
+        ref var globalBlock = ref m_GlobalBlock;
+
+        lock (m_GlobalLock)
         {
-            int allocationSize = Align(size);
+            if ((nuint)(globalBlock.End - globalBlock.Current) < (nuint)allocationSize)
+                globalBlock = AllocateGlobalBlock(allocationSize);
 
-            if ((nuint)(m_End - m_Current) < (nuint)allocationSize)
-                AllocateBlock(allocationSize);
-
-            byte* p = m_Current;
-            m_Current += allocationSize;
+            byte* p = globalBlock.Allocate(allocationSize);
 
             return new Span<byte>(p, size);
         }
     }
 
-    public static bool TryAllocateNear<T>(void* target, int count, nuint maximumDistance, out Span<T> allocation) where T : struct
-    {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
-
-        int size = checked(count * Unsafe.SizeOf<T>());
-        lock (m_SyncRoot)
-        {
-            int allocationSize = Align(size);
-
-            for (int i = 0; i < m_NearBlocks.Count; ++i)
-            {
-                var block = m_NearBlocks[i];
-                if ((nuint)(block.End - block.Current) >= (nuint)allocationSize &&
-                    IsWithinDistance(target, block.Current, maximumDistance))
-                {
-                    allocation = new(block.Allocate(allocationSize), count);
-                    m_NearBlocks[i] = block;
-                    return true;
-                }
-            }
-
-            if (!TryAllocateBlockNear(target, allocationSize, maximumDistance, out var newBlock))
-            {
-                allocation = [];
-                return false;
-            }
-
-            allocation = new(newBlock.Allocate(allocationSize), count);
-            m_NearBlocks.Add(newBlock);
-            return true;
-        }
-    }
-
-    static void AllocateBlock(int minimumSize)
+    static Block AllocateGlobalBlock(int minimumSize)
     {
         int blockSize = Math.Max(Environment.SystemPageSize, minimumSize);
         void* p = NativeMethods.VirtualAlloc(
@@ -97,61 +66,56 @@ static unsafe class TrampolineAllocator
         if (p == null)
             throw new Win32Exception(Marshal.GetLastWin32Error());
 
-        m_Current = (byte*)p;
-        m_End = m_Current + blockSize;
+        byte* current = (byte*)p;
+        return new Block { Current = current, End = current + blockSize };
     }
 
-    static bool TryAllocateBlockNear(void* target, int minimumSize, nuint maximumDistance, out Block block)
+    static readonly Lock m_GlobalLock = new();
+    static Block m_GlobalBlock;
+
+    #endregion
+
+    #region Proximal Allocation
+
+    public static bool TryAllocateNear<T>(
+        void* target,
+        int count,
+        nuint maximumDistance,
+        out Span<T> allocation)
+        where T : struct
     {
-        const nuint AllocationGranularity = 64 * 1024;
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
-        int blockSize = Math.Max(Environment.SystemPageSize, minimumSize);
-        nuint targetAddress = (nuint)target;
-        nuint minimumAddress = targetAddress > maximumDistance ? targetAddress - maximumDistance : 0;
-        nuint maximumAddress = targetAddress <= NuintMaxValue - maximumDistance ? targetAddress + maximumDistance : NuintMaxValue;
-        nuint origin = targetAddress & ~(AllocationGranularity - 1);
+        int size = Align(checked(count * Unsafe.SizeOf<T>()));
 
-        for (nuint distance = 0; distance <= maximumDistance; distance += AllocationGranularity)
+        var nearBlocks = m_NearBlocks;
+        lock (nearBlocks)
         {
-            if (origin >= distance)
+            for (int i = 0; i < nearBlocks.Count; ++i)
             {
-                nuint candidate = origin - distance;
-                if (candidate >= minimumAddress && TryAllocateBlockAt(candidate, blockSize, out block))
+                var block = nearBlocks[i];
+                if ((nuint)(block.End - block.Current) >= (nuint)size &&
+                    IsWithinDistance(target, block.Current, maximumDistance))
+                {
+                    allocation = new(block.Allocate(size), count);
+                    nearBlocks[i] = block;
                     return true;
+                }
             }
 
-            if (distance != 0 && origin <= NuintMaxValue - distance)
+            if (!TryAllocateNearBlock(target, size, maximumDistance, out var newBlock))
             {
-                nuint candidate = origin + distance;
-                if (candidate <= maximumAddress && TryAllocateBlockAt(candidate, blockSize, out block))
-                    return true;
+                allocation = [];
+                return false;
             }
 
-            if (maximumDistance - distance < AllocationGranularity)
-                break;
+            allocation = new(newBlock.Allocate(size), count);
+            nearBlocks.Add(newBlock);
+            return true;
         }
-
-        block = default;
-        return false;
     }
 
-    static bool TryAllocateBlockAt(nuint address, int blockSize, out Block block)
-    {
-        void* p = NativeMethods.VirtualAlloc(
-            (void*)address,
-            (nuint)blockSize,
-            NativeMethods.VirtualAllocationType.Reserve | NativeMethods.VirtualAllocationType.Commit,
-            NativeMethods.PageProtect.ExecuteRead);
-
-        if (p == null)
-        {
-            block = default;
-            return false;
-        }
-
-        block = new() { Current = (byte*)p, End = (byte*)p + blockSize };
-        return true;
-    }
+    static readonly List<Block> m_NearBlocks = [];
 
     static bool IsWithinDistance(void* x, void* y, nuint maximumDistance)
     {
@@ -160,13 +124,61 @@ static unsafe class TrampolineAllocator
         return a >= b ? a - b <= maximumDistance : b - a <= maximumDistance;
     }
 
+    static bool TryAllocateNearBlock(void* target, int minimumSize, nuint maximumDistance, out Block block)
+    {
+        const nuint AllocationGranularity = 64 * 1024;
+
+        int blockSize = AlignUp(Math.Max(Environment.SystemPageSize, minimumSize), Environment.SystemPageSize);
+        nuint targetAddress = (nuint)target;
+        nuint minimumAddress = targetAddress > maximumDistance ? targetAddress - maximumDistance : 0;
+        nuint maximumAddress = targetAddress <= NuintMaxValue - maximumDistance ? targetAddress + maximumDistance - 1 : NuintMaxValue;
+
+        minimumAddress = AlignUp(minimumAddress, AllocationGranularity);
+        maximumAddress = maximumAddress == NuintMaxValue ? maximumAddress : ((maximumAddress + 1) & ~(AllocationGranularity - 1)) - 1;
+        if (minimumAddress > maximumAddress)
+        {
+            block = default;
+            return false;
+        }
+
+        var addressRequirements = new NativeMethods.MemoryAddressRequirements
+        {
+            LowestStartingAddress = (void*)minimumAddress,
+            HighestEndingAddress = (void*)maximumAddress
+        };
+
+        var extendedParameter = new NativeMethods.MemoryExtendedParameter
+        {
+            Type = 1, // MemExtendedParameterAddressRequirements
+            Pointer = &addressRequirements
+        };
+
+        void* p = NativeMethods.VirtualAlloc2(
+            IntPtr.Zero,
+            null,
+            (nuint)blockSize,
+            NativeMethods.VirtualAllocationType.Reserve | NativeMethods.VirtualAllocationType.Commit,
+            NativeMethods.PageProtect.ExecuteRead,
+            &extendedParameter,
+            1);
+
+        if (p == null)
+        {
+            block = default;
+            return false;
+        }
+
+        block = new Block { Current = (byte*)p, End = (byte*)p + blockSize };
+        return true;
+    }
+
     static readonly nuint NuintMaxValue = unchecked((nuint)(nint)(-1));
 
-    static readonly Lock m_SyncRoot = new();
+    #endregion
 
     struct Block
     {
-        public void* Allocate(int allocationSize)
+        public byte* Allocate(int allocationSize)
         {
             byte* p = Current;
             Current += allocationSize;
@@ -177,13 +189,19 @@ static unsafe class TrampolineAllocator
         public byte* End;
     }
 
-    static byte* m_Current;
-    static byte* m_End;
-    static readonly List<Block> m_NearBlocks = [];
-
     static int Align(int size)
     {
         const int alignment = 16;
         return checked((size + alignment - 1) & -alignment);
+    }
+
+    static int AlignUp(int value, int alignment)
+    {
+        return checked((value + alignment - 1) / alignment * alignment);
+    }
+
+    static nuint AlignUp(nuint value, nuint alignment)
+    {
+        return checked((value + alignment - 1) & ~(alignment - 1));
     }
 }
