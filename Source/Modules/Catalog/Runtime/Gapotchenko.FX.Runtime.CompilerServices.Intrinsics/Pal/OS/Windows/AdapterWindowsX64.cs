@@ -47,7 +47,7 @@ sealed class AdapterWindowsX64 : AdapterX64
             code.CopyTo(instructions);
 
             // End the method with a RET instruction.
-            instructions[code.Length] = RET;
+            instructions[code.Length] = Ret;
 
             scope.FlushInstructions();
         }

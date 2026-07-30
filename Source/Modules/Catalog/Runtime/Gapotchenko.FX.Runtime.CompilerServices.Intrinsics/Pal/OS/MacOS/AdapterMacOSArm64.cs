@@ -49,7 +49,7 @@ sealed class AdapterMacOSArm64 : AdapterArm64
             patchCode.CopyTo(instructions);
 
             // End the method with a RET instruction.
-            instructions[patchCode.Length] = RET;
+            instructions[patchCode.Length] = Ret;
 
             scope.FlushInstructions();
         }

@@ -157,7 +157,7 @@ abstract class AdapterX86 : Adapter
         }
     }
 
-    protected const byte RET = 0xc3;
+    protected const byte Ret = 0xc3;
     protected const int JmpRel32 = 0xe9;
     protected const int JmpRel32Size = 5;
 }

@@ -37,5 +37,5 @@ abstract class AdapterArm64 : AdapterArm
         }
     }
 
-    protected const uint RET = 0xd65f03c0;
+    protected const uint Ret = 0xd65f03c0;
 }

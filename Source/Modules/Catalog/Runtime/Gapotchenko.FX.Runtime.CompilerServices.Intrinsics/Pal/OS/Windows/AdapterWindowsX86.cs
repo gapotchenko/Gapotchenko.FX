@@ -102,7 +102,7 @@ sealed class AdapterWindowsX86 : AdapterX86
 
             trampoline = TrampolineAllocator.Allocate(patchSize);
             code.CopyTo(trampoline);
-            trampoline[code.Length] = RET;
+            trampoline[code.Length] = Ret;
 
             CpuCache.FlushInstructions(trampoline);
         }
@@ -128,7 +128,7 @@ sealed class AdapterWindowsX86 : AdapterX86
             code.CopyTo(instructions);
 
             // End the method with a RET instruction.
-            instructions[code.Length] = RET;
+            instructions[code.Length] = Ret;
         }
 
         scope.FlushInstructions();

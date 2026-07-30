@@ -44,7 +44,7 @@ sealed class AdapterLinuxX86 : AdapterX86
             code.CopyTo(instructions);
 
             // End the method with a RET instruction.
-            instructions[code.Length] = RET;
+            instructions[code.Length] = Ret;
         }
 
         return PatchResult.Success;
