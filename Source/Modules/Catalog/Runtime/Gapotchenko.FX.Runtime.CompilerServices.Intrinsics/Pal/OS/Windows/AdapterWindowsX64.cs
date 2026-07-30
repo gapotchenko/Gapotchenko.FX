@@ -90,7 +90,8 @@ sealed class AdapterWindowsX64 : AdapterX64
         var trampoline = Span<byte>.Empty;
         if (patchSize > instructions.Length)
         {
-            if (instructions.Length < JmpAbs64Size)
+            const int redirectionSize = JmpAbs64Size;
+            if (instructions.Length < redirectionSize)
                 return PatchResult.NoSpace;
 
             trampoline = TrampolineAllocator.Allocate(patchSize);
@@ -99,6 +100,12 @@ sealed class AdapterWindowsX64 : AdapterX64
             code.CopyTo(trampoline);
             trampoline[code.Length] = Ret;
             trampolineScope.FlushInstructions();
+
+            instructions = instructions[..redirectionSize];
+        }
+        else
+        {
+            instructions = instructions[..patchSize];
         }
 
         // Temporarily allow memory modification in order to apply the intrinsic code.
