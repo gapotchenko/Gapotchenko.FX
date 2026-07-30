@@ -20,14 +20,15 @@ static unsafe class TrampolineAllocator
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
-        int size = Align(checked(count * Unsafe.SizeOf<T>()));
+        int size = MemoryArithmetics.Align16(checked(count * Unsafe.SizeOf<T>()));
         var blocks = m_Blocks;
         lock (blocks)
         {
             for (int i = 0; i < blocks.Count; ++i)
             {
                 var block = blocks[i];
-                if (block.AvailableSize >= (nuint)size && IsWithinDistance(target, block.Current, maximumDistance))
+                if (block.AvailableSize >= (nuint)size &&
+                    MemoryArithmetics.IsWithinDistance((nint)target, (nint)block.Current, maximumDistance))
                 {
                     allocation = new(block.Allocate(size), count);
                     blocks[i] = block;
@@ -52,13 +53,13 @@ static unsafe class TrampolineAllocator
     static bool TryAllocateNearBlock(void* target, int minimumSize, nuint maximumDistance, out LinearMemoryBlock block)
     {
         nuint pageSize = (nuint)Environment.SystemPageSize;
-        nuint blockSize = AlignUp((nuint)Math.Max(Environment.SystemPageSize, minimumSize), pageSize);
+        nuint blockSize = MemoryArithmetics.AlignUp((nuint)Math.Max(Environment.SystemPageSize, minimumSize), pageSize);
         nuint targetAddress = (nuint)target;
         nuint minimumAddress = targetAddress > maximumDistance ? targetAddress - maximumDistance : 0;
         nuint maximumAddress = targetAddress <= nuint.MaxValue - maximumDistance ? targetAddress + maximumDistance - 1 : nuint.MaxValue;
         nuint limitEnd = maximumAddress == nuint.MaxValue ? maximumAddress : maximumAddress + 1;
 
-        nuint cursor = AlignUp(minimumAddress, pageSize);
+        nuint cursor = MemoryArithmetics.AlignUp(minimumAddress, pageSize);
         uint task = NativeMethods.mach_task_self();
         while (cursor <= maximumAddress && blockSize - 1 <= maximumAddress - cursor)
         {
@@ -76,7 +77,7 @@ static unsafe class TrampolineAllocator
                 void* p = NativeMethods.mmap((void*)cursor, blockSize, protection, MapPrivate | MapJit | MapAnonymous, -1, 0);
                 if (p != (void*)(-1))
                 {
-                    if (IsWithinDistance(target, p, maximumDistance))
+                    if (MemoryArithmetics.IsWithinDistance((nint)target, (nint)p, maximumDistance))
                     {
                         block = new((byte*)p, blockSize);
                         return true;
@@ -94,28 +95,10 @@ static unsafe class TrampolineAllocator
             nuint regionEnd = checked((nuint)regionStart + (nuint)regionSize);
             if (regionEnd <= cursor)
                 break;
-            cursor = AlignUp(regionEnd, pageSize);
+            cursor = MemoryArithmetics.AlignUp(regionEnd, pageSize);
         }
 
         block = default;
         return false;
-    }
-
-    static bool IsWithinDistance(void* x, void* y, nuint maximumDistance)
-    {
-        nuint a = (nuint)x;
-        nuint b = (nuint)y;
-        return a >= b ? a - b <= maximumDistance : b - a <= maximumDistance;
-    }
-
-    static int Align(int size)
-    {
-        const int alignment = 16;
-        return checked((size + alignment - 1) & -alignment);
-    }
-
-    static nuint AlignUp(nuint value, nuint alignment)
-    {
-        return checked((value + alignment - 1) & ~(alignment - 1));
     }
 }

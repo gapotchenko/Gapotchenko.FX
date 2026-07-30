@@ -41,7 +41,7 @@ static unsafe class TrampolineAllocator
 
     static Span<byte> AllocateCore(int size)
     {
-        int allocationSize = Align(size);
+        int allocationSize = MemoryArithmetics.Align16(size);
         ref var globalBlock = ref m_GlobalBlock;
 
         lock (m_GlobalLock)
@@ -86,7 +86,7 @@ static unsafe class TrampolineAllocator
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
-        int size = Align(checked(count * Unsafe.SizeOf<T>()));
+        int size = MemoryArithmetics.Align16(checked(count * Unsafe.SizeOf<T>()));
 
         var nearBlocks = m_NearBlocks;
         lock (nearBlocks)
@@ -95,7 +95,7 @@ static unsafe class TrampolineAllocator
             {
                 var block = nearBlocks[i];
                 if (block.AvailableSize >= (nuint)size &&
-                    IsWithinDistance(target, block.Current, maximumDistance))
+                    MemoryArithmetics.IsWithinDistance((nint)target, (nint)block.Current, maximumDistance))
                 {
                     allocation = new(block.Allocate(size), count);
                     nearBlocks[i] = block;
@@ -117,24 +117,17 @@ static unsafe class TrampolineAllocator
 
     static readonly List<LinearMemoryBlock> m_NearBlocks = [];
 
-    static bool IsWithinDistance(void* x, void* y, nuint maximumDistance)
-    {
-        nuint a = (nuint)x;
-        nuint b = (nuint)y;
-        return a >= b ? a - b <= maximumDistance : b - a <= maximumDistance;
-    }
-
     static bool TryAllocateNearBlock(void* target, int minimumSize, nuint maximumDistance, out LinearMemoryBlock block)
     {
         const nuint AllocationGranularity = 64 * 1024;
 
-        nuint blockSize = (nuint)AlignUp(Math.Max(Environment.SystemPageSize, minimumSize), Environment.SystemPageSize);
+        nuint blockSize = (nuint)MemoryArithmetics.AlignUp(Math.Max(Environment.SystemPageSize, minimumSize), Environment.SystemPageSize);
         nuint targetAddress = (nuint)target;
         nuint minimumAddress = targetAddress > maximumDistance ? targetAddress - maximumDistance : 0;
         nuint maximumAddress = targetAddress <= nuint.MaxValue - maximumDistance ? targetAddress + maximumDistance - 1 : nuint.MaxValue;
 
-        minimumAddress = AlignUp(minimumAddress, AllocationGranularity);
-        maximumAddress = maximumAddress == nuint.MaxValue ? maximumAddress : AlignDown(maximumAddress + 1, AllocationGranularity) - 1;
+        minimumAddress = MemoryArithmetics.AlignUp(minimumAddress, AllocationGranularity);
+        maximumAddress = maximumAddress == nuint.MaxValue ? maximumAddress : MemoryArithmetics.AlignDown(maximumAddress + 1, AllocationGranularity) - 1;
         if (minimumAddress > maximumAddress)
         {
             block = default;
@@ -173,25 +166,4 @@ static unsafe class TrampolineAllocator
     }
 
     #endregion
-
-    static int Align(int size)
-    {
-        const int alignment = 16;
-        return checked((size + alignment - 1) & -alignment);
-    }
-
-    static int AlignUp(int value, int alignment)
-    {
-        return checked((value + alignment - 1) / alignment * alignment);
-    }
-
-    static nuint AlignUp(nuint value, nuint alignment)
-    {
-        return checked((value + alignment - 1) & ~(alignment - 1));
-    }
-
-    static nuint AlignDown(nuint value, nuint alignment)
-    {
-        return value & ~(alignment - 1);
-    }
 }
