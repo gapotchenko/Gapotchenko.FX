@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
@@ -117,5 +118,4 @@ static unsafe class TrampolineAllocator
     {
         return checked((value + alignment - 1) & ~(alignment - 1));
     }
-
 }

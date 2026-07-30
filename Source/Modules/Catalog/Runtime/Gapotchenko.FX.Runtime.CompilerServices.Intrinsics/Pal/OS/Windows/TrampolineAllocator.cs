@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

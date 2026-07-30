@@ -7,7 +7,7 @@
 
 using System.Diagnostics;
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Utils;
 
 unsafe struct LinearMemoryBlock(byte* current, nuint size)
 {
