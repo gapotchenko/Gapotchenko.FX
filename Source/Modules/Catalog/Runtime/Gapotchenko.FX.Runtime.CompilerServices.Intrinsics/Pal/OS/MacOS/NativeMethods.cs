@@ -52,6 +52,15 @@ static unsafe class NativeMethods
     [DllImport("libSystem.B.dylib", SetLastError = true, ExactSpelling = true)]
     public static extern int mprotect(void* address, nuint length, MemoryProtection protection);
 
+    [DllImport("libSystem.B.dylib", SetLastError = true, ExactSpelling = true)]
+    public static extern void* mmap(void* address, nuint length, MemoryProtection protection, int flags, int fileDescriptor, nint offset);
+
+    [DllImport("libSystem.B.dylib", SetLastError = true, ExactSpelling = true)]
+    public static extern int munmap(void* address, nuint length);
+
+    [DllImport("libSystem.B.dylib", ExactSpelling = true)]
+    public static extern void pthread_jit_write_protect_np(int enabled);
+
     [DllImport("libSystem.B.dylib", ExactSpelling = true)]
     public static extern void sys_icache_invalidate(void* start, nuint length);
 }
