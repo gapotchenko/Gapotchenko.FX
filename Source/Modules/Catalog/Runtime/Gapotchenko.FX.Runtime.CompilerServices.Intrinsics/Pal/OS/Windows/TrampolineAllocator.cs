@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -45,7 +46,7 @@ static unsafe class TrampolineAllocator
 
         lock (m_GlobalLock)
         {
-            if ((nuint)(globalBlock.End - globalBlock.Current) < (nuint)allocationSize)
+            if (globalBlock.AvailableSize < (nuint)allocationSize)
                 globalBlock = AllocateGlobalBlock(allocationSize);
 
             byte* p = globalBlock.Allocate(allocationSize);
@@ -93,7 +94,7 @@ static unsafe class TrampolineAllocator
             for (int i = 0; i < nearBlocks.Count; ++i)
             {
                 var block = nearBlocks[i];
-                if ((nuint)(block.End - block.Current) >= (nuint)size &&
+                if (block.AvailableSize >= (nuint)size &&
                     IsWithinDistance(target, block.Current, maximumDistance))
                 {
                     allocation = new(block.Allocate(size), count);
@@ -133,7 +134,7 @@ static unsafe class TrampolineAllocator
         nuint maximumAddress = targetAddress <= nuint.MaxValue - maximumDistance ? targetAddress + maximumDistance - 1 : nuint.MaxValue;
 
         minimumAddress = AlignUp(minimumAddress, AllocationGranularity);
-        maximumAddress = maximumAddress == nuint.MaxValue ? maximumAddress : ((maximumAddress + 1) & ~(AllocationGranularity - 1)) - 1;
+        maximumAddress = maximumAddress == nuint.MaxValue ? maximumAddress : AlignDown(maximumAddress + 1, AllocationGranularity) - 1;
         if (minimumAddress > maximumAddress)
         {
             block = default;
@@ -178,9 +179,12 @@ static unsafe class TrampolineAllocator
         public byte* Allocate(int allocationSize)
         {
             byte* p = Current;
-            Current += allocationSize;
+            Current = p + allocationSize;
+            Debug.Assert(Current <= End);
             return p;
         }
+
+        public readonly nuint AvailableSize => (nuint)(End - Current);
 
         public byte* Current { get; private set; } = current;
 
@@ -201,5 +205,10 @@ static unsafe class TrampolineAllocator
     static nuint AlignUp(nuint value, nuint alignment)
     {
         return checked((value + alignment - 1) & ~(alignment - 1));
+    }
+
+    static nuint AlignDown(nuint value, nuint alignment)
+    {
+        return value & ~(alignment - 1);
     }
 }
