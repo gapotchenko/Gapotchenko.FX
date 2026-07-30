@@ -56,13 +56,15 @@ static unsafe class TrampolineAllocator
     {
         nuint pageSize = (nuint)Environment.SystemPageSize;
         nuint blockSize = MemoryArithmetics.AlignUp((nuint)Math.Max(Environment.SystemPageSize, minimumSize), pageSize);
-        const int MapPrivate = 0x0002;
-        const int MapJit = 0x0800;
-        const int MapAnonymous = 0x1000;
-        var protection = NativeMethods.MemoryProtection.Read | NativeMethods.MemoryProtection.Write | NativeMethods.MemoryProtection.Execute;
-        void* p = NativeMethods.mmap(null, blockSize, protection, MapPrivate | MapJit | MapAnonymous, -1, 0);
+        void* p = NativeMethods.mmap(
+            null,
+            blockSize,
+            NativeMethods.MemoryProtection.Read | NativeMethods.MemoryProtection.Write | NativeMethods.MemoryProtection.Execute,
+            NativeMethods.MemoryMapFlags.Private | NativeMethods.MemoryMapFlags.Jit | NativeMethods.MemoryMapFlags.Anonymous,
+            -1,
+            0);
         if (p == (void*)(-1))
-            throw new InvalidOperationException("Cannot allocate executable memory for a trampoline.");
+            throw new InvalidOperationException("Cannot allocate executable memory for an intrinsic trampoline.");
         return new((byte*)p, blockSize);
     }
 
@@ -128,11 +130,13 @@ static unsafe class TrampolineAllocator
 
             if (cursor <= gapEnd && blockSize <= gapEnd - cursor)
             {
-                const int MapPrivate = 0x0002;
-                const int MapJit = 0x0800;
-                const int MapAnonymous = 0x1000;
-                var protection = NativeMethods.MemoryProtection.Read | NativeMethods.MemoryProtection.Write | NativeMethods.MemoryProtection.Execute;
-                void* p = NativeMethods.mmap((void*)cursor, blockSize, protection, MapPrivate | MapJit | MapAnonymous, -1, 0);
+                void* p = NativeMethods.mmap(
+                    (void*)cursor,
+                    blockSize,
+                    NativeMethods.MemoryProtection.Read | NativeMethods.MemoryProtection.Write | NativeMethods.MemoryProtection.Execute,
+                    NativeMethods.MemoryMapFlags.Private | NativeMethods.MemoryMapFlags.Jit | NativeMethods.MemoryMapFlags.Anonymous,
+                    -1,
+                    0);
                 if (p != (void*)(-1))
                 {
                     if (MemoryArithmetics.IsWithinDistance((nint)target, (nint)p, maximumDistance))

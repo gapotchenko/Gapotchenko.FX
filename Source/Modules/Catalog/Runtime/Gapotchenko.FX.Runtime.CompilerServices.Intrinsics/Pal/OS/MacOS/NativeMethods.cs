@@ -23,6 +23,14 @@ static unsafe class NativeMethods
         Execute = 0x4
     }
 
+    [Flags]
+    public enum MemoryMapFlags
+    {
+        Private = 0x0002,
+        Jit = 0x0800,
+        Anonymous = 0x1000
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     public struct VmRegionBasicInfo64
     {
@@ -53,7 +61,13 @@ static unsafe class NativeMethods
     public static extern int mprotect(void* address, nuint length, MemoryProtection protection);
 
     [DllImport("libSystem.B.dylib", SetLastError = true, ExactSpelling = true)]
-    public static extern void* mmap(void* address, nuint length, MemoryProtection protection, int flags, int fileDescriptor, nint offset);
+    public static extern void* mmap(
+        void* address,
+        nuint length,
+        MemoryProtection protection,
+        MemoryMapFlags flags,
+        int fileDescriptor,
+        nint offset);
 
     [DllImport("libSystem.B.dylib", SetLastError = true, ExactSpelling = true)]
     public static extern int munmap(void* address, nuint length);
