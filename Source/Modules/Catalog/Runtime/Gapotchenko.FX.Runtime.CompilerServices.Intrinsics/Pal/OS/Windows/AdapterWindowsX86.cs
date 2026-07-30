@@ -6,10 +6,11 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
-using System.Buffers.Binary;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
+#pragma warning disable CS9191 // The 'ref' modifier for an argument corresponding to 'in' parameter is equivalent to 'in'. Consider using 'in' instead.
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
@@ -121,7 +122,7 @@ sealed class AdapterWindowsX86 : AdapterX86
 
             // "JMP rel32" instruction is used because it has the most compact form in x86 instruction set.
             instructions[0] = JmpRel32;
-            BinaryPrimitives.WriteInt32LittleEndian(instructions[1..], displacement);
+            MemoryMarshal.Write(instructions[1..], ref displacement);
         }
         else
         {
