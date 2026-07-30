@@ -7,6 +7,7 @@
 
 using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
 
@@ -15,6 +16,63 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
 #endif
 static unsafe class TrampolineAllocator
 {
+    #region Global Allocation
+
+    public static Span<T> Allocate<T>(int count) where T : struct
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
+
+        var bytes = AllocateCore(checked(count * Unsafe.SizeOf<T>()));
+
+        return new(
+            Unsafe.AsPointer(ref MemoryMarshal.GetReference(bytes)),
+            count);
+    }
+
+    public static Span<byte> Allocate(int size)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size);
+
+        return AllocateCore(size);
+    }
+
+    static Span<byte> AllocateCore(int size)
+    {
+        int allocationSize = MemoryArithmetics.Align16(size);
+        ref var globalBlock = ref m_GlobalBlock;
+
+        lock (m_GlobalLock)
+        {
+            if (globalBlock.AvailableSize < (nuint)allocationSize)
+                globalBlock = AllocateGlobalBlock(allocationSize);
+
+            byte* p = globalBlock.Allocate(allocationSize);
+
+            return new Span<byte>(p, size);
+        }
+    }
+
+    static LinearMemoryBlock AllocateGlobalBlock(int minimumSize)
+    {
+        nuint pageSize = (nuint)Environment.SystemPageSize;
+        nuint blockSize = MemoryArithmetics.AlignUp((nuint)Math.Max(Environment.SystemPageSize, minimumSize), pageSize);
+        const int MapPrivate = 0x0002;
+        const int MapJit = 0x0800;
+        const int MapAnonymous = 0x1000;
+        var protection = NativeMethods.MemoryProtection.Read | NativeMethods.MemoryProtection.Write | NativeMethods.MemoryProtection.Execute;
+        void* p = NativeMethods.mmap(null, blockSize, protection, MapPrivate | MapJit | MapAnonymous, -1, 0);
+        if (p == (void*)(-1))
+            throw new InvalidOperationException("Cannot allocate executable memory for a trampoline.");
+        return new((byte*)p, blockSize);
+    }
+
+    static readonly Lock m_GlobalLock = new();
+    static LinearMemoryBlock m_GlobalBlock;
+
+    #endregion
+
+    #region Proximal Allocation
+
     public static bool TryAllocateNear<T>(void* target, int count, nuint maximumDistance, out Span<T> allocation)
         where T : struct
     {
@@ -101,4 +159,6 @@ static unsafe class TrampolineAllocator
         block = default;
         return false;
     }
+
+    #endregion
 }
