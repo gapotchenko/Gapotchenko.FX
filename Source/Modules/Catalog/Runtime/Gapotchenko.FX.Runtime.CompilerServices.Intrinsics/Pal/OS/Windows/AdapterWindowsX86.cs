@@ -70,7 +70,7 @@ sealed class AdapterWindowsX86 : AdapterX86
         p = SkipBranches(p);
 
         // It is impossible to determine the exact method instruction boundaries for x86 architecture.
-        // Instead, use memory region information as a crude approximation.
+        // Instead, use memory region information as a coarse approximation.
         if (NativeMethods.VirtualQuery(p, out var memoryInfo, (nuint)sizeof(NativeMethods.MemoryBasicInformation)) == 0 ||
             memoryInfo.State != NativeMethods.PageState.MemCommit ||
             (memoryInfo.Protect & (NativeMethods.PageProtect.NoAccess | NativeMethods.PageProtect.Guard)) != 0)
@@ -101,10 +101,11 @@ sealed class AdapterWindowsX86 : AdapterX86
                 return PatchResult.NoSpace;
 
             trampoline = TrampolineAllocator.Allocate(patchSize);
+
+            using var trampolineScope = VirtualProtectionScope.Create(trampoline, NativeMethods.PageProtect.ExecuteReadWrite);
             code.CopyTo(trampoline);
             trampoline[code.Length] = Ret;
-
-            CpuCache.FlushInstructions(trampoline);
+            trampolineScope.FlushInstructions();
         }
 
         // Temporarily allow memory modification in order to apply the intrinsic code.
@@ -116,7 +117,7 @@ sealed class AdapterWindowsX86 : AdapterX86
             nint offset = Unsafe.ByteOffset(
                 ref MemoryMarshal.GetReference(instructions),
                 ref MemoryMarshal.GetReference(trampoline));
-            int displacement = unchecked((int)(offset - JmpRel32Size));
+            int displacement = (int)(offset - JmpRel32Size);
 
             // "JMP rel32" instruction is used because it has the most compact form in x86 instruction set.
             instructions[0] = JmpRel32;

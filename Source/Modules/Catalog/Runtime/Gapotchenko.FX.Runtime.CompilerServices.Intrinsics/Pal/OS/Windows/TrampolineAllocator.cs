@@ -10,6 +10,9 @@ using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
+/// <summary>
+/// Provides functionality for an ever-growing executable memory allocation.
+/// </summary>
 #if NET
 [SupportedOSPlatform("windows")]
 #endif
@@ -19,7 +22,7 @@ static unsafe class TrampolineAllocator
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
-        var bytes = AllocateCore(count * Unsafe.SizeOf<T>());
+        var bytes = AllocateCore(checked(count * Unsafe.SizeOf<T>()));
 
         return new(
             Unsafe.AsPointer(ref MemoryMarshal.GetReference(bytes)),
@@ -35,8 +38,6 @@ static unsafe class TrampolineAllocator
 
     static Span<byte> AllocateCore(int size)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size);
-
         lock (m_SyncRoot)
         {
             int allocationSize = Align(size);
@@ -58,7 +59,7 @@ static unsafe class TrampolineAllocator
             null,
             (nuint)blockSize,
             NativeMethods.VirtualAllocationType.Reserve | NativeMethods.VirtualAllocationType.Commit,
-            NativeMethods.PageProtect.ExecuteReadWrite);
+            NativeMethods.PageProtect.ExecuteRead);
 
         if (p == null)
             throw new Win32Exception(Marshal.GetLastWin32Error());
