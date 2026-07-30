@@ -39,6 +39,13 @@ static unsafe class NativeMethods
     }
 
     [Flags]
+    public enum VirtualAllocationType : uint
+    {
+        Commit = 0x1000,
+        Reserve = 0x2000
+    }
+
+    [Flags]
     public enum PageProtect : uint
     {
         NoAccess = 0x01,
@@ -56,6 +63,9 @@ static unsafe class NativeMethods
 
     [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
     public static extern bool VirtualProtect(void* lpAddress, nuint dwSize, PageProtect flNewProtect, out PageProtect lpflOldProtect);
+
+    [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+    public static extern void* VirtualAlloc(void* lpAddress, nuint dwSize, VirtualAllocationType flAllocationType, PageProtect flProtect);
 
     [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
     public static extern nuint VirtualQuery(void* lpAddress, out MemoryBasicInformation lpBuffer, nuint dwLength);

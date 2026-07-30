@@ -6,8 +6,10 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+using System.Buffers.Binary;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
@@ -29,17 +31,7 @@ sealed class AdapterWindowsX86 : AdapterX86
 
         instructions = instructions[..Math.Min(patchablePrologueSize, instructions.Length)];
 
-        int patchSize = code.Length + 1 /* RET */;
-        if (patchSize > instructions.Length)
-        {
-            // TODO: Use trampoline allocator to contain the code, patch method with JMP instruction to that code.
-            return PatchResult.NoSpace;
-        }
-        else
-        {
-            instructions = instructions[..patchSize];
-        }
-
+        PatchResult result;
 #if TFF_CER
         // Ensure that code changes are atomic by using the constrained execution region.
         RuntimeHelpers.PrepareConstrainedRegions();
@@ -49,19 +41,9 @@ sealed class AdapterWindowsX86 : AdapterX86
         finally
 #endif
         {
-            // Temporarily allow memory modification in order to apply the intrinsic code.
-            using var scope = VirtualProtectionScope.Create(instructions, NativeMethods.PageProtect.ExecuteReadWrite);
-
-            // Put the intrinsic code.
-            code.CopyTo(instructions);
-
-            // End the method with a RET instruction.
-            instructions[code.Length] = RET;
-
-            scope.FlushInstructions();
+            result = ApplyPatch(instructions, code);
         }
-
-        return PatchResult.Success;
+        return result;
     }
 
     // The table defines a conservative minimum method body extent:
@@ -106,5 +88,51 @@ sealed class AdapterWindowsX86 : AdapterX86
             return [];
 
         return new(p, (int)regionLength);
+    }
+
+    static PatchResult ApplyPatch(Span<byte> instructions, ReadOnlySpan<byte> code)
+    {
+        int patchSize = code.Length + 1 /* RET */;
+
+        var trampoline = Span<byte>.Empty;
+        if (patchSize > instructions.Length)
+        {
+            if (instructions.Length < JmpRel32Size)
+                return PatchResult.NoSpace;
+
+            trampoline = TrampolineAllocator.Allocate(patchSize);
+            code.CopyTo(trampoline);
+            trampoline[code.Length] = RET;
+
+            CpuCache.FlushInstructions(trampoline);
+        }
+
+        // Temporarily allow memory modification in order to apply the intrinsic code.
+        using var scope = VirtualProtectionScope.Create(instructions, NativeMethods.PageProtect.ExecuteReadWrite);
+
+        if (!trampoline.IsEmpty)
+        {
+            // Redirect the method to the trampoline.
+            nint offset = Unsafe.ByteOffset(
+                ref MemoryMarshal.GetReference(instructions),
+                ref MemoryMarshal.GetReference(trampoline));
+            int displacement = unchecked((int)(offset - JmpRel32Size));
+
+            // "JMP rel32" instruction is used because it has the most compact form in x86 instruction set.
+            instructions[0] = JmpRel32;
+            BinaryPrimitives.WriteInt32LittleEndian(instructions[1..], displacement);
+        }
+        else
+        {
+            // Put the intrinsic code.
+            code.CopyTo(instructions);
+
+            // End the method with a RET instruction.
+            instructions[code.Length] = RET;
+        }
+
+        scope.FlushInstructions();
+
+        return PatchResult.Success;
     }
 }

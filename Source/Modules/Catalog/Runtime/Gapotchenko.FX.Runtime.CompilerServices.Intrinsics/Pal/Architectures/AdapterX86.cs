@@ -74,6 +74,7 @@ abstract class AdapterX86 : Adapter
             0x89, 0x56, 0x0c,        // MOV [ESI+12], EDX
             0x5e,                    // POP ESI
             0x5b,                    // POP EBX
+            0xc2, 0x04, 0x00,        // RET 4
             SupportedOSPlatforms = ["windows"])]
         [MachineCodeIntrinsic(
             Architecture.X86,
@@ -157,4 +158,6 @@ abstract class AdapterX86 : Adapter
     }
 
     protected const byte RET = 0xc3;
+    protected const int JmpRel32 = 0xe9;
+    protected const int JmpRel32Size = 5;
 }
