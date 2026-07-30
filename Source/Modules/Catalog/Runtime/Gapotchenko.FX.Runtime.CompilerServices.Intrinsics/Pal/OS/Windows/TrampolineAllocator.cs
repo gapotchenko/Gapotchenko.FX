@@ -66,8 +66,7 @@ static unsafe class TrampolineAllocator
         if (p == null)
             throw new Win32Exception(Marshal.GetLastWin32Error());
 
-        byte* current = (byte*)p;
-        return new Block { Current = current, End = current + blockSize };
+        return new Block((byte*)p, blockSize);
     }
 
     static readonly Lock m_GlobalLock = new();
@@ -131,10 +130,10 @@ static unsafe class TrampolineAllocator
         int blockSize = AlignUp(Math.Max(Environment.SystemPageSize, minimumSize), Environment.SystemPageSize);
         nuint targetAddress = (nuint)target;
         nuint minimumAddress = targetAddress > maximumDistance ? targetAddress - maximumDistance : 0;
-        nuint maximumAddress = targetAddress <= NuintMaxValue - maximumDistance ? targetAddress + maximumDistance - 1 : NuintMaxValue;
+        nuint maximumAddress = targetAddress <= nuint.MaxValue - maximumDistance ? targetAddress + maximumDistance - 1 : nuint.MaxValue;
 
         minimumAddress = AlignUp(minimumAddress, AllocationGranularity);
-        maximumAddress = maximumAddress == NuintMaxValue ? maximumAddress : ((maximumAddress + 1) & ~(AllocationGranularity - 1)) - 1;
+        maximumAddress = maximumAddress == nuint.MaxValue ? maximumAddress : ((maximumAddress + 1) & ~(AllocationGranularity - 1)) - 1;
         if (minimumAddress > maximumAddress)
         {
             block = default;
@@ -168,15 +167,13 @@ static unsafe class TrampolineAllocator
             return false;
         }
 
-        block = new Block { Current = (byte*)p, End = (byte*)p + blockSize };
+        block = new Block((byte*)p, blockSize);
         return true;
     }
 
-    static readonly nuint NuintMaxValue = unchecked((nuint)(nint)(-1));
-
     #endregion
 
-    struct Block
+    struct Block(byte* current, int size)
     {
         public byte* Allocate(int allocationSize)
         {
@@ -185,8 +182,9 @@ static unsafe class TrampolineAllocator
             return p;
         }
 
-        public byte* Current;
-        public byte* End;
+        public byte* Current { get; private set; } = current;
+
+        public byte* End { get; } = current + size;
     }
 
     static int Align(int size)
