@@ -151,6 +151,17 @@ Here are the execution times of all three implementations benchmarked on a x64 s
 The intrinsic compiler may or may not apply machine code to a method depending on the current app host environment.
 When intrinsic is not applied, the original method implementation is used, thus providing a graceful, albeit less performant, fallback.
 
+## Native AOT Compatibility
+
+The methods defined using intrinsic machine code are fully compatible with native ahead-of-time compilation provided by .NET.
+
+When intrinsic initialization is triggered by the first direct call to a method in a Native AOT application,
+that call may continue executing the original ahead-of-time compiled implementation even though the method entry point is patched during type initialization.
+Subsequent calls execute the intrinsic machine code through the patched entry point.
+
+This behavior does not affect correctness because the original method implementation is the semantic fallback for the intrinsic.
+It only means that the managed implementation may be used for the first call; subsequent calls receive the intrinsic performance benefit.
+
 ## Usage
 
 `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics):
