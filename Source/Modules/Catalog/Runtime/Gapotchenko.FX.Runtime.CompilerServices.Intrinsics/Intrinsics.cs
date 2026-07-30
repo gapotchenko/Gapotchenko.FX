@@ -33,6 +33,9 @@ public static class Intrinsics
         ArgumentNullException.ThrowIfNull(type);
 
         var adapter = m_Adapter;
+
+        // Fast-path check only.
+        // The m_GiveUpOnPatching flag is checked authoritatively under m_PatchingLock below.
         if (adapter == null || m_GiveUpOnPatching)
             return;
 
@@ -55,21 +58,31 @@ public static class Intrinsics
             ValidateMethod(method);
 
             Adapter.PatchResult patchResult;
-            try
-            {
-                patchResult = adapter.PatchMethod(method, intrinsicAttribute.Code);
-            }
-            catch (Exception e) when (!e.IsControlFlowException())
-            {
-                // Give up on code patching if an error occurs.
-                m_GiveUpOnPatching = true;
 
-                Log.TraceSource.TraceEvent(
-                    TraceEventType.Error,
-                    1932901002,
-                    string.Format("Unexpected error occurred during compilation of intrinsic method '{0}'. Giving up on intrinsic methods for the current environment.", method) + Environment.NewLine + e);
+            lock (m_PatchingLock)
+            {
+                if (m_GiveUpOnPatching)
+                    return;
 
-                return;
+                try
+                {
+                    patchResult = adapter.PatchMethod(method, intrinsicAttribute.Code);
+                }
+                catch (Exception e) when (!e.IsControlFlowException())
+                {
+                    // Give up on code patching if an error occurs.
+                    m_GiveUpOnPatching = true;
+
+                    Log.TraceSource.TraceEvent(
+                        TraceEventType.Error,
+                        1932901002,
+                        string.Format("Unexpected error occurred during compilation of intrinsic method '{0}'. Giving up on intrinsic methods for the current environment.", method) + Environment.NewLine + e);
+
+                    return;
+                }
+
+                if (patchResult is Adapter.PatchResult.WriteProtected)
+                    m_GiveUpOnPatching = true;
             }
 
             switch (patchResult)
@@ -91,7 +104,6 @@ public static class Intrinsics
                     break;
 
                 case Adapter.PatchResult.WriteProtected:
-                    m_GiveUpOnPatching = true;
                     Log.TraceSource.TraceEvent(
                         TraceEventType.Error,
                         1932901008,
@@ -113,6 +125,8 @@ public static class Intrinsics
             }
         }
     }
+
+    static readonly object m_PatchingLock = new();
 
     static bool m_GiveUpOnPatching;
 
