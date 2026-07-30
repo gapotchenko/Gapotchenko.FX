@@ -87,8 +87,16 @@ public static class Intrinsics
                     break;
 
                 case Adapter.PatchResult.NoSpace:
-                    Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901006, "Not enough available space for intrinsic instructions in method '{0}'. Compilation discarded.", method);
+                    Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901007, "Not enough available space for intrinsic instructions in method '{0}'. Compilation discarded.", method);
                     break;
+
+                case Adapter.PatchResult.WriteProtected:
+                    m_GiveUpOnPatching = true;
+                    Log.TraceSource.TraceEvent(
+                        TraceEventType.Error,
+                        1932901008,
+                        "Intrinsic method code cannot be made writable on the current platform. Giving up on intrinsic compilation for the current environment.");
+                    return;
             }
         }
 

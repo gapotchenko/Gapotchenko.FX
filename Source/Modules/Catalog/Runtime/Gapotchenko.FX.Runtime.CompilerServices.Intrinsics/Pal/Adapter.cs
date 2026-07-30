@@ -23,6 +23,7 @@ abstract class Adapter
         Success,
         UnexpectedPrologue,
         InvalidAlignment,
-        NoSpace
+        NoSpace,
+        WriteProtected
     }
 }

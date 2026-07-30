@@ -70,6 +70,10 @@ sealed class AdapterMacOSX64 : AdapterX64
             if (redirection.Length < JmpAbs64Size)
                 return PatchResult.NoSpace;
 
+            redirection = redirection[..JmpAbs64Size];
+            if (!MemoryMap.IsWriteAllowed(redirection))
+                return PatchResult.WriteProtected;
+
             trampoline = TrampolineAllocator.Allocate(patchSize);
 
             using (var trampolineScope = JitWriteProtectionScope.Create(trampoline))
@@ -79,11 +83,13 @@ sealed class AdapterMacOSX64 : AdapterX64
                 trampolineScope.FlushInstructions();
             }
 
-            instructions = redirection[..JmpAbs64Size];
+            instructions = redirection;
         }
         else
         {
             instructions = instructions[..patchSize];
+            if (!MemoryMap.IsWriteAllowed(instructions))
+                return PatchResult.WriteProtected;
         }
 
         using var scope = MemoryProtectionScope.Create(

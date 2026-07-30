@@ -82,6 +82,9 @@ sealed class AdapterMacOSArm64 : AdapterArm64
         if (patchSize > instructions.Length)
         {
             var redirection = entryPoint.IsEmpty ? instructions[..1] : entryPoint;
+            if (!MemoryMap.IsWriteAllowed(redirection))
+                return PatchResult.WriteProtected;
+
             ref uint instruction = ref MemoryMarshal.GetReference(redirection);
             void* target = Unsafe.AsPointer(ref instruction);
 
@@ -104,6 +107,8 @@ sealed class AdapterMacOSArm64 : AdapterArm64
         else
         {
             instructions = instructions[..patchSize];
+            if (!MemoryMap.IsWriteAllowed(instructions))
+                return PatchResult.WriteProtected;
         }
 
         using var scope = JitWriteProtectionScope.Create(instructions);

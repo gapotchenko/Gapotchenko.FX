@@ -8,6 +8,7 @@
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
 
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 #if NET
 [SupportedOSPlatform("macos")]
@@ -41,7 +42,8 @@ static unsafe class MemoryMap
                     return new Region(
                         (byte*)checked((nuint)start),
                         (byte*)checked((nuint)end),
-                        info.Protection);
+                        info.Protection,
+                        info.MaxProtection);
                 }
                 catch (OverflowException)
                 {
@@ -53,10 +55,30 @@ static unsafe class MemoryMap
         return null;
     }
 
-    public readonly struct Region(byte* start, byte* end, NativeMethods.MemoryProtection protection)
+    public static bool IsWriteAllowed<T>(Span<T> span)
+    {
+        void* address = Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
+        nuint size = checked((nuint)span.Length * (nuint)Unsafe.SizeOf<T>());
+
+        if (TryGetRegion(address) is not { } region)
+            return false;
+
+        nuint start = (nuint)address;
+        nuint end = checked(start + size);
+        return
+            end <= (nuint)region.End &&
+            (region.MaxProtection & NativeMethods.MemoryProtection.Write) != 0;
+    }
+
+    public readonly struct Region(
+        byte* start,
+        byte* end,
+        NativeMethods.MemoryProtection protection,
+        NativeMethods.MemoryProtection maxProtection)
     {
         public byte* Start { get; } = start;
         public byte* End { get; } = end;
         public NativeMethods.MemoryProtection Protection { get; } = protection;
+        public NativeMethods.MemoryProtection MaxProtection { get; } = maxProtection;
     }
 }
