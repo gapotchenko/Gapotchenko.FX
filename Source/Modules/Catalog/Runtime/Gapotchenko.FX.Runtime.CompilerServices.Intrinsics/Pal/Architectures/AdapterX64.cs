@@ -9,4 +9,6 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 
 abstract class AdapterX64 : AdapterX86
 {
+    protected static ReadOnlySpan<byte> JmpAbs64 => [0xff, 0x25, 0x00, 0x00, 0x00, 0x00];
+    protected const int JmpAbs64Size = 6 + 8;
 }

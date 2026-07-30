@@ -94,7 +94,7 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         uint* p = (uint*)method.MethodHandle.GetFunctionPointer();
         p = SkipBranches(p);
 
-        // Get instruction boundaries.
+        // Get the exact method instruction boundaries.
         var runtimeFunction = (NativeMethods.RuntimeFunctionArm64*)NativeMethods.RtlLookupFunctionEntry(p, out void* imageBase, null);
         if (runtimeFunction == null)
             return [];

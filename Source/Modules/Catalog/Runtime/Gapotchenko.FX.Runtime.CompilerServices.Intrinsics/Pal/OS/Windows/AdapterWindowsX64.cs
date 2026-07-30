@@ -8,6 +8,9 @@
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+#pragma warning disable CS9191 // The 'ref' modifier for an argument corresponding to 'in' parameter is equivalent to 'in'. Consider using 'in' instead.
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
@@ -25,12 +28,7 @@ sealed class AdapterWindowsX64 : AdapterX64
         if (!Util.HasPrologue(instructions, m_SupportedPrologues))
             return PatchResult.UnexpectedPrologue;
 
-        int patchSize = code.Length + 1 /* RET */;
-        if (patchSize > instructions.Length)
-            return PatchResult.NoSpace;
-
-        instructions = instructions[..patchSize];
-
+        PatchResult result;
 #if TFF_CER
         // Ensure that code changes are atomic by using the constrained execution region.
         RuntimeHelpers.PrepareConstrainedRegions();
@@ -40,19 +38,9 @@ sealed class AdapterWindowsX64 : AdapterX64
         finally
 #endif
         {
-            // Temporarily allow memory modification in order to apply the intrinsic code.
-            using var scope = VirtualProtectionScope.Create(instructions, NativeMethods.PageProtect.ExecuteReadWrite);
-
-            // Put the intrinsic code.
-            code.CopyTo(instructions);
-
-            // End the method with a RET instruction.
-            instructions[code.Length] = Ret;
-
-            scope.FlushInstructions();
+            result = ApplyPatch(instructions, code);
         }
-
-        return PatchResult.Success;
+        return result;
     }
 
     static readonly byte[][] m_SupportedPrologues =
@@ -78,7 +66,7 @@ sealed class AdapterWindowsX64 : AdapterX64
         byte* p = (byte*)method.MethodHandle.GetFunctionPointer();
         p = SkipBranches(p);
 
-        // Get instruction boundaries.
+        // Get the exact method instruction boundaries.
         var runtimeFunction = (NativeMethods.RuntimeFunctionX64*)NativeMethods.RtlLookupFunctionEntry(p, out void* imageBase, null);
         if (runtimeFunction == null)
             return [];
@@ -93,5 +81,48 @@ sealed class AdapterWindowsX64 : AdapterX64
             return [];
 
         return new(p, (int)functionLength);
+    }
+
+    static unsafe PatchResult ApplyPatch(Span<byte> instructions, ReadOnlySpan<byte> code)
+    {
+        int patchSize = code.Length + 1 /* RET */;
+
+        var trampoline = Span<byte>.Empty;
+        if (patchSize > instructions.Length)
+        {
+            if (instructions.Length < JmpAbs64Size)
+                return PatchResult.NoSpace;
+
+            trampoline = TrampolineAllocator.Allocate(patchSize);
+
+            using var trampolineScope = VirtualProtectionScope.Create(trampoline, NativeMethods.PageProtect.ExecuteReadWrite);
+            code.CopyTo(trampoline);
+            trampoline[code.Length] = Ret;
+            trampolineScope.FlushInstructions();
+        }
+
+        // Temporarily allow memory modification in order to apply the intrinsic code.
+        using var scope = VirtualProtectionScope.Create(instructions, NativeMethods.PageProtect.ExecuteReadWrite);
+
+        if (!trampoline.IsEmpty)
+        {
+            // Redirect the method to the trampoline with "JMP [RIP+0]" followed by
+            // the absolute 64-bit destination address.
+            JmpAbs64.CopyTo(instructions);
+            nint address = (nint)Unsafe.AsPointer(ref MemoryMarshal.GetReference(trampoline));
+            MemoryMarshal.Write(instructions[JmpAbs64.Length..], ref address);
+        }
+        else
+        {
+            // Put the intrinsic code.
+            code.CopyTo(instructions);
+
+            // End the method with a RET instruction.
+            instructions[code.Length] = Ret;
+        }
+
+        scope.FlushInstructions();
+
+        return PatchResult.Success;
     }
 }
