@@ -50,7 +50,7 @@ sealed class AdapterLinuxArm32 : AdapterArm32
             patchCode.CopyTo(instructions);
 
             // End the method with a BX LR instruction.
-            instructions[patchCode.Length] = BX_LR;
+            instructions[patchCode.Length] = BxLr;
 
             scope.FlushInstructions();
         }

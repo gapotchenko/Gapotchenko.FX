@@ -36,5 +36,5 @@ abstract class AdapterArm32 : AdapterArm
         }
     }
 
-    protected const ushort BX_LR = 0x4770;
+    protected const ushort BxLr = 0x4770;
 }
