@@ -5,9 +5,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
-namespace Gapotchenko.FX.Runtime.CompilerServices;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Utils;
 
-static class Util
+static class InstructionOperations
 {
     public static bool HasPrologue<T>(ReadOnlySpan<T> data, T[][] prologues)
         where T : IEquatable<T>?

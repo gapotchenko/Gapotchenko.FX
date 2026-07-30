@@ -6,6 +6,7 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -26,7 +27,7 @@ sealed class AdapterWindowsX86 : AdapterX86
     {
         var instructions = GetMethodInstructions(method);
 
-        int patchablePrologueSize = Util.GetPatchablePrologueSize(instructions, m_SupportedPrologues);
+        int patchablePrologueSize = InstructionOperations.GetPatchablePrologueSize(instructions, m_SupportedPrologues);
         if (patchablePrologueSize < 0)
             return PatchResult.UnexpectedPrologue;
 

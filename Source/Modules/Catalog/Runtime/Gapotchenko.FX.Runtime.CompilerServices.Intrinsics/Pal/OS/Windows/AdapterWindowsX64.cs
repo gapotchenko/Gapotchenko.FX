@@ -6,6 +6,7 @@
 // Year of introduction: 2019
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -25,7 +26,7 @@ sealed class AdapterWindowsX64 : AdapterX64
     public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
         var instructions = GetMethodInstructions(method);
-        if (!Util.HasPrologue(instructions, m_SupportedPrologues))
+        if (!InstructionOperations.HasPrologue(instructions, m_SupportedPrologues))
             return PatchResult.UnexpectedPrologue;
 
         PatchResult result;
