@@ -6,6 +6,7 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Utils;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 
@@ -57,15 +58,16 @@ static unsafe class TrampolineAllocator
 
     #region Proximal Allocation
 
-    public static bool TryAllocateNear(
+    public static bool TryAllocateNear<T>(
         void* target,
-        int size,
+        int count,
         nuint maximumDistance,
-        out Span<byte> allocation)
+        out Span<T> allocation)
+        where T : struct
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
-        int allocationSize = MemoryArithmetics.Align16(size);
+        int allocationSize = MemoryArithmetics.Align16(checked(count * Unsafe.SizeOf<T>()));
         var blocks = m_NearBlocks;
         lock (blocks)
         {
@@ -75,7 +77,7 @@ static unsafe class TrampolineAllocator
                 if (block.AvailableSize >= (nuint)allocationSize &&
                     MemoryArithmetics.IsWithinDistance((nint)target, (nint)block.Current, maximumDistance))
                 {
-                    allocation = new(block.Allocate(allocationSize), size);
+                    allocation = new(block.Allocate(allocationSize), count);
                     blocks[i] = block;
                     return true;
                 }
@@ -87,7 +89,7 @@ static unsafe class TrampolineAllocator
                 return false;
             }
 
-            allocation = new(newBlock.Allocate(allocationSize), size);
+            allocation = new(newBlock.Allocate(allocationSize), count);
             blocks.Add(newBlock);
             return true;
         }
