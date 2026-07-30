@@ -42,8 +42,16 @@ static unsafe class NativeMethods
 
     public struct MemoryExtendedParameter
     {
-        public ulong Type;
+        public MemoryExtendedParameterType Type;
         public void* Pointer;
+    }
+
+    public enum MemoryExtendedParameterType : ulong
+    {
+        /// <summary>
+        /// Indicates the presence of <see cref="MemoryAddressRequirements"/> structure.
+        /// </summary>
+        AddressRequirements = 1
     }
 
     public enum PageState : uint

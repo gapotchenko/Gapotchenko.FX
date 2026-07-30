@@ -148,7 +148,7 @@ static unsafe class TrampolineAllocator
 
         var extendedParameter = new NativeMethods.MemoryExtendedParameter
         {
-            Type = 1, // MemExtendedParameterAddressRequirements
+            Type = NativeMethods.MemoryExtendedParameterType.AddressRequirements,
             Pointer = &addressRequirements
         };
 
