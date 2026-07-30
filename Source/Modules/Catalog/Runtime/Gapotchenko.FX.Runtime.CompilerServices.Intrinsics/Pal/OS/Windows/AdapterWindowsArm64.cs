@@ -38,7 +38,7 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         if ((code.Length & (sizeof(uint) - 1)) != 0)
             return PatchResult.InvalidAlignment;
 
-        var instructions = GetMethodInstructions(method);
+        var instructions = GetMethodInstructions(method, out var entryPoint);
         if (!IsSupportedPrologue(instructions))
             return PatchResult.UnexpectedPrologue;
 
@@ -54,7 +54,7 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         finally
 #endif
         {
-            result = ApplyPatch(instructions, patchCode);
+            result = ApplyPatch(instructions, entryPoint, patchCode);
         }
         return result;
     }
@@ -72,14 +72,16 @@ sealed class AdapterWindowsArm64 : AdapterArm64
             (instruction & 0xff8003ff) == 0xd10003ff;
     }
 
-    static unsafe Span<uint> GetMethodInstructions(MethodInfo method)
+    static unsafe Span<uint> GetMethodInstructions(MethodInfo method, out Span<uint> entryPoint)
     {
         // Compile the method.
         RuntimeHelpers.PrepareMethod(method.MethodHandle);
 
         // Get pointer to the first instruction.
-        uint* p = (uint*)method.MethodHandle.GetFunctionPointer();
+        uint* p0 = (uint*)method.MethodHandle.GetFunctionPointer();
+        uint* p = p0;
         p = SkipBranches(p);
+        entryPoint = p0 != p ? new(p0, 1) : [];
 
         // Get the exact method instruction boundaries.
         var runtimeFunction = (NativeMethods.RuntimeFunctionArm64*)NativeMethods.RtlLookupFunctionEntry(p, out void* imageBase, null);
@@ -110,25 +112,35 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         return new(p, (int)functionLength);
     }
 
-    static unsafe PatchResult ApplyPatch(Span<uint> instructions, ReadOnlySpan<uint> code)
+    static unsafe PatchResult ApplyPatch(Span<uint> instructions, Span<uint> entryPoint, ReadOnlySpan<uint> code)
     {
         int patchSize = checked(code.Length + 1 /* RET */);
 
         var trampoline = Span<uint>.Empty;
+        uint branchDisplacement = 0;
         if (patchSize > instructions.Length)
         {
-            const int redirectionSize = AbsoluteVeneerSize;
-            if (instructions.Length < redirectionSize)
+            if (entryPoint.IsEmpty)
                 return PatchResult.NoSpace;
 
-            trampoline = TrampolineAllocator.Allocate<uint>(patchSize);
+            ref uint instruction = ref MemoryMarshal.GetReference(entryPoint);
+            void* target = Unsafe.AsPointer(ref instruction);
+
+            if (!TrampolineAllocator.TryAllocateNear(target, patchSize, (nuint)BranchMaximumDistance, out trampoline))
+                return PatchResult.NoSpace;
+
+            nint entryOffset = Unsafe.ByteOffset(
+                ref instruction,
+                ref MemoryMarshal.GetReference(trampoline));
+            if (!TryEncodeBranch(entryOffset, out branchDisplacement))
+                return PatchResult.NoSpace;
 
             using var trampolineScope = VirtualProtectionScope.Create(trampoline, NativeMethods.PageProtect.ExecuteReadWrite);
             code.CopyTo(trampoline);
             trampoline[code.Length] = Ret;
             trampolineScope.FlushInstructions();
 
-            instructions = instructions[..redirectionSize];
+            instructions = entryPoint;
         }
         else
         {
@@ -140,12 +152,9 @@ sealed class AdapterWindowsArm64 : AdapterArm64
 
         if (!trampoline.IsEmpty)
         {
-            // Redirect the method to the trampoline with "LDR X16, #8; BR X16"
-            // followed by the absolute 64-bit destination address.
-            instructions[0] = LdrX16Pc8;
-            instructions[1] = BrX16;
-            nint address = (nint)Unsafe.AsPointer(ref MemoryMarshal.GetReference(trampoline));
-            MemoryMarshal.Write(MemoryMarshal.AsBytes(instructions[2..]), ref address);
+            // Redirect future invocations from the entry veneer to the nearby trampoline.
+            // The invocation that initiated type initialization has already passed this point.
+            instructions[0] = B | branchDisplacement;
         }
         else
         {
@@ -160,4 +169,18 @@ sealed class AdapterWindowsArm64 : AdapterArm64
 
         return PatchResult.Success;
     }
+
+    static bool TryEncodeBranch(nint offset, out uint displacement)
+    {
+        if ((offset & (sizeof(uint) - 1)) != 0 || offset < -BranchMaximumDistance || offset >= BranchMaximumDistance)
+        {
+            displacement = 0;
+            return false;
+        }
+
+        displacement = (uint)(offset >> 2) & 0x03ffffff;
+        return true;
+    }
+
+    const nint BranchMaximumDistance = 1 << 27;
 }
