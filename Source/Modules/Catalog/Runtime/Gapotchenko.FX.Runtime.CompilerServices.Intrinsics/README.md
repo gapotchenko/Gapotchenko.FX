@@ -76,7 +76,7 @@ Meet the Intel 80386, a 32-bit microprocessor introduced in 1985.
 It brought the Bit Scan Reverse (BSR) instruction that does exactly the same what we want to achieve by `Log2` using just a small fraction of CPU cycles.
 
 Chances are that your machine runs on a descendant of that influential CPU, be it AMD Ryzen or Intel Core.
-So how can we use the low-level `BSR` instruction from high-level .NET?
+So how can we use low-level CPU instructions from high-level .NET?
 
 This is why `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics` class exists.
 It allows you to define intrinsic implementations of a method
@@ -106,11 +106,22 @@ class BitOperations
         AdditionalArchitectures = [Architecture.X64],
         SupportedOSPlatforms = ["windows"])]
     [MachineCodeIntrinsic(
+        Architecture.X86,
+        0x8b, 0x44, 0x24, 0x04,  // MOV EAX,[ESP+4]
+        0x83, 0xc8, 0x01,        // OR EAX,1
+        0x0f, 0xbd, 0xc0,        // BSR EAX,EAX
+        SupportedOSPlatforms = ["linux"])]
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x83, 0xcf, 0x01,  // OR EDI,1
+        0x0f, 0xbd, 0xc7,  // BSR EAX,EDI
+        SupportedOSPlatforms = ["linux"])]
+    [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x00, 0x32,   // ORR W0,W0,#1
         0x00, 0x10, 0xc0, 0x5a,   // CLZ W0,W0
         0x00, 0x10, 0x00, 0x52,   // EOR W0,W0,#31
-        SupportedOSPlatforms = ["windows"])]
+        SupportedOSPlatforms = ["windows", "linux"])]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Log2_Intrinsic(uint value)
     {
