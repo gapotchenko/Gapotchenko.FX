@@ -115,13 +115,13 @@ class BitOperations
         Architecture.X64,
         0x83, 0xcf, 0x01,  // OR EDI,1
         0x0f, 0xbd, 0xc7,  // BSR EAX,EDI
-        SupportedOSPlatforms = ["linux"])]
+        SupportedOSPlatforms = ["linux", "macos"])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x00, 0x32,   // ORR W0,W0,#1
         0x00, 0x10, 0xc0, 0x5a,   // CLZ W0,W0
         0x00, 0x10, 0x00, 0x52,   // EOR W0,W0,#31
-        SupportedOSPlatforms = ["windows", "linux"])]
+        SupportedOSPlatforms = ["windows", "linux", "macos"])]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int Log2_Intrinsic(uint value)
     {
@@ -152,7 +152,7 @@ and these requirements are reflected in the attributes as well.
 Please note that besides using `MachineCodeIntrinsicAttribute` to define method intrinsic implementations,
 `BitOperations` class **should** use a static constructor to ensure that the corresponding methods are initialized (compiled) before they are called.
 
-Here are the execution times of all three implementations benchmarked on a x64 system (lower is better):
+Here are the execution times of all three implementations benchmarked on a Windows x64 system (lower is better):
 
 |         Method |     Mean |     Error |    StdDev |
 |--------------- |---------:|----------:|----------:|
