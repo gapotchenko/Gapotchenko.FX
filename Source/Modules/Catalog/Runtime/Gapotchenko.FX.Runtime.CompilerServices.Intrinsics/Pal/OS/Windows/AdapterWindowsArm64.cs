@@ -6,9 +6,12 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+using System.Buffers.Binary;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+
+#pragma warning disable CS9191 // The 'ref' modifier for an argument corresponding to 'in' parameter is equivalent to 'in'. Consider using 'in' instead.
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
@@ -42,12 +45,7 @@ sealed class AdapterWindowsArm64 : AdapterArm64
 
         var patchCode = MemoryMarshal.Cast<byte, uint>(code);
 
-        int patchSize = patchCode.Length + 1 /* RET */;
-        if (patchSize > instructions.Length)
-            return PatchResult.NoSpace;
-
-        instructions = instructions[..patchSize];
-
+        PatchResult result;
 #if TFF_CER
         // Ensure that code changes are atomic by using the constrained execution region.
         RuntimeHelpers.PrepareConstrainedRegions();
@@ -57,19 +55,9 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         finally
 #endif
         {
-            // Temporarily allow memory modification in order to apply the intrinsic code.
-            using var scope = VirtualProtectionScope.Create(instructions, NativeMethods.PageProtect.ExecuteReadWrite);
-
-            // Put the intrinsic code.
-            patchCode.CopyTo(instructions);
-
-            // End the method with a RET instruction.
-            instructions[patchCode.Length] = 0xd65f03c0;
-
-            scope.FlushInstructions();
+            result = ApplyPatch(instructions, patchCode);
         }
-
-        return PatchResult.Success;
+        return result;
     }
 
     static bool IsSupportedPrologue(ReadOnlySpan<uint> instructions)
@@ -121,5 +109,56 @@ sealed class AdapterWindowsArm64 : AdapterArm64
             return [];
 
         return new(p, (int)functionLength);
+    }
+
+    static unsafe PatchResult ApplyPatch(Span<uint> instructions, ReadOnlySpan<uint> code)
+    {
+        int patchSize = checked(code.Length + 1 /* RET */);
+
+        var trampoline = Span<uint>.Empty;
+        if (patchSize > instructions.Length)
+        {
+            const int redirectionSize = AbsoluteVeneerSize;
+            if (instructions.Length < redirectionSize)
+                return PatchResult.NoSpace;
+
+            trampoline = TrampolineAllocator.Allocate<uint>(patchSize);
+
+            using var trampolineScope = VirtualProtectionScope.Create(trampoline, NativeMethods.PageProtect.ExecuteReadWrite);
+            code.CopyTo(trampoline);
+            trampoline[code.Length] = Ret;
+            trampolineScope.FlushInstructions();
+
+            instructions = instructions[..redirectionSize];
+        }
+        else
+        {
+            instructions = instructions[..patchSize];
+        }
+
+        // Temporarily allow memory modification in order to apply the intrinsic code.
+        using var scope = VirtualProtectionScope.Create(instructions, NativeMethods.PageProtect.ExecuteReadWrite);
+
+        if (!trampoline.IsEmpty)
+        {
+            // Redirect the method to the trampoline with "LDR X16, #8; BR X16"
+            // followed by the absolute 64-bit destination address.
+            instructions[0] = LdrX16Pc8;
+            instructions[1] = BrX16;
+            nint address = (nint)Unsafe.AsPointer(ref MemoryMarshal.GetReference(trampoline));
+            MemoryMarshal.Write(MemoryMarshal.AsBytes(instructions[2..]), ref address);
+        }
+        else
+        {
+            // Put the intrinsic code.
+            code.CopyTo(instructions);
+
+            // End the method with a RET instruction.
+            instructions[code.Length] = Ret;
+        }
+
+        scope.FlushInstructions();
+
+        return PatchResult.Success;
     }
 }

@@ -38,4 +38,7 @@ abstract class AdapterArm64 : AdapterArm
     }
 
     protected const uint Ret = 0xd65f03c0;
+    protected const int AbsoluteVeneerSize = 4;
+    protected const uint LdrX16Pc8 = 0x58000050;
+    protected const uint BrX16 = 0xd61f0200;
 }
