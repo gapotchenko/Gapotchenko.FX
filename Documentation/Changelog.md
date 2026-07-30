@@ -6,9 +6,12 @@
 
 Release date: not released yet
 
-- Added polyfills for `LeadingZeroCount(UInt32)`, `LeadingZeroCount(UInt64)`, and `Log2(UInt64)` methods of `BitOperations` class
 - Improved compatibility with AOT compilation
-- Improved hashing performance of `ArrayEqualityComparer`, `SpanEqualityComparer` and `MemoryEqualityComparer`. This is achieved by utilizing hardware-accelerated xxHash3 hash function instead of FNV-1a 
+- Improved hashing performance of `ArrayEqualityComparer`, `SpanEqualityComparer` and `MemoryEqualityComparer`
+- Polyfills:
+    - Added `UIntPtr.MaxValue` polyfill property
+    - Added polyfills for `LeadingZeroCount(UInt32)`, `LeadingZeroCount(UInt64)`, and `Log2(UInt64)` methods of `BitOperations` class
+
 - Fixed issue with `BitOperations.Log2(UInt32)` polyfill method that returned a non-zero value for zero argument on x64 processor architecture
 
 ### Gapotchenko.FX 2026.8
