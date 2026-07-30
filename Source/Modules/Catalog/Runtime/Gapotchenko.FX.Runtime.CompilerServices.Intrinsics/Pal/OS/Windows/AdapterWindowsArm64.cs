@@ -79,8 +79,7 @@ sealed class AdapterWindowsArm64 : AdapterArm64
 
         // Get pointer to the first instruction.
         uint* p0 = (uint*)method.MethodHandle.GetFunctionPointer();
-        uint* p = p0;
-        p = SkipBranches(p);
+        uint* p = SkipBranches(p0);
         entryPoint = p0 != p ? new(p0, 1) : [];
 
         // Get the exact method instruction boundaries.
@@ -120,10 +119,8 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         uint branchDisplacement = 0;
         if (patchSize > instructions.Length)
         {
-            if (entryPoint.IsEmpty)
-                return PatchResult.NoSpace;
-
-            ref uint instruction = ref MemoryMarshal.GetReference(entryPoint);
+            var redirection = entryPoint.IsEmpty ? instructions[..1] : entryPoint;
+            ref uint instruction = ref MemoryMarshal.GetReference(redirection);
             void* target = Unsafe.AsPointer(ref instruction);
 
             if (!TrampolineAllocator.TryAllocateNear(target, patchSize, (nuint)BranchMaximumDistance, out trampoline))
@@ -140,7 +137,7 @@ sealed class AdapterWindowsArm64 : AdapterArm64
             trampoline[code.Length] = Ret;
             trampolineScope.FlushInstructions();
 
-            instructions = entryPoint;
+            instructions = redirection;
         }
         else
         {
@@ -152,8 +149,8 @@ sealed class AdapterWindowsArm64 : AdapterArm64
 
         if (!trampoline.IsEmpty)
         {
-            // Redirect future invocations from the entry veneer to the nearby trampoline.
-            // The invocation that initiated type initialization has already passed this point.
+            // Redirect invocations from the entry veneer, or directly from the method entry
+            // when the runtime does not expose a separate veneer.
             instructions[0] = B | branchDisplacement;
         }
         else
