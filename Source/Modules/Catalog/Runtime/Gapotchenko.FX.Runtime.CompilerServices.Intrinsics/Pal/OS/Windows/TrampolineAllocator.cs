@@ -5,7 +5,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -55,23 +54,23 @@ static unsafe class TrampolineAllocator
         }
     }
 
-    static Block AllocateGlobalBlock(int minimumSize)
+    static LinearMemoryBlock AllocateGlobalBlock(int minimumSize)
     {
-        int blockSize = Math.Max(Environment.SystemPageSize, minimumSize);
+        nuint blockSize = (nuint)Math.Max(Environment.SystemPageSize, minimumSize);
         void* p = NativeMethods.VirtualAlloc(
             null,
-            (nuint)blockSize,
+            blockSize,
             NativeMethods.VirtualAllocationType.Reserve | NativeMethods.VirtualAllocationType.Commit,
             NativeMethods.PageProtect.ExecuteRead);
 
         if (p == null)
             throw new Win32Exception(Marshal.GetLastWin32Error());
 
-        return new Block((byte*)p, blockSize);
+        return new LinearMemoryBlock((byte*)p, blockSize);
     }
 
     static readonly Lock m_GlobalLock = new();
-    static Block m_GlobalBlock;
+    static LinearMemoryBlock m_GlobalBlock;
 
     #endregion
 
@@ -115,7 +114,7 @@ static unsafe class TrampolineAllocator
         }
     }
 
-    static readonly List<Block> m_NearBlocks = [];
+    static readonly List<LinearMemoryBlock> m_NearBlocks = [];
 
     static bool IsWithinDistance(void* x, void* y, nuint maximumDistance)
     {
@@ -124,11 +123,11 @@ static unsafe class TrampolineAllocator
         return a >= b ? a - b <= maximumDistance : b - a <= maximumDistance;
     }
 
-    static bool TryAllocateNearBlock(void* target, int minimumSize, nuint maximumDistance, out Block block)
+    static bool TryAllocateNearBlock(void* target, int minimumSize, nuint maximumDistance, out LinearMemoryBlock block)
     {
         const nuint AllocationGranularity = 64 * 1024;
 
-        int blockSize = AlignUp(Math.Max(Environment.SystemPageSize, minimumSize), Environment.SystemPageSize);
+        nuint blockSize = (nuint)AlignUp(Math.Max(Environment.SystemPageSize, minimumSize), Environment.SystemPageSize);
         nuint targetAddress = (nuint)target;
         nuint minimumAddress = targetAddress > maximumDistance ? targetAddress - maximumDistance : 0;
         nuint maximumAddress = targetAddress <= nuint.MaxValue - maximumDistance ? targetAddress + maximumDistance - 1 : nuint.MaxValue;
@@ -156,7 +155,7 @@ static unsafe class TrampolineAllocator
         void* p = NativeMethods.VirtualAlloc2(
             IntPtr.Zero,
             null,
-            (nuint)blockSize,
+            blockSize,
             NativeMethods.VirtualAllocationType.Reserve | NativeMethods.VirtualAllocationType.Commit,
             NativeMethods.PageProtect.ExecuteRead,
             &extendedParameter,
@@ -168,28 +167,11 @@ static unsafe class TrampolineAllocator
             return false;
         }
 
-        block = new Block((byte*)p, blockSize);
+        block = new LinearMemoryBlock((byte*)p, blockSize);
         return true;
     }
 
     #endregion
-
-    struct Block(byte* current, int size)
-    {
-        public byte* Allocate(int allocationSize)
-        {
-            byte* p = Current;
-            Current = p + allocationSize;
-            Debug.Assert(Current <= End);
-            return p;
-        }
-
-        public readonly nuint AvailableSize => (nuint)(End - Current);
-
-        public byte* Current { get; private set; } = current;
-
-        public byte* End { get; } = current + size;
-    }
 
     static int Align(int size)
     {
