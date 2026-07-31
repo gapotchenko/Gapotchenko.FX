@@ -95,11 +95,48 @@ sealed class AdapterMacOSArm64 : AdapterArm64
             if (!TryEncodeBranch(offset, out branchDisplacement))
                 return PatchResult.NoSpace;
 
-            using (var trampolineScope = JitWriteProtectionScope.Create(trampoline))
+            var bodyTrampoline = Span<uint>.Empty;
+            var bodyRedirection = Span<uint>.Empty;
+            uint bodyBranchDisplacement = 0;
+
+            if (!entryPoint.IsEmpty)
             {
-                code.CopyTo(trampoline);
-                trampoline[code.Length] = Ret;
-                trampolineScope.FlushInstructions();
+                bodyRedirection = instructions[..1];
+                if (!MemoryMap.IsWriteAllowed(bodyRedirection))
+                    return PatchResult.WriteProtected;
+
+                nint bodyOffset = Unsafe.ByteOffset(
+                    ref MemoryMarshal.GetReference(bodyRedirection),
+                    ref MemoryMarshal.GetReference(trampoline));
+                if (!TryEncodeBranch(bodyOffset, out bodyBranchDisplacement))
+                {
+                    ref uint bodyInstruction = ref MemoryMarshal.GetReference(bodyRedirection);
+                    if (!TrampolineAllocator.TryAllocateNear(
+                        Unsafe.AsPointer(ref bodyInstruction),
+                        patchSize,
+                        (nuint)BranchMaximumDistance,
+                        out bodyTrampoline))
+                    {
+                        return PatchResult.NoSpace;
+                    }
+
+                    bodyOffset = Unsafe.ByteOffset(
+                        ref bodyInstruction,
+                        ref MemoryMarshal.GetReference(bodyTrampoline));
+                    if (!TryEncodeBranch(bodyOffset, out bodyBranchDisplacement))
+                        return PatchResult.NoSpace;
+                }
+            }
+
+            WriteTrampoline(trampoline, code);
+            if (!bodyTrampoline.IsEmpty)
+                WriteTrampoline(bodyTrampoline, code);
+
+            if (!bodyRedirection.IsEmpty)
+            {
+                using var bodyScope = JitWriteProtectionScope.Create(bodyRedirection);
+                bodyRedirection[0] = B | bodyBranchDisplacement;
+                bodyScope.FlushInstructions();
             }
 
             instructions = redirection;
@@ -125,5 +162,13 @@ sealed class AdapterMacOSArm64 : AdapterArm64
 
         scope.FlushInstructions();
         return PatchResult.Success;
+
+        static void WriteTrampoline(Span<uint> destination, ReadOnlySpan<uint> code)
+        {
+            using var scope = JitWriteProtectionScope.Create(destination);
+            code.CopyTo(destination);
+            destination[code.Length] = Ret;
+            scope.FlushInstructions();
+        }
     }
 }
