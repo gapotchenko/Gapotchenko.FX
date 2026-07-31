@@ -7,8 +7,167 @@
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
 abstract class AdapterArm32 : AdapterArm
 {
+    public sealed override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
+    {
+        if ((code.Length & (sizeof(ushort) - 1)) != 0)
+            return PatchResult.InvalidAlignment;
+
+        GetMethodInstructions(method, out var instructions, out var entryPoint, out var entryPointTarget);
+        int prologueSize = GetPatchablePrologueSize(instructions);
+        if (prologueSize < 0)
+            return PatchResult.UnexpectedPrologue;
+
+        instructions = instructions[..Math.Min(prologueSize, instructions.Length)];
+        var patchCode = MemoryMarshal.Cast<byte, ushort>(code);
+
+        PatchResult result;
+#if TFF_CER
+        RuntimeHelpers.PrepareConstrainedRegions();
+        try
+        {
+        }
+        finally
+#endif
+        {
+            result = ApplyPatch(instructions, entryPoint, entryPointTarget, patchCode);
+        }
+        return result;
+    }
+
+    protected abstract void GetMethodInstructions(
+        MethodInfo method,
+        out Span<ushort> instructions,
+        out Span<ushort> entryPoint,
+        out Span<uint> entryPointTarget);
+
+    protected static unsafe ushort* GetMethodCodePointer(
+        MethodInfo method,
+        out Span<ushort> entryPoint,
+        out Span<uint> entryPointTarget)
+    {
+        RuntimeHelpers.PrepareMethod(method.MethodHandle);
+        ushort* p0 = (ushort*)((nuint)(void*)method.MethodHandle.GetFunctionPointer() & ~(nuint)1);
+        ushort* p = SkipBranches(p0);
+
+        entryPoint = [];
+        entryPointTarget = [];
+        if (p0 != p)
+        {
+            if (TryGetIndirectBranchTargetSlot(p0, out uint* targetSlot))
+                entryPointTarget = new(targetSlot, 1);
+            else
+                entryPoint = new(p0, 2);
+        }
+        return p;
+    }
+
+    static int GetPatchablePrologueSize(ReadOnlySpan<ushort> instructions)
+    {
+        if (instructions.Length < 1)
+            return -1;
+
+        ushort instruction = instructions[0];
+        if ((instruction & 0xff00) == 0xb500)
+            return 2;
+        if (instruction == 0xe92d && instructions.Length >= 2 && (instructions[1] & 0x4000) != 0)
+            return 4;
+        if ((instruction & 0xff80) == 0xb080)
+            return 3;
+        return -1;
+    }
+
+    unsafe PatchResult ApplyPatch(
+        Span<ushort> instructions,
+        Span<ushort> entryPoint,
+        Span<uint> entryPointTarget,
+        ReadOnlySpan<ushort> code)
+    {
+        int patchSize = checked(code.Length + 1);
+        if (patchSize <= instructions.Length)
+        {
+            var destination = instructions[..patchSize];
+            if (!IsWriteAllowed(destination))
+                return PatchResult.WriteProtected;
+            WriteCode(destination, code);
+            return PatchResult.Success;
+        }
+
+        var bodyRedirection = instructions[..2];
+        if (!IsWriteAllowed(bodyRedirection) ||
+            !entryPoint.IsEmpty && !IsWriteAllowed(entryPoint) ||
+            !entryPointTarget.IsEmpty && !IsWriteAllowed(entryPointTarget))
+        {
+            return PatchResult.WriteProtected;
+        }
+
+        Span<ushort> trampoline;
+        Span<ushort> primaryRedirection;
+        if (!entryPointTarget.IsEmpty)
+        {
+            trampoline = AllocateTrampoline(patchSize);
+            primaryRedirection = [];
+        }
+        else
+        {
+            primaryRedirection = entryPoint.IsEmpty ? bodyRedirection : entryPoint;
+            if (!TryAllocateTrampolineNear(GetPointer(primaryRedirection), patchSize, out trampoline))
+                return PatchResult.NoSpace;
+        }
+
+        ushort primaryBranchFirst = 0, primaryBranchSecond = 0;
+        if (!primaryRedirection.IsEmpty &&
+            !TryEncodeBranch(GetBranchOffset(primaryRedirection, trampoline), out primaryBranchFirst, out primaryBranchSecond))
+        {
+            return PatchResult.NoSpace;
+        }
+
+        var bodyTrampoline = Span<ushort>.Empty;
+        ushort bodyBranchFirst = primaryBranchFirst, bodyBranchSecond = primaryBranchSecond;
+        if (!entryPoint.IsEmpty || !entryPointTarget.IsEmpty)
+        {
+            if (!TryEncodeBranch(GetBranchOffset(bodyRedirection, trampoline), out bodyBranchFirst, out bodyBranchSecond))
+            {
+                if (!TryAllocateTrampolineNear(GetPointer(bodyRedirection), patchSize, out bodyTrampoline) ||
+                    !TryEncodeBranch(GetBranchOffset(bodyRedirection, bodyTrampoline), out bodyBranchFirst, out bodyBranchSecond))
+                {
+                    return PatchResult.NoSpace;
+                }
+            }
+        }
+
+        WriteCode(trampoline, code);
+        if (!bodyTrampoline.IsEmpty)
+            WriteCode(bodyTrampoline, code);
+
+        WriteBranch(bodyRedirection, bodyBranchFirst, bodyBranchSecond);
+
+        if (!entryPoint.IsEmpty)
+            WriteBranch(entryPoint, primaryBranchFirst, primaryBranchSecond);
+        else if (!entryPointTarget.IsEmpty)
+            WriteAddress(entryPointTarget, (uint)(nuint)GetPointer(trampoline) | 1);
+
+        return PatchResult.Success;
+    }
+
+    protected abstract bool IsWriteAllowed<T>(Span<T> span) where T : struct;
+    protected abstract Span<ushort> AllocateTrampoline(int count);
+    protected abstract unsafe bool TryAllocateTrampolineNear(void* target, int count, out Span<ushort> trampoline);
+    protected abstract void WriteCode(Span<ushort> destination, ReadOnlySpan<ushort> code);
+    protected abstract void WriteBranch(Span<ushort> destination, ushort first, ushort second);
+    protected abstract void WriteAddress(Span<uint> destination, uint address);
+
+    static unsafe void* GetPointer(Span<ushort> span) =>
+        Unsafe.AsPointer(ref MemoryMarshal.GetReference(span));
+
+    static nint GetBranchOffset(Span<ushort> source, Span<ushort> target) =>
+        checked(Unsafe.ByteOffset(ref MemoryMarshal.GetReference(source), ref MemoryMarshal.GetReference(target)) - sizeof(uint));
+
     protected static unsafe ushort* SkipBranches(ushort* p)
     {
         // Function pointers for Thumb code have bit 0 set.
