@@ -75,11 +75,9 @@ sealed class AdapterMacOSX64 : AdapterX64
         scope.FlushInstructions();
     }
 
-    static MemoryProtectionScope CreateWriteScope(Span<byte> span)
+    static JitWriteProtectionScope CreateWriteScope(Span<byte> span)
     {
-        return MemoryProtectionScope.Create(
-            span,
-            NativeMethods.MemoryProtection.Read | NativeMethods.MemoryProtection.Write | NativeMethods.MemoryProtection.Execute);
+        return JitWriteProtectionScope.Create(span);
     }
 
     protected override unsafe void GetMethodInstructions(
