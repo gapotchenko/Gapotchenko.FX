@@ -139,7 +139,7 @@
   <Folder Name="/01. Modules/Runtime/" />
   <Folder Name="/01. Modules/Runtime/CompilerServices/" />
   <Folder Name="/01. Modules/Runtime/CompilerServices/Intrinsics/">
-    <Project Path="Modules/Catalog/Runtime/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj" />
+    <Project Path="Modules/Catalog/Runtime/CompilerServices/Intrinsics/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj" />
   </Folder>
   <Folder Name="/01. Modules/Runtime/InteropServices/">
     <Project Path="Modules/Catalog/Runtime/Gapotchenko.FX.Runtime.InteropServices/Gapotchenko.FX.Runtime.InteropServices.csproj" />

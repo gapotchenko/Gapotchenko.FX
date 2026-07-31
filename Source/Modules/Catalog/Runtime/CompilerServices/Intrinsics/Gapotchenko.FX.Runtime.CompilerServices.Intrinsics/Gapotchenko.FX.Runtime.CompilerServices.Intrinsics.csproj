@@ -6,12 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.CompilerServices.IntrinsicServices" />
+    <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.CompilerServices.Intrinsics" />
     <CommonlyUsedPart Include="Gapotchenko.FX.Runtime.CompilerServices.MachineCodeIntrinsicAttribute" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
+    <ProjectReference Include="..\..\..\..\Gapotchenko.FX\Gapotchenko.FX.csproj" />
   </ItemGroup>
 
 </Project>
