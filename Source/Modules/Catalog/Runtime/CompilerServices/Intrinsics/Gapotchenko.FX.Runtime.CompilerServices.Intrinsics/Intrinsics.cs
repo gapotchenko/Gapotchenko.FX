@@ -22,6 +22,16 @@ public static class Intrinsics
     /// Initializes intrinsic methods of the specified type.
     /// </summary>
     /// <param name="type">The type with intrinsic methods to initialize.</param>
+    /// <remarks>
+    /// <para>
+    /// This method must be called exactly once, from the static constructor of
+    /// <paramref name="type"/>, before any intrinsic method declared by that type can be invoked.
+    /// </para>
+    /// <para>
+    /// Calling this method more than once for the same type, or calling it while an intrinsic
+    /// method of that type can be executing on another thread, results in undefined behavior.
+    /// </para>
+    /// </remarks>
     public static void InitializeType(
 #if NET
         [DynamicallyAccessedMembers(
