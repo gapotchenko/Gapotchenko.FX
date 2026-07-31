@@ -96,6 +96,14 @@ static class Program
 
     static void EdgeCaseExercise()
     {
-        // TODO
+        int result = EdgeCaseOperations.LongIntrinsic();
+        Assert.IsTrue(
+            result is EdgeCaseOperations.ManagedResult or EdgeCaseOperations.IntrinsicResult,
+            "The first invocation returned an unexpected value.");
+
+        // When initialization occurs inside the first managed invocation, that active frame
+        // finishes by executing the original body. Every later invocation must be redirected.
+        for (int i = 1; i < 100_000; ++i)
+            Assert.AreEqual(EdgeCaseOperations.IntrinsicResult, EdgeCaseOperations.LongIntrinsic());
     }
 }
