@@ -26,6 +26,10 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         {
             // Advanced SIMD is a baseline requirement for Windows on ARM64.
             MachineCodeIntrinsicFeature.AdvSimd => true,
+#if !NET
+            MachineCodeIntrinsicFeature.Crc32 => NativeMethods.IsProcessorFeaturePresent(
+                NativeMethods.ProcessorFeature.ArmV8Crc32InstructionsAvailable),
+#endif
             _ => base.IsFeatureSupported(feature)
         };
     }

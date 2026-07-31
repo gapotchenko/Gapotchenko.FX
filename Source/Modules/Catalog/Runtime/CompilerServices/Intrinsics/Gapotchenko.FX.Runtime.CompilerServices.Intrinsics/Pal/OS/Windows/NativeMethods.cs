@@ -59,6 +59,11 @@ static unsafe class NativeMethods
         MemCommit = 0x1000
     }
 
+    public enum ProcessorFeature : uint
+    {
+        ArmV8Crc32InstructionsAvailable = 31
+    }
+
     [Flags]
     public enum VirtualAllocationType : uint
     {
@@ -103,6 +108,9 @@ static unsafe class NativeMethods
 
     [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
     public static extern bool FlushInstructionCache(IntPtr hProcess, void* lpBaseAddress, nuint dwSize);
+
+    [DllImport("kernel32.dll", ExactSpelling = true)]
+    public static extern bool IsProcessorFeaturePresent(ProcessorFeature processorFeature);
 
     [DllImport("kernel32.dll", ExactSpelling = true)]
     public static extern void* RtlLookupFunctionEntry(void* controlPc, out void* imageBase, void* historyTable);
