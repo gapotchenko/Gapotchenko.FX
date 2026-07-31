@@ -18,12 +18,18 @@ abstract class AdapterArm64 : AdapterArm
         if ((code.Length & (sizeof(uint) - 1)) != 0)
             return PatchResult.InvalidAlignment;
 
-        GetMethodInstructions(method, out var instructions, out var entryPoint, out var entryPointTarget);
+        GetMethodInstructions(
+            method,
+            out var instructions,
+            out var entryPoint,
+            out var entryPointTarget,
+            out bool hasExactBoundaries);
         int prologueSize = GetPatchablePrologueSize(instructions);
         if (prologueSize < 0)
             return PatchResult.UnexpectedPrologue;
 
-        instructions = instructions[..Math.Min(prologueSize, instructions.Length)];
+        if (!hasExactBoundaries)
+            instructions = instructions[..Math.Min(prologueSize, instructions.Length)];
         var patchCode = MemoryMarshal.Cast<byte, uint>(code);
 
         PatchResult result;
@@ -44,7 +50,8 @@ abstract class AdapterArm64 : AdapterArm
         MethodInfo method,
         out Span<uint> instructions,
         out Span<uint> entryPoint,
-        out Span<nuint> entryPointTarget);
+        out Span<nuint> entryPointTarget,
+        out bool hasExactBoundaries);
 
     protected static unsafe uint* GetMethodCodePointer(
         MethodInfo method,

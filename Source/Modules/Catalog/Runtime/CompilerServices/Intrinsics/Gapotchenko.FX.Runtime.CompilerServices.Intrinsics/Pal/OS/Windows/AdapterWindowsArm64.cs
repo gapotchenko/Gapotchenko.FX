@@ -34,8 +34,10 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         MethodInfo method,
         out Span<uint> instructions,
         out Span<uint> entryPoint,
-        out Span<nuint> entryPointTarget)
+        out Span<nuint> entryPointTarget,
+        out bool hasExactBoundaries)
     {
+        hasExactBoundaries = true;
         uint* p = GetMethodCodePointer(method, out entryPoint, out entryPointTarget);
 
         // Get the exact method instruction boundaries.

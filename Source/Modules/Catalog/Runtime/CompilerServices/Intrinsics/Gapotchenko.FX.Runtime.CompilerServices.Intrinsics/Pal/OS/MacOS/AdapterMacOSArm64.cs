@@ -20,8 +20,10 @@ sealed class AdapterMacOSArm64 : AdapterArm64
         MethodInfo method,
         out Span<uint> instructions,
         out Span<uint> entryPoint,
-        out Span<nuint> entryPointTarget)
+        out Span<nuint> entryPointTarget,
+        out bool hasExactBoundaries)
     {
+        hasExactBoundaries = false;
         uint* p = GetMethodCodePointer(method, out entryPoint, out entryPointTarget);
         if (((nuint)p & (sizeof(uint) - 1)) != 0)
         {
