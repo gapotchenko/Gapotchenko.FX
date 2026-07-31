@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 
-abstract class AdapterX64 : AdapterX86
+abstract class AdapterX64 : AdapterX86Base
 {
     public sealed override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
