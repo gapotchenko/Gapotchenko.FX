@@ -6,6 +6,7 @@
 
 Release date: not released yet
 
+- Added Linux and macOS intrinsic compilation support
 - Improved compatibility with AOT compilation
 - Improved hashing performance of `ArrayEqualityComparer`, `SpanEqualityComparer` and `MemoryEqualityComparer`
 - Polyfills:
