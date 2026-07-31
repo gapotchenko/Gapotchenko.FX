@@ -16,6 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Gapotchenko.FX.Numerics\Gapotchenko.FX.Numerics.csproj" />
     <ProjectReference Include="..\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics\Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj" />
   </ItemGroup>
 

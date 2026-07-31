@@ -6,6 +6,7 @@
 // Year of introduction: 2026
 
 using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Harness;
@@ -33,16 +34,11 @@ static class Program
 
     static void Run(IReadOnlyList<string> args)
     {
-        ShowEnvironmentInfo();
         InitializeLogging();
+        ShowEnvironmentInfo();
         Exercise();
     }
 
-    static void ShowEnvironmentInfo()
-    {
-        Console.WriteLine("OS: {0}", RuntimeInformation.OSDescription);
-        Console.WriteLine("Process architecture: {0}", RuntimeInformation.ProcessArchitecture);
-    }
 
     static void InitializeLogging()
     {
@@ -66,10 +62,17 @@ static class Program
 #endif
     }
 
+    static void ShowEnvironmentInfo()
+    {
+        Console.WriteLine("OS: {0}", RuntimeInformation.OSDescription);
+        Console.WriteLine("Process architecture: {0}", RuntimeInformation.ProcessArchitecture);
+    }
+
     static void Exercise()
     {
         DoExercise(() => NormalExercise(), "Normal exercise");
         DoExercise(() => EdgeCaseExercise(), "Edge-case exercise");
+        DoExercise(() => ExerciseBitOperations(), "Bit operations exercise");
     }
 
     static void DoExercise(Action action, string title)
@@ -133,5 +136,16 @@ static class Program
         }
 
         #endregion
+    }
+
+    static void ExerciseBitOperations()
+    {
+        // Bit operations are implemented as intrinsic machine code methods
+        // on .NET Framework by Gapotchenko.FX.Numerics module.
+        // .NET 8.0+ provides bit operations natively.
+
+        Assert.AreEqual(0, BitOperations.Log2(0));
+        Assert.AreEqual(6, NormalOperations.Log2_Intrinsic(67));
+        Assert.AreEqual(12, BitOperations.PopCount(120431));
     }
 }
