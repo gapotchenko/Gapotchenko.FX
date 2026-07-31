@@ -65,7 +65,7 @@ public static class Intrinsics
             if (intrinsicAttribute is null)
                 continue;
 
-            ValidateMethod(method);
+            ValidateMethod(method, intrinsicAttribute);
 
             Adapter.PatchResult patchResult;
 
@@ -122,21 +122,53 @@ public static class Intrinsics
             }
         }
 
-        static void ValidateMethod(MethodInfo method)
+        static void ValidateMethod(MethodInfo method, MachineCodeIntrinsicAttribute attribute)
         {
             if ((method.MethodImplementationFlags & MethodImplAttributes.NoInlining) == 0)
             {
-                throw new InvalidOperationException(
+                throw CreateInvalidMethodException(
+                    method,
+                    string.Format("is not marked with {0} implementation flag", nameof(MethodImplAttributes.NoInlining)));
+            }
+
+            if (!method.IsStatic)
+                throw CreateInvalidMethodException(method, "is not static");
+
+            if (method.ContainsGenericParameters)
+                throw CreateInvalidMethodException(method, "contains unassigned generic parameters");
+
+            if (method.IsAbstract)
+                throw CreateInvalidMethodException(method, "is abstract");
+
+            if ((method.Attributes & MethodAttributes.PinvokeImpl) != 0)
+                throw CreateInvalidMethodException(method, "is a platform invocation method");
+
+            if ((method.MethodImplementationFlags & MethodImplAttributes.CodeTypeMask) != MethodImplAttributes.IL)
+                throw CreateInvalidMethodException(method, "is not implemented in IL");
+
+            if ((method.MethodImplementationFlags & MethodImplAttributes.InternalCall) != 0)
+                throw CreateInvalidMethodException(method, "is an internal-call method");
+
+            byte[] code =
+                attribute.Code ??
+                throw CreateInvalidMethodException(method, "has null intrinsic machine code");
+
+            if (code.Length == 0 && method.ReturnType != typeof(void))
+                throw CreateInvalidMethodException(method, "has empty intrinsic machine code despite returning a value");
+
+            static Exception CreateInvalidMethodException(MethodInfo method, string reason)
+            {
+                return new InvalidOperationException(
                     string.Format(
-                        "Intrinsic method '{0}' declared in type '{1}' is not marked with {2} implementation flag.",
+                        "Intrinsic method '{0}' declared in type '{1}' {2}.",
                         method,
                         method.DeclaringType,
-                        nameof(MethodImplAttributes.NoInlining)));
+                        reason));
             }
         }
     }
 
-    static readonly object m_PatchingLock = new();
+    static readonly Lock m_PatchingLock = new();
 
     static bool m_GiveUpOnPatching;
 
