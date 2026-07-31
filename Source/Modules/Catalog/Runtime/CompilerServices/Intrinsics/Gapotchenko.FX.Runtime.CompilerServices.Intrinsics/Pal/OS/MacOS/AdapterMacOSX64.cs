@@ -6,7 +6,6 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
-using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -20,118 +19,77 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
 #endif
 sealed class AdapterMacOSX64 : AdapterX64
 {
-    public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
+    protected override bool IsWriteAllowed(Span<byte> span)
     {
-        var instructions = GetMethodInstructions(method, out var entryPoint);
-        int patchablePrologueSize = InstructionOperations.GetPatchablePrologueSize(instructions, m_SupportedPrologues);
-        if (patchablePrologueSize < 0)
-            return PatchResult.UnexpectedPrologue;
-
-        instructions = instructions[..Math.Min(patchablePrologueSize, instructions.Length)];
-
-        PatchResult result;
-#if TFF_CER
-        // Ensure that code changes are atomic by using the constrained execution region.
-        RuntimeHelpers.PrepareConstrainedRegions();
-        try
-        {
-        }
-        finally
-#endif
-        {
-            result = ApplyPatch(instructions, entryPoint, code);
-        }
-        return result;
+        return MemoryMap.IsWriteAllowed(span);
     }
 
-    // The table defines a conservative minimum method body extent:
-    // complete prologue plus the shortest matching restoration/return sequence.
-    static readonly (byte[] Instructions, int Size)[] m_SupportedPrologues =
-    [
-        ([0x41, 0x57, 0x53, 0x48, 0x83, 0xec], 7 + 8),
-        ([0x48, 0x83, 0xec], 4 + 5),
-        ([0x48, 0x81, 0xec], 7 + 8),
-        ([0x53, 0x48, 0x83, 0xec], 5 + 6),
-        ([0x55, 0x48, 0x8b, 0xec], 4 + 2), // .NET 10 x64, tier 0
-        ([0x55, 0x48, 0x89, 0xe5], 4 + 2),
-        ([0x55, 0x48, 0x83, 0xec], 5 + 6),
-        ([0x55, 0x41, 0x57], 3 + 4),
-        ([0x56, 0x48, 0x83, 0xec], 5 + 6),
-        ([0x57, 0x48, 0x83, 0xec], 5 + 6)
-    ];
-
-    static unsafe PatchResult ApplyPatch(Span<byte> instructions, Span<byte> entryPoint, ReadOnlySpan<byte> code)
+    protected override bool TryAllocateTrampoline(
+        Span<byte> redirection,
+        int size,
+        out Span<byte> trampoline)
     {
-        int patchSize = code.Length + 1 /* RET */;
+        trampoline = TrampolineAllocator.Allocate(size);
+        return true;
+    }
 
-        var trampoline = Span<byte>.Empty;
-        if (patchSize > instructions.Length)
-        {
-            var redirection = entryPoint.IsEmpty ? instructions : entryPoint;
-            if (redirection.Length < JmpAbs64Size)
-                return PatchResult.NoSpace;
-
-            redirection = redirection[..JmpAbs64Size];
-            if (!MemoryMap.IsWriteAllowed(redirection))
-                return PatchResult.WriteProtected;
-
-            trampoline = TrampolineAllocator.Allocate(patchSize);
-
-            using (var trampolineScope = JitWriteProtectionScope.Create(trampoline))
-            {
-                code.CopyTo(trampoline);
-                trampoline[code.Length] = Ret;
-                trampolineScope.FlushInstructions();
-            }
-
-            instructions = redirection;
-        }
-        else
-        {
-            instructions = instructions[..patchSize];
-            if (!MemoryMap.IsWriteAllowed(instructions))
-                return PatchResult.WriteProtected;
-        }
-
-        using var scope = MemoryProtectionScope.Create(
-            instructions,
-            NativeMethods.MemoryProtection.Read | NativeMethods.MemoryProtection.Write | NativeMethods.MemoryProtection.Execute);
-
-        if (!trampoline.IsEmpty)
-        {
-            JmpAbs64.CopyTo(instructions);
-            nint address = (nint)Unsafe.AsPointer(ref MemoryMarshal.GetReference(trampoline));
-            MemoryMarshal.Write(instructions[JmpAbs64.Length..], ref address);
-        }
-        else
-        {
-            code.CopyTo(instructions);
-            instructions[code.Length] = Ret;
-        }
-
+    protected override void WriteCode(Span<byte> destination, ReadOnlySpan<byte> code)
+    {
+        using var scope = CreateWriteScope(destination);
+        code.CopyTo(destination);
+        destination[code.Length] = Ret;
         scope.FlushInstructions();
-        return PatchResult.Success;
     }
 
-    static unsafe Span<byte> GetMethodInstructions(MethodInfo method, out Span<byte> entryPoint)
+    protected override void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code)
     {
-        RuntimeHelpers.PrepareMethod(method.MethodHandle);
-        byte* p0 = (byte*)method.MethodHandle.GetFunctionPointer();
-        byte* p = SkipBranches(p0);
+        using var scope = JitWriteProtectionScope.Create(destination);
+        code.CopyTo(destination);
+        destination[code.Length] = Ret;
+        scope.FlushInstructions();
+    }
 
-        // .NET x64 uses a 20-byte precode stub beginning with an indirect jump,
-        // followed by "MOV R10,[RIP+disp32]". It safely accommodates JmpAbs64.
-        if (p0 != p &&
-            p0[0] == 0xff && p0[1] == 0x25 &&
-            p0[6] == 0x4c && p0[7] == 0x8b && p0[8] == 0x15)
-        {
-            entryPoint = new(p0, JmpAbs64Size);
-        }
-        else
-        {
-            entryPoint = [];
-        }
+    protected override int RedirectionSize => JmpAbs64Size;
 
-        return Unwind.GetMethodInstructions(p);
+    protected override unsafe void WriteRedirection(Span<byte> destination, Span<byte> trampoline)
+    {
+        using var scope = CreateWriteScope(destination);
+        JmpAbs64.CopyTo(destination);
+        nint address = (nint)Unsafe.AsPointer(ref MemoryMarshal.GetReference(trampoline));
+        MemoryMarshal.Write(destination[JmpAbs64.Length..], ref address);
+        scope.FlushInstructions();
+    }
+
+    protected override int BodyRedirectionSize => JmpRel32Size;
+
+    protected override void WriteBodyRedirection(Span<byte> destination, Span<byte> entryPoint)
+    {
+        nint offset = Unsafe.ByteOffset(
+            ref MemoryMarshal.GetReference(destination),
+            ref MemoryMarshal.GetReference(entryPoint));
+        int displacement = checked((int)(offset - JmpRel32Size));
+
+        using var scope = CreateWriteScope(destination);
+        destination[0] = JmpRel32;
+        MemoryMarshal.Write(destination[1..], ref displacement);
+        scope.FlushInstructions();
+    }
+
+    static MemoryProtectionScope CreateWriteScope(Span<byte> span)
+    {
+        return MemoryProtectionScope.Create(
+            span,
+            NativeMethods.MemoryProtection.Read | NativeMethods.MemoryProtection.Write | NativeMethods.MemoryProtection.Execute);
+    }
+
+    protected override unsafe void GetMethodInstructions(
+        MethodInfo method,
+        out Span<byte> instructions,
+        out Span<byte> entryPoint,
+        out bool hasExactBoundaries)
+    {
+        hasExactBoundaries = false;
+        byte* p = GetMethodCodePointer(method, true, out entryPoint);
+        instructions = Unwind.GetMethodInstructions(p);
     }
 }

@@ -6,7 +6,6 @@
 // Year of introduction: 2019
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
-using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -23,114 +22,82 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #endif
 sealed class AdapterWindowsX64 : AdapterX64
 {
-    public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
+    protected override unsafe void GetMethodInstructions(
+        MethodInfo method,
+        out Span<byte> instructions,
+        out Span<byte> entryPoint,
+        out bool hasExactBoundaries)
     {
-        var instructions = GetMethodInstructions(method);
-        if (!InstructionOperations.HasPrologue(instructions, m_SupportedPrologues))
-            return PatchResult.UnexpectedPrologue;
-
-        PatchResult result;
-#if TFF_CER
-        // Ensure that code changes are atomic by using the constrained execution region.
-        RuntimeHelpers.PrepareConstrainedRegions();
-        try
-        {
-        }
-        finally
-#endif
-        {
-            result = ApplyPatch(instructions, code);
-        }
-        return result;
-    }
-
-    static readonly byte[][] m_SupportedPrologues =
-    [
-        [0x48, 0x83, 0xec, 0x18, 0x48, 0x89, 0x34, 0x24], // Mono 5.18.1, x64
-        [0x48, 0x83, 0xec, 0x28],
-        [0x48, 0x89, 0x54, 0x24],
-        [0x53, 0x48, 0x83, 0xec, 0x20],
-        [0x55, 0x48, 0x83, 0xec, 0x20],
-        [0x55, 0x48, 0x83, 0xec, 0x30], // .NET 10 x64, optimized
-        [0x55, 0x48, 0x8b, 0xec], // .NET 10 x64, tier 0
-        [0x55, 0x57, 0x56, 0x48, 0x83, 0xec, 0x30],
-        [0x56, 0x48, 0x83, 0xec, 0x20],
-        [0x57, 0x56, 0x48, 0x83, 0xec, 0x28], // Windows 10 x64, NGen 4.7.2
-    ];
-
-    static unsafe Span<byte> GetMethodInstructions(MethodInfo method)
-    {
-        // Compile the method.
-        RuntimeHelpers.PrepareMethod(method.MethodHandle);
-
-        // Get pointer to the first instruction.
-        byte* p = (byte*)method.MethodHandle.GetFunctionPointer();
-        p = SkipBranches(p);
+        hasExactBoundaries = true;
+        byte* p = GetMethodCodePointer(method, false, out entryPoint);
 
         // Get the exact method instruction boundaries.
         var runtimeFunction = (NativeMethods.RuntimeFunctionX64*)NativeMethods.RtlLookupFunctionEntry(p, out void* imageBase, null);
         if (runtimeFunction == null)
-            return [];
+        {
+            instructions = [];
+            return;
+        }
 
         byte* functionStart = (byte*)imageBase + runtimeFunction->BeginAddress;
         byte* functionEnd = (byte*)imageBase + runtimeFunction->EndAddress;
         if (p < functionStart || p >= functionEnd)
-            return [];
+        {
+            instructions = [];
+            return;
+        }
 
         nuint functionLength = (nuint)(functionEnd - p);
         if (functionLength > int.MaxValue)
-            return [];
+        {
+            instructions = [];
+            return;
+        }
 
-        return new(p, (int)functionLength);
+        instructions = new(p, (int)functionLength);
     }
 
-    static unsafe PatchResult ApplyPatch(Span<byte> instructions, ReadOnlySpan<byte> code)
+    protected override bool IsWriteAllowed(Span<byte> span) => true;
+
+    protected override unsafe bool TryAllocateTrampoline(
+        Span<byte> redirection,
+        int size,
+        out Span<byte> trampoline)
     {
-        int patchSize = code.Length + 1 /* RET */;
+        ref byte instruction = ref MemoryMarshal.GetReference(redirection);
+        return TrampolineAllocator.TryAllocateNear(
+            Unsafe.AsPointer(ref instruction),
+            size,
+            int.MaxValue - JmpRel32Size,
+            out trampoline);
+    }
 
-        var trampoline = Span<byte>.Empty;
-        if (patchSize > instructions.Length)
-        {
-            const int redirectionSize = JmpAbs64Size;
-            if (instructions.Length < redirectionSize)
-                return PatchResult.NoSpace;
+    protected override void WriteCode(Span<byte> destination, ReadOnlySpan<byte> code) =>
+        WriteCodeCore(destination, code);
 
-            trampoline = TrampolineAllocator.Allocate(patchSize);
+    protected override void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code) =>
+        WriteCodeCore(destination, code);
 
-            using var trampolineScope = VirtualProtectionScope.Create(trampoline, NativeMethods.PageProtect.ExecuteReadWrite);
-            code.CopyTo(trampoline);
-            trampoline[code.Length] = Ret;
-            trampolineScope.FlushInstructions();
-
-            instructions = instructions[..redirectionSize];
-        }
-        else
-        {
-            instructions = instructions[..patchSize];
-        }
-
-        // Temporarily allow memory modification in order to apply the intrinsic code.
-        using var scope = VirtualProtectionScope.Create(instructions, NativeMethods.PageProtect.ExecuteReadWrite);
-
-        if (!trampoline.IsEmpty)
-        {
-            // Redirect the method to the trampoline with "JMP [RIP+0]" followed by
-            // the absolute 64-bit destination address.
-            JmpAbs64.CopyTo(instructions);
-            nint address = (nint)Unsafe.AsPointer(ref MemoryMarshal.GetReference(trampoline));
-            MemoryMarshal.Write(instructions[JmpAbs64.Length..], ref address);
-        }
-        else
-        {
-            // Put the intrinsic code.
-            code.CopyTo(instructions);
-
-            // End the method with a RET instruction.
-            instructions[code.Length] = Ret;
-        }
-
+    static void WriteCodeCore(Span<byte> destination, ReadOnlySpan<byte> code)
+    {
+        using var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite);
+        code.CopyTo(destination);
+        destination[code.Length] = Ret;
         scope.FlushInstructions();
+    }
 
-        return PatchResult.Success;
+    protected override int RedirectionSize => JmpRel32Size;
+
+    protected override void WriteRedirection(Span<byte> destination, Span<byte> trampoline)
+    {
+        nint offset = Unsafe.ByteOffset(
+            ref MemoryMarshal.GetReference(destination),
+            ref MemoryMarshal.GetReference(trampoline));
+        int displacement = checked((int)(offset - JmpRel32Size));
+
+        using var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite);
+        destination[0] = JmpRel32;
+        MemoryMarshal.Write(destination[1..], ref displacement);
+        scope.FlushInstructions();
     }
 }
