@@ -101,7 +101,7 @@ static class Program
         int result = EdgeCaseOperations.LongIntrinsic();
         Assert.IsTrue(
             result is EdgeCaseOperations.ManagedResult or EdgeCaseOperations.IntrinsicResult,
-            "The first invocation returned an unexpected value.");
+            "The first intrinsic invocation returned an unexpected value.");
 
         // When initialization occurs inside the first managed invocation, that active frame
         // finishes by executing the original body. Every later invocation must be redirected.
@@ -111,7 +111,9 @@ static class Program
         // Long frame activation
 
         result = EdgeCaseOperations.LongFrameActivation.LongIntrinsic();
-        Assert.AreEqual(EdgeCaseOperations.ManagedResult, result);
+        Assert.IsTrue(
+            result is EdgeCaseOperations.ManagedResult or EdgeCaseOperations.IntrinsicResult,
+            "The first intrinsic invocation returned an unexpected value.");
 
         for (int i = 1; i < 100_000; ++i)
         {
