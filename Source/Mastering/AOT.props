@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <IsAotCompatible Condition=" '$(MasteringProjectKind)' == 'module' ">true</IsAotCompatible>
+    <EnableSourceLink Condition=" '$(PublishAot)' == 'true' ">false</EnableSourceLink>
     <NoWarn>$(NoWarn),NETSDK1210</NoWarn>
   </PropertyGroup>
 
