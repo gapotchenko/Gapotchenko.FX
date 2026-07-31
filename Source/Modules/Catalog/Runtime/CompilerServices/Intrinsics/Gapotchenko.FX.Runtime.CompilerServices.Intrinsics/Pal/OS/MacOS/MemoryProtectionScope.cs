@@ -44,7 +44,8 @@ readonly unsafe struct MemoryProtectionScope : IDisposable
 
     public void Dispose()
     {
-        _ = NativeMethods.mprotect(m_Address, m_Size, m_OldProtection);
+        if (NativeMethods.mprotect(m_Address, m_Size, m_OldProtection) != 0)
+            throw new Win32Exception(Marshal.GetLastWin32Error());
     }
 
     /// <summary>
