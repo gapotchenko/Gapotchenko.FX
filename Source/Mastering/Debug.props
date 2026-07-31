@@ -4,7 +4,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(MasteringProjectKind)' == 'module' ">
+  <PropertyGroup Condition=" '$(MasteringProjectKind)' == 'module' AND '$(PublishAot)' != 'true' ">
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
