@@ -7,8 +7,6 @@
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 #pragma warning disable CS9191 // The 'ref' modifier for an argument corresponding to 'in' parameter is equivalent to 'in'. Consider using 'in' instead.
 
@@ -32,60 +30,21 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         };
     }
 
-    public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
+    protected override unsafe void GetMethodInstructions(
+        MethodInfo method,
+        out Span<uint> instructions,
+        out Span<uint> entryPoint,
+        out Span<nuint> entryPointTarget)
     {
-        // Every ARM64 instruction is four bytes long.
-        if ((code.Length & (sizeof(uint) - 1)) != 0)
-            return PatchResult.InvalidAlignment;
-
-        var instructions = GetMethodInstructions(method, out var entryPoint);
-        if (!IsSupportedPrologue(instructions))
-            return PatchResult.UnexpectedPrologue;
-
-        var patchCode = MemoryMarshal.Cast<byte, uint>(code);
-
-        PatchResult result;
-#if TFF_CER
-        // Ensure that code changes are atomic by using the constrained execution region.
-        RuntimeHelpers.PrepareConstrainedRegions();
-        try
-        {
-        }
-        finally
-#endif
-        {
-            result = ApplyPatch(instructions, entryPoint, patchCode);
-        }
-        return result;
-    }
-
-    static bool IsSupportedPrologue(ReadOnlySpan<uint> instructions)
-    {
-        if (instructions.Length < 1)
-            return false;
-
-        uint instruction = instructions[0];
-        return
-            // STP X29, X30, [SP, #-imm]!
-            (instruction & 0xffc07fff) == 0xa9807bfd ||
-            // SUB SP, SP, #imm{, LSL #12}
-            (instruction & 0xff8003ff) == 0xd10003ff;
-    }
-
-    static unsafe Span<uint> GetMethodInstructions(MethodInfo method, out Span<uint> entryPoint)
-    {
-        // Compile the method.
-        RuntimeHelpers.PrepareMethod(method.MethodHandle);
-
-        // Get pointer to the first instruction.
-        uint* p0 = (uint*)method.MethodHandle.GetFunctionPointer();
-        uint* p = SkipBranches(p0);
-        entryPoint = p0 != p ? new(p0, 1) : [];
+        uint* p = GetMethodCodePointer(method, out entryPoint, out entryPointTarget);
 
         // Get the exact method instruction boundaries.
         var runtimeFunction = (NativeMethods.RuntimeFunctionArm64*)NativeMethods.RtlLookupFunctionEntry(p, out void* imageBase, null);
         if (runtimeFunction == null)
-            return [];
+        {
+            instructions = [];
+            return;
+        }
 
         uint unwindData = runtimeFunction->UnwindData;
         uint functionLength =
@@ -101,69 +60,52 @@ sealed class AdapterWindowsArm64 : AdapterArm64
             };
 
         if (functionLength > int.MaxValue)
-            return [];
+        {
+            instructions = [];
+            return;
+        }
 
         byte* functionStart = (byte*)imageBase + runtimeFunction->BeginAddress;
         byte* functionEnd = functionStart + (functionLength << 2);
         if ((byte*)p < functionStart || (byte*)p >= functionEnd)
-            return [];
+        {
+            instructions = [];
+            return;
+        }
 
-        return new(p, (int)functionLength);
+        instructions = new(p, (int)functionLength);
     }
 
-    static unsafe PatchResult ApplyPatch(Span<uint> instructions, Span<uint> entryPoint, ReadOnlySpan<uint> code)
+    protected override bool IsWriteAllowed<T>(Span<T> span) => true;
+
+    protected override Span<uint> AllocateTrampoline(int count)
     {
-        int patchSize = checked(code.Length + 1 /* RET */);
+        return TrampolineAllocator.Allocate<uint>(count);
+    }
 
-        var trampoline = Span<uint>.Empty;
-        uint branchDisplacement = 0;
-        if (patchSize > instructions.Length)
-        {
-            var redirection = entryPoint.IsEmpty ? instructions[..1] : entryPoint;
-            ref uint instruction = ref MemoryMarshal.GetReference(redirection);
-            void* target = Unsafe.AsPointer(ref instruction);
+    protected override unsafe bool TryAllocateTrampolineNear(void* target, int count, out Span<uint> trampoline)
+    {
+        return TrampolineAllocator.TryAllocateNear(target, count, (nuint)BranchMaximumDistance, out trampoline);
+    }
 
-            if (!TrampolineAllocator.TryAllocateNear(target, patchSize, (nuint)BranchMaximumDistance, out trampoline))
-                return PatchResult.NoSpace;
-
-            nint entryOffset = Unsafe.ByteOffset(
-                ref instruction,
-                ref MemoryMarshal.GetReference(trampoline));
-            if (!TryEncodeBranch(entryOffset, out branchDisplacement))
-                return PatchResult.NoSpace;
-
-            using var trampolineScope = VirtualProtectionScope.Create(trampoline, NativeMethods.PageProtect.ExecuteReadWrite);
-            code.CopyTo(trampoline);
-            trampoline[code.Length] = Ret;
-            trampolineScope.FlushInstructions();
-
-            instructions = redirection;
-        }
-        else
-        {
-            instructions = instructions[..patchSize];
-        }
-
-        // Temporarily allow memory modification in order to apply the intrinsic code.
-        using var scope = VirtualProtectionScope.Create(instructions, NativeMethods.PageProtect.ExecuteReadWrite);
-
-        if (!trampoline.IsEmpty)
-        {
-            // Redirect invocations from the entry veneer, or directly from the method entry
-            // when the runtime does not expose a separate veneer.
-            instructions[0] = B | branchDisplacement;
-        }
-        else
-        {
-            // Put the intrinsic code.
-            code.CopyTo(instructions);
-
-            // End the method with a RET instruction.
-            instructions[code.Length] = Ret;
-        }
-
+    protected override void WriteCode(Span<uint> destination, ReadOnlySpan<uint> code)
+    {
+        using var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite);
+        code.CopyTo(destination);
+        destination[code.Length] = Ret;
         scope.FlushInstructions();
+    }
 
-        return PatchResult.Success;
+    protected override void WriteBranch(Span<uint> destination, uint displacement)
+    {
+        using var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite);
+        destination[0] = B | displacement;
+        scope.FlushInstructions();
+    }
+
+    protected override void WriteAddress(Span<nuint> destination, nuint address)
+    {
+        using var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite);
+        destination[0] = address;
     }
 }

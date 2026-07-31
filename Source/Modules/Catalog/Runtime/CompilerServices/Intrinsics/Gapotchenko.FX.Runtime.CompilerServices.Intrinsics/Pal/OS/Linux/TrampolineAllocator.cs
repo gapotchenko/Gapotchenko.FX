@@ -7,6 +7,7 @@
 
 using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 
@@ -17,10 +18,26 @@ static unsafe class TrampolineAllocator
 {
     #region Global Allocation
 
+    public static Span<T> Allocate<T>(int count) where T : struct
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
+
+        var bytes = AllocateCore(checked(count * Unsafe.SizeOf<T>()));
+
+        return new(
+            Unsafe.AsPointer(ref MemoryMarshal.GetReference(bytes)),
+            count);
+    }
+
     public static Span<byte> Allocate(int size)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size);
 
+        return AllocateCore(size);
+    }
+
+    static Span<byte> AllocateCore(int size)
+    {
         int allocationSize = MemoryArithmetics.Align16(size);
         ref var globalBlock = ref m_GlobalBlock;
 
@@ -30,7 +47,8 @@ static unsafe class TrampolineAllocator
                 globalBlock = AllocateGlobalBlock(allocationSize);
 
             byte* p = globalBlock.Allocate(allocationSize);
-            return new(p, size);
+
+            return new Span<byte>(p, size);
         }
     }
 
