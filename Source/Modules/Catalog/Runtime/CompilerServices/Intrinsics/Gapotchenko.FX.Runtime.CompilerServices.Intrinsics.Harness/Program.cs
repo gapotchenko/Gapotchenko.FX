@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Numerics;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -148,5 +149,6 @@ static class Program
         Assert.AreEqual(0, BitOperations.Log2(0));
         Assert.AreEqual(6, NormalOperations.Log2_Intrinsic(67));
         Assert.AreEqual(12, BitOperations.PopCount(120431));
+        Assert.AreEqual(0x15555833u, BitOperations.Crc32C(0x19c2f193u, 0xb6));
     }
 }

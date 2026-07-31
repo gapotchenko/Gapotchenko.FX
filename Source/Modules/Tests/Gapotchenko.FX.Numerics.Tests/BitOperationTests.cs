@@ -18,6 +18,7 @@ public class BitOperationTests
         // Ensure that even the first call of a type method will have an intrinsic code version.
         // This allows us to ensure that all calls are covered by the tests.
         RuntimeHelpers.RunClassConstructor(typeof(BitOperations).TypeHandle);
+        RuntimeHelpers.RunClassConstructor(typeof(BitOperationsPolyfills).TypeHandle);
     }
 
     [TestMethod]
@@ -144,5 +145,15 @@ public class BitOperationTests
             // A mask - 1 signifies all the bits prior to j-th: 10000 - 1 = 01111
             Assert.AreEqual(j, BitOperations.PopCount(mask - 1));
         }
+    }
+
+    [TestMethod]
+    public void BitOperations_Crc32C()
+    {
+        uint crc = uint.MaxValue;
+        foreach (byte data in "123456789"u8)
+            crc = BitOperations.Crc32C(crc, data);
+
+        Assert.AreEqual(0x1cf96d7cU, crc);
     }
 }

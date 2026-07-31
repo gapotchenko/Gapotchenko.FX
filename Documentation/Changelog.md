@@ -7,11 +7,11 @@
 Release date: not released yet
 
 - Added Linux and macOS intrinsic compilation support
-- Improved compatibility with AOT compilation
 - Improved hashing performance of `ArrayEqualityComparer`, `SpanEqualityComparer` and `MemoryEqualityComparer`
+- Improved compatibility with AOT compilation
 - Polyfills:
     - Added `UIntPtr.MaxValue` polyfill property
-    - Added polyfills for `LeadingZeroCount(UInt32)`, `LeadingZeroCount(UInt64)`, and `Log2(UInt64)` methods of `BitOperations` class
+    - Added polyfills for `LeadingZeroCount(UInt32)`, `LeadingZeroCount(UInt64)`, `Log2(UInt64)`, and `Crc32C(UInt32, Byte)` methods of `BitOperations` class
 
 - Fixed issue with `BitOperations.Log2(UInt32)` polyfill method that returned a non-zero value for zero argument on x64 processor architecture
 

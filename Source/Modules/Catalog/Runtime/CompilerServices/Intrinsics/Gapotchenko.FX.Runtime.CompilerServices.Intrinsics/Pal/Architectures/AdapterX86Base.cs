@@ -25,9 +25,11 @@ abstract class AdapterX86Base : Adapter
 #if NET
             MachineCodeIntrinsicFeature.Popcnt => Popcnt.IsSupported,
             MachineCodeIntrinsicFeature.Lzcnt => Lzcnt.IsSupported,
+            MachineCodeIntrinsicFeature.Crc32 => Sse42.IsSupported,
 #else
             MachineCodeIntrinsicFeature.Popcnt => (FeatureDetection.Cpuid_01h_Ecx & (1 << 23)) != 0,
             MachineCodeIntrinsicFeature.Lzcnt => (FeatureDetection.Cpuid_80000001h_Ecx & (1 << 5)) != 0,
+            MachineCodeIntrinsicFeature.Crc32 => (FeatureDetection.Cpuid_01h_Ecx & (1 << 20)) != 0,
 #endif
             _ => base.IsFeatureSupported(feature)
         };

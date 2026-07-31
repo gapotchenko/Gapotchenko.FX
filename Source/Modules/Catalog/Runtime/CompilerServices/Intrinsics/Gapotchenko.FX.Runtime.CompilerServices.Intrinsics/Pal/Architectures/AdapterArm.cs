@@ -19,6 +19,7 @@ abstract class AdapterArm : Adapter
         {
 #if NET
             MachineCodeIntrinsicFeature.AdvSimd => AdvSimd.IsSupported,
+            MachineCodeIntrinsicFeature.Crc32 => Crc32.IsSupported,
 #endif
             _ => base.IsFeatureSupported(feature)
         };

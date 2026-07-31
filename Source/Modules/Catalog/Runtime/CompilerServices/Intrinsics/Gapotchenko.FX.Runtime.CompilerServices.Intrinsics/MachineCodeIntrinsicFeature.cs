@@ -33,6 +33,14 @@ public enum MachineCodeIntrinsicFeature
     Lzcnt,
 
     /// <summary>
+    /// CRC-32C instruction support.
+    /// </summary>
+    /// <remarks>
+    /// This corresponds to the x86/x64 <c>CRC32</c> instruction or the ARM CRC32 extension.
+    /// </remarks>
+    Crc32,
+
+    /// <summary>
     /// ARM Advanced SIMD instruction set.
     /// </summary>
     AdvSimd
