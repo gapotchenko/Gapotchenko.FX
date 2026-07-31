@@ -66,6 +66,7 @@ static class Program
     {
         Console.WriteLine("OS: {0}", RuntimeInformation.OSDescription);
         Console.WriteLine("Process architecture: {0}", RuntimeInformation.ProcessArchitecture);
+        Console.WriteLine(".NET environment version: {0}", Environment.Version);
     }
 
     static void Exercise()
