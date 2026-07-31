@@ -37,13 +37,36 @@ public static class BitOperations
     // Some routines use techniques from the "Bit Twiddling Hacks" by Sean Eron Anderson:
     // http://graphics.stanford.edu/~seander/bithacks.html
 
-    static readonly int[] m_Log2DeBruijn32 =
-    [
-         0,  9,  1, 10, 13, 21,  2, 29,
-        11, 14, 16, 18, 22, 25,  3, 30,
-         8, 12, 20, 28, 15, 17, 24,  7,
-        19, 27, 23,  6, 26,  5,  4, 31
-    ];
+    /// <inheritdoc cref="Log2(uint)"/>
+    [CLSCompliant(false)]
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x48, 0x83, 0xc9, 0x01,   // OR RCX,1
+        0x48, 0x0f, 0xbd, 0xc1,   // BSR RAX,RCX
+        SupportedOSPlatforms = ["windows"])]
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x48, 0x83, 0xc9, 0x01,        // OR RCX,1
+        0xf3, 0x48, 0x0f, 0xbd, 0xc1,  // LZCNT RAX,RCX
+        0x48, 0x83, 0xf0, 0x3f,        // XOR RAX,63
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["windows"],
+        Priority = 10)]               // LZCNT is faster than BSR on AMD processors
+    [MachineCodeIntrinsic(
+        Architecture.Arm64,
+        0x00, 0x00, 0x40, 0xb2,   // ORR X0,X0,#1
+        0x00, 0x10, 0xc0, 0xda,   // CLZ X0,X0
+        0x00, 0x14, 0x40, 0xd2,   // EOR X0,X0,#63
+        SupportedOSPlatforms = ["windows"])]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static int Log2(ulong value)
+    {
+        uint hi = (uint)(value >> 32);
+        if (hi == 0)
+            return Log2((uint)value);
+        else
+            return 32 + Log2(hi);
+    }
 
     /// <summary>
     /// Returns the integer (floor) base 2 logarithm of a specified number.
@@ -90,36 +113,13 @@ public static class BitOperations
         return m_Log2DeBruijn32[index];
     }
 
-    /// <inheritdoc cref="Log2(uint)"/>
-    [CLSCompliant(false)]
-    [MachineCodeIntrinsic(
-        Architecture.X64,
-        0x48, 0x83, 0xc9, 0x01,   // OR RCX,1
-        0x48, 0x0f, 0xbd, 0xc1,   // BSR RAX,RCX
-        SupportedOSPlatforms = ["windows"])]
-    [MachineCodeIntrinsic(
-        Architecture.X64,
-        0x48, 0x83, 0xc9, 0x01,        // OR RCX,1
-        0xf3, 0x48, 0x0f, 0xbd, 0xc1,  // LZCNT RAX,RCX
-        0x48, 0x83, 0xf0, 0x3f,        // XOR RAX,63
-        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
-        SupportedOSPlatforms = ["windows"],
-        Priority = 10)]               // LZCNT is faster than BSR on AMD processors
-    [MachineCodeIntrinsic(
-        Architecture.Arm64,
-        0x00, 0x00, 0x40, 0xb2,   // ORR X0,X0,#1
-        0x00, 0x10, 0xc0, 0xda,   // CLZ X0,X0
-        0x00, 0x14, 0x40, 0xd2,   // EOR X0,X0,#63
-        SupportedOSPlatforms = ["windows"])]
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public static int Log2(ulong value)
-    {
-        uint hi = (uint)(value >> 32);
-        if (hi == 0)
-            return Log2((uint)value);
-        else
-            return 32 + Log2(hi);
-    }
+    static readonly int[] m_Log2DeBruijn32 =
+    [
+         0,  9,  1, 10, 13, 21,  2, 29,
+        11, 14, 16, 18, 22, 25,  3, 30,
+         8, 12, 20, 28, 15, 17, 24,  7,
+        19, 27, 23,  6, 26,  5,  4, 31
+    ];
 
     /// <summary>
     /// Counts the number of leading zero bits in an unsigned 32-bit integer mask.
