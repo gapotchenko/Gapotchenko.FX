@@ -96,6 +96,8 @@ static class Program
 
     static void EdgeCaseExercise()
     {
+        // Long intrinsic
+
         int result = EdgeCaseOperations.LongIntrinsic();
         Assert.IsTrue(
             result is EdgeCaseOperations.ManagedResult or EdgeCaseOperations.IntrinsicResult,
@@ -105,5 +107,17 @@ static class Program
         // finishes by executing the original body. Every later invocation must be redirected.
         for (int i = 1; i < 100_000; ++i)
             Assert.AreEqual(EdgeCaseOperations.IntrinsicResult, EdgeCaseOperations.LongIntrinsic());
+
+        // Long frame activation
+
+        result = EdgeCaseOperations.LongFrameActivation.LongIntrinsic();
+        Assert.AreEqual(EdgeCaseOperations.ManagedResult, result);
+
+        for (int i = 1; i < 100_000; ++i)
+        {
+            Assert.AreEqual(
+                EdgeCaseOperations.IntrinsicResult,
+                EdgeCaseOperations.LongFrameActivation.LongIntrinsic());
+        }
     }
 }
