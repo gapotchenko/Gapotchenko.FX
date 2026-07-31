@@ -119,7 +119,7 @@ static class EdgeCaseOperations
             0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf,
             SupportedOSPlatforms = ["linux"])]
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static int LongIntrinsic()
+        public static int LongFrameIntrinsic()
         {
             GC.KeepAlive(m_InitializationSentinel);
             return ManagedResult;

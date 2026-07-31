@@ -6,6 +6,7 @@
 // Year of introduction: 2026
 
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Harness;
 
@@ -32,8 +33,15 @@ static class Program
 
     static void Run(IReadOnlyList<string> args)
     {
+        ShowEnvironmentInfo();
         InitializeLogging();
         Exercise();
+    }
+
+    static void ShowEnvironmentInfo()
+    {
+        Console.WriteLine("OS: {0}", RuntimeInformation.OSDescription);
+        Console.WriteLine("Process architecture: {0}", RuntimeInformation.ProcessArchitecture);
     }
 
     static void InitializeLogging()
@@ -110,7 +118,7 @@ static class Program
 
         // Long frame activation
 
-        result = EdgeCaseOperations.LongFrameActivation.LongIntrinsic();
+        result = EdgeCaseOperations.LongFrameActivation.LongFrameIntrinsic();
         Assert.IsTrue(
             result is EdgeCaseOperations.ManagedResult or EdgeCaseOperations.IntrinsicResult,
             "The first intrinsic invocation returned an unexpected value.");
@@ -119,7 +127,7 @@ static class Program
         {
             Assert.AreEqual(
                 EdgeCaseOperations.IntrinsicResult,
-                EdgeCaseOperations.LongFrameActivation.LongIntrinsic());
+                EdgeCaseOperations.LongFrameActivation.LongFrameIntrinsic());
         }
     }
 }
