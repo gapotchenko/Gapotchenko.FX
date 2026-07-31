@@ -120,13 +120,19 @@ abstract class AdapterArm64 : AdapterArm
         else
         {
             primaryRedirection = entryPoint.IsEmpty ? bodyRedirection : entryPoint;
-            if (!TryAllocateTrampolineNear(GetPointer(primaryRedirection), patchSize, out trampoline))
-                return PatchResult.NoSpace;
+            if (!TryAllocateTrampolineNear(
+                GetPointer(primaryRedirection),
+                patchSize,
+                (nuint)BranchMaximumDistance,
+                out trampoline))
+            {
+                return ApplyLongPatch(instructions, entryPoint, entryPointTarget, code);
+            }
         }
 
         uint primaryBranch = 0;
         if (!primaryRedirection.IsEmpty && !TryEncodeBranch(GetOffset(primaryRedirection, trampoline), out primaryBranch))
-            return PatchResult.NoSpace;
+            return ApplyLongPatch(instructions, entryPoint, entryPointTarget, code);
 
         var bodyTrampoline = Span<uint>.Empty;
         uint bodyBranch = primaryBranch;
@@ -134,10 +140,14 @@ abstract class AdapterArm64 : AdapterArm
         {
             if (!TryEncodeBranch(GetOffset(bodyRedirection, trampoline), out bodyBranch))
             {
-                if (!TryAllocateTrampolineNear(GetPointer(bodyRedirection), patchSize, out bodyTrampoline) ||
+                if (!TryAllocateTrampolineNear(
+                        GetPointer(bodyRedirection),
+                        patchSize,
+                        (nuint)BranchMaximumDistance,
+                        out bodyTrampoline) ||
                     !TryEncodeBranch(GetOffset(bodyRedirection, bodyTrampoline), out bodyBranch))
                 {
-                    return PatchResult.NoSpace;
+                    return ApplyLongPatch(instructions, entryPoint, entryPointTarget, code);
                 }
             }
         }
@@ -158,11 +168,56 @@ abstract class AdapterArm64 : AdapterArm
         return PatchResult.Success;
     }
 
+    unsafe PatchResult ApplyLongPatch(
+        Span<uint> instructions,
+        Span<uint> entryPoint,
+        Span<nuint> entryPointTarget,
+        ReadOnlySpan<uint> code)
+    {
+        var bodyRedirection = instructions[..LongBranchInstructionCount];
+        if (!IsWriteAllowed(bodyRedirection) ||
+            !entryPoint.IsEmpty && !IsWriteAllowed(entryPoint) ||
+            !entryPointTarget.IsEmpty && !IsWriteAllowed(entryPointTarget))
+        {
+            return PatchResult.WriteProtected;
+        }
+
+        int patchSize = checked(code.Length + 1);
+        if (!TryAllocateTrampolineNear(
+                GetPointer(bodyRedirection),
+                patchSize,
+                unchecked((nuint)LongBranchMaximumDistance),
+                out var trampoline) ||
+            !TryEncodeLongBranch(bodyRedirection, trampoline, out uint adrp, out uint add))
+        {
+            return PatchResult.NoSpace;
+        }
+
+        uint entryPointBranch = 0;
+        if (!entryPoint.IsEmpty && !TryEncodeBranch(GetOffset(entryPoint, bodyRedirection), out entryPointBranch))
+            return PatchResult.NoSpace;
+
+        WriteCode(trampoline, code);
+        WriteLongBranch(bodyRedirection, adrp, add);
+
+        if (!entryPoint.IsEmpty)
+            WriteBranch(entryPoint, entryPointBranch);
+        else if (!entryPointTarget.IsEmpty)
+            WriteAddress(entryPointTarget, (nuint)GetPointer(trampoline));
+
+        return PatchResult.Success;
+    }
+
     protected abstract bool IsWriteAllowed<T>(Span<T> span) where T : struct;
     protected abstract Span<uint> AllocateTrampoline(int count);
-    protected abstract unsafe bool TryAllocateTrampolineNear(void* target, int count, out Span<uint> trampoline);
+    protected abstract unsafe bool TryAllocateTrampolineNear(
+        void* target,
+        int count,
+        nuint maximumDistance,
+        out Span<uint> trampoline);
     protected abstract void WriteCode(Span<uint> destination, ReadOnlySpan<uint> code);
     protected abstract void WriteBranch(Span<uint> destination, uint displacement);
+    protected abstract void WriteLongBranch(Span<uint> destination, uint adrp, uint add);
     protected abstract void WriteAddress(Span<nuint> destination, nuint address);
 
     static unsafe void* GetPointer(Span<uint> span) =>
@@ -213,6 +268,7 @@ abstract class AdapterArm64 : AdapterArm
 
     protected const uint Ret = 0xd65f03c0;
     protected const uint B = 0x14000000;
+    protected const uint BrX16 = 0xd61f0200;
 
     protected static bool TryEncodeBranch(nint offset, out uint displacement)
     {
@@ -227,4 +283,31 @@ abstract class AdapterArm64 : AdapterArm
     }
 
     protected const nint BranchMaximumDistance = 1 << 27;
+
+    static unsafe bool TryEncodeLongBranch(
+        Span<uint> source,
+        Span<uint> target,
+        out uint adrp,
+        out uint add)
+    {
+        nuint sourceAddress = (nuint)GetPointer(source);
+        nuint targetAddress = (nuint)GetPointer(target);
+        nint pageOffset = (nint)(targetAddress & ~(nuint)0xfff) - (nint)(sourceAddress & ~(nuint)0xfff);
+        nint pageDisplacement = pageOffset >> 12;
+        if (pageDisplacement < -(1 << 20) || pageDisplacement >= 1 << 20)
+        {
+            adrp = 0;
+            add = 0;
+            return false;
+        }
+
+        uint immediate = (uint)pageDisplacement & 0x1fffff;
+        adrp = 0x90000010 | (immediate & 3) << 29 | (immediate >> 2) << 5;
+        add = 0x91000210 | (uint)(targetAddress & 0xfff) << 10;
+        return true;
+    }
+
+    const int LongBranchInstructionCount = 3;
+
+    const ulong LongBranchMaximumDistance = 1UL << 32;
 }

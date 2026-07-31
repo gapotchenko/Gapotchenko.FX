@@ -43,9 +43,13 @@ sealed class AdapterMacOSArm64 : AdapterArm64
         return TrampolineAllocator.Allocate<uint>(count);
     }
 
-    protected override unsafe bool TryAllocateTrampolineNear(void* target, int count, out Span<uint> trampoline)
+    protected override unsafe bool TryAllocateTrampolineNear(
+        void* target,
+        int count,
+        nuint maximumDistance,
+        out Span<uint> trampoline)
     {
-        return TrampolineAllocator.TryAllocateNear(target, count, (nuint)BranchMaximumDistance, out trampoline);
+        return TrampolineAllocator.TryAllocateNear(target, count, maximumDistance, out trampoline);
     }
 
     protected override void WriteCode(Span<uint> destination, ReadOnlySpan<uint> code)
@@ -60,6 +64,15 @@ sealed class AdapterMacOSArm64 : AdapterArm64
     {
         using var scope = JitWriteProtectionScope.Create(destination);
         destination[0] = B | displacement;
+        scope.FlushInstructions();
+    }
+
+    protected override void WriteLongBranch(Span<uint> destination, uint adrp, uint add)
+    {
+        using var scope = JitWriteProtectionScope.Create(destination);
+        destination[0] = adrp;
+        destination[1] = add;
+        destination[2] = BrX16;
         scope.FlushInstructions();
     }
 
