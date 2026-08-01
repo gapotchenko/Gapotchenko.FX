@@ -21,10 +21,13 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 #endif
 sealed class AdapterLinuxX64 : AdapterX64
 {
-    protected override PatchResult ValidateCode(ReadOnlySpan<byte> code) =>
-        DwarfUnwindX64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
-        PatchResult.UnsupportedUnwindPrologue :
-        PatchResult.Success;
+    protected override PatchResult ValidateCode(ReadOnlySpan<byte> code)
+    {
+        return
+            DwarfUnwindX64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
+                PatchResult.UnsupportedUnwindPrologue :
+                PatchResult.Success;
+    }
 
     protected override bool RequiresTrampoline(ReadOnlySpan<byte> code) =>
         DwarfUnwindX64.Analyze(code, out _) == UnwindAnalysisResult.Supported;

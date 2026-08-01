@@ -18,10 +18,12 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 #endif
 sealed class AdapterLinuxArm64 : AdapterArm64
 {
-    protected override PatchResult ValidateCode(ReadOnlySpan<uint> code) =>
-        UnwindArm64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
-        PatchResult.UnsupportedUnwindPrologue :
-        PatchResult.Success;
+    protected override PatchResult ValidateCode(ReadOnlySpan<uint> code)
+    {
+        return UnwindArm64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
+            PatchResult.UnsupportedUnwindPrologue :
+            PatchResult.Success;
+    }
 
     protected override bool RequiresTrampoline(ReadOnlySpan<uint> code) =>
         UnwindArm64.Analyze(code, out _) == UnwindAnalysisResult.Supported;
