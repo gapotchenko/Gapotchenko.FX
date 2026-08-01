@@ -93,10 +93,10 @@ static class DwarfUnwindX64
     public static unsafe void Write(
         Span<byte> destination,
         ReadOnlySpan<byte> code,
-        scoped ref readonly UnwindX64.Analysis analysis,
+        ref readonly UnwindX64.Analysis analysis,
         void* codeAddress)
     {
-        int size = GetSize(in analysis);
+        int size = GetSize(analysis);
         destination = destination[..size];
         byte* unwindAddress = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(destination));
         Cie.CopyTo(destination);
@@ -117,9 +117,9 @@ static class DwarfUnwindX64
     }
 
     static void WriteInstructions(
-        scoped ref DwarfSerializer serializer,
-        scoped ReadOnlySpan<UnwindX64.UnwindOperation> operations,
-        scoped ReadOnlySpan<UnwindX64.EpilogueOperation> epilogue)
+        ref DwarfSerializer serializer,
+        ReadOnlySpan<UnwindX64.UnwindOperation> operations,
+        ReadOnlySpan<UnwindX64.EpilogueOperation> epilogue)
     {
         int location = 0;
         int rspCfaOffset = InitialCfaOffset;

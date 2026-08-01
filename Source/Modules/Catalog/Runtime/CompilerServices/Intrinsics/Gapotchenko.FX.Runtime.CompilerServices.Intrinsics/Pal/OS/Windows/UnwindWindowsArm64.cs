@@ -17,28 +17,34 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #endif
 static class UnwindWindowsArm64
 {
-    public static UnwindAnalysisResult Analyze(ReadOnlySpan<uint> code, out uint unwindData)
+    public static UnwindArm64.Analysis Analyze(ReadOnlySpan<uint> code)
     {
-        unwindData = 0;
-        var result = UnwindArm64.Analyze(code, out var info);
-        if (result != UnwindAnalysisResult.Supported)
-            return result;
+        var analysis = UnwindArm64.Analyze(code);
+        if (analysis.Result != UnwindAnalysisResult.Supported)
+            return analysis;
 
         int functionLength = checked(code.Length + 1);
         if (functionLength > MaximumFunctionLength ||
-            info.FrameSize > MaximumFrameSize)
+            analysis.Info.FrameSize > MaximumFrameSize)
         {
-            return UnwindAnalysisResult.Unsupported;
+            return analysis with { Result = UnwindAnalysisResult.Unsupported };
         }
 
         // Packed unwind data assumes the canonical prologue starts at the
         // function beginning and its inverse epilogue ends immediately before RET.
-        if (info.PrologueInstructionCount >= functionLength)
-            return UnwindAnalysisResult.Unsupported;
+        if (analysis.Info.PrologueInstructionCount >= functionLength)
+            return analysis with { Result = UnwindAnalysisResult.Unsupported };
 
-        int chained = info.FrameKind == UnwindArm64.FrameKind.FrameChain ? 3 : 0;
-        unwindData = EncodePackedUnwindData(functionLength, info.FrameSize, chained);
-        return UnwindAnalysisResult.Supported;
+        return analysis;
+    }
+
+    public static uint GetUnwindData(ReadOnlySpan<uint> code, in UnwindArm64.Analysis analysis)
+    {
+        int chained = analysis.Info.FrameKind == UnwindArm64.FrameKind.FrameChain ? 3 : 0;
+        return EncodePackedUnwindData(
+            checked(code.Length + 1),
+            analysis.Info.FrameSize,
+            chained);
     }
 
     static uint EncodePackedUnwindData(int functionLength, int frameSize, int chained)

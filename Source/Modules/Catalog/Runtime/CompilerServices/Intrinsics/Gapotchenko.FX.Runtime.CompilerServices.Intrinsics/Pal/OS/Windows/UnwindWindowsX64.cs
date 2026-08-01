@@ -38,7 +38,7 @@ static class UnwindWindowsX64
             UnwindCodeSize * AlignUnwindCodeCount(CountUnwindCodes(analysis.UnwindOperations));
     }
 
-    public static void Write(Span<byte> destination, scoped ref readonly UnwindX64.Analysis analysis)
+    public static void Write(Span<byte> destination, in UnwindX64.Analysis analysis)
     {
         var operations = analysis.UnwindOperations;
         var info = analysis.Info;

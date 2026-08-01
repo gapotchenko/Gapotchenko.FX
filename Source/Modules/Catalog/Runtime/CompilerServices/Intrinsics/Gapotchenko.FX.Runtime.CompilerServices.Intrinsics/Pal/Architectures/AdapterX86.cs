@@ -6,7 +6,6 @@
 // Year of introduction: 2026
 
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Reflection;
 using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 

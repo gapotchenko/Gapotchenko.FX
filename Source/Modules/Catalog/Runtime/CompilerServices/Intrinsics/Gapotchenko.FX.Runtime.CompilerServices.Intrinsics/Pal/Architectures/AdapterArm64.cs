@@ -19,7 +19,8 @@ abstract class AdapterArm64 : AdapterArm
             return PatchResult.InvalidAlignment;
 
         var patchCode = MemoryMarshal.Cast<byte, uint>(code);
-        var codeValidationResult = ValidateCode(patchCode);
+        var analysis = AnalyzeCode(patchCode);
+        var codeValidationResult = ValidateCode(analysis);
         if (codeValidationResult != PatchResult.Success)
             return codeValidationResult;
 
@@ -44,7 +45,7 @@ abstract class AdapterArm64 : AdapterArm
         finally
 #endif
         {
-            result = ApplyPatch(instructions, entryPoint, entryPointTarget, patchCode);
+            result = ApplyPatch(instructions, entryPoint, entryPointTarget, patchCode, analysis);
         }
         return result;
     }
@@ -89,10 +90,11 @@ abstract class AdapterArm64 : AdapterArm
         Span<uint> instructions,
         Span<uint> entryPoint,
         Span<nuint> entryPointTarget,
-        ReadOnlySpan<uint> code)
+        ReadOnlySpan<uint> code,
+        in UnwindArm64.Analysis analysis)
     {
         int patchSize = checked(code.Length + 1);
-        if (!RequiresTrampoline(code) && patchSize <= instructions.Length)
+        if (!RequiresTrampoline(analysis) && patchSize <= instructions.Length)
         {
             var destination = instructions[..patchSize];
             if (!IsWriteAllowed(destination))
@@ -113,7 +115,7 @@ abstract class AdapterArm64 : AdapterArm
         Span<uint> primaryRedirection;
         if (!entryPointTarget.IsEmpty)
         {
-            trampoline = AllocateTrampoline(GetTrampolineAllocationCount(code));
+            trampoline = AllocateTrampoline(GetTrampolineAllocationCount(code, analysis));
             primaryRedirection = [];
         }
         else
@@ -121,11 +123,11 @@ abstract class AdapterArm64 : AdapterArm
             primaryRedirection = entryPoint.IsEmpty ? bodyRedirection : entryPoint;
             if (!TryAllocateTrampolineNear(
                 GetPointer(primaryRedirection),
-                GetTrampolineAllocationCount(code),
+                GetTrampolineAllocationCount(code, analysis),
                 (nuint)InstructionsArm64.BranchMaximumDistance,
                 out trampoline))
             {
-                return ApplyLongPatch(instructions, entryPoint, entryPointTarget, code);
+                return ApplyLongPatch(instructions, entryPoint, entryPointTarget, code, analysis);
             }
         }
 
@@ -133,7 +135,7 @@ abstract class AdapterArm64 : AdapterArm
         if (!primaryRedirection.IsEmpty &&
             !InstructionsArm64.TryEncodeBranch(GetOffset(primaryRedirection, trampoline), out primaryBranch))
         {
-            return ApplyLongPatch(instructions, entryPoint, entryPointTarget, code);
+            return ApplyLongPatch(instructions, entryPoint, entryPointTarget, code, analysis);
         }
 
         var bodyTrampoline = Span<uint>.Empty;
@@ -144,19 +146,19 @@ abstract class AdapterArm64 : AdapterArm
             {
                 if (!TryAllocateTrampolineNear(
                         GetPointer(bodyRedirection),
-                        GetTrampolineAllocationCount(code),
+                        GetTrampolineAllocationCount(code, analysis),
                         (nuint)InstructionsArm64.BranchMaximumDistance,
                         out bodyTrampoline) ||
                     !InstructionsArm64.TryEncodeBranch(GetOffset(bodyRedirection, bodyTrampoline), out bodyBranch))
                 {
-                    return ApplyLongPatch(instructions, entryPoint, entryPointTarget, code);
+                    return ApplyLongPatch(instructions, entryPoint, entryPointTarget, code, analysis);
                 }
             }
         }
 
-        WriteTrampoline(trampoline, code);
+        WriteTrampoline(trampoline, code, analysis);
         if (!bodyTrampoline.IsEmpty)
-            WriteTrampoline(bodyTrampoline, code);
+            WriteTrampoline(bodyTrampoline, code, analysis);
 
         // Patch the body before the entry point. This keeps a return into an active
         // frame valid when compilation was initiated by that frame's type initializer.
@@ -174,7 +176,8 @@ abstract class AdapterArm64 : AdapterArm
         Span<uint> instructions,
         Span<uint> entryPoint,
         Span<nuint> entryPointTarget,
-        ReadOnlySpan<uint> code)
+        ReadOnlySpan<uint> code,
+        in UnwindArm64.Analysis analysis)
     {
         var bodyRedirection = instructions[..InstructionsArm64.LongBranchInstructionCount];
         if (!IsWriteAllowed(bodyRedirection) ||
@@ -187,7 +190,7 @@ abstract class AdapterArm64 : AdapterArm
         int patchSize = checked(code.Length + 1);
         if (!TryAllocateTrampolineNear(
                 GetPointer(bodyRedirection),
-                GetTrampolineAllocationCount(code),
+                GetTrampolineAllocationCount(code, analysis),
                 unchecked((nuint)InstructionsArm64.LongBranchMaximumDistance),
                 out var trampoline) ||
             !InstructionsArm64.TryEncodeLongBranch(
@@ -206,7 +209,7 @@ abstract class AdapterArm64 : AdapterArm
             return PatchResult.NoSpace;
         }
 
-        WriteTrampoline(trampoline, code);
+        WriteTrampoline(trampoline, code, analysis);
         WriteLongBranch(bodyRedirection, adrp, add);
 
         if (!entryPoint.IsEmpty)
@@ -218,9 +221,13 @@ abstract class AdapterArm64 : AdapterArm
     }
 
     protected abstract bool IsWriteAllowed<T>(Span<T> span) where T : struct;
-    protected virtual PatchResult ValidateCode(ReadOnlySpan<uint> code) => PatchResult.Success;
-    protected virtual bool RequiresTrampoline(ReadOnlySpan<uint> code) => false;
-    protected virtual int GetTrampolineAllocationCount(ReadOnlySpan<uint> code) =>
+    protected virtual UnwindArm64.Analysis AnalyzeCode(ReadOnlySpan<uint> code) =>
+        UnwindArm64.Analyze(code);
+    protected virtual PatchResult ValidateCode(in UnwindArm64.Analysis analysis) => PatchResult.Success;
+    protected virtual bool RequiresTrampoline(in UnwindArm64.Analysis analysis) => false;
+    protected virtual int GetTrampolineAllocationCount(
+        ReadOnlySpan<uint> code,
+        in UnwindArm64.Analysis analysis) =>
         checked(code.Length + 1);
     protected abstract Span<uint> AllocateTrampoline(int count);
     protected abstract unsafe bool TryAllocateTrampolineNear(
@@ -229,7 +236,10 @@ abstract class AdapterArm64 : AdapterArm
         nuint maximumDistance,
         out Span<uint> trampoline);
     protected abstract void WriteCode(Span<uint> destination, ReadOnlySpan<uint> code);
-    protected virtual void WriteTrampoline(Span<uint> destination, ReadOnlySpan<uint> code) =>
+    protected virtual void WriteTrampoline(
+        Span<uint> destination,
+        ReadOnlySpan<uint> code,
+        in UnwindArm64.Analysis analysis) =>
         WriteCode(destination, code);
     protected abstract void WriteBranch(Span<uint> destination, uint displacement);
     protected abstract void WriteLongBranch(Span<uint> destination, uint adrp, uint add);

@@ -203,7 +203,7 @@ abstract class AdapterX64 : AdapterX86Base
     protected virtual void WriteTrampoline(
         Span<byte> destination,
         ReadOnlySpan<byte> code,
-        scoped in UnwindX64.Analysis analysis)
+        in UnwindX64.Analysis analysis)
     {
         WriteCode(destination, code);
     }

@@ -12,6 +12,12 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 /// </summary>
 static class UnwindArm64
 {
+    public static Analysis Analyze(ReadOnlySpan<uint> code)
+    {
+        var result = Analyze(code, out var info);
+        return new(result, info);
+    }
+
     public static UnwindAnalysisResult Analyze(ReadOnlySpan<uint> code, out UnwindInfo info)
     {
         info = default;
@@ -102,6 +108,10 @@ static class UnwindArm64
         StackAllocation,
         FrameChain
     }
+
+    public readonly record struct Analysis(
+        UnwindAnalysisResult Result,
+        UnwindInfo Info);
 
     public const int StackAlignment = 16;
 }

@@ -31,15 +31,14 @@ sealed class AdapterLinuxX64 : AdapterX64
         return DwarfUnwindX64.Analyze(code, unwindOperations, epilogueOperations);
     }
 
-    protected override PatchResult ValidateCode(scoped in UnwindX64.Analysis analysis)
+    protected override PatchResult ValidateCode(in UnwindX64.Analysis analysis)
     {
         return analysis.Result == UnwindAnalysisResult.Unsupported ?
             PatchResult.UnsupportedUnwindPrologue :
             PatchResult.Success;
     }
 
-    protected override bool RequiresTrampoline(
-        scoped in UnwindX64.Analysis analysis)
+    protected override bool RequiresTrampoline(in UnwindX64.Analysis analysis)
     {
         return analysis.Result == UnwindAnalysisResult.Supported;
     }
@@ -77,7 +76,7 @@ sealed class AdapterLinuxX64 : AdapterX64
     protected override unsafe void WriteTrampoline(
         Span<byte> destination,
         ReadOnlySpan<byte> code,
-        scoped in UnwindX64.Analysis analysis)
+        in UnwindX64.Analysis analysis)
     {
         if (analysis.Result == UnwindAnalysisResult.Leaf)
         {
@@ -86,7 +85,7 @@ sealed class AdapterLinuxX64 : AdapterX64
         }
         int codeSize = checked(code.Length + 1);
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
-        int unwindSize = DwarfUnwindX64.GetSize(in analysis);
+        int unwindSize = DwarfUnwindX64.GetSize(analysis);
         destination = destination[..checked(unwindOffset + unwindSize + sizeof(uint))];
 
         ref byte baseAddress = ref MemoryMarshal.GetReference(destination);

@@ -6,7 +6,6 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
-using Gapotchenko.FX.Runtime.CompilerServices.Pal.Formats.Dwarf;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -17,20 +16,20 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Formats.Dwarf;
 /// </summary>
 static class DwarfUnwindArm64
 {
-    public static int GetSize(ReadOnlySpan<uint> code, UnwindArm64.UnwindInfo info)
+    public static int GetSize(ReadOnlySpan<uint> code, in UnwindArm64.Analysis analysis)
     {
         var serializer = new DwarfSerializer();
-        WriteInstructions(ref serializer, code, info);
+        WriteInstructions(ref serializer, code, analysis.Info);
         return DwarfSerializer.GetFdeSize(CieSize, serializer.Position);
     }
 
     public static unsafe void Write(
         Span<byte> destination,
         ReadOnlySpan<uint> code,
-        UnwindArm64.UnwindInfo info,
+        in UnwindArm64.Analysis analysis,
         void* codeAddress)
     {
-        int size = GetSize(code, info);
+        int size = GetSize(code, analysis);
         destination = destination[..size];
         byte* unwindAddress = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(destination));
         Cie.CopyTo(destination);
@@ -43,12 +42,12 @@ static class DwarfUnwindArm64
             codeAddress,
             checked((code.Length + 1) * sizeof(uint)),
             fdeSize);
-        WriteInstructions(ref serializer, code, info);
+        WriteInstructions(ref serializer, code, analysis.Info);
         serializer.CompleteFde(fdeSize);
     }
 
     static void WriteInstructions(
-        scoped ref DwarfSerializer serializer,
+        ref DwarfSerializer serializer,
         ReadOnlySpan<uint> code,
         UnwindArm64.UnwindInfo info)
     {

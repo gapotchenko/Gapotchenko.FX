@@ -22,7 +22,7 @@ static class UnwindX86
 
     public static UnwindAnalysisResult Analyze(
         ReadOnlySpan<byte> code,
-        scoped Span<UnwindOperation> operations,
+        Span<UnwindOperation> operations,
         out int operationCount,
         out UnwindInfo info)
     {

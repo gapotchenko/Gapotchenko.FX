@@ -124,7 +124,7 @@ sealed class AdapterWindowsX64 : AdapterX64
 
         int codeSize = checked(code.Length + 1);
         int unwindInfoOffset = MemoryArithmetics.Align4(codeSize);
-        int unwindInfoSize = UnwindWindowsX64.GetSize(in analysis);
+        int unwindInfoSize = UnwindWindowsX64.GetSize(analysis);
         int runtimeFunctionOffset = checked(unwindInfoOffset + unwindInfoSize);
         int allocationSize = checked(runtimeFunctionOffset + Unsafe.SizeOf<NativeMethods.RuntimeFunctionX64>());
         destination = destination[..allocationSize];
@@ -137,7 +137,7 @@ sealed class AdapterWindowsX64 : AdapterX64
         {
             code.CopyTo(destination);
             destination[code.Length] = InstructionsX64.Ret;
-            UnwindWindowsX64.Write(destination[unwindInfoOffset..runtimeFunctionOffset], in analysis);
+            UnwindWindowsX64.Write(destination[unwindInfoOffset..runtimeFunctionOffset], analysis);
 
             runtimeFunction.BeginAddress = 0;
             runtimeFunction.EndAddress = checked((uint)codeSize);

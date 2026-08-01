@@ -6,7 +6,6 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
-using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 

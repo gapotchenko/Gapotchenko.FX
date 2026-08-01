@@ -57,8 +57,8 @@ static class DwarfUnwindX86
     }
 
     static UnwindAnalysisResult Analyze(ReadOnlySpan<byte> code,
-        scoped Span<UnwindX86.UnwindOperation> operations, out int operationCount,
-        scoped Span<EpilogueOperation> epilogue, out int epilogueCount,
+        Span<UnwindX86.UnwindOperation> operations, out int operationCount,
+        Span<EpilogueOperation> epilogue, out int epilogueCount,
         out UnwindX86.UnwindInfo info)
     {
         epilogueCount = 0;
