@@ -5,6 +5,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
 /// <summary>
@@ -107,7 +109,7 @@ static class UnwindX64
             {
                 if (!TryAddOperation(operations, ref operationCount, ref prologueSize, instructionSize, NativeMethods.UnwindOperation.PushNonvolatile, register))
                     return AnalysisResult.Unsupported;
-                if (register == RegisterRbp)
+                if (register == InstructionsX64.RegisterBp)
                     rbpSaved = true;
                 continue;
             }
@@ -127,7 +129,7 @@ static class UnwindX64
                     return AnalysisResult.Unsupported;
                 }
 
-                frameRegister = RegisterRbp;
+                frameRegister = InstructionsX64.RegisterBp;
                 frameOffset = offset / 16;
                 continue;
             }
@@ -231,17 +233,20 @@ static class UnwindX64
             return false;
 
         byte operation = code[0];
-        if (operation is >= 0x53 and <= 0x57 && operation != 0x54)
+        if (operation is >= InstructionsX64.PushRegister + 3 and <= InstructionsX64.PushRegisterLast &&
+            operation != InstructionsX64.PushRegister + InstructionsX64.RegisterSp)
         {
             instructionSize = 1;
-            register = operation - 0x50;
+            register = operation - InstructionsX64.PushRegister;
             return true;
         }
 
-        if (code.Length >= 2 && operation == 0x41 && code[1] is >= 0x54 and <= 0x57)
+        if (code.Length >= 2 &&
+            operation == InstructionsX64.RexB &&
+            code[1] is >= InstructionsX64.PushRegister + 4 and <= InstructionsX64.PushRegisterLast)
         {
             instructionSize = 2;
-            register = code[1] - 0x50 + 8;
+            register = code[1] - InstructionsX64.PushRegister + InstructionsX64.ExtendedRegisterOffset;
             return true;
         }
 
@@ -253,7 +258,10 @@ static class UnwindX64
         instructionSize = 0;
         allocationSize = 0;
 
-        if (code.Length >= 4 && code[0] == 0x48 && code[1] == 0x83 && code[2] == 0xec)
+        if (code.Length >= 4 &&
+            code[0] == InstructionsX64.RexW &&
+            code[1] == InstructionsX64.Group1Immediate8 &&
+            code[2] == InstructionsX64.ModRmSubRsp)
         {
             instructionSize = 4;
             // The immediate is sign-extended by the processor. A negative
@@ -262,7 +270,10 @@ static class UnwindX64
             return true;
         }
 
-        if (code.Length >= 7 && code[0] == 0x48 && code[1] == 0x81 && code[2] == 0xec)
+        if (code.Length >= 7 &&
+            code[0] == InstructionsX64.RexW &&
+            code[1] == InstructionsX64.Group1Immediate32 &&
+            code[2] == InstructionsX64.ModRmSubRsp)
         {
             instructionSize = 7;
             allocationSize = ReadUInt32(code[3..]);
@@ -279,15 +290,19 @@ static class UnwindX64
         instructionSize = 0;
         frameOffset = 0;
 
-        if (code.Length >= 3 && code[0] == 0x48 &&
-            (code[1] == 0x8b && code[2] == 0xec || code[1] == 0x89 && code[2] == 0xe5))
+        if (code.Length >= 3 && code[0] == InstructionsX64.RexW &&
+            (code[1] == InstructionsX64.MovRegisterRm && code[2] == InstructionsX64.ModRmMovRbpRsp ||
+             code[1] == InstructionsX64.MovRmRegister && code[2] == InstructionsX64.ModRmMovRspRbp))
         {
             instructionSize = 3;
             return true;
         }
 
         if (code.Length >= 5 &&
-            code[0] == 0x48 && code[1] == 0x8d && code[2] == 0x6c && code[3] == 0x24)
+            code[0] == InstructionsX64.RexW &&
+            code[1] == InstructionsX64.Lea &&
+            code[2] == InstructionsX64.ModRmLeaRbpRspDisp8 &&
+            code[3] == InstructionsX64.SibRsp)
         {
             instructionSize = 5;
             frameOffset = code[4];
@@ -295,7 +310,10 @@ static class UnwindX64
         }
 
         if (code.Length >= 8 &&
-            code[0] == 0x48 && code[1] == 0x8d && code[2] == 0xac && code[3] == 0x24)
+            code[0] == InstructionsX64.RexW &&
+            code[1] == InstructionsX64.Lea &&
+            code[2] == InstructionsX64.ModRmLeaRbpRspDisp32 &&
+            code[3] == InstructionsX64.SibRsp)
         {
             uint offset = ReadUInt32(code[4..]);
             if (offset > int.MaxValue)
@@ -314,25 +332,33 @@ static class UnwindX64
             return false;
 
         byte operation = code[0];
-        if (operation is >= 0x50 and <= 0x57 or 0x68 or 0x6a or 0x9c or 0xc8)
+        if (operation is >= InstructionsX64.PushRegister and <= InstructionsX64.PushRegisterLast or
+            InstructionsX64.PushImmediate32 or
+            InstructionsX64.PushImmediate8 or
+            InstructionsX64.PushFlags or
+            InstructionsX64.Enter)
             return true;
 
-        if (code.Length >= 2 && operation == 0x41 && code[1] is >= 0x50 and <= 0x57)
+        if (code.Length >= 2 &&
+            operation == InstructionsX64.RexB &&
+            code[1] is >= InstructionsX64.PushRegister and <= InstructionsX64.PushRegisterLast)
             return true;
 
-        if (code.Length >= 3 && operation == 0x48 &&
-            code[1] is 0x81 or 0x83 &&
-            code[2] is 0xc4 or 0xe4 or 0xec)
+        if (code.Length >= 3 && operation == InstructionsX64.RexW &&
+            code[1] is InstructionsX64.Group1Immediate32 or InstructionsX64.Group1Immediate8 &&
+            code[2] is InstructionsX64.ModRmAddRsp or InstructionsX64.ModRmAndRsp or InstructionsX64.ModRmSubRsp)
         {
             return true;
         }
 
         // MOV/LEA with RSP or RBP as the destination can establish a stack or
         // frame state that must be represented by unwind information.
-        if (code.Length >= 3 && operation == 0x48 && code[1] is 0x89 or 0x8b or 0x8d)
+        if (code.Length >= 3 && operation == InstructionsX64.RexW &&
+            code[1] is InstructionsX64.MovRmRegister or InstructionsX64.MovRegisterRm or InstructionsX64.Lea)
         {
-            int destinationRegister = code[1] == 0x89 ? code[2] & 7 : code[2] >> 3 & 7;
-            if (destinationRegister is RegisterRsp or RegisterRbp)
+            int destinationRegister =
+                code[1] == InstructionsX64.MovRmRegister ? code[2] & 7 : code[2] >> 3 & 7;
+            if (destinationRegister is InstructionsX64.RegisterSp or InstructionsX64.RegisterBp)
                 return true;
         }
 
@@ -364,6 +390,4 @@ static class UnwindX64
     const byte Version = 1;
     const int HeaderSize = 4;
     const int UnwindCodeSize = 2;
-    const int RegisterRsp = 4;
-    const int RegisterRbp = 5;
 }
