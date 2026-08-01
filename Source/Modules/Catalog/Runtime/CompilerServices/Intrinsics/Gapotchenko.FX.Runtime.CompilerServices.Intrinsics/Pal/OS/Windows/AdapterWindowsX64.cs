@@ -23,36 +23,38 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #endif
 sealed class AdapterWindowsX64 : AdapterX64
 {
-    protected override UnwindX64.AnalysisLevel UnwindAnalysisLevel => UnwindX64.AnalysisLevel.UnwindOperations;
+    protected override UnwindX64.AnalysisLevel UnwindAnalysisLevel => UnwindX64.AnalysisLevel.Operations;
 
-    protected override UnwindX64.Analysis AnalyzeCode(
+    protected override UnwindX64.Analysis AnalyzeUnwind(
         ReadOnlySpan<byte> code,
-        Span<UnwindX64.UnwindOperation> unwindOperations,
-        Span<UnwindX64.EpilogueOperation> epilogueOperations)
+        Span<UnwindX64.UnwindOperation> operations,
+        Span<UnwindX64.EpilogueOperation> epilogue)
     {
-        return UnwindWindowsX64.Analyze(code, unwindOperations);
+        return UnwindWindowsX64.Analyze(code, operations);
     }
 
-    protected override PatchResult ValidateCode(in UnwindX64.Analysis analysis)
+    protected override PatchResult ValidateCode(in UnwindX64.Analysis unwindAnalysis)
     {
-        return analysis.Result == UnwindAnalysisResult.Unsupported ?
+        return unwindAnalysis.Result == UnwindAnalysisResult.Unsupported ?
             PatchResult.UnsupportedUnwindPrologue :
             PatchResult.Success;
     }
 
-    protected override bool RequiresTrampoline(in UnwindX64.Analysis analysis)
+    protected override bool RequiresTrampoline(in UnwindX64.Analysis unwindAnalysis)
     {
-        return analysis.Result == UnwindAnalysisResult.Supported;
+        return unwindAnalysis.Result == UnwindAnalysisResult.Supported;
     }
 
-    protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code, in UnwindX64.Analysis analysis)
+    protected override int GetTrampolineAllocationSize(
+        ReadOnlySpan<byte> code,
+        in UnwindX64.Analysis unwindAnalysis)
     {
         int codeSize = checked(code.Length + 1);
-        if (analysis.Result == UnwindAnalysisResult.Leaf)
+        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
             return codeSize;
 
         int unwindInfoOffset = MemoryArithmetics.Align4(codeSize);
-        int unwindInfoSize = UnwindWindowsX64.GetSize(analysis);
+        int unwindInfoSize = UnwindWindowsX64.GetSize(unwindAnalysis);
         return checked(unwindInfoOffset + unwindInfoSize + Unsafe.SizeOf<NativeMethods.RuntimeFunctionX64>());
     }
 
@@ -114,9 +116,9 @@ sealed class AdapterWindowsX64 : AdapterX64
     protected override unsafe void WriteTrampoline(
         Span<byte> destination,
         ReadOnlySpan<byte> code,
-        in UnwindX64.Analysis analysis)
+        in UnwindX64.Analysis unwindAnalysis)
     {
-        if (analysis.Result == UnwindAnalysisResult.Leaf)
+        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
         {
             WriteCodeCore(destination, code);
             return;
@@ -124,7 +126,7 @@ sealed class AdapterWindowsX64 : AdapterX64
 
         int codeSize = checked(code.Length + 1);
         int unwindInfoOffset = MemoryArithmetics.Align4(codeSize);
-        int unwindInfoSize = UnwindWindowsX64.GetSize(analysis);
+        int unwindInfoSize = UnwindWindowsX64.GetSize(unwindAnalysis);
         int runtimeFunctionOffset = checked(unwindInfoOffset + unwindInfoSize);
         int allocationSize = checked(runtimeFunctionOffset + Unsafe.SizeOf<NativeMethods.RuntimeFunctionX64>());
         destination = destination[..allocationSize];
@@ -137,7 +139,7 @@ sealed class AdapterWindowsX64 : AdapterX64
         {
             code.CopyTo(destination);
             destination[code.Length] = InstructionsX64.Ret;
-            UnwindWindowsX64.Write(destination[unwindInfoOffset..runtimeFunctionOffset], analysis);
+            UnwindWindowsX64.Write(destination[unwindInfoOffset..runtimeFunctionOffset], unwindAnalysis);
 
             runtimeFunction.BeginAddress = 0;
             runtimeFunction.EndAddress = checked((uint)codeSize);

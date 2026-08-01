@@ -16,10 +16,10 @@ static class UnwindX86
 {
     public static Analysis Analyze(
         ReadOnlySpan<byte> code,
-        Span<UnwindOperation> unwindOperations)
+        Span<UnwindOperation> operations)
     {
-        var result = Analyze(code, unwindOperations, out int operationCount, out var info);
-        return new(result, info, unwindOperations[..operationCount]);
+        var result = Analyze(code, operations, out int operationCount, out var info);
+        return new(result, info, operations[..operationCount]);
     }
 
     static UnwindAnalysisResult Analyze(
@@ -225,20 +225,20 @@ static class UnwindX86
     public readonly ref struct Analysis(
         UnwindAnalysisResult result,
         UnwindInfo info,
-        ReadOnlySpan<UnwindOperation> unwindOperations,
-        ReadOnlySpan<EpilogueOperation> epilogueOperations = default)
+        ReadOnlySpan<UnwindOperation> operations,
+        ReadOnlySpan<EpilogueOperation> epilogue = default)
     {
         public UnwindAnalysisResult Result { get; init; } = result;
         public UnwindInfo Info { get; } = info;
-        public ReadOnlySpan<UnwindOperation> UnwindOperations { get; } = unwindOperations;
-        public ReadOnlySpan<EpilogueOperation> EpilogueOperations { get; init; } = epilogueOperations;
+        public ReadOnlySpan<UnwindOperation> Operations { get; } = operations;
+        public ReadOnlySpan<EpilogueOperation> Epilogue { get; init; } = epilogue;
     }
 
     public enum AnalysisLevel
     {
         None,
-        UnwindOperations,
-        EpilogueOperations
+        Operations,
+        Epilogue
     }
 
     public const int MaximumOperationCount = byte.MaxValue;

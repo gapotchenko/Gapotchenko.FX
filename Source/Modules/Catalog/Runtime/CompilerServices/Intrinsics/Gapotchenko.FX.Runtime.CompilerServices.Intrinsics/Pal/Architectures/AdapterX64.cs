@@ -16,17 +16,17 @@ abstract class AdapterX64 : AdapterX86Base
     public sealed override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
         var level = UnwindAnalysisLevel;
-        if (level >= UnwindX64.AnalysisLevel.UnwindOperations)
+        if (level >= UnwindX64.AnalysisLevel.Operations)
         {
             Span<UnwindX64.UnwindOperation> operations = stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
 
-            scoped Span<UnwindX64.EpilogueOperation> epilogueOperations;
-            if (level >= UnwindX64.AnalysisLevel.EpilogueOperations)
-                epilogueOperations = stackalloc UnwindX64.EpilogueOperation[UnwindX64.MaximumOperationCount];
+            scoped Span<UnwindX64.EpilogueOperation> epilogue;
+            if (level >= UnwindX64.AnalysisLevel.Epilogue)
+                epilogue = stackalloc UnwindX64.EpilogueOperation[UnwindX64.MaximumOperationCount];
             else
-                epilogueOperations = [];
+                epilogue = [];
 
-            var analysis = AnalyzeCode(code, operations, epilogueOperations);
+            var analysis = AnalyzeUnwind(code, operations, epilogue);
             return PatchMethod(method, code, analysis);
         }
         else
@@ -38,9 +38,9 @@ abstract class AdapterX64 : AdapterX86Base
     PatchResult PatchMethod(
         MethodInfo method,
         ReadOnlySpan<byte> code,
-        in UnwindX64.Analysis analysis)
+        in UnwindX64.Analysis unwindAnalysis)
     {
-        var codeValidationResult = ValidateCode(analysis);
+        var codeValidationResult = ValidateCode(unwindAnalysis);
         if (codeValidationResult != PatchResult.Success)
             return codeValidationResult;
 
@@ -61,7 +61,7 @@ abstract class AdapterX64 : AdapterX86Base
         finally
 #endif
         {
-            result = ApplyPatch(instructions, entryPoint, code, analysis);
+            result = ApplyPatch(instructions, entryPoint, code, unwindAnalysis);
         }
         return result;
     }
@@ -101,10 +101,10 @@ abstract class AdapterX64 : AdapterX86Base
         Span<byte> instructions,
         Span<byte> entryPoint,
         ReadOnlySpan<byte> code,
-        in UnwindX64.Analysis analysis)
+        in UnwindX64.Analysis unwindAnalysis)
     {
         int patchSize = checked(code.Length + 1);
-        if (!RequiresTrampoline(analysis) && patchSize <= instructions.Length)
+        if (!RequiresTrampoline(unwindAnalysis) && patchSize <= instructions.Length)
         {
             var destination = instructions[..patchSize];
             if (!IsWriteAllowed(destination))
@@ -135,13 +135,13 @@ abstract class AdapterX64 : AdapterX86Base
 
         if (!TryAllocateTrampoline(
             redirection,
-            GetTrampolineAllocationSize(code, analysis),
+            GetTrampolineAllocationSize(code, unwindAnalysis),
             out var trampoline))
         {
             return PatchResult.NoSpace;
         }
 
-        WriteTrampoline(trampoline, code, analysis);
+        WriteTrampoline(trampoline, code, unwindAnalysis);
         WriteRedirection(redirection, trampoline);
         if (!bodyRedirection.IsEmpty)
             WriteBodyRedirection(bodyRedirection, redirection);
@@ -179,19 +179,19 @@ abstract class AdapterX64 : AdapterX86Base
 
     protected virtual UnwindX64.AnalysisLevel UnwindAnalysisLevel => UnwindX64.AnalysisLevel.None;
 
-    protected virtual UnwindX64.Analysis AnalyzeCode(
+    protected virtual UnwindX64.Analysis AnalyzeUnwind(
         ReadOnlySpan<byte> code,
-        Span<UnwindX64.UnwindOperation> unwindOperations,
-        Span<UnwindX64.EpilogueOperation> epilogueOperations)
+        Span<UnwindX64.UnwindOperation> operations,
+        Span<UnwindX64.EpilogueOperation> epilogue)
     {
-        return UnwindX64.Analyze(code, unwindOperations);
+        return UnwindX64.Analyze(code, operations);
     }
 
-    protected virtual PatchResult ValidateCode(in UnwindX64.Analysis analysis) => PatchResult.Success;
+    protected virtual PatchResult ValidateCode(in UnwindX64.Analysis unwindAnalysis) => PatchResult.Success;
 
-    protected virtual bool RequiresTrampoline(in UnwindX64.Analysis analysis) => false;
+    protected virtual bool RequiresTrampoline(in UnwindX64.Analysis unwindAnalysis) => false;
 
-    protected virtual int GetTrampolineAllocationSize(ReadOnlySpan<byte> code, in UnwindX64.Analysis analysis)
+    protected virtual int GetTrampolineAllocationSize(ReadOnlySpan<byte> code, in UnwindX64.Analysis unwindAnalysis)
     {
         return checked(code.Length + sizeof(byte) /* RET */);
     }
@@ -203,7 +203,7 @@ abstract class AdapterX64 : AdapterX86Base
     protected virtual void WriteTrampoline(
         Span<byte> destination,
         ReadOnlySpan<byte> code,
-        in UnwindX64.Analysis analysis)
+        in UnwindX64.Analysis unwindAnalysis)
     {
         WriteCode(destination, code);
     }

@@ -26,7 +26,7 @@ static class UnwindWindowsX64
         if (analysis.Result != UnwindAnalysisResult.Supported)
             return analysis;
 
-        return IsSupported(analysis.UnwindOperations, analysis.Info) ?
+        return IsSupported(analysis.Operations, analysis.Info) ?
             analysis :
             analysis with { Result = UnwindAnalysisResult.Unsupported };
     }
@@ -35,27 +35,27 @@ static class UnwindWindowsX64
     {
         return
             HeaderSize +
-            UnwindCodeSize * AlignUnwindCodeCount(CountUnwindCodes(analysis.UnwindOperations));
+            UnwindCodeSize * AlignUnwindCodeCount(CountUnwindCodes(analysis.Operations));
     }
 
-    public static void Write(Span<byte> destination, in UnwindX64.Analysis analysis)
+    public static void Write(Span<byte> destination, in UnwindX64.Analysis unwindAnalysis)
     {
-        var operations = analysis.UnwindOperations;
-        var info = analysis.Info;
-        int unwindCodeCount = CountUnwindCodes(operations);
+        var unwindOperations = unwindAnalysis.Operations;
+        var unwindInfo = unwindAnalysis.Info;
+        int unwindCodeCount = CountUnwindCodes(unwindOperations);
         int size = HeaderSize + UnwindCodeSize * AlignUnwindCodeCount(unwindCodeCount);
         destination = destination[..size];
         destination.Clear();
 
         destination[0] = Version;
-        destination[1] = checked((byte)info.PrologueSize);
+        destination[1] = checked((byte)unwindInfo.PrologueSize);
         destination[2] = checked((byte)unwindCodeCount);
-        destination[3] = checked((byte)(info.FrameOffset / FrameOffsetUnit << 4 | info.FrameRegister));
+        destination[3] = checked((byte)(unwindInfo.FrameOffset / FrameOffsetUnit << 4 | unwindInfo.FrameRegister));
 
         int destinationOffset = HeaderSize;
-        for (int i = operations.Length - 1; i >= 0; --i)
+        for (int i = unwindOperations.Length - 1; i >= 0; --i)
         {
-            ref readonly var operation = ref operations[i];
+            ref readonly var operation = ref unwindOperations[i];
             GetEncoding(
                 operation,
                 out var operationCode,

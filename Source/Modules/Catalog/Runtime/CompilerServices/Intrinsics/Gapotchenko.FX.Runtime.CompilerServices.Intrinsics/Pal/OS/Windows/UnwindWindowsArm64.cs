@@ -38,12 +38,12 @@ static class UnwindWindowsArm64
         return analysis;
     }
 
-    public static uint GetUnwindData(ReadOnlySpan<uint> code, in UnwindArm64.Analysis analysis)
+    public static uint GetUnwindData(ReadOnlySpan<uint> code, in UnwindArm64.Analysis unwindAnalysis)
     {
-        int chained = analysis.Info.FrameKind == UnwindArm64.FrameKind.FrameChain ? 3 : 0;
+        int chained = unwindAnalysis.Info.FrameKind == UnwindArm64.FrameKind.FrameChain ? 3 : 0;
         return EncodePackedUnwindData(
             checked(code.Length + 1),
-            analysis.Info.FrameSize,
+            unwindAnalysis.Info.FrameSize,
             chained);
     }
 

@@ -21,9 +21,9 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
 #endif
 sealed class AdapterMacOSX64 : AdapterX64
 {
-    protected override UnwindX64.AnalysisLevel UnwindAnalysisLevel => UnwindX64.AnalysisLevel.EpilogueOperations;
+    protected override UnwindX64.AnalysisLevel UnwindAnalysisLevel => UnwindX64.AnalysisLevel.Epilogue;
 
-    protected override UnwindX64.Analysis AnalyzeCode(
+    protected override UnwindX64.Analysis AnalyzeUnwind(
         ReadOnlySpan<byte> code,
         Span<UnwindX64.UnwindOperation> operations,
         Span<UnwindX64.EpilogueOperation> epilogueOperations)
@@ -31,26 +31,26 @@ sealed class AdapterMacOSX64 : AdapterX64
         return DwarfUnwindX64.Analyze(code, operations, epilogueOperations);
     }
 
-    protected override PatchResult ValidateCode(in UnwindX64.Analysis analysis)
+    protected override PatchResult ValidateCode(in UnwindX64.Analysis unwindAnalysis)
     {
-        return analysis.Result == UnwindAnalysisResult.Unsupported ?
+        return unwindAnalysis.Result == UnwindAnalysisResult.Unsupported ?
             PatchResult.UnsupportedUnwindPrologue :
             PatchResult.Success;
     }
 
-    protected override bool RequiresTrampoline(in UnwindX64.Analysis analysis)
+    protected override bool RequiresTrampoline(in UnwindX64.Analysis unwindAnalysis)
     {
-        return analysis.Result == UnwindAnalysisResult.Supported;
+        return unwindAnalysis.Result == UnwindAnalysisResult.Supported;
     }
 
-    protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code, in UnwindX64.Analysis analysis)
+    protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code, in UnwindX64.Analysis unwindAnalysis)
     {
         int codeSize = checked(code.Length + 1);
-        if (analysis.Result == UnwindAnalysisResult.Leaf)
+        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
             return codeSize;
 
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
-        return checked(unwindOffset + DwarfUnwindX64.GetSize(analysis));
+        return checked(unwindOffset + DwarfUnwindX64.GetSize(unwindAnalysis));
     }
 
     protected override bool IsWriteAllowed(Span<byte> span)
@@ -78,9 +78,9 @@ sealed class AdapterMacOSX64 : AdapterX64
     protected override unsafe void WriteTrampoline(
         Span<byte> destination,
         ReadOnlySpan<byte> code,
-        in UnwindX64.Analysis analysis)
+        in UnwindX64.Analysis unwindAnalysis)
     {
-        if (analysis.Result == UnwindAnalysisResult.Leaf)
+        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
         {
             using var leafScope = JitWriteProtectionScope.Create(destination);
             code.CopyTo(destination);
@@ -90,7 +90,7 @@ sealed class AdapterMacOSX64 : AdapterX64
         }
         int codeSize = checked(code.Length + 1);
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
-        int unwindSize = DwarfUnwindX64.GetSize(analysis);
+        int unwindSize = DwarfUnwindX64.GetSize(unwindAnalysis);
         destination = destination[..checked(unwindOffset + unwindSize)];
 
         ref byte baseAddress = ref MemoryMarshal.GetReference(destination);
@@ -103,7 +103,7 @@ sealed class AdapterMacOSX64 : AdapterX64
             DwarfUnwindX64.Write(
                 unwindDestination,
                 code,
-                in analysis,
+                in unwindAnalysis,
                 Unsafe.AsPointer(ref baseAddress));
             scope.FlushInstructions();
         }

@@ -16,18 +16,18 @@ abstract class AdapterX86 : AdapterX86Base
     public sealed override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
         var level = UnwindAnalysisLevel;
-        if (level >= UnwindX86.AnalysisLevel.UnwindOperations)
+        if (level >= UnwindX86.AnalysisLevel.Operations)
         {
-            Span<UnwindX86.UnwindOperation> unwindOperations =
+            Span<UnwindX86.UnwindOperation> operations =
                 stackalloc UnwindX86.UnwindOperation[UnwindX86.MaximumOperationCount];
 
-            scoped Span<UnwindX86.EpilogueOperation> epilogueOperations;
-            if (level >= UnwindX86.AnalysisLevel.EpilogueOperations)
-                epilogueOperations = stackalloc UnwindX86.EpilogueOperation[UnwindX86.MaximumOperationCount];
+            scoped Span<UnwindX86.EpilogueOperation> epilogue;
+            if (level >= UnwindX86.AnalysisLevel.Epilogue)
+                epilogue = stackalloc UnwindX86.EpilogueOperation[UnwindX86.MaximumOperationCount];
             else
-                epilogueOperations = [];
+                epilogue = [];
 
-            var analysis = AnalyzeCode(code, unwindOperations, epilogueOperations);
+            var analysis = AnalyzeUnwind(code, operations, epilogue);
             return PatchMethod(method, code, analysis);
         }
         else
@@ -36,9 +36,12 @@ abstract class AdapterX86 : AdapterX86Base
         }
     }
 
-    PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code, in UnwindX86.Analysis analysis)
+    PatchResult PatchMethod(
+        MethodInfo method,
+        ReadOnlySpan<byte> code,
+        in UnwindX86.Analysis unwindAnalysis)
     {
-        var codeValidationResult = ValidateCode(analysis);
+        var codeValidationResult = ValidateCode(unwindAnalysis);
         if (codeValidationResult != PatchResult.Success)
             return codeValidationResult;
 
@@ -59,7 +62,7 @@ abstract class AdapterX86 : AdapterX86Base
         finally
 #endif
         {
-            result = ApplyPatch(instructions, code, analysis);
+            result = ApplyPatch(instructions, code, unwindAnalysis);
         }
         return result;
     }
@@ -72,10 +75,10 @@ abstract class AdapterX86 : AdapterX86Base
     PatchResult ApplyPatch(
         Span<byte> instructions,
         ReadOnlySpan<byte> code,
-        in UnwindX86.Analysis analysis)
+        in UnwindX86.Analysis unwindAnalysis)
     {
         int patchSize = checked(code.Length + 1);
-        if (!RequiresTrampoline(analysis) && patchSize <= instructions.Length)
+        if (!RequiresTrampoline(unwindAnalysis) && patchSize <= instructions.Length)
         {
             var destination = instructions[..patchSize];
             if (!IsWriteAllowed(destination))
@@ -91,8 +94,8 @@ abstract class AdapterX86 : AdapterX86Base
         if (!IsWriteAllowed(redirection))
             return PatchResult.WriteProtected;
 
-        var trampoline = AllocateTrampoline(GetTrampolineAllocationSize(code, analysis));
-        WriteTrampoline(trampoline, code, analysis);
+        var trampoline = AllocateTrampoline(GetTrampolineAllocationSize(code, unwindAnalysis));
+        WriteTrampoline(trampoline, code, unwindAnalysis);
         WriteRedirection(redirection, trampoline);
         return PatchResult.Success;
     }
@@ -123,38 +126,39 @@ abstract class AdapterX86 : AdapterX86Base
 
     protected virtual UnwindX86.AnalysisLevel UnwindAnalysisLevel => UnwindX86.AnalysisLevel.None;
 
-    protected virtual UnwindX86.Analysis AnalyzeCode(
+    protected virtual UnwindX86.Analysis AnalyzeUnwind(
         ReadOnlySpan<byte> code,
-        Span<UnwindX86.UnwindOperation> unwindOperations,
-        Span<UnwindX86.EpilogueOperation> epilogueOperations)
+        Span<UnwindX86.UnwindOperation> operations,
+        Span<UnwindX86.EpilogueOperation> epilogue)
     {
-        return UnwindX86.Analyze(code, unwindOperations);
+        return UnwindX86.Analyze(code, operations);
     }
 
-    protected virtual PatchResult ValidateCode(in UnwindX86.Analysis analysis)
+    protected virtual PatchResult ValidateCode(in UnwindX86.Analysis unwindAnalysis)
     {
         return PatchResult.Success;
     }
 
-    protected virtual bool RequiresTrampoline(in UnwindX86.Analysis analysis)
+    protected virtual bool RequiresTrampoline(in UnwindX86.Analysis unwindAnalysis)
     {
         return false;
     }
 
     protected virtual int GetTrampolineAllocationSize(
         ReadOnlySpan<byte> code,
-        in UnwindX86.Analysis analysis)
+        in UnwindX86.Analysis unwindAnalysis)
     {
         return checked(code.Length + sizeof(byte) /* RET */);
     }
 
     protected abstract Span<byte> AllocateTrampoline(int size);
+
     protected abstract void WriteCode(Span<byte> destination, ReadOnlySpan<byte> code);
 
     protected virtual void WriteTrampoline(
         Span<byte> destination,
         ReadOnlySpan<byte> code,
-        in UnwindX86.Analysis analysis)
+        in UnwindX86.Analysis unwindAnalysis)
     {
         WriteCode(destination, code);
     }

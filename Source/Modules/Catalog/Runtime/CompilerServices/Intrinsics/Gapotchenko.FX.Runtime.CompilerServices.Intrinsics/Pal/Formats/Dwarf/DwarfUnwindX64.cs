@@ -18,29 +18,29 @@ static class DwarfUnwindX64
 {
     public static UnwindX64.Analysis Analyze(
         ReadOnlySpan<byte> code,
-        Span<UnwindX64.UnwindOperation> unwindOperations,
-        Span<UnwindX64.EpilogueOperation> epilogueOperations)
+        Span<UnwindX64.UnwindOperation> operations,
+        Span<UnwindX64.EpilogueOperation> epilogue)
     {
-        var analysis = UnwindX64.Analyze(code, unwindOperations);
+        var analysis = UnwindX64.Analyze(code, operations);
         if (analysis.Result != UnwindAnalysisResult.Supported)
             return analysis;
 
-        var analyzedUnwindOperations = analysis.UnwindOperations;
+        var analyzedOperations = analysis.Operations;
         int cfaOffset = InitialCfaOffset;
-        foreach (ref readonly var unwindOperation in analyzedUnwindOperations)
+        foreach (ref readonly var operation in analyzedOperations)
         {
-            switch (unwindOperation.Kind)
+            switch (operation.Kind)
             {
                 case UnwindX64.UnwindOperationKind.PushNonvolatile:
                     cfaOffset = checked(cfaOffset + StackSlotSize);
                     break;
 
                 case UnwindX64.UnwindOperationKind.StackAllocation:
-                    cfaOffset = checked(cfaOffset + (int)unwindOperation.Value);
+                    cfaOffset = checked(cfaOffset + (int)operation.Value);
                     break;
 
                 case UnwindX64.UnwindOperationKind.SetFramePointer:
-                    if (unwindOperation.Value > cfaOffset)
+                    if (operation.Value > cfaOffset)
                         return analysis with { Result = UnwindAnalysisResult.Unsupported };
                     break;
             }
@@ -48,9 +48,9 @@ static class DwarfUnwindX64
 
         int epilogueOperationCount = 0;
         int end = code.Length;
-        for (int i = analyzedUnwindOperations.Length - 1; i >= 0; --i)
+        for (int i = analyzedOperations.Length - 1; i >= 0; --i)
         {
-            ref readonly var operation = ref analyzedUnwindOperations[i];
+            ref readonly var operation = ref analyzedOperations[i];
             int start;
             switch (operation.Kind)
             {
@@ -71,13 +71,13 @@ static class DwarfUnwindX64
                     return analysis with { Result = UnwindAnalysisResult.Unsupported };
             }
 
-            if (start < analysis.Info.PrologueSize || epilogueOperationCount >= epilogueOperations.Length)
+            if (start < analysis.Info.PrologueSize || epilogueOperationCount >= epilogue.Length)
                 return analysis with { Result = UnwindAnalysisResult.Unsupported };
-            epilogueOperations[epilogueOperationCount++] = new(start, end, i);
+            epilogue[epilogueOperationCount++] = new(start, end, i);
             end = start;
         }
 
-        return analysis with { EpilogueOperations = epilogueOperations[..epilogueOperationCount] };
+        return analysis with { Epilogue = epilogue[..epilogueOperationCount] };
     }
 
     public static int GetSize(in UnwindX64.Analysis analysis)
@@ -85,18 +85,18 @@ static class DwarfUnwindX64
         var serializer = new DwarfSerializer();
         WriteInstructions(
             ref serializer,
-            analysis.UnwindOperations,
-            analysis.EpilogueOperations);
+            analysis.Operations,
+            analysis.Epilogue);
         return DwarfSerializer.GetFdeSize(CieSize, serializer.Position);
     }
 
     public static unsafe void Write(
         Span<byte> destination,
         ReadOnlySpan<byte> code,
-        ref readonly UnwindX64.Analysis analysis,
+        ref readonly UnwindX64.Analysis unwindAnalysis,
         void* codeAddress)
     {
-        int size = GetSize(analysis);
+        int size = GetSize(unwindAnalysis);
         destination = destination[..size];
         byte* unwindAddress = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(destination));
         Cie.CopyTo(destination);
@@ -111,8 +111,8 @@ static class DwarfUnwindX64
             fdeSize);
         WriteInstructions(
             ref serializer,
-            analysis.UnwindOperations,
-            analysis.EpilogueOperations);
+            unwindAnalysis.Operations,
+            unwindAnalysis.Epilogue);
         serializer.CompleteFde(fdeSize);
     }
 

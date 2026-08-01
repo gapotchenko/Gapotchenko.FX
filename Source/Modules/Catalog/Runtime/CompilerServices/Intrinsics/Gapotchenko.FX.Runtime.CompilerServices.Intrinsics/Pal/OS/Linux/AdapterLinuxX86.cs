@@ -22,38 +22,38 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 sealed class AdapterLinuxX86 : AdapterX86
 {
     protected override UnwindX86.AnalysisLevel UnwindAnalysisLevel =>
-        UnwindX86.AnalysisLevel.EpilogueOperations;
+        UnwindX86.AnalysisLevel.Epilogue;
 
-    protected override UnwindX86.Analysis AnalyzeCode(
+    protected override UnwindX86.Analysis AnalyzeUnwind(
         ReadOnlySpan<byte> code,
-        Span<UnwindX86.UnwindOperation> unwindOperations,
-        Span<UnwindX86.EpilogueOperation> epilogueOperations)
+        Span<UnwindX86.UnwindOperation> operations,
+        Span<UnwindX86.EpilogueOperation> epilogue)
     {
-        return DwarfUnwindX86.Analyze(code, unwindOperations, epilogueOperations);
+        return DwarfUnwindX86.Analyze(code, operations, epilogue);
     }
 
-    protected override PatchResult ValidateCode(in UnwindX86.Analysis analysis)
+    protected override PatchResult ValidateCode(in UnwindX86.Analysis unwindAnalysis)
     {
-        return analysis.Result == UnwindAnalysisResult.Unsupported ?
+        return unwindAnalysis.Result == UnwindAnalysisResult.Unsupported ?
             PatchResult.UnsupportedUnwindPrologue :
             PatchResult.Success;
     }
 
-    protected override bool RequiresTrampoline(in UnwindX86.Analysis analysis)
+    protected override bool RequiresTrampoline(in UnwindX86.Analysis unwindAnalysis)
     {
-        return analysis.Result == UnwindAnalysisResult.Supported;
+        return unwindAnalysis.Result == UnwindAnalysisResult.Supported;
     }
 
     protected override int GetTrampolineAllocationSize(
         ReadOnlySpan<byte> code,
-        in UnwindX86.Analysis analysis)
+        in UnwindX86.Analysis unwindAnalysis)
     {
         int codeSize = checked(code.Length + 1);
-        if (analysis.Result == UnwindAnalysisResult.Leaf)
+        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
             return codeSize;
 
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
-        return checked(unwindOffset + DwarfUnwindX86.GetSize(analysis) + sizeof(uint));
+        return checked(unwindOffset + DwarfUnwindX86.GetSize(unwindAnalysis) + sizeof(uint));
     }
 
     protected override unsafe void GetMethodInstructions(
@@ -82,16 +82,16 @@ sealed class AdapterLinuxX86 : AdapterX86
     protected override unsafe void WriteTrampoline(
         Span<byte> destination,
         ReadOnlySpan<byte> code,
-        in UnwindX86.Analysis analysis)
+        in UnwindX86.Analysis unwindAnalysis)
     {
-        if (analysis.Result == UnwindAnalysisResult.Leaf)
+        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
         {
             WriteCodeCore(destination, code);
             return;
         }
         int codeSize = checked(code.Length + 1);
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
-        int unwindSize = DwarfUnwindX86.GetSize(analysis);
+        int unwindSize = DwarfUnwindX86.GetSize(unwindAnalysis);
         destination = destination[..checked(unwindOffset + unwindSize + sizeof(uint))];
 
         ref byte baseAddress = ref MemoryMarshal.GetReference(destination);
@@ -101,7 +101,7 @@ sealed class AdapterLinuxX86 : AdapterX86
             code.CopyTo(destination);
             destination[code.Length] = InstructionsX86.Ret;
             destination[codeSize..unwindOffset].Clear();
-            DwarfUnwindX86.Write(unwindDestination, code, analysis, Unsafe.AsPointer(ref baseAddress));
+            DwarfUnwindX86.Write(unwindDestination, code, unwindAnalysis, Unsafe.AsPointer(ref baseAddress));
             destination[(unwindOffset + unwindSize)..].Clear();
             scope.FlushInstructions();
         }

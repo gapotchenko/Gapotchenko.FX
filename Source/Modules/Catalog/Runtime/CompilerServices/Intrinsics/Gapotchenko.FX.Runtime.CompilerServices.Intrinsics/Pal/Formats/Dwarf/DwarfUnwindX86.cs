@@ -18,16 +18,16 @@ static class DwarfUnwindX86
 {
     public static UnwindX86.Analysis Analyze(
         ReadOnlySpan<byte> code,
-        Span<UnwindX86.UnwindOperation> unwindOperations,
-        Span<UnwindX86.EpilogueOperation> epilogueOperations)
+        Span<UnwindX86.UnwindOperation> operations,
+        Span<UnwindX86.EpilogueOperation> epilogue)
     {
-        var analysis = UnwindX86.Analyze(code, unwindOperations);
+        var analysis = UnwindX86.Analyze(code, operations);
         if (analysis.Result != UnwindAnalysisResult.Supported)
             return analysis;
 
-        var analyzedUnwindOperations = analysis.UnwindOperations;
+        var analyzedOperations = analysis.Operations;
         int cfaOffset = InitialCfaOffset;
-        foreach (ref readonly var operation in analyzedUnwindOperations)
+        foreach (ref readonly var operation in analyzedOperations)
         {
             switch (operation.Kind)
             {
@@ -45,9 +45,9 @@ static class DwarfUnwindX86
         // Decode backwards from the end of the method. Stack operations are
         // undone in reverse execution order, so they match prologue operations
         // in their original order here.
-        for (int i = 0; i < analyzedUnwindOperations.Length; ++i)
+        for (int i = 0; i < analyzedOperations.Length; ++i)
         {
-            ref readonly var operation = ref analyzedUnwindOperations[i];
+            ref readonly var operation = ref analyzedOperations[i];
             int start;
             switch (operation.Kind)
             {
@@ -64,19 +64,19 @@ static class DwarfUnwindX86
                 default:
                     return analysis with { Result = UnwindAnalysisResult.Unsupported };
             }
-            if (start < analysis.Info.PrologueSize || epilogueOperationCount >= epilogueOperations.Length)
+            if (start < analysis.Info.PrologueSize || epilogueOperationCount >= epilogue.Length)
                 return analysis with { Result = UnwindAnalysisResult.Unsupported };
-            epilogueOperations[epilogueOperationCount++] = new(start, end, i);
+            epilogue[epilogueOperationCount++] = new(start, end, i);
             end = start;
         }
 
-        return analysis with { EpilogueOperations = epilogueOperations[..epilogueOperationCount] };
+        return analysis with { Epilogue = epilogue[..epilogueOperationCount] };
     }
 
     public static int GetSize(in UnwindX86.Analysis analysis)
     {
         var serializer = new DwarfSerializer();
-        WriteInstructions(ref serializer, analysis.UnwindOperations, analysis.EpilogueOperations);
+        WriteInstructions(ref serializer, analysis.Operations, analysis.Epilogue);
         return DwarfSerializer.GetFdeSize(CieSize, serializer.Position);
     }
 
@@ -93,7 +93,7 @@ static class DwarfUnwindX86
         var serializer = new DwarfSerializer(destination[CieSize..]);
         int fdeSize = size - CieSize;
         serializer.WriteFdeHeader(CieSize, unwindAddress, codeAddress, checked(code.Length + 1), fdeSize);
-        WriteInstructions(ref serializer, analysis.UnwindOperations, analysis.EpilogueOperations);
+        WriteInstructions(ref serializer, analysis.Operations, analysis.Epilogue);
         serializer.CompleteFde(fdeSize);
     }
 

@@ -18,26 +18,28 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 #endif
 sealed class AdapterLinuxArm64 : AdapterArm64
 {
-    protected override PatchResult ValidateCode(in UnwindArm64.Analysis analysis)
+    protected override PatchResult ValidateCode(in UnwindArm64.Analysis unwindAnalysis)
     {
-        return analysis.Result == UnwindAnalysisResult.Unsupported ?
+        return unwindAnalysis.Result == UnwindAnalysisResult.Unsupported ?
             PatchResult.UnsupportedUnwindPrologue :
             PatchResult.Success;
     }
 
-    protected override bool RequiresTrampoline(in UnwindArm64.Analysis analysis) =>
-        analysis.Result == UnwindAnalysisResult.Supported;
+    protected override bool RequiresTrampoline(in UnwindArm64.Analysis unwindAnalysis)
+    {
+        return unwindAnalysis.Result == UnwindAnalysisResult.Supported;
+    }
 
     protected override int GetTrampolineAllocationCount(
         ReadOnlySpan<uint> code,
-        in UnwindArm64.Analysis analysis)
+        in UnwindArm64.Analysis unwindAnalysis)
     {
-        return analysis.Result switch
+        return unwindAnalysis.Result switch
         {
-            UnwindAnalysisResult.Leaf => base.GetTrampolineAllocationCount(code, analysis),
+            UnwindAnalysisResult.Leaf => base.GetTrampolineAllocationCount(code, unwindAnalysis),
             UnwindAnalysisResult.Supported => checked(
                 code.Length + 1 +
-                (DwarfUnwindArm64.GetSize(code, analysis) + sizeof(uint) - 1) / sizeof(uint) +
+                (DwarfUnwindArm64.GetSize(code, unwindAnalysis) + sizeof(uint) - 1) / sizeof(uint) +
                 1),
             _ => throw new InvalidOperationException("The intrinsic has an unsupported Linux ARM64 unwind prologue.")
         };
@@ -94,15 +96,15 @@ sealed class AdapterLinuxArm64 : AdapterArm64
     protected override unsafe void WriteTrampoline(
         Span<uint> destination,
         ReadOnlySpan<uint> code,
-        in UnwindArm64.Analysis analysis)
+        in UnwindArm64.Analysis unwindAnalysis)
     {
-        if (analysis.Result == UnwindAnalysisResult.Leaf)
+        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
         {
             WriteCode(destination, code);
             return;
         }
         int codeCount = checked(code.Length + 1);
-        int unwindSize = DwarfUnwindArm64.GetSize(code, analysis);
+        int unwindSize = DwarfUnwindArm64.GetSize(code, unwindAnalysis);
         int unwindCount = checked((unwindSize + sizeof(uint) - 1) / sizeof(uint));
         int allocationCount = checked(codeCount + unwindCount + 1);
         destination = destination[..allocationCount];
@@ -117,7 +119,7 @@ sealed class AdapterLinuxArm64 : AdapterArm64
             DwarfUnwindArm64.Write(
                 unwindDestination,
                 code,
-                in analysis,
+                in unwindAnalysis,
                 Unsafe.AsPointer(ref baseAddress));
             scope.FlushInstructions();
         }
