@@ -69,7 +69,7 @@ abstract class AdapterArm64 : AdapterArm
         entryPointTarget = [];
         if (p0 != p)
         {
-            if (TryGetIndirectBranchTargetSlot(p0, out nuint* targetSlot))
+            if (InstructionsArm64.TryGetIndirectBranchTargetSlot(p0, out nuint* targetSlot))
                 entryPointTarget = new(targetSlot, 1);
             else
                 entryPoint = new(p0, 1);
@@ -82,11 +82,7 @@ abstract class AdapterArm64 : AdapterArm
         if (instructions.Length < 1)
             return -1;
 
-        uint instruction = instructions[0];
-        bool supported =
-            (instruction & 0xffc07fff) == 0xa9807bfd ||
-            (instruction & 0xff8003ff) == 0xd10003ff;
-        return supported ? 3 : -1;
+        return InstructionsArm64.IsStackFrameSetup(instructions[0]) ? 3 : -1;
     }
 
     unsafe PatchResult ApplyPatch(
@@ -126,7 +122,7 @@ abstract class AdapterArm64 : AdapterArm
             if (!TryAllocateTrampolineNear(
                 GetPointer(primaryRedirection),
                 GetTrampolineAllocationCount(code),
-                (nuint)BranchMaximumDistance,
+                (nuint)InstructionsArm64.BranchMaximumDistance,
                 out trampoline))
             {
                 return ApplyLongPatch(instructions, entryPoint, entryPointTarget, code);
@@ -134,21 +130,24 @@ abstract class AdapterArm64 : AdapterArm
         }
 
         uint primaryBranch = 0;
-        if (!primaryRedirection.IsEmpty && !TryEncodeBranch(GetOffset(primaryRedirection, trampoline), out primaryBranch))
+        if (!primaryRedirection.IsEmpty &&
+            !InstructionsArm64.TryEncodeBranch(GetOffset(primaryRedirection, trampoline), out primaryBranch))
+        {
             return ApplyLongPatch(instructions, entryPoint, entryPointTarget, code);
+        }
 
         var bodyTrampoline = Span<uint>.Empty;
         uint bodyBranch = primaryBranch;
         if (!entryPoint.IsEmpty || !entryPointTarget.IsEmpty)
         {
-            if (!TryEncodeBranch(GetOffset(bodyRedirection, trampoline), out bodyBranch))
+            if (!InstructionsArm64.TryEncodeBranch(GetOffset(bodyRedirection, trampoline), out bodyBranch))
             {
                 if (!TryAllocateTrampolineNear(
                         GetPointer(bodyRedirection),
                         GetTrampolineAllocationCount(code),
-                        (nuint)BranchMaximumDistance,
+                        (nuint)InstructionsArm64.BranchMaximumDistance,
                         out bodyTrampoline) ||
-                    !TryEncodeBranch(GetOffset(bodyRedirection, bodyTrampoline), out bodyBranch))
+                    !InstructionsArm64.TryEncodeBranch(GetOffset(bodyRedirection, bodyTrampoline), out bodyBranch))
                 {
                     return ApplyLongPatch(instructions, entryPoint, entryPointTarget, code);
                 }
@@ -177,7 +176,7 @@ abstract class AdapterArm64 : AdapterArm
         Span<nuint> entryPointTarget,
         ReadOnlySpan<uint> code)
     {
-        var bodyRedirection = instructions[..LongBranchInstructionCount];
+        var bodyRedirection = instructions[..InstructionsArm64.LongBranchInstructionCount];
         if (!IsWriteAllowed(bodyRedirection) ||
             !entryPoint.IsEmpty && !IsWriteAllowed(entryPoint) ||
             !entryPointTarget.IsEmpty && !IsWriteAllowed(entryPointTarget))
@@ -189,16 +188,23 @@ abstract class AdapterArm64 : AdapterArm
         if (!TryAllocateTrampolineNear(
                 GetPointer(bodyRedirection),
                 GetTrampolineAllocationCount(code),
-                unchecked((nuint)LongBranchMaximumDistance),
+                unchecked((nuint)InstructionsArm64.LongBranchMaximumDistance),
                 out var trampoline) ||
-            !TryEncodeLongBranch(bodyRedirection, trampoline, out uint adrp, out uint add))
+            !InstructionsArm64.TryEncodeLongBranch(
+                (nuint)GetPointer(bodyRedirection),
+                (nuint)GetPointer(trampoline),
+                out uint adrp,
+                out uint add))
         {
             return PatchResult.NoSpace;
         }
 
         uint entryPointBranch = 0;
-        if (!entryPoint.IsEmpty && !TryEncodeBranch(GetOffset(entryPoint, bodyRedirection), out entryPointBranch))
+        if (!entryPoint.IsEmpty &&
+            !InstructionsArm64.TryEncodeBranch(GetOffset(entryPoint, bodyRedirection), out entryPointBranch))
+        {
             return PatchResult.NoSpace;
+        }
 
         WriteTrampoline(trampoline, code);
         WriteLongBranch(bodyRedirection, adrp, add);
@@ -235,88 +241,16 @@ abstract class AdapterArm64 : AdapterArm
     static nint GetOffset(Span<uint> source, Span<uint> target) =>
         Unsafe.ByteOffset(ref MemoryMarshal.GetReference(source), ref MemoryMarshal.GetReference(target));
 
-    protected static unsafe uint* SkipBranches(uint* p)
+    static unsafe uint* SkipBranches(uint* p)
     {
         for (; ; )
         {
-            // B label: the signed imm26 operand is measured in four-byte instructions.
-            if ((*p & 0xfc000000) == 0x14000000)
-            {
-                // Sign-extend the operand and scale it by four to obtain a byte displacement in one go.
-                int displacement = (int)(*p << 6) >> 4;
+            if (InstructionsArm64.TryDecodeBranch(*p, out int displacement))
                 p = (uint*)((byte*)p + displacement);
-            }
-            // LDR Xt, label; BR Xt
-            else if (TryGetIndirectBranchTargetSlot(p, out nuint* targetSlot))
-            {
+            else if (InstructionsArm64.TryGetIndirectBranchTargetSlot(p, out nuint* targetSlot))
                 p = (uint*)*targetSlot;
-            }
             else
-            {
                 return p;
-            }
         }
     }
-
-    protected static unsafe bool TryGetIndirectBranchTargetSlot(uint* p, out nuint* targetSlot)
-    {
-        if (
-            (p[0] & 0xff000000) == 0x58000000 &&
-            (p[1] & 0xfffffc1f) == 0xd61f0000 &&
-            (p[0] & 0x1f) == ((p[1] >> 5) & 0x1f))
-        {
-            // Sign-extend the imm19 operand and scale it by four.
-            int displacement = ((int)((p[0] >> 5) & 0x7ffff) << 13 >> 13) << 2;
-            targetSlot = (nuint*)((byte*)p + displacement);
-            return true;
-        }
-
-        targetSlot = null;
-        return false;
-    }
-
-    protected const uint Ret = 0xd65f03c0;
-    protected const uint B = 0x14000000;
-    protected const uint BrX16 = 0xd61f0200;
-
-    protected static bool TryEncodeBranch(nint offset, out uint displacement)
-    {
-        if ((offset & (sizeof(uint) - 1)) != 0 || offset < -BranchMaximumDistance || offset >= BranchMaximumDistance)
-        {
-            displacement = 0;
-            return false;
-        }
-
-        displacement = (uint)(offset >> 2) & 0x03ffffff;
-        return true;
-    }
-
-    protected const nint BranchMaximumDistance = 1 << 27;
-
-    static unsafe bool TryEncodeLongBranch(
-        Span<uint> source,
-        Span<uint> target,
-        out uint adrp,
-        out uint add)
-    {
-        nuint sourceAddress = (nuint)GetPointer(source);
-        nuint targetAddress = (nuint)GetPointer(target);
-        nint pageOffset = (nint)(targetAddress & ~(nuint)0xfff) - (nint)(sourceAddress & ~(nuint)0xfff);
-        nint pageDisplacement = pageOffset >> 12;
-        if (pageDisplacement < -(1 << 20) || pageDisplacement >= 1 << 20)
-        {
-            adrp = 0;
-            add = 0;
-            return false;
-        }
-
-        uint immediate = (uint)pageDisplacement & 0x1fffff;
-        adrp = 0x90000010 | (immediate & 3) << 29 | (immediate >> 2) << 5;
-        add = 0x91000210 | (uint)(targetAddress & 0xfff) << 10;
-        return true;
-    }
-
-    const int LongBranchInstructionCount = 3;
-
-    const ulong LongBranchMaximumDistance = 1UL << 32;
 }

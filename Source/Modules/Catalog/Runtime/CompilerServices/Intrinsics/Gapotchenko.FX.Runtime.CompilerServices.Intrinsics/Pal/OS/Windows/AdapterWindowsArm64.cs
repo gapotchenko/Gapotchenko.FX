@@ -123,7 +123,7 @@ sealed class AdapterWindowsArm64 : AdapterArm64
     {
         using var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite);
         code.CopyTo(destination);
-        destination[code.Length] = Ret;
+        destination[code.Length] = InstructionsArm64.Ret;
         scope.FlushInstructions();
     }
 
@@ -148,7 +148,7 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         using (var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite))
         {
             code.CopyTo(destination);
-            destination[code.Length] = Ret;
+            destination[code.Length] = InstructionsArm64.Ret;
             runtimeFunction.BeginAddress = 0;
             runtimeFunction.UnwindData = unwindData;
             scope.FlushInstructions();
@@ -166,7 +166,7 @@ sealed class AdapterWindowsArm64 : AdapterArm64
     protected override void WriteBranch(Span<uint> destination, uint displacement)
     {
         using var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite);
-        destination[0] = B | displacement;
+        destination[0] = InstructionsArm64.B | displacement;
         scope.FlushInstructions();
     }
 
@@ -175,7 +175,7 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         using var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite);
         destination[0] = adrp;
         destination[1] = add;
-        destination[2] = BrX16;
+        destination[2] = InstructionsArm64.BrX16;
         scope.FlushInstructions();
     }
 
