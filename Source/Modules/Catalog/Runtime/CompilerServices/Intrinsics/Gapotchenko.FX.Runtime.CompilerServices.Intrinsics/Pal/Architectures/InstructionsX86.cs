@@ -11,6 +11,8 @@ abstract class InstructionsX86
 {
     public const byte PushRegister = 0x50;
     public const byte PushRegisterLast = PushRegister + 7;
+    public const byte PopRegister = 0x58;
+    public const byte PopRegisterLast = PopRegister + 7;
     public const byte PushImmediate32 = 0x68;
     public const byte PushImmediate8 = 0x6a;
     public const byte PushFlags = 0x9c;

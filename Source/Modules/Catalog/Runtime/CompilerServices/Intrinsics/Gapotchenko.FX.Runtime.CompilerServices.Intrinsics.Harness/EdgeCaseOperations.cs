@@ -84,6 +84,12 @@ static class EdgeCaseOperations
             0xe0, 0x03, 0x80, 0x52, // MOV W0,31
             0xff, 0x43, 0x00, 0x91, // ADD SP,SP,#16
             SupportedOSPlatforms = ["windows", "macos"])]
+        [MachineCodeIntrinsic(
+            Architecture.X64,
+            0x48, 0x83, 0xec, 0x28, // SUB RSP,40
+            0xb8, 0x1f, 0x00, 0x00, 0x00, // MOV EAX,31
+            0x48, 0x83, 0xc4, 0x28, // ADD RSP,40
+            SupportedOSPlatforms = ["windows", "macos"])]
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static int StackAllocationIntrinsic() => ManagedResult;
 
@@ -93,6 +99,13 @@ static class EdgeCaseOperations
             0xfd, 0x03, 0x00, 0x91, // MOV X29,SP
             0xe0, 0x03, 0x80, 0x52, // MOV W0,31
             0xfd, 0x7b, 0xc1, 0xa8, // LDP X29,LR,[SP],#16
+            SupportedOSPlatforms = ["windows", "macos"])]
+        [MachineCodeIntrinsic(
+            Architecture.X64,
+            0x55,                   // PUSH RBP
+            0x48, 0x89, 0xe5,       // MOV RBP,RSP
+            0xb8, 0x1f, 0x00, 0x00, 0x00, // MOV EAX,31
+            0x5d,                   // POP RBP
             SupportedOSPlatforms = ["windows", "macos"])]
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static int FrameChainIntrinsic() => ManagedResult;

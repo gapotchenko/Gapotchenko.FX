@@ -1,0 +1,191 @@
+// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2026
+
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+using Gapotchenko.FX.Runtime.CompilerServices.Utils;
+
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
+
+/// <summary>
+/// Encodes Windows x64 unwind information for intrinsic prologues.
+/// </summary>
+#if NET
+[SupportedOSPlatform("windows")]
+#endif
+static class UnwindWindowsX64
+{
+    public static UnwindAnalysisResult Analyze(ReadOnlySpan<byte> code, out int prologueSize)
+    {
+        Span<UnwindX64.UnwindOperation> operations = stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
+        var result = UnwindX64.Analyze(code, operations, out int operationCount, out var info);
+        prologueSize = info.PrologueSize;
+        if (result != UnwindAnalysisResult.Supported)
+            return result;
+
+        return IsSupported(operations[..operationCount], info) ?
+            UnwindAnalysisResult.Supported :
+            UnwindAnalysisResult.Unsupported;
+    }
+
+    public static int GetSize(ReadOnlySpan<byte> code, int prologueSize)
+    {
+        Span<UnwindX64.UnwindOperation> operations = stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
+        var result = UnwindX64.Analyze(code, operations, out int operationCount, out var info);
+        operations = operations[..operationCount];
+        if (result != UnwindAnalysisResult.Supported ||
+            info.PrologueSize != prologueSize ||
+            !IsSupported(operations, info))
+        {
+            throw new ArgumentException("The code does not have a supported Windows x64 prologue.", nameof(code));
+        }
+
+        return HeaderSize + UnwindCodeSize * AlignUnwindCodeCount(CountUnwindCodes(operations));
+    }
+
+    public static void Write(Span<byte> destination, ReadOnlySpan<byte> code, int prologueSize)
+    {
+        Span<UnwindX64.UnwindOperation> operations = stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
+        var result = UnwindX64.Analyze(code, operations, out int operationCount, out var info);
+        operations = operations[..operationCount];
+        if (result != UnwindAnalysisResult.Supported ||
+            info.PrologueSize != prologueSize ||
+            !IsSupported(operations, info))
+        {
+            throw new ArgumentException("The code does not have a supported Windows x64 prologue.", nameof(code));
+        }
+
+        int unwindCodeCount = CountUnwindCodes(operations);
+        int size = HeaderSize + UnwindCodeSize * AlignUnwindCodeCount(unwindCodeCount);
+        destination = destination[..size];
+        destination.Clear();
+
+        destination[0] = Version;
+        destination[1] = checked((byte)prologueSize);
+        destination[2] = checked((byte)unwindCodeCount);
+        destination[3] = checked((byte)(info.FrameOffset / FrameOffsetUnit << 4 | info.FrameRegister));
+
+        int destinationOffset = HeaderSize;
+        for (int i = operations.Length - 1; i >= 0; --i)
+        {
+            ref readonly var operation = ref operations[i];
+            GetEncoding(
+                operation,
+                out var operationCode,
+                out int operationInfo,
+                out uint extraData,
+                out int extraSlotCount);
+
+            destination[destinationOffset] = operation.CodeOffset;
+            destination[destinationOffset + 1] = checked((byte)(operationInfo << 4 | (byte)operationCode));
+            destinationOffset += UnwindCodeSize;
+
+            switch (extraSlotCount)
+            {
+                case 1:
+                    WriteUInt16(destination[destinationOffset..], checked((ushort)extraData));
+                    destinationOffset += UnwindCodeSize;
+                    break;
+
+                case 2:
+                    WriteUInt32(destination[destinationOffset..], extraData);
+                    destinationOffset += 2 * UnwindCodeSize;
+                    break;
+            }
+        }
+    }
+
+    static bool IsSupported(ReadOnlySpan<UnwindX64.UnwindOperation> operations, UnwindX64.UnwindInfo info)
+    {
+        if (info.FrameRegister != 0 &&
+            (info.FrameOffset % FrameOffsetUnit != 0 || info.FrameOffset > MaximumFrameOffset))
+        {
+            return false;
+        }
+
+        return CountUnwindCodes(operations) <= byte.MaxValue;
+    }
+
+    static int CountUnwindCodes(ReadOnlySpan<UnwindX64.UnwindOperation> operations)
+    {
+        int count = 0;
+        foreach (ref readonly var operation in operations)
+        {
+            GetEncoding(operation, out _, out _, out _, out int extraSlotCount);
+            count = checked(count + 1 + extraSlotCount);
+        }
+        return count;
+    }
+
+    static void GetEncoding(
+        UnwindX64.UnwindOperation operation,
+        out NativeMethods.UnwindOperation operationCode,
+        out int operationInfo,
+        out uint extraData,
+        out int extraSlotCount)
+    {
+        operationInfo = 0;
+        extraData = 0;
+        extraSlotCount = 0;
+
+        switch (operation.Kind)
+        {
+            case UnwindX64.UnwindOperationKind.PushNonvolatile:
+                operationCode = NativeMethods.UnwindOperation.PushNonvolatile;
+                operationInfo = operation.Register;
+                break;
+
+            case UnwindX64.UnwindOperationKind.StackAllocation:
+                uint allocationSize = operation.Value;
+                if (allocationSize <= 128)
+                {
+                    operationCode = NativeMethods.UnwindOperation.AllocateSmall;
+                    operationInfo = checked((int)(allocationSize / 8 - 1));
+                }
+                else if (allocationSize / 8 <= ushort.MaxValue)
+                {
+                    operationCode = NativeMethods.UnwindOperation.AllocateLarge;
+                    extraData = allocationSize / 8;
+                    extraSlotCount = 1;
+                }
+                else
+                {
+                    operationCode = NativeMethods.UnwindOperation.AllocateLarge;
+                    operationInfo = 1;
+                    extraData = allocationSize;
+                    extraSlotCount = 2;
+                }
+                break;
+
+            case UnwindX64.UnwindOperationKind.SetFramePointer:
+                operationCode = NativeMethods.UnwindOperation.SetFramePointer;
+                break;
+
+            default:
+                throw new InvalidOperationException("Unknown x64 unwind operation.");
+        }
+    }
+
+    static int AlignUnwindCodeCount(int count) => MemoryArithmetics.Align2(count);
+
+    static void WriteUInt16(Span<byte> destination, ushort value)
+    {
+        destination[0] = (byte)value;
+        destination[1] = (byte)(value >> 8);
+    }
+
+    static void WriteUInt32(Span<byte> destination, uint value)
+    {
+        WriteUInt16(destination, (ushort)value);
+        WriteUInt16(destination[2..], (ushort)(value >> 16));
+    }
+
+    const byte Version = 1;
+    const int HeaderSize = 4;
+    const int UnwindCodeSize = 2;
+    const int FrameOffsetUnit = 16;
+    const int MaximumFrameOffset = 240;
+}
