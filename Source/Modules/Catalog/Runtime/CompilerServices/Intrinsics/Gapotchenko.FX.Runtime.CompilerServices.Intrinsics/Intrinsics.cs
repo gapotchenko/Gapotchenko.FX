@@ -19,8 +19,16 @@ namespace Gapotchenko.FX.Runtime.CompilerServices;
 public static class Intrinsics
 {
     /// <summary>
-    /// Gets or sets the activation mode of the intrinsics compiler.
+    /// Gets or sets the activation mode of the intrinsic compiler.
     /// </summary>
+    /// <remarks>
+    /// The mode affects subsequent calls to <see cref="InitializeType(Type)"/> and should be configured
+    /// before intrinsic types are initialized. Changing the mode does not revert intrinsic methods that
+    /// have already been compiled.
+    /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="value"/> is not a defined <see cref="IntrinsicsActivationMode"/> value.
+    /// </exception>
     public static IntrinsicsActivationMode ActivationMode
     {
         get => field;

@@ -8,26 +8,30 @@
 namespace Gapotchenko.FX.Runtime.CompilerServices;
 
 /// <summary>
-/// Specifies the mode of activation for <see cref="Intrinsics"/> compiler.
+/// Specifies the activation mode of the intrinsic compiler.
 /// </summary>
 public enum IntrinsicsActivationMode
 {
     /// <summary>
-    /// Instructs <see cref="Intrinsics"/> compiler to automatically select "on" or "off" activation mode
+    /// Instructs the intrinsic compiler to automatically select "on" or "off" activation mode
     /// based on the current operating environment.
-    /// This is the default mode.
     /// </summary>
+    /// <remarks>
+    /// This is the default mode.
+    /// </remarks>
     Auto,
 
     /// <summary>
-    /// Instructs <see cref="Intrinsics"/> compiler to be turned off.
-    /// In this mode, intrinsic methods always use their managed fallback implementations,
-    /// no machine code is executed.
+    /// Instructs the intrinsic compiler to be turned off.
+    /// In this mode, subsequent intrinsic initialization is disabled.
     /// </summary>
+    /// <remarks>
+    /// Intrinsic methods that have already been compiled are not reverted to their managed fallback implementations.
+    /// </remarks>
     AlwaysOff,
 
     /// <summary>
-    /// Instructs <see cref="Intrinsics"/> compiler to activate itself
+    /// Instructs the intrinsic compiler to activate itself
     /// whenever the current operating environment permits just-in-time machine code execution.
     /// </summary>
     /// <remarks>
