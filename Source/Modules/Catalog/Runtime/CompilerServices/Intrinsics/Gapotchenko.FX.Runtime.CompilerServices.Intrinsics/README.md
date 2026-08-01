@@ -122,7 +122,7 @@ class BitOperations
         0x00, 0x10, 0xc0, 0x5a,   // CLZ W0,W0
         0x00, 0x10, 0x00, 0x52,   // EOR W0,W0,#31
         SupportedOSPlatforms = ["windows", "linux", "macos"])]
-    [MethodImpl(MethodImplOptions.NoInlining)]
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.AggressiveOptimization)]
     public static int Log2_Intrinsic(uint value)
     {
         value |= value >> 1;
