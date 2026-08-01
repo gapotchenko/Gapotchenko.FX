@@ -24,6 +24,12 @@ abstract class InstructionsX86
     public const byte MovRegisterRm = 0x8b;
     public const byte Lea = 0x8d;
 
+    public const byte ModRmAddEsp = 0xc4;
+    public const byte ModRmAndEsp = 0xe4;
+    public const byte ModRmSubEsp = 0xec;
+    public const byte ModRmMovEbpEsp = 0xec;
+    public const byte ModRmMovEspEbp = 0xe5;
+
     public const byte Ret = 0xc3;
     public const int JmpRel32 = 0xe9;
     public const int JmpRel32Size = 5;
