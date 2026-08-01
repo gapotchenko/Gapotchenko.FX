@@ -67,7 +67,7 @@ static class Program
     {
         Console.WriteLine("OS: {0}", RuntimeInformation.OSDescription);
         Console.WriteLine("Process architecture: {0}", RuntimeInformation.ProcessArchitecture);
-        Console.WriteLine(".NET environment version: {0}", Environment.Version);
+        Console.WriteLine(".NET environment: {0}", RuntimeInformation.FrameworkDescription);
     }
 
     static void Exercise()
@@ -111,13 +111,9 @@ static class Program
     {
         #region Long intrinsic
 
-        int result = EdgeCaseOperations.LongIntrinsic();
-        Assert.IsTrue(
-            result is EdgeCaseOperations.ManagedResult or EdgeCaseOperations.IntrinsicResult,
-            "The first intrinsic invocation returned an unexpected value.");
-
         // When initialization occurs inside the first managed invocation, that active frame
         // finishes by executing the original body. Every later invocation must be redirected.
+        Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.LongIntrinsic());
         for (int i = 1; i < 100_000; ++i)
             Assert.AreEqual(EdgeCaseOperations.IntrinsicResult, EdgeCaseOperations.LongIntrinsic());
 
