@@ -7,6 +7,7 @@
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 using Gapotchenko.FX.Runtime.CompilerServices.Utils;
+using System.Buffers.Binary;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 
@@ -70,12 +71,16 @@ static class UnwindWindowsX64
             switch (extraSlotCount)
             {
                 case 1:
-                    WriteUInt16(destination[destinationOffset..], checked((ushort)extraData));
+                    BinaryPrimitives.WriteUInt16LittleEndian(
+                        destination[destinationOffset..],
+                        checked((ushort)extraData));
                     destinationOffset += UnwindCodeSize;
                     break;
 
                 case 2:
-                    WriteUInt32(destination[destinationOffset..], extraData);
+                    BinaryPrimitives.WriteUInt32LittleEndian(
+                        destination[destinationOffset..],
+                        extraData);
                     destinationOffset += 2 * UnwindCodeSize;
                     break;
             }
@@ -154,18 +159,6 @@ static class UnwindWindowsX64
     }
 
     static int AlignUnwindCodeCount(int count) => MemoryArithmetics.Align2(count);
-
-    static void WriteUInt16(Span<byte> destination, ushort value)
-    {
-        destination[0] = (byte)value;
-        destination[1] = (byte)(value >> 8);
-    }
-
-    static void WriteUInt32(Span<byte> destination, uint value)
-    {
-        WriteUInt16(destination, (ushort)value);
-        WriteUInt16(destination[2..], (ushort)(value >> 16));
-    }
 
     const byte Version = 1;
     const int HeaderSize = 4;
