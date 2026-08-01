@@ -6,7 +6,9 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Formats.Dwarf;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
@@ -16,6 +18,28 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 #endif
 sealed class AdapterLinuxArm64 : AdapterArm64
 {
+    protected override PatchResult ValidateCode(ReadOnlySpan<uint> code) =>
+        UnwindArm64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
+        PatchResult.UnsupportedUnwindPrologue :
+        PatchResult.Success;
+
+    protected override bool RequiresTrampoline(ReadOnlySpan<uint> code) =>
+        UnwindArm64.Analyze(code, out _) == UnwindAnalysisResult.Supported;
+
+    protected override int GetTrampolineAllocationCount(ReadOnlySpan<uint> code)
+    {
+        var result = UnwindArm64.Analyze(code, out var info);
+        return result switch
+        {
+            UnwindAnalysisResult.Leaf => base.GetTrampolineAllocationCount(code),
+            UnwindAnalysisResult.Supported => checked(
+                code.Length + 1 +
+                (DwarfUnwindArm64.GetSize(code, info) + sizeof(uint) - 1) / sizeof(uint) +
+                1),
+            _ => throw new InvalidOperationException("The intrinsic has an unsupported Linux ARM64 unwind prologue.")
+        };
+    }
+
     protected override unsafe void GetMethodInstructions(
         MethodInfo method,
         out Span<uint> instructions,
@@ -62,6 +86,41 @@ sealed class AdapterLinuxArm64 : AdapterArm64
         using var scope = CreateWriteScope(destination);
         destination[0] = InstructionsArm64.B | displacement;
         scope.FlushInstructions();
+    }
+
+    protected override unsafe void WriteTrampoline(Span<uint> destination, ReadOnlySpan<uint> code)
+    {
+        var result = UnwindArm64.Analyze(code, out var info);
+        if (result == UnwindAnalysisResult.Leaf)
+        {
+            WriteCode(destination, code);
+            return;
+        }
+        if (result != UnwindAnalysisResult.Supported)
+            throw new InvalidOperationException("The intrinsic has an unsupported Linux ARM64 unwind prologue.");
+
+        int codeCount = checked(code.Length + 1);
+        int unwindSize = DwarfUnwindArm64.GetSize(code, info);
+        int unwindCount = checked((unwindSize + sizeof(uint) - 1) / sizeof(uint));
+        int allocationCount = checked(codeCount + unwindCount + 1);
+        destination = destination[..allocationCount];
+
+        ref uint baseAddress = ref MemoryMarshal.GetReference(destination);
+        var unwindDestination = MemoryMarshal.AsBytes(destination.Slice(codeCount, unwindCount));
+        using (var scope = CreateWriteScope(destination))
+        {
+            code.CopyTo(destination);
+            destination[code.Length] = InstructionsArm64.Ret;
+            destination[codeCount..].Clear();
+            DwarfUnwindArm64.Write(
+                unwindDestination,
+                code,
+                info,
+                Unsafe.AsPointer(ref baseAddress));
+            scope.FlushInstructions();
+        }
+
+        NativeMethods.RegisterFrame(Unsafe.AsPointer(ref MemoryMarshal.GetReference(unwindDestination)));
     }
 
     protected override void WriteLongBranch(Span<uint> destination, uint adrp, uint add)

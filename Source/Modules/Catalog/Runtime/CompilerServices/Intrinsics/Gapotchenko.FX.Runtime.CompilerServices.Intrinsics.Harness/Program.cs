@@ -123,7 +123,7 @@ static class Program
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture is Architecture.X64 or Architecture.Arm64 ||
             RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture is Architecture.X64 or Architecture.Arm64 ||
-            RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.X64)
+            RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture is Architecture.X64 or Architecture.Arm64)
         {
             Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
             Assert.AreEqual(

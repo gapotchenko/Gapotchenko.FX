@@ -83,7 +83,7 @@ static class EdgeCaseOperations
             0xff, 0x43, 0x00, 0xd1,  // SUB SP,SP,#16
             0xe0, 0x03, 0x80, 0x52,  // MOV W0,31
             0xff, 0x43, 0x00, 0x91,  // ADD SP,SP,#16
-            SupportedOSPlatforms = ["windows", "macos"])]
+            SupportedOSPlatforms = ["windows", "linux", "macos"])]
         [MachineCodeIntrinsic(
             Architecture.X64,
             0x48, 0x83, 0xec, 0x28,        // SUB RSP,40
@@ -99,7 +99,7 @@ static class EdgeCaseOperations
             0xfd, 0x03, 0x00, 0x91,  // MOV X29,SP
             0xe0, 0x03, 0x80, 0x52,  // MOV W0,31
             0xfd, 0x7b, 0xc1, 0xa8,  // LDP X29,LR,[SP],#16
-            SupportedOSPlatforms = ["windows", "macos"])]
+            SupportedOSPlatforms = ["windows", "linux", "macos"])]
         [MachineCodeIntrinsic(
             Architecture.X64,
             0x55,                          // PUSH RBP

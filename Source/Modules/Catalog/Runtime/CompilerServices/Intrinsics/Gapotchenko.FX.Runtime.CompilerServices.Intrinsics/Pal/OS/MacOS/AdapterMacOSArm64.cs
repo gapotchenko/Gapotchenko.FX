@@ -6,6 +6,7 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Formats.Dwarf;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -33,7 +34,7 @@ sealed class AdapterMacOSArm64 : AdapterArm64
             UnwindAnalysisResult.Leaf => base.GetTrampolineAllocationCount(code),
             UnwindAnalysisResult.Supported => checked(
                 code.Length + 1 +
-                (UnwindMacOSArm64.GetSize(code, info) + sizeof(uint) - 1) / sizeof(uint)),
+                (DwarfUnwindArm64.GetSize(code, info) + sizeof(uint) - 1) / sizeof(uint)),
             _ => throw new InvalidOperationException("The intrinsic has an unsupported macOS ARM64 unwind prologue.")
         };
     }
@@ -94,7 +95,7 @@ sealed class AdapterMacOSArm64 : AdapterArm64
             throw new InvalidOperationException("The intrinsic has an unsupported macOS ARM64 unwind prologue.");
 
         int codeCount = checked(code.Length + 1);
-        int unwindSize = UnwindMacOSArm64.GetSize(code, info);
+        int unwindSize = DwarfUnwindArm64.GetSize(code, info);
         int allocationCount = checked(codeCount + (unwindSize + sizeof(uint) - 1) / sizeof(uint));
         destination = destination[..allocationCount];
 
@@ -105,7 +106,7 @@ sealed class AdapterMacOSArm64 : AdapterArm64
         {
             code.CopyTo(destination);
             destination[code.Length] = InstructionsArm64.Ret;
-            UnwindMacOSArm64.Write(
+            DwarfUnwindArm64.Write(
                 unwindDestination,
                 code,
                 info,
@@ -113,7 +114,7 @@ sealed class AdapterMacOSArm64 : AdapterArm64
             scope.FlushInstructions();
         }
 
-        ref byte fde = ref unwindDestination[UnwindMacOSArm64.FdeOffset];
+        ref byte fde = ref unwindDestination[DwarfUnwindArm64.FdeOffset];
         NativeMethods.__register_frame(Unsafe.AsPointer(ref fde));
     }
 

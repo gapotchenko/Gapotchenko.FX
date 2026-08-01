@@ -10,15 +10,12 @@ using Gapotchenko.FX.Runtime.CompilerServices.Pal.Formats.Dwarf;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Formats.Dwarf;
 
 /// <summary>
-/// Encodes DWARF unwind information for macOS ARM64 intrinsic trampolines.
+/// Encodes DWARF unwind information for ARM64 intrinsic trampolines.
 /// </summary>
-#if NET
-[SupportedOSPlatform("macos")]
-#endif
-static class UnwindMacOSArm64
+static class DwarfUnwindArm64
 {
     public static int GetSize(ReadOnlySpan<uint> code, UnwindArm64.UnwindInfo info)
     {
