@@ -6,6 +6,10 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Utils;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+#pragma warning disable CS9191 // The 'ref' modifier for an argument corresponding to 'in' parameter is equivalent to 'in'. Consider using 'in' instead.
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
 
@@ -61,8 +65,10 @@ ref struct DwarfSerializer
     public void AdvanceLocation(int offset)
     {
         if (offset == 0)
+        {
             return;
-        if ((uint)offset <= DwCfaAdvanceLocationMask)
+        }
+        else if ((uint)offset <= DwCfaAdvanceLocationMask)
         {
             WriteByte((byte)(DwCfaAdvanceLocation | offset));
         }
@@ -122,19 +128,19 @@ ref struct DwarfSerializer
         ++Position;
     }
 
-    void WriteUInt16(ushort value)
-    {
-        WriteByte((byte)value);
-        WriteByte((byte)(value >> 8));
-    }
+    void WriteUInt16(ushort value) => Write(value);
 
-    void WriteUInt32(uint value)
-    {
-        WriteUInt16((ushort)value);
-        WriteUInt16((ushort)(value >> 16));
-    }
+    void WriteUInt32(uint value) => Write(value);
 
-    void WriteInt32(int value) => WriteUInt32((uint)value);
+    void WriteInt32(int value) => Write(value);
+
+    void Write<T>(T value) where T : struct
+    {
+        int size = Unsafe.SizeOf<T>();
+        if (!m_IsCounting)
+            MemoryMarshal.Write(m_Destination[Position..], ref value);
+        Position = checked(Position + size);
+    }
 
     void WriteUleb128(uint value)
     {
