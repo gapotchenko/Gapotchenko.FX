@@ -152,7 +152,7 @@ and these requirements are reflected in the attributes as well.
 Please note that besides using `MachineCodeIntrinsicAttribute` to define method intrinsic implementations,
 `BitOperations` class **should** use a static constructor to ensure that the corresponding methods are initialized (compiled) before they are called.
 
-Here are the execution times of all three implementations benchmarked on a Windows x64 system (lower is better):
+Here are the execution times of all three implementations benchmarked on a Windows x64 system in Release configuration (lower is better):
 
 |         Method |     Mean |     Error |    StdDev |
 |--------------- |---------:|----------:|----------:|
@@ -197,7 +197,7 @@ It only means that the managed implementation may be used for the first call; su
 The intrinsic compiler reports diagnostics through the
 [`System.Diagnostics.TraceSource`](https://learn.microsoft.com/dotnet/api/system.diagnostics.tracesource) named
 `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics`.
-The source can be accessed directly through `Intrinsics.TraceSource` property and has `SourceLevels.Error` diagnostic level set by default.
+The source can be accessed directly through `Intrinsics.TraceSource` that has `SourceLevels.Error` diagnostic level set by default.
 
 The diagnostic levels have the following meanings:
 
