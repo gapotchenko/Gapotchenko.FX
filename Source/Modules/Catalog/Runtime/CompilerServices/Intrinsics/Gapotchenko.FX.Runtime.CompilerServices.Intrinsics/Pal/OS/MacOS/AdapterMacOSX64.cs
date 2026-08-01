@@ -21,25 +21,38 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
 #endif
 sealed class AdapterMacOSX64 : AdapterX64
 {
-    protected override PatchResult ValidateCode(ReadOnlySpan<byte> code) =>
-        DwarfUnwindX64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
-        PatchResult.UnsupportedUnwindPrologue :
-        PatchResult.Success;
+    protected override UnwindX64.AnalysisLevel UnwindAnalysisLevel => UnwindX64.AnalysisLevel.EpilogueOperations;
 
-    protected override bool RequiresTrampoline(ReadOnlySpan<byte> code) =>
-        DwarfUnwindX64.Analyze(code, out _) == UnwindAnalysisResult.Supported;
+    protected override UnwindX64.Analysis AnalyzeCode(
+        ReadOnlySpan<byte> code,
+        Span<UnwindX64.UnwindOperation> operations,
+        Span<UnwindX64.EpilogueOperation> epilogueOperations)
+    {
+        return DwarfUnwindX64.Analyze(code, operations, epilogueOperations);
+    }
 
-    protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code)
+    protected override PatchResult ValidateCode(
+        scoped in UnwindX64.Analysis analysis)
+    {
+        return analysis.Result == UnwindAnalysisResult.Unsupported ?
+            PatchResult.UnsupportedUnwindPrologue :
+            PatchResult.Success;
+    }
+
+    protected override bool RequiresTrampoline(
+        scoped in UnwindX64.Analysis analysis)
+    {
+        return analysis.Result == UnwindAnalysisResult.Supported;
+    }
+
+    protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code, in UnwindX64.Analysis analysis)
     {
         int codeSize = checked(code.Length + 1);
-        var result = DwarfUnwindX64.Analyze(code, out var info);
-        if (result == UnwindAnalysisResult.Leaf)
+        if (analysis.Result == UnwindAnalysisResult.Leaf)
             return codeSize;
-        if (result != UnwindAnalysisResult.Supported)
-            throw new InvalidOperationException("The intrinsic has an unsupported macOS x64 unwind prologue.");
 
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
-        return checked(unwindOffset + DwarfUnwindX64.GetSize(code, info));
+        return checked(unwindOffset + DwarfUnwindX64.GetSize(analysis));
     }
 
     protected override bool IsWriteAllowed(Span<byte> span)
@@ -64,10 +77,12 @@ sealed class AdapterMacOSX64 : AdapterX64
         scope.FlushInstructions();
     }
 
-    protected override unsafe void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code)
+    protected override unsafe void WriteTrampoline(
+        Span<byte> destination,
+        ReadOnlySpan<byte> code,
+        scoped in UnwindX64.Analysis analysis)
     {
-        var result = DwarfUnwindX64.Analyze(code, out var info);
-        if (result == UnwindAnalysisResult.Leaf)
+        if (analysis.Result == UnwindAnalysisResult.Leaf)
         {
             using var leafScope = JitWriteProtectionScope.Create(destination);
             code.CopyTo(destination);
@@ -75,12 +90,9 @@ sealed class AdapterMacOSX64 : AdapterX64
             leafScope.FlushInstructions();
             return;
         }
-        if (result != UnwindAnalysisResult.Supported)
-            throw new InvalidOperationException("The intrinsic has an unsupported macOS x64 unwind prologue.");
-
         int codeSize = checked(code.Length + 1);
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
-        int unwindSize = DwarfUnwindX64.GetSize(code, info);
+        int unwindSize = DwarfUnwindX64.GetSize(in analysis);
         destination = destination[..checked(unwindOffset + unwindSize)];
 
         ref byte baseAddress = ref MemoryMarshal.GetReference(destination);
@@ -93,7 +105,7 @@ sealed class AdapterMacOSX64 : AdapterX64
             DwarfUnwindX64.Write(
                 unwindDestination,
                 code,
-                info,
+                in analysis,
                 Unsafe.AsPointer(ref baseAddress));
             scope.FlushInstructions();
         }

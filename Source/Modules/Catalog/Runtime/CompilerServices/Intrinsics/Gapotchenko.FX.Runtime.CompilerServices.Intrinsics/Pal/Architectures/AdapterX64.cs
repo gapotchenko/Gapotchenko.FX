@@ -7,32 +7,40 @@
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 
+using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 
 abstract class AdapterX64 : AdapterX86Base
 {
     public sealed override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
-        if (UsesUnwindAnalysis)
+        var level = UnwindAnalysisLevel;
+        if (level >= UnwindX64.AnalysisLevel.UnwindOperations)
         {
-            Span<UnwindX64.UnwindOperation> operations =
-                stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
-            var analysis = AnalyzeCode(code, operations);
-            return PatchMethod(method, code, ref analysis);
-        }
+            Span<UnwindX64.UnwindOperation> operations = stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
 
-        var emptyAnalysis = default(UnwindX64.Analysis);
-        return PatchMethod(method, code, ref emptyAnalysis);
+            scoped Span<UnwindX64.EpilogueOperation> epilogueOperations;
+            if (level >= UnwindX64.AnalysisLevel.EpilogueOperations)
+                epilogueOperations = stackalloc UnwindX64.EpilogueOperation[UnwindX64.MaximumOperationCount];
+            else
+                epilogueOperations = [];
+
+            var analysis = AnalyzeCode(code, operations, epilogueOperations);
+            return PatchMethod(method, code, analysis);
+        }
+        else
+        {
+            return PatchMethod(method, code, default);
+        }
     }
 
     PatchResult PatchMethod(
         MethodInfo method,
         ReadOnlySpan<byte> code,
-        scoped ref UnwindX64.Analysis analysis)
+        in UnwindX64.Analysis analysis)
     {
-        var codeValidationResult = ValidateCode(code, ref analysis);
+        var codeValidationResult = ValidateCode(analysis);
         if (codeValidationResult != PatchResult.Success)
             return codeValidationResult;
 
@@ -53,7 +61,7 @@ abstract class AdapterX64 : AdapterX86Base
         finally
 #endif
         {
-            result = ApplyPatch(instructions, entryPoint, code, ref analysis);
+            result = ApplyPatch(instructions, entryPoint, code, analysis);
         }
         return result;
     }
@@ -93,10 +101,10 @@ abstract class AdapterX64 : AdapterX86Base
         Span<byte> instructions,
         Span<byte> entryPoint,
         ReadOnlySpan<byte> code,
-        scoped ref UnwindX64.Analysis analysis)
+        in UnwindX64.Analysis analysis)
     {
         int patchSize = checked(code.Length + 1);
-        if (!RequiresTrampoline(code, ref analysis) && patchSize <= instructions.Length)
+        if (!RequiresTrampoline(analysis) && patchSize <= instructions.Length)
         {
             var destination = instructions[..patchSize];
             if (!IsWriteAllowed(destination))
@@ -127,11 +135,13 @@ abstract class AdapterX64 : AdapterX86Base
 
         if (!TryAllocateTrampoline(
             redirection,
-            GetTrampolineAllocationSize(code, ref analysis),
+            GetTrampolineAllocationSize(code, analysis),
             out var trampoline))
+        {
             return PatchResult.NoSpace;
+        }
 
-        WriteTrampoline(trampoline, code, ref analysis);
+        WriteTrampoline(trampoline, code, analysis);
         WriteRedirection(redirection, trampoline);
         if (!bodyRedirection.IsEmpty)
             WriteBodyRedirection(bodyRedirection, redirection);
@@ -167,44 +177,36 @@ abstract class AdapterX64 : AdapterX86Base
 
     protected abstract bool IsWriteAllowed(Span<byte> span);
 
-    protected virtual bool UsesUnwindAnalysis => false;
+    protected virtual UnwindX64.AnalysisLevel UnwindAnalysisLevel => UnwindX64.AnalysisLevel.None;
 
     protected virtual UnwindX64.Analysis AnalyzeCode(
         ReadOnlySpan<byte> code,
-        Span<UnwindX64.UnwindOperation> operations) =>
-        UnwindX64.Analyze(code, operations);
+        Span<UnwindX64.UnwindOperation> unwindOperations,
+        Span<UnwindX64.EpilogueOperation> epilogueOperations)
+    {
+        return UnwindX64.Analyze(code, unwindOperations);
+    }
 
-    protected virtual PatchResult ValidateCode(
-        ReadOnlySpan<byte> code,
-        scoped ref readonly UnwindX64.Analysis analysis) =>
-        ValidateCode(code);
+    protected virtual PatchResult ValidateCode(in UnwindX64.Analysis analysis) => PatchResult.Success;
 
-    protected virtual PatchResult ValidateCode(ReadOnlySpan<byte> code) => PatchResult.Success;
+    protected virtual bool RequiresTrampoline(in UnwindX64.Analysis analysis) => false;
 
-    protected virtual bool RequiresTrampoline(
-        ReadOnlySpan<byte> code,
-        scoped ref readonly UnwindX64.Analysis analysis) =>
-        RequiresTrampoline(code);
-
-    protected virtual bool RequiresTrampoline(ReadOnlySpan<byte> code) => false;
-
-    protected virtual int GetTrampolineAllocationSize(
-        ReadOnlySpan<byte> code,
-        scoped ref readonly UnwindX64.Analysis analysis) =>
-        GetTrampolineAllocationSize(code);
-
-    protected virtual int GetTrampolineAllocationSize(ReadOnlySpan<byte> code) =>
-        checked(code.Length + 1);
+    protected virtual int GetTrampolineAllocationSize(ReadOnlySpan<byte> code, in UnwindX64.Analysis analysis)
+    {
+        return checked(code.Length + sizeof(byte) /* RET */);
+    }
 
     protected abstract bool TryAllocateTrampoline(Span<byte> redirection, int size, out Span<byte> trampoline);
+
     protected abstract void WriteCode(Span<byte> destination, ReadOnlySpan<byte> code);
+
     protected virtual void WriteTrampoline(
         Span<byte> destination,
         ReadOnlySpan<byte> code,
-        scoped ref readonly UnwindX64.Analysis analysis) =>
-        WriteTrampoline(destination, code);
-    protected virtual void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code) =>
+        scoped in UnwindX64.Analysis analysis)
+    {
         WriteCode(destination, code);
+    }
 
     protected abstract int RedirectionSize { get; }
 

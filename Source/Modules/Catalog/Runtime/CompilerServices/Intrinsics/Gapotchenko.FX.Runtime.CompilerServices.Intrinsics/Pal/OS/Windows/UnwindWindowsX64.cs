@@ -26,19 +26,21 @@ static class UnwindWindowsX64
         if (analysis.Result != UnwindAnalysisResult.Supported)
             return analysis;
 
-        return IsSupported(analysis.Operations, analysis.Info) ?
+        return IsSupported(analysis.UnwindOperations, analysis.Info) ?
             analysis :
             analysis with { Result = UnwindAnalysisResult.Unsupported };
     }
 
-    public static int GetSize(scoped ref readonly UnwindX64.Analysis analysis)
+    public static int GetSize(in UnwindX64.Analysis analysis)
     {
-        return HeaderSize + UnwindCodeSize * AlignUnwindCodeCount(CountUnwindCodes(analysis.Operations));
+        return
+            HeaderSize +
+            UnwindCodeSize * AlignUnwindCodeCount(CountUnwindCodes(analysis.UnwindOperations));
     }
 
     public static void Write(Span<byte> destination, scoped ref readonly UnwindX64.Analysis analysis)
     {
-        var operations = analysis.Operations;
+        var operations = analysis.UnwindOperations;
         var info = analysis.Info;
         int unwindCodeCount = CountUnwindCodes(operations);
         int size = HeaderSize + UnwindCodeSize * AlignUnwindCodeCount(unwindCodeCount);

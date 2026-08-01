@@ -6,7 +6,6 @@
 // Year of introduction: 2026
 
 using System.Buffers.Binary;
-using System.Diagnostics.Contracts;
 using Instructions = Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.InstructionsX64;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
@@ -16,27 +15,21 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 /// </summary>
 static class UnwindX64
 {
-    public static UnwindAnalysisResult Analyze(ReadOnlySpan<byte> code, out UnwindInfo info)
-    {
-        Span<UnwindOperation> operations = stackalloc UnwindOperation[MaximumOperationCount];
-        return Analyze(code, operations, out _, out info);
-    }
-
     public static Analysis Analyze(
         ReadOnlySpan<byte> code,
-        Span<UnwindOperation> operations)
+        Span<UnwindOperation> unwindOperations)
     {
-        var result = Analyze(code, operations, out int operationCount, out var info);
-        return new(result, info, operations[..operationCount]);
+        var result = Analyze(code, unwindOperations, out int operationCount, out var info);
+        return new(result, info, unwindOperations[..operationCount]);
     }
 
-    public static UnwindAnalysisResult Analyze(
+    static UnwindAnalysisResult Analyze(
         ReadOnlySpan<byte> code,
-        scoped Span<UnwindOperation> operations,
-        out int operationCount,
+        Span<UnwindOperation> unwindOperations,
+        out int unwindOperationCount,
         out UnwindInfo info)
     {
-        operationCount = 0;
+        unwindOperationCount = 0;
         int prologueSize = 0;
         int frameRegister = 0;
         int frameOffset = 0;
@@ -48,8 +41,8 @@ static class UnwindX64
             if (TryDecodePushNonvolatile(remainingCode, out int instructionSize, out int register))
             {
                 if (!TryAddOperation(
-                    operations,
-                    ref operationCount,
+                    unwindOperations,
+                    ref unwindOperationCount,
                     ref prologueSize,
                     instructionSize,
                     UnwindOperationKind.PushNonvolatile,
@@ -68,8 +61,8 @@ static class UnwindX64
             {
                 if (allocationSize == 0 || (allocationSize & 7) != 0 ||
                     !TryAddOperation(
-                        operations,
-                        ref operationCount,
+                        unwindOperations,
+                        ref unwindOperationCount,
                         ref prologueSize,
                         instructionSize,
                         UnwindOperationKind.StackAllocation,
@@ -86,8 +79,8 @@ static class UnwindX64
             {
                 if (!rbpSaved || frameRegister != 0 ||
                     !TryAddOperation(
-                        operations,
-                        ref operationCount,
+                        unwindOperations,
+                        ref unwindOperationCount,
                         ref prologueSize,
                         instructionSize,
                         UnwindOperationKind.SetFramePointer,
@@ -113,7 +106,7 @@ static class UnwindX64
         }
 
         info = new(prologueSize, frameRegister, frameOffset);
-        return operationCount == 0 ? UnwindAnalysisResult.Leaf : UnwindAnalysisResult.Supported;
+        return unwindOperationCount == 0 ? UnwindAnalysisResult.Leaf : UnwindAnalysisResult.Supported;
     }
 
     public static bool TryDecodeStackDeallocationEndingAt(
@@ -343,6 +336,8 @@ static class UnwindX64
         byte Register,
         uint Value);
 
+    public readonly record struct EpilogueOperation(int Start, int End, int OperationIndex);
+
     public enum UnwindOperationKind
     {
         PushNonvolatile,
@@ -353,13 +348,23 @@ static class UnwindX64
     public readonly ref struct Analysis(
         UnwindAnalysisResult result,
         UnwindInfo info,
-        ReadOnlySpan<UnwindOperation> operations)
+        ReadOnlySpan<UnwindOperation> unwindOperations,
+        ReadOnlySpan<EpilogueOperation> epilogueOperations = default)
     {
         public UnwindAnalysisResult Result { get; init; } = result;
 
         public UnwindInfo Info { get; } = info;
 
-        public ReadOnlySpan<UnwindOperation> Operations { get; } = operations;
+        public ReadOnlySpan<UnwindOperation> UnwindOperations { get; } = unwindOperations;
+
+        public ReadOnlySpan<EpilogueOperation> EpilogueOperations { get; init; } = epilogueOperations;
+    }
+
+    public enum AnalysisLevel
+    {
+        None,
+        UnwindOperations,
+        EpilogueOperations
     }
 
     public const int MaximumOperationCount = byte.MaxValue;

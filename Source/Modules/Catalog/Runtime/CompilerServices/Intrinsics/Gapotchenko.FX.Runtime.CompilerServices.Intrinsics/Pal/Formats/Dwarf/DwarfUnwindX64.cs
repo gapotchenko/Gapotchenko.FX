@@ -16,54 +16,87 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Formats.Dwarf;
 /// </summary>
 static class DwarfUnwindX64
 {
-    public static UnwindAnalysisResult Analyze(ReadOnlySpan<byte> code, out UnwindX64.UnwindInfo info)
+    public static UnwindX64.Analysis Analyze(
+        ReadOnlySpan<byte> code,
+        Span<UnwindX64.UnwindOperation> unwindOperations,
+        Span<UnwindX64.EpilogueOperation> epilogueOperations)
     {
-        Span<UnwindX64.UnwindOperation> operations = stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
-        Span<EpilogueOperation> epilogue = stackalloc EpilogueOperation[UnwindX64.MaximumOperationCount];
-        return Analyze(code, operations, out _, epilogue, out _, out info);
+        var analysis = UnwindX64.Analyze(code, unwindOperations);
+        if (analysis.Result != UnwindAnalysisResult.Supported)
+            return analysis;
+
+        var analyzedUnwindOperations = analysis.UnwindOperations;
+        int cfaOffset = InitialCfaOffset;
+        foreach (ref readonly var unwindOperation in analyzedUnwindOperations)
+        {
+            switch (unwindOperation.Kind)
+            {
+                case UnwindX64.UnwindOperationKind.PushNonvolatile:
+                    cfaOffset = checked(cfaOffset + StackSlotSize);
+                    break;
+
+                case UnwindX64.UnwindOperationKind.StackAllocation:
+                    cfaOffset = checked(cfaOffset + (int)unwindOperation.Value);
+                    break;
+
+                case UnwindX64.UnwindOperationKind.SetFramePointer:
+                    if (unwindOperation.Value > cfaOffset)
+                        return analysis with { Result = UnwindAnalysisResult.Unsupported };
+                    break;
+            }
+        }
+
+        int epilogueOperationCount = 0;
+        int end = code.Length;
+        for (int i = analyzedUnwindOperations.Length - 1; i >= 0; --i)
+        {
+            ref readonly var operation = ref analyzedUnwindOperations[i];
+            int start;
+            switch (operation.Kind)
+            {
+                case UnwindX64.UnwindOperationKind.SetFramePointer:
+                    continue;
+
+                case UnwindX64.UnwindOperationKind.StackAllocation:
+                    if (!UnwindX64.TryDecodeStackDeallocationEndingAt(code, end, operation.Value, out start))
+                        return analysis with { Result = UnwindAnalysisResult.Unsupported };
+                    break;
+
+                case UnwindX64.UnwindOperationKind.PushNonvolatile:
+                    if (!UnwindX64.TryDecodePopNonvolatileEndingAt(code, end, operation.Register, out start))
+                        return analysis with { Result = UnwindAnalysisResult.Unsupported };
+                    break;
+
+                default:
+                    return analysis with { Result = UnwindAnalysisResult.Unsupported };
+            }
+
+            if (start < analysis.Info.PrologueSize || epilogueOperationCount >= epilogueOperations.Length)
+                return analysis with { Result = UnwindAnalysisResult.Unsupported };
+            epilogueOperations[epilogueOperationCount++] = new(start, end, i);
+            end = start;
+        }
+
+        return analysis with { EpilogueOperations = epilogueOperations[..epilogueOperationCount] };
     }
 
-    public static int GetSize(ReadOnlySpan<byte> code, UnwindX64.UnwindInfo expectedInfo)
+    public static int GetSize(in UnwindX64.Analysis analysis)
     {
-        Span<UnwindX64.UnwindOperation> operations = stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
-        Span<EpilogueOperation> epilogue = stackalloc EpilogueOperation[UnwindX64.MaximumOperationCount];
-        var result = Analyze(
-            code,
-            operations,
-            out int operationCount,
-            epilogue,
-            out int epilogueCount,
-            out var info);
-        if (result != UnwindAnalysisResult.Supported || info != expectedInfo)
-            throw new ArgumentException("The code does not have a supported x64 DWARF unwind prologue.", nameof(code));
-
         var serializer = new DwarfSerializer();
         WriteInstructions(
             ref serializer,
-            operations[..operationCount],
-            epilogue[..epilogueCount]);
+            analysis.UnwindOperations,
+            analysis.EpilogueOperations);
         return DwarfSerializer.GetFdeSize(CieSize, serializer.Position);
     }
 
     public static unsafe void Write(
         Span<byte> destination,
         ReadOnlySpan<byte> code,
-        UnwindX64.UnwindInfo expectedInfo,
+        scoped ref readonly UnwindX64.Analysis analysis,
         void* codeAddress)
     {
-        Span<UnwindX64.UnwindOperation> operations = stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
-        Span<EpilogueOperation> epilogue = stackalloc EpilogueOperation[UnwindX64.MaximumOperationCount];
-        var result = Analyze(
-            code,
-            operations,
-            out int operationCount,
-            epilogue,
-            out int epilogueCount,
-            out var info);
-        if (result != UnwindAnalysisResult.Supported || info != expectedInfo)
-            throw new ArgumentException("The code does not have a supported x64 DWARF unwind prologue.", nameof(code));
-
-        int size = GetSize(code, info);
+        int size = GetSize(in analysis);
         destination = destination[..size];
         byte* unwindAddress = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(destination));
         Cie.CopyTo(destination);
@@ -78,82 +111,15 @@ static class DwarfUnwindX64
             fdeSize);
         WriteInstructions(
             ref serializer,
-            operations[..operationCount],
-            epilogue[..epilogueCount]);
+            analysis.UnwindOperations,
+            analysis.EpilogueOperations);
         serializer.CompleteFde(fdeSize);
-    }
-
-    static UnwindAnalysisResult Analyze(
-        ReadOnlySpan<byte> code,
-        scoped Span<UnwindX64.UnwindOperation> operations,
-        out int operationCount,
-        scoped Span<EpilogueOperation> epilogue,
-        out int epilogueCount,
-        out UnwindX64.UnwindInfo info)
-    {
-        epilogueCount = 0;
-        var result = UnwindX64.Analyze(code, operations, out operationCount, out info);
-        if (result != UnwindAnalysisResult.Supported)
-            return result;
-
-        operations = operations[..operationCount];
-        int cfaOffset = InitialCfaOffset;
-        foreach (ref readonly var operation in operations)
-        {
-            switch (operation.Kind)
-            {
-                case UnwindX64.UnwindOperationKind.PushNonvolatile:
-                    cfaOffset = checked(cfaOffset + StackSlotSize);
-                    break;
-
-                case UnwindX64.UnwindOperationKind.StackAllocation:
-                    cfaOffset = checked(cfaOffset + (int)operation.Value);
-                    break;
-
-                case UnwindX64.UnwindOperationKind.SetFramePointer:
-                    if (operation.Value > cfaOffset)
-                        return UnwindAnalysisResult.Unsupported;
-                    break;
-            }
-        }
-
-        int end = code.Length;
-        for (int i = operations.Length - 1; i >= 0; --i)
-        {
-            ref readonly var operation = ref operations[i];
-            int start;
-            switch (operation.Kind)
-            {
-                case UnwindX64.UnwindOperationKind.SetFramePointer:
-                    continue;
-
-                case UnwindX64.UnwindOperationKind.StackAllocation:
-                    if (!UnwindX64.TryDecodeStackDeallocationEndingAt(code, end, operation.Value, out start))
-                        return UnwindAnalysisResult.Unsupported;
-                    break;
-
-                case UnwindX64.UnwindOperationKind.PushNonvolatile:
-                    if (!UnwindX64.TryDecodePopNonvolatileEndingAt(code, end, operation.Register, out start))
-                        return UnwindAnalysisResult.Unsupported;
-                    break;
-
-                default:
-                    return UnwindAnalysisResult.Unsupported;
-            }
-
-            if (start < info.PrologueSize || epilogueCount >= epilogue.Length)
-                return UnwindAnalysisResult.Unsupported;
-            epilogue[epilogueCount++] = new(start, end, i);
-            end = start;
-        }
-
-        return UnwindAnalysisResult.Supported;
     }
 
     static void WriteInstructions(
         scoped ref DwarfSerializer serializer,
         scoped ReadOnlySpan<UnwindX64.UnwindOperation> operations,
-        scoped ReadOnlySpan<EpilogueOperation> epilogue)
+        scoped ReadOnlySpan<UnwindX64.EpilogueOperation> epilogue)
     {
         int location = 0;
         int rspCfaOffset = InitialCfaOffset;
@@ -249,8 +215,6 @@ static class DwarfUnwindX64
             >= 8 and <= 15 => (uint)register,
             _ => throw new ArgumentOutOfRangeException(nameof(register))
         };
-
-    readonly record struct EpilogueOperation(int Start, int End, int OperationIndex);
 
     public const int FdeOffset = CieSize;
 
