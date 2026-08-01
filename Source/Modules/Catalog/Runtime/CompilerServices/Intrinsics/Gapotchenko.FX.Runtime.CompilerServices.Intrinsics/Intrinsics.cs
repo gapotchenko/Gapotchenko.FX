@@ -204,24 +204,16 @@ public static class Intrinsics
 
     static bool IsActive()
     {
-        // Fast-path check only.
-        // The m_GiveUpOnPatching flag is checked authoritatively under m_PatchingLock
-        // further in the code invoking this method.
-        if (m_GiveUpOnPatching)
-            return false;
-
-        var mode = ActivationMode;
-        if (mode == IntrinsicsActivationMode.AlwaysOff)
-            return false;
-
-        if (!CodeSafetyStrategy.UnsafeCodeAllowed)
-            return false;
-
-        if (mode == IntrinsicsActivationMode.PreferablyOn)
-            return true;
-
-        Debug.Assert(mode is IntrinsicsActivationMode.Auto);
-        return CodeSafetyStrategy.UnsafeCodeRecommended;
+        return
+            // The m_GiveUpOnPatching flag is checked authoritatively under m_PatchingLock further in the code.
+            // Here it's used as a fast-path check only.
+            !m_GiveUpOnPatching &&
+            ActivationMode switch
+            {
+                IntrinsicsActivationMode.Auto => CodeSafetyStrategy.UnsafeCodeRecommended,
+                IntrinsicsActivationMode.AlwaysOff => false,
+                IntrinsicsActivationMode.PreferablyOn => CodeSafetyStrategy.UnsafeCodeAllowed
+            };
     }
 
     static bool m_GiveUpOnPatching;
