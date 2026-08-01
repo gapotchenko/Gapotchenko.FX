@@ -37,7 +37,7 @@ sealed class AdapterMacOSX64 : AdapterX64
     {
         using var scope = CreateWriteScope(destination);
         code.CopyTo(destination);
-        destination[code.Length] = Ret;
+        destination[code.Length] = InstructionsX64.Ret;
         scope.FlushInstructions();
     }
 
@@ -45,32 +45,32 @@ sealed class AdapterMacOSX64 : AdapterX64
     {
         using var scope = JitWriteProtectionScope.Create(destination);
         code.CopyTo(destination);
-        destination[code.Length] = Ret;
+        destination[code.Length] = InstructionsX64.Ret;
         scope.FlushInstructions();
     }
 
-    protected override int RedirectionSize => JmpAbs64Size;
+    protected override int RedirectionSize => InstructionsX64.JmpAbs64Size;
 
     protected override unsafe void WriteRedirection(Span<byte> destination, Span<byte> trampoline)
     {
         using var scope = CreateWriteScope(destination);
-        JmpAbs64.CopyTo(destination);
+        InstructionsX64.JmpAbs64.CopyTo(destination);
         nint address = (nint)Unsafe.AsPointer(ref MemoryMarshal.GetReference(trampoline));
-        MemoryMarshal.Write(destination[JmpAbs64.Length..], ref address);
+        MemoryMarshal.Write(destination[InstructionsX64.JmpAbs64.Length..], ref address);
         scope.FlushInstructions();
     }
 
-    protected override int BodyRedirectionSize => JmpRel32Size;
+    protected override int BodyRedirectionSize => InstructionsX64.JmpRel32Size;
 
     protected override void WriteBodyRedirection(Span<byte> destination, Span<byte> entryPoint)
     {
         nint offset = Unsafe.ByteOffset(
             ref MemoryMarshal.GetReference(destination),
             ref MemoryMarshal.GetReference(entryPoint));
-        int displacement = checked((int)(offset - JmpRel32Size));
+        int displacement = checked((int)(offset - InstructionsX64.JmpRel32Size));
 
         using var scope = CreateWriteScope(destination);
-        destination[0] = JmpRel32;
+        destination[0] = InstructionsX64.JmpRel32;
         MemoryMarshal.Write(destination[1..], ref displacement);
         scope.FlushInstructions();
     }

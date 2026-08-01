@@ -55,10 +55,10 @@ abstract class AdapterX86 : AdapterX86Base
             return PatchResult.Success;
         }
 
-        if (instructions.Length < JmpRel32Size)
+        if (instructions.Length < InstructionsX86.JmpRel32Size)
             return PatchResult.NoSpace;
 
-        var redirection = instructions[..JmpRel32Size];
+        var redirection = instructions[..InstructionsX86.JmpRel32Size];
         if (!IsWriteAllowed(redirection))
             return PatchResult.WriteProtected;
 
@@ -71,7 +71,7 @@ abstract class AdapterX86 : AdapterX86Base
     static int GetPatchablePrologueSize(ReadOnlySpan<byte> instructions)
     {
         // Prologue-less leaf method: MOV EAX,imm32; RET.
-        if (instructions.Length >= 6 && instructions[0] == 0xb8 && instructions[5] == Ret)
+        if (instructions.Length >= 6 && instructions[0] == 0xb8 && instructions[5] == InstructionsX86.Ret)
             return 6;
 
         return InstructionOperations.GetPatchablePrologueSize(instructions, m_SupportedPrologues);

@@ -95,7 +95,7 @@ sealed class AdapterWindowsX64 : AdapterX64
         return TrampolineAllocator.TryAllocateNear(
             Unsafe.AsPointer(ref instruction),
             size,
-            int.MaxValue - JmpRel32Size,
+            int.MaxValue - InstructionsX64.JmpRel32Size,
             out trampoline);
     }
 
@@ -127,7 +127,7 @@ sealed class AdapterWindowsX64 : AdapterX64
         using (var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite))
         {
             code.CopyTo(destination);
-            destination[code.Length] = Ret;
+            destination[code.Length] = InstructionsX64.Ret;
             UnwindX64.Write(destination[unwindInfoOffset..runtimeFunctionOffset], code, prologueSize);
 
             runtimeFunction.BeginAddress = 0;
@@ -149,21 +149,21 @@ sealed class AdapterWindowsX64 : AdapterX64
     {
         using var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite);
         code.CopyTo(destination);
-        destination[code.Length] = Ret;
+        destination[code.Length] = InstructionsX64.Ret;
         scope.FlushInstructions();
     }
 
-    protected override int RedirectionSize => JmpRel32Size;
+    protected override int RedirectionSize => InstructionsX64.JmpRel32Size;
 
     protected override void WriteRedirection(Span<byte> destination, Span<byte> trampoline)
     {
         nint offset = Unsafe.ByteOffset(
             ref MemoryMarshal.GetReference(destination),
             ref MemoryMarshal.GetReference(trampoline));
-        int displacement = checked((int)(offset - JmpRel32Size));
+        int displacement = checked((int)(offset - InstructionsX64.JmpRel32Size));
 
         using var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite);
-        destination[0] = JmpRel32;
+        destination[0] = InstructionsX64.JmpRel32;
         MemoryMarshal.Write(destination[1..], ref displacement);
         scope.FlushInstructions();
     }

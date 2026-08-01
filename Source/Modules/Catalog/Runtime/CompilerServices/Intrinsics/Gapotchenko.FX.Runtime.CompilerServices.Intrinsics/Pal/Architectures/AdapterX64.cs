@@ -62,7 +62,7 @@ abstract class AdapterX64 : AdapterX86Base
             p0[0] == 0xff && p0[1] == 0x25 &&
             p0[6] == 0x4c && p0[7] == 0x8b && p0[8] == 0x15)
         {
-            entryPoint = new(p0, JmpAbs64Size);
+            entryPoint = new(p0, InstructionsX64.JmpAbs64Size);
         }
         else
         {
@@ -162,11 +162,4 @@ abstract class AdapterX64 : AdapterX86Base
 
     protected virtual void WriteBodyRedirection(Span<byte> destination, Span<byte> entryPoint) =>
         throw new NotSupportedException();
-
-    #region Instructions
-
-    protected static ReadOnlySpan<byte> JmpAbs64 => [0xff, 0x25, 0x00, 0x00, 0x00, 0x00];
-    protected const int JmpAbs64Size = 6 + 8;
-
-    #endregion
 }

@@ -158,12 +158,4 @@ abstract class AdapterX86Base : Adapter
             }
         }
     }
-
-    #region Instructions
-
-    protected const byte Ret = 0xc3;
-    protected const int JmpRel32 = 0xe9;
-    protected const int JmpRel32Size = 5;
-
-    #endregion
 }
