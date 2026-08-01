@@ -299,4 +299,10 @@ public static class Intrinsics
             architecture,
             platform);
     }
+
+    /// <summary>
+    /// Gets the <see cref="TraceSource"/> instance used for intrinsic compiler diagnostics.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Advanced)]
+    public static TraceSource TraceSource => Log.TraceSource;
 }
