@@ -192,6 +192,52 @@ Subsequent calls execute the intrinsic machine code through the patched entry po
 This behavior does not affect correctness because the original method implementation is the semantic fallback for the intrinsic.
 It only means that the managed implementation may be used for the first call; subsequent calls receive the intrinsic performance benefit.
 
+## Diagnostics
+
+The intrinsic compiler reports diagnostics through the
+[`System.Diagnostics.TraceSource`](https://learn.microsoft.com/dotnet/api/system.diagnostics.tracesource) named
+`Gapotchenko.FX.Runtime.CompilerServices.Intrinsics`.
+The source can be accessed directly through `Intrinsics.TraceSource` property and has `SourceLevels.Error` diagnostic level set by default.
+
+The diagnostic levels have the following meanings:
+
+- `Verbose` explains why the intrinsic compiler is unavailable for the current environment or architecture.
+- `Information` reports successful intrinsic compilation.
+- `Warning` reports that an individual intrinsic was discarded and its managed implementation remains in use.
+- `Error` reports a hard failure that prevents further intrinsic compilation in the current environment.
+
+For example, the following code writes all intrinsic compiler diagnostics to the console:
+
+``` C#
+using Gapotchenko.FX.Runtime.CompilerServices;
+using System.Diagnostics;
+
+var traceSource = Intrinsics.TraceSource;
+traceSource.Switch.Level = SourceLevels.Verbose;
+traceSource.Listeners.Add(new ConsoleTraceListener());
+```
+
+Configure the trace source before calling `Intrinsics.InitializeType` or otherwise triggering initialization of a type
+that contains intrinsic methods. This ensures that diagnostics emitted during intrinsic compilation are captured.
+
+On .NET Framework, the trace source can alternatively be configured in the application configuration file:
+
+``` XML
+<configuration>
+  <system.diagnostics>
+    <sources>
+      <source name="Gapotchenko.FX.Runtime.CompilerServices.Intrinsics" switchValue="Verbose">
+        <listeners>
+          <add name="console" type="System.Diagnostics.ConsoleTraceListener" />
+        </listeners>
+      </source>
+    </sources>
+  </system.diagnostics>
+</configuration>
+```
+
+On .NET 7.0+, a similar effect can be achieved by utilizing `System.Diagnostics.TraceSource.Initializing` property.
+
 ## Usage
 
 `Gapotchenko.FX.Runtime.CompilerServices.Intrinsics` module is available as a [NuGet package](https://nuget.org/packages/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics):
