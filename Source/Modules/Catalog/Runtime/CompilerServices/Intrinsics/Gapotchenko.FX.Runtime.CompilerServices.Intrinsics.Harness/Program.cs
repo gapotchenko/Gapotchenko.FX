@@ -40,7 +40,6 @@ static class Program
         Exercise();
     }
 
-
     static void InitializeLogging()
     {
 #if NET

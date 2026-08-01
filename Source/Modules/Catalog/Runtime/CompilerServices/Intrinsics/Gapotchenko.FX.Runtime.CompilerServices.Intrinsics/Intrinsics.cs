@@ -19,6 +19,20 @@ namespace Gapotchenko.FX.Runtime.CompilerServices;
 public static class Intrinsics
 {
     /// <summary>
+    /// Gets or sets the activation mode of the intrinsics compiler.
+    /// </summary>
+    public static IntrinsicsActivationMode ActivationMode
+    {
+        get => field;
+        set
+        {
+            if (value is not (>= IntrinsicsActivationMode.Auto and <= IntrinsicsActivationMode.PreferablyOn))
+                throw new ArgumentOutOfRangeException(nameof(value));
+            field = value;
+        }
+    }
+
+    /// <summary>
     /// Initializes intrinsic methods of the specified type.
     /// </summary>
     /// <param name="type">The type with intrinsic methods to initialize.</param>
@@ -42,11 +56,11 @@ public static class Intrinsics
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        var adapter = m_Adapter;
+        if (!IsActive())
+            return;
 
-        // Fast-path check only.
-        // The m_GiveUpOnPatching flag is checked authoritatively under m_PatchingLock below.
-        if (adapter == null || m_GiveUpOnPatching)
+        var adapter = m_Adapter;
+        if (adapter == null)
             return;
 
         var arch = RuntimeInformation.ProcessArchitecture;
@@ -179,6 +193,28 @@ public static class Intrinsics
     }
 
     static readonly Lock m_PatchingLock = new();
+
+    static bool IsActive()
+    {
+        // Fast-path check only.
+        // The m_GiveUpOnPatching flag is checked authoritatively under m_PatchingLock
+        // further in the code invoking this method.
+        if (m_GiveUpOnPatching)
+            return false;
+
+        var mode = ActivationMode;
+        if (mode == IntrinsicsActivationMode.AlwaysOff)
+            return false;
+
+        if (!CodeSafetyStrategy.UnsafeCodeAllowed)
+            return false;
+
+        if (mode == IntrinsicsActivationMode.PreferablyOn)
+            return true;
+
+        Debug.Assert(mode is IntrinsicsActivationMode.Auto);
+        return CodeSafetyStrategy.UnsafeCodeRecommended;
+    }
 
     static bool m_GiveUpOnPatching;
 
