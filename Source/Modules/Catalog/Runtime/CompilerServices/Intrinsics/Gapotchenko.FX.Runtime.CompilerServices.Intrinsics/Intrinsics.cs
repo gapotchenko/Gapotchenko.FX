@@ -86,7 +86,13 @@ public static class Intrinsics
                     Log.TraceSource.TraceEvent(
                         TraceEventType.Error,
                         1932901002,
-                        string.Format("Unexpected error occurred during compilation of intrinsic method '{0}'. Giving up on intrinsic methods for the current environment.", method) + Environment.NewLine + e);
+                        string.Concat(
+                            string.Format(
+                                "Unexpected error occurred during compilation of intrinsic method '{0}' declared in type '{1}'. Giving up on intrinsic methods for the current environment.",
+                                method,
+                                method.DeclaringType),
+                            Environment.NewLine,
+                            e.ToString()));
 
                     return;
                 }
@@ -98,19 +104,19 @@ public static class Intrinsics
             switch (patchResult)
             {
                 case Adapter.PatchResult.Success:
-                    Log.TraceSource.TraceEvent(TraceEventType.Information, 1932901000, "Intrinsic method '{0}' compiled successfully.", method);
+                    Log.TraceSource.TraceEvent(TraceEventType.Information, 1932901000, "Intrinsic method '{0}' declared in type '{1}' compiled successfully.", method, method.DeclaringType);
                     break;
 
                 case Adapter.PatchResult.UnexpectedPrologue:
-                    Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901001, "Unexpected machine code prologue encountered in intrinsic method '{0}'. Compilation discarded.", method);
+                    Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901001, "Unexpected machine code prologue encountered in intrinsic method '{0}' declared in type '{1}'. Compilation discarded.", method, method.DeclaringType);
                     break;
 
                 case Adapter.PatchResult.InvalidAlignment:
-                    Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901006, "Unexpected machine code alignment encountered in intrinsic method '{0}'. Compilation discarded.", method);
+                    Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901006, "Unexpected machine code alignment encountered in intrinsic method '{0}' declared in type '{1}'. Compilation discarded.", method, method.DeclaringType);
                     break;
 
                 case Adapter.PatchResult.NoSpace:
-                    Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901007, "Not enough available space for intrinsic instructions in method '{0}'. Compilation discarded.", method);
+                    Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901007, "Not enough available space for intrinsic instructions in method '{0}' declared in type '{1}'. Compilation discarded.", method, method.DeclaringType);
                     break;
 
                 case Adapter.PatchResult.WriteProtected:
@@ -121,7 +127,7 @@ public static class Intrinsics
                     return;
 
                 case Adapter.PatchResult.UnsupportedUnwindPrologue:
-                    Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901009, "Unsupported unwind prologue encountered in intrinsic method '{0}'. Compilation discarded.", method);
+                    Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901009, "Unsupported unwind prologue encountered in intrinsic method '{0}' declared in type '{1}'. Compilation discarded.", method, method.DeclaringType);
                     break;
             }
         }
