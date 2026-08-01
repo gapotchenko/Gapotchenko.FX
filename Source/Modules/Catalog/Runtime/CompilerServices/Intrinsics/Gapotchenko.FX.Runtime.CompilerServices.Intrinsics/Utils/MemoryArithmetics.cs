@@ -15,6 +15,8 @@ static class MemoryArithmetics
         return checked((size + alignment - 1) & -alignment);
     }
 
+    public static int Align4(int value) => checked((value + 3) & ~3);
+
     public static int AlignUp(int value, int alignment)
     {
         return checked((value + alignment - 1) / alignment * alignment);

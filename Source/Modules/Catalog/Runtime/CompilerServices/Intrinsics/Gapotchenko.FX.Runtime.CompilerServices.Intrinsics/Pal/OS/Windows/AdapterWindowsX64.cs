@@ -6,6 +6,7 @@
 // Year of introduction: 2019
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -22,6 +23,21 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #endif
 sealed class AdapterWindowsX64 : AdapterX64
 {
+    protected override bool RequiresTrampoline(ReadOnlySpan<byte> code) =>
+        X64UnwindInfo.GetPrologueSize(code) != 0;
+
+    protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code)
+    {
+        int codeSize = checked(code.Length + 1);
+        int prologueSize = X64UnwindInfo.GetPrologueSize(code);
+        if (prologueSize == 0)
+            return codeSize;
+
+        int unwindInfoOffset = MemoryArithmetics.Align4(codeSize);
+        int unwindInfoSize = X64UnwindInfo.GetSize(code, prologueSize);
+        return checked(unwindInfoOffset + unwindInfoSize + Unsafe.SizeOf<NativeMethods.RuntimeFunctionX64>());
+    }
+
     protected override unsafe void GetMethodInstructions(
         MethodInfo method,
         out Span<byte> instructions,
@@ -75,8 +91,46 @@ sealed class AdapterWindowsX64 : AdapterX64
     protected override void WriteCode(Span<byte> destination, ReadOnlySpan<byte> code) =>
         WriteCodeCore(destination, code);
 
-    protected override void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code) =>
-        WriteCodeCore(destination, code);
+    protected override unsafe void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code)
+    {
+        int prologueSize = X64UnwindInfo.GetPrologueSize(code);
+        if (prologueSize == 0)
+        {
+            WriteCodeCore(destination, code);
+            return;
+        }
+
+        int codeSize = checked(code.Length + 1);
+        int unwindInfoOffset = MemoryArithmetics.Align4(codeSize);
+        int unwindInfoSize = X64UnwindInfo.GetSize(code, prologueSize);
+        int runtimeFunctionOffset = checked(unwindInfoOffset + unwindInfoSize);
+        int allocationSize = checked(runtimeFunctionOffset + Unsafe.SizeOf<NativeMethods.RuntimeFunctionX64>());
+        destination = destination[..allocationSize];
+
+        ref byte baseAddress = ref MemoryMarshal.GetReference(destination);
+        ref var runtimeFunction = ref Unsafe.As<byte, NativeMethods.RuntimeFunctionX64>(
+            ref destination[runtimeFunctionOffset]);
+
+        using (var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite))
+        {
+            code.CopyTo(destination);
+            destination[code.Length] = Ret;
+            X64UnwindInfo.Write(destination[unwindInfoOffset..runtimeFunctionOffset], code, prologueSize);
+
+            runtimeFunction.BeginAddress = 0;
+            runtimeFunction.EndAddress = checked((uint)codeSize);
+            runtimeFunction.UnwindData = checked((uint)unwindInfoOffset);
+            scope.FlushInstructions();
+        }
+
+        if (!NativeMethods.RtlAddFunctionTable(
+            (NativeMethods.RuntimeFunctionX64*)Unsafe.AsPointer(ref runtimeFunction),
+            1,
+            (nuint)Unsafe.AsPointer(ref baseAddress)))
+        {
+            throw new InvalidOperationException("Failed to register unwind information for an x64 trampoline.");
+        }
+    }
 
     static void WriteCodeCore(Span<byte> destination, ReadOnlySpan<byte> code)
     {

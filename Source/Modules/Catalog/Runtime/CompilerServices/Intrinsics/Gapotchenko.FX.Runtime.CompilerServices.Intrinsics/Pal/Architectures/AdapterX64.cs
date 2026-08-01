@@ -71,7 +71,7 @@ abstract class AdapterX64 : AdapterX86Base
     PatchResult ApplyPatch(Span<byte> instructions, Span<byte> entryPoint, ReadOnlySpan<byte> code)
     {
         int patchSize = checked(code.Length + 1);
-        if (patchSize <= instructions.Length)
+        if (!RequiresTrampoline(code) && patchSize <= instructions.Length)
         {
             var destination = instructions[..patchSize];
             if (!IsWriteAllowed(destination))
@@ -100,7 +100,7 @@ abstract class AdapterX64 : AdapterX86Base
                 return PatchResult.WriteProtected;
         }
 
-        if (!TryAllocateTrampoline(redirection, patchSize, out var trampoline))
+        if (!TryAllocateTrampoline(redirection, GetTrampolineAllocationSize(code), out var trampoline))
             return PatchResult.NoSpace;
 
         WriteTrampoline(trampoline, code);
@@ -138,6 +138,12 @@ abstract class AdapterX64 : AdapterX86Base
     ];
 
     protected abstract bool IsWriteAllowed(Span<byte> span);
+
+    protected virtual bool RequiresTrampoline(ReadOnlySpan<byte> code) => false;
+
+    protected virtual int GetTrampolineAllocationSize(ReadOnlySpan<byte> code) =>
+        checked(code.Length + 1);
+
     protected abstract bool TryAllocateTrampoline(Span<byte> redirection, int size, out Span<byte> trampoline);
     protected abstract void WriteCode(Span<byte> destination, ReadOnlySpan<byte> code);
     protected abstract void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code);
