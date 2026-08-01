@@ -7,6 +7,7 @@
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
@@ -16,6 +17,27 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
 #endif
 sealed class AdapterMacOSArm64 : AdapterArm64
 {
+    protected override PatchResult ValidateCode(ReadOnlySpan<uint> code) =>
+        UnwindArm64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
+        PatchResult.UnsupportedUnwindPrologue :
+        PatchResult.Success;
+
+    protected override bool RequiresTrampoline(ReadOnlySpan<uint> code) =>
+        UnwindArm64.Analyze(code, out _) == UnwindAnalysisResult.Supported;
+
+    protected override int GetTrampolineAllocationCount(ReadOnlySpan<uint> code)
+    {
+        var result = UnwindArm64.Analyze(code, out var info);
+        return result switch
+        {
+            UnwindAnalysisResult.Leaf => base.GetTrampolineAllocationCount(code),
+            UnwindAnalysisResult.Supported => checked(
+                code.Length + 1 +
+                (UnwindMacOSArm64.GetSize(code, info) + sizeof(uint) - 1) / sizeof(uint)),
+            _ => throw new InvalidOperationException("The intrinsic has an unsupported macOS ARM64 unwind prologue.")
+        };
+    }
+
     protected override unsafe void GetMethodInstructions(
         MethodInfo method,
         out Span<uint> instructions,
@@ -58,6 +80,41 @@ sealed class AdapterMacOSArm64 : AdapterArm64
         code.CopyTo(destination);
         destination[code.Length] = InstructionsArm64.Ret;
         scope.FlushInstructions();
+    }
+
+    protected override unsafe void WriteTrampoline(Span<uint> destination, ReadOnlySpan<uint> code)
+    {
+        var result = UnwindArm64.Analyze(code, out var info);
+        if (result == UnwindAnalysisResult.Leaf)
+        {
+            WriteCode(destination, code);
+            return;
+        }
+        if (result != UnwindAnalysisResult.Supported)
+            throw new InvalidOperationException("The intrinsic has an unsupported macOS ARM64 unwind prologue.");
+
+        int codeCount = checked(code.Length + 1);
+        int unwindSize = UnwindMacOSArm64.GetSize(code, info);
+        int allocationCount = checked(codeCount + (unwindSize + sizeof(uint) - 1) / sizeof(uint));
+        destination = destination[..allocationCount];
+
+        ref uint baseAddress = ref MemoryMarshal.GetReference(destination);
+        var unwindDestination = MemoryMarshal.AsBytes(destination[codeCount..]);
+
+        using (var scope = JitWriteProtectionScope.Create(destination))
+        {
+            code.CopyTo(destination);
+            destination[code.Length] = InstructionsArm64.Ret;
+            UnwindMacOSArm64.Write(
+                unwindDestination,
+                code,
+                info,
+                Unsafe.AsPointer(ref baseAddress));
+            scope.FlushInstructions();
+        }
+
+        ref byte fde = ref unwindDestination[UnwindMacOSArm64.FdeOffset];
+        NativeMethods.__register_frame(Unsafe.AsPointer(ref fde));
     }
 
     protected override void WriteBranch(Span<uint> destination, uint displacement)

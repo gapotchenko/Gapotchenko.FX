@@ -77,4 +77,7 @@ static unsafe class NativeMethods
 
     [DllImport("libSystem.B.dylib", ExactSpelling = true)]
     public static extern void sys_icache_invalidate(void* start, nuint length);
+
+    [DllImport("libSystem.B.dylib", ExactSpelling = true)]
+    public static extern void __register_frame(void* fde);
 }

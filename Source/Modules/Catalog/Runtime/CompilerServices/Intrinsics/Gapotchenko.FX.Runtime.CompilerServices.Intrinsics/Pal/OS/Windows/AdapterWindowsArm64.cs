@@ -23,16 +23,16 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 sealed class AdapterWindowsArm64 : AdapterArm64
 {
     protected override PatchResult ValidateCode(ReadOnlySpan<uint> code) =>
-        UnwindArm64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
+        UnwindWindowsArm64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
         PatchResult.UnsupportedUnwindPrologue :
         PatchResult.Success;
 
     protected override bool RequiresTrampoline(ReadOnlySpan<uint> code) =>
-        UnwindArm64.Analyze(code, out _) == UnwindAnalysisResult.Supported;
+        UnwindWindowsArm64.Analyze(code, out _) == UnwindAnalysisResult.Supported;
 
     protected override int GetTrampolineAllocationCount(ReadOnlySpan<uint> code)
     {
-        var result = UnwindArm64.Analyze(code, out _);
+        var result = UnwindWindowsArm64.Analyze(code, out _);
         return result switch
         {
             UnwindAnalysisResult.Leaf => base.GetTrampolineAllocationCount(code),
@@ -129,7 +129,7 @@ sealed class AdapterWindowsArm64 : AdapterArm64
 
     protected override unsafe void WriteTrampoline(Span<uint> destination, ReadOnlySpan<uint> code)
     {
-        var result = UnwindArm64.Analyze(code, out uint unwindData);
+        var result = UnwindWindowsArm64.Analyze(code, out uint unwindData);
         if (result == UnwindAnalysisResult.Leaf)
         {
             WriteCode(destination, code);

@@ -125,7 +125,8 @@ static class Program
 
         #region Unwind
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
+        if ((RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
+             RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) &&
             RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
         {
             Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
