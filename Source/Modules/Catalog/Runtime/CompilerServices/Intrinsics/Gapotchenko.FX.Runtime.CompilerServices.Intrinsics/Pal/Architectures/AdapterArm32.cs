@@ -18,14 +18,17 @@ abstract class AdapterArm32 : AdapterArm
         if ((code.Length & (sizeof(ushort) - 1)) != 0)
             return PatchResult.InvalidAlignment;
 
+        var patchCode = MemoryMarshal.Cast<byte, ushort>(code);
+        var codeValidationResult = ValidateCode(patchCode);
+        if (codeValidationResult != PatchResult.Success)
+            return codeValidationResult;
+
         GetMethodInstructions(method, out var instructions, out var entryPoint, out var entryPointTarget);
         int prologueSize = GetPatchablePrologueSize(instructions);
         if (prologueSize < 0)
             return PatchResult.UnexpectedPrologue;
 
         instructions = instructions[..Math.Min(prologueSize, instructions.Length)];
-        var patchCode = MemoryMarshal.Cast<byte, ushort>(code);
-
         PatchResult result;
 #if TFF_CER
         RuntimeHelpers.PrepareConstrainedRegions();
@@ -73,11 +76,11 @@ abstract class AdapterArm32 : AdapterArm
             return -1;
 
         ushort instruction = instructions[0];
-        if ((instruction & 0xff00) == 0xb500)
+        if (InstructionsArm32.IsPushRegistersWithLinkRegister(instruction))
             return 2;
-        if (instruction == 0xe92d && instructions.Length >= 2 && (instructions[1] & 0x4000) != 0)
+        if (InstructionsArm32.IsPushRegistersWideWithLinkRegister(instructions))
             return 4;
-        if ((instruction & 0xff80) == 0xb080)
+        if (InstructionsArm32.IsStackAllocation(instruction))
             return 3;
         return -1;
     }
@@ -156,6 +159,7 @@ abstract class AdapterArm32 : AdapterArm
     }
 
     protected abstract bool IsWriteAllowed<T>(Span<T> span) where T : struct;
+    protected virtual PatchResult ValidateCode(ReadOnlySpan<ushort> code) => PatchResult.Success;
     protected abstract Span<ushort> AllocateTrampoline(int count);
     protected abstract unsafe bool TryAllocateTrampolineNear(void* target, int count, out Span<ushort> trampoline);
     protected abstract void WriteCode(Span<ushort> destination, ReadOnlySpan<ushort> code);
@@ -209,7 +213,7 @@ abstract class AdapterArm32 : AdapterArm
 
     protected static bool TryEncodeBranch(nint offset, out ushort first, out ushort second)
     {
-        if ((offset & 1) != 0 || offset < -BranchMaximumDistance || offset >= BranchMaximumDistance)
+        if ((offset & 1) != 0 || offset < -InstructionsArm32.BranchMaximumDistance || offset >= InstructionsArm32.BranchMaximumDistance)
         {
             first = second = 0;
             return false;
@@ -226,8 +230,4 @@ abstract class AdapterArm32 : AdapterArm
         second = (ushort)(0x9000 | j1 << 13 | j2 << 11 | displacement >> 1 & 0x07ff);
         return true;
     }
-
-    protected const nint BranchMaximumDistance = 1 << 24;
-
-    protected const ushort BxLr = 0x4770;
 }

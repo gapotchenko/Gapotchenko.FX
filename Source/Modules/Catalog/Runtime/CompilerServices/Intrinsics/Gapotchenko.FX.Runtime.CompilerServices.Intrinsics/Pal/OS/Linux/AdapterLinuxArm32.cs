@@ -16,6 +16,13 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 #endif
 sealed class AdapterLinuxArm32 : AdapterArm32
 {
+    protected override PatchResult ValidateCode(ReadOnlySpan<ushort> code)
+    {
+        return UnwindLinuxArm32.Analyze(code) == UnwindAnalysisResult.Unsupported ?
+            PatchResult.UnsupportedUnwindPrologue :
+            PatchResult.Success;
+    }
+
     protected override unsafe void GetMethodInstructions(
         MethodInfo method,
         out Span<ushort> instructions,
@@ -40,14 +47,14 @@ sealed class AdapterLinuxArm32 : AdapterArm32
 
     protected override unsafe bool TryAllocateTrampolineNear(void* target, int count, out Span<ushort> trampoline)
     {
-        return TrampolineAllocator.TryAllocateNear(target, count, (nuint)BranchMaximumDistance, out trampoline);
+        return TrampolineAllocator.TryAllocateNear(target, count, (nuint)InstructionsArm32.BranchMaximumDistance, out trampoline);
     }
 
     protected override void WriteCode(Span<ushort> destination, ReadOnlySpan<ushort> code)
     {
         using var scope = CreateWriteScope(destination);
         code.CopyTo(destination);
-        destination[code.Length] = BxLr;
+        destination[code.Length] = InstructionsArm32.BxLr;
         scope.FlushInstructions();
     }
 

@@ -135,6 +135,13 @@ static class Program
                 EdgeCaseOperations.IntrinsicResult,
                 EdgeCaseOperations.Unwind.FrameChainIntrinsic());
         }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.Arm)
+        {
+            Assert.AreEqual(EdgeCaseOperations.ManagedResult, EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
+            Assert.AreEqual(EdgeCaseOperations.ManagedResult, EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
+            Assert.AreEqual(EdgeCaseOperations.ManagedResult, EdgeCaseOperations.Unwind.FrameChainIntrinsic());
+            Assert.AreEqual(EdgeCaseOperations.ManagedResult, EdgeCaseOperations.Unwind.FrameChainIntrinsic());
+        }
 
         #endregion
 
