@@ -23,20 +23,20 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 sealed class AdapterWindowsArm64 : AdapterArm64
 {
     protected override PatchResult ValidateCode(ReadOnlySpan<uint> code) =>
-        UnwindArm64.Analyze(code, out _) == UnwindArm64.AnalysisResult.Unsupported ?
+        UnwindArm64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
         PatchResult.UnsupportedUnwindPrologue :
         PatchResult.Success;
 
     protected override bool RequiresTrampoline(ReadOnlySpan<uint> code) =>
-        UnwindArm64.Analyze(code, out _) == UnwindArm64.AnalysisResult.Supported;
+        UnwindArm64.Analyze(code, out _) == UnwindAnalysisResult.Supported;
 
     protected override int GetTrampolineAllocationCount(ReadOnlySpan<uint> code)
     {
         var result = UnwindArm64.Analyze(code, out _);
         return result switch
         {
-            UnwindArm64.AnalysisResult.Leaf => base.GetTrampolineAllocationCount(code),
-            UnwindArm64.AnalysisResult.Supported => checked(code.Length + 1 + RuntimeFunctionWordCount),
+            UnwindAnalysisResult.Leaf => base.GetTrampolineAllocationCount(code),
+            UnwindAnalysisResult.Supported => checked(code.Length + 1 + RuntimeFunctionWordCount),
             _ => throw new InvalidOperationException("The intrinsic has an unsupported Windows ARM64 unwind prologue.")
         };
     }
@@ -130,12 +130,12 @@ sealed class AdapterWindowsArm64 : AdapterArm64
     protected override unsafe void WriteTrampoline(Span<uint> destination, ReadOnlySpan<uint> code)
     {
         var result = UnwindArm64.Analyze(code, out uint unwindData);
-        if (result == UnwindArm64.AnalysisResult.Leaf)
+        if (result == UnwindAnalysisResult.Leaf)
         {
             WriteCode(destination, code);
             return;
         }
-        if (result != UnwindArm64.AnalysisResult.Supported)
+        if (result != UnwindAnalysisResult.Supported)
             throw new InvalidOperationException("The intrinsic has an unsupported Windows ARM64 unwind prologue.");
 
         int codeCount = checked(code.Length + 1);

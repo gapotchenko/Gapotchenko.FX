@@ -25,23 +25,23 @@ sealed class AdapterWindowsX64 : AdapterX64
 {
     protected override PatchResult ValidateCode(ReadOnlySpan<byte> code)
     {
-        return UnwindX64.Analyze(code, out _) == UnwindX64.AnalysisResult.Unsupported ?
+        return UnwindX64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
             PatchResult.UnsupportedUnwindPrologue :
             PatchResult.Success;
     }
 
     protected override bool RequiresTrampoline(ReadOnlySpan<byte> code)
     {
-        return UnwindX64.Analyze(code, out _) == UnwindX64.AnalysisResult.Supported;
+        return UnwindX64.Analyze(code, out _) == UnwindAnalysisResult.Supported;
     }
 
     protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code)
     {
         int codeSize = checked(code.Length + 1);
         var analysisResult = UnwindX64.Analyze(code, out int prologueSize);
-        if (analysisResult == UnwindX64.AnalysisResult.Leaf)
+        if (analysisResult == UnwindAnalysisResult.Leaf)
             return codeSize;
-        if (analysisResult != UnwindX64.AnalysisResult.Supported)
+        if (analysisResult != UnwindAnalysisResult.Supported)
             throw new InvalidOperationException("The intrinsic has an unsupported Windows x64 unwind prologue.");
 
         int unwindInfoOffset = MemoryArithmetics.Align4(codeSize);
@@ -105,12 +105,12 @@ sealed class AdapterWindowsX64 : AdapterX64
     protected override unsafe void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code)
     {
         var analysisResult = UnwindX64.Analyze(code, out int prologueSize);
-        if (analysisResult == UnwindX64.AnalysisResult.Leaf)
+        if (analysisResult == UnwindAnalysisResult.Leaf)
         {
             WriteCodeCore(destination, code);
             return;
         }
-        if (analysisResult != UnwindX64.AnalysisResult.Supported)
+        if (analysisResult != UnwindAnalysisResult.Supported)
             throw new InvalidOperationException("The intrinsic has an unsupported Windows x64 unwind prologue.");
 
         int codeSize = checked(code.Length + 1);

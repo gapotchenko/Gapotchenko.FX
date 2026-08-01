@@ -128,20 +128,12 @@ static class Program
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
             RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
         {
-            result = EdgeCaseOperations.Unwind.StackAllocationIntrinsic();
-            Assert.IsTrue(
-                result is EdgeCaseOperations.ManagedResult or EdgeCaseOperations.IntrinsicResult,
-                "The first unwind intrinsic invocation returned an unexpected value.");
-
+            Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
             Assert.AreEqual(
                 EdgeCaseOperations.IntrinsicResult,
                 EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
 
-            result = EdgeCaseOperations.Unwind.FrameChainIntrinsic();
-            Assert.IsTrue(
-                result is EdgeCaseOperations.ManagedResult or EdgeCaseOperations.IntrinsicResult,
-                "The first frame-chain intrinsic invocation returned an unexpected value.");
-
+            Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.Unwind.FrameChainIntrinsic());
             Assert.AreEqual(
                 EdgeCaseOperations.IntrinsicResult,
                 EdgeCaseOperations.Unwind.FrameChainIntrinsic());
@@ -151,11 +143,7 @@ static class Program
 
         #region Long frame activation
 
-        result = EdgeCaseOperations.LongFrameActivation.LongFrameIntrinsic();
-        Assert.IsTrue(
-            result is EdgeCaseOperations.ManagedResult or EdgeCaseOperations.IntrinsicResult,
-            "The first intrinsic invocation returned an unexpected value.");
-
+        Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.LongFrameActivation.LongFrameIntrinsic());
         for (int i = 1; i < 100_000; ++i)
         {
             Assert.AreEqual(
@@ -169,7 +157,7 @@ static class Program
     static void ExerciseBitOperations()
     {
         // Bit operations are implemented as intrinsic machine code methods
-        // on .NET Framework by Gapotchenko.FX.Numerics module.
+        // by Gapotchenko.FX.Numerics module for .NET Framework target.
         // .NET 8.0+ provides bit operations natively.
 
         Assert.AreEqual(0, BitOperations.Log2(0));

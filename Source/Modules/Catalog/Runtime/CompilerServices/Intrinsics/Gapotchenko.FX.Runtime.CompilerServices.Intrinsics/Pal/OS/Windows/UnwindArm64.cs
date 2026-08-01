@@ -17,18 +17,11 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #endif
 static class UnwindArm64
 {
-    public enum AnalysisResult
-    {
-        Leaf,
-        Supported,
-        Unsupported
-    }
-
-    public static AnalysisResult Analyze(ReadOnlySpan<uint> code, out uint unwindData)
+    public static UnwindAnalysisResult Analyze(ReadOnlySpan<uint> code, out uint unwindData)
     {
         unwindData = 0;
         if (code.IsEmpty)
-            return AnalysisResult.Leaf;
+            return UnwindAnalysisResult.Leaf;
 
         int frameSize;
         int prologueInstructionCount;
@@ -39,7 +32,7 @@ static class UnwindArm64
             prologueInstructionCount = 1;
             chained = 0;
             if (code.Length < 2 || !IsStackDeallocation(code[^1], frameSize))
-                return AnalysisResult.Unsupported;
+                return UnwindAnalysisResult.Unsupported;
         }
         else if (TryDecodeFpLrSave(code[0], out frameSize))
         {
@@ -49,30 +42,30 @@ static class UnwindArm64
                 code[1] != InstructionsArm64.MovFpSp ||
                 !IsFpLrRestore(code[^1], frameSize))
             {
-                return AnalysisResult.Unsupported;
+                return UnwindAnalysisResult.Unsupported;
             }
         }
         else
         {
             return IsPotentialPrologueInstruction(code[0]) ?
-                AnalysisResult.Unsupported :
-                AnalysisResult.Leaf;
+                UnwindAnalysisResult.Unsupported :
+                UnwindAnalysisResult.Leaf;
         }
 
         int functionLength = checked(code.Length + 1);
         if (functionLength > MaximumFunctionLength ||
             frameSize == 0 || frameSize % StackAlignment != 0 || frameSize > MaximumFrameSize)
         {
-            return AnalysisResult.Unsupported;
+            return UnwindAnalysisResult.Unsupported;
         }
 
         // Packed unwind data assumes the canonical prologue starts at the
         // function beginning and its inverse epilogue ends immediately before RET.
         if (prologueInstructionCount >= functionLength)
-            return AnalysisResult.Unsupported;
+            return UnwindAnalysisResult.Unsupported;
 
         unwindData = EncodePackedUnwindData(functionLength, frameSize, chained);
-        return AnalysisResult.Supported;
+        return UnwindAnalysisResult.Supported;
     }
 
     static uint EncodePackedUnwindData(int functionLength, int frameSize, int chained)

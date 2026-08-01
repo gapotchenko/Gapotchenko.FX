@@ -17,14 +17,7 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #endif
 static class UnwindX64
 {
-    public enum AnalysisResult
-    {
-        Leaf,
-        Supported,
-        Unsupported
-    }
-
-    public static AnalysisResult Analyze(ReadOnlySpan<byte> code, out int prologueSize)
+    public static UnwindAnalysisResult Analyze(ReadOnlySpan<byte> code, out int prologueSize)
     {
         Span<Operation> operations = stackalloc Operation[byte.MaxValue];
         return Analyze(code, operations, out int operationCount, out prologueSize, out _, out _);
@@ -34,7 +27,7 @@ static class UnwindX64
     {
         Span<Operation> operations = stackalloc Operation[byte.MaxValue];
         var result = Analyze(code, operations, out int operationCount, out int actualPrologueSize, out _, out _);
-        if (result != AnalysisResult.Supported || actualPrologueSize != prologueSize)
+        if (result != UnwindAnalysisResult.Supported || actualPrologueSize != prologueSize)
             throw new ArgumentException("The code does not have a supported Windows x64 prologue.", nameof(code));
 
         return HeaderSize + UnwindCodeSize * AlignUnwindCodeCount(CountUnwindCodes(operations[..operationCount]));
@@ -50,7 +43,7 @@ static class UnwindX64
             out int actualPrologueSize,
             out int frameRegister,
             out int frameOffset);
-        if (result != AnalysisResult.Supported || actualPrologueSize != prologueSize)
+        if (result != UnwindAnalysisResult.Supported || actualPrologueSize != prologueSize)
             throw new ArgumentException("The code does not have a supported Windows x64 prologue.", nameof(code));
 
         operations = operations[..operationCount];
@@ -88,7 +81,7 @@ static class UnwindX64
         }
     }
 
-    static AnalysisResult Analyze(
+    static UnwindAnalysisResult Analyze(
         ReadOnlySpan<byte> code,
         Span<Operation> operations,
         out int operationCount,
@@ -108,7 +101,7 @@ static class UnwindX64
             if (TryDecodePushNonvolatile(remainingCode, out int instructionSize, out int register))
             {
                 if (!TryAddOperation(operations, ref operationCount, ref prologueSize, instructionSize, NativeMethods.UnwindOperation.PushNonvolatile, register))
-                    return AnalysisResult.Unsupported;
+                    return UnwindAnalysisResult.Unsupported;
                 if (register == InstructionsX64.RegisterBp)
                     rbpSaved = true;
                 continue;
@@ -117,7 +110,7 @@ static class UnwindX64
             if (TryDecodeStackAllocation(remainingCode, out instructionSize, out uint allocationSize))
             {
                 if (!TryAddStackAllocation(operations, ref operationCount, ref prologueSize, instructionSize, allocationSize))
-                    return AnalysisResult.Unsupported;
+                    return UnwindAnalysisResult.Unsupported;
                 continue;
             }
 
@@ -126,7 +119,7 @@ static class UnwindX64
                 if (!rbpSaved || frameRegister != 0 || offset % 16 != 0 || offset > 240 ||
                     !TryAddOperation(operations, ref operationCount, ref prologueSize, instructionSize, NativeMethods.UnwindOperation.SetFramePointer, 0))
                 {
-                    return AnalysisResult.Unsupported;
+                    return UnwindAnalysisResult.Unsupported;
                 }
 
                 frameRegister = InstructionsX64.RegisterBp;
@@ -135,15 +128,15 @@ static class UnwindX64
             }
 
             if (IsPotentialPrologueInstruction(remainingCode))
-                return AnalysisResult.Unsupported;
+                return UnwindAnalysisResult.Unsupported;
 
             break;
         }
 
         if (CountUnwindCodes(operations[..operationCount]) > byte.MaxValue)
-            return AnalysisResult.Unsupported;
+            return UnwindAnalysisResult.Unsupported;
 
-        return operationCount == 0 ? AnalysisResult.Leaf : AnalysisResult.Supported;
+        return operationCount == 0 ? UnwindAnalysisResult.Leaf : UnwindAnalysisResult.Supported;
     }
 
     static bool TryAddStackAllocation(
