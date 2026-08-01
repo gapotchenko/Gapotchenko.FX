@@ -48,4 +48,7 @@ static unsafe class NativeMethods
 
     [DllImport("libgcc_s.so.1", EntryPoint = "__clear_cache", ExactSpelling = true)]
     public static extern void ClearInstructionCache(void* begin, void* end);
+
+    [DllImport("libgcc_s.so.1", EntryPoint = "__register_frame", ExactSpelling = true)]
+    public static extern void RegisterFrame(void* ehFrame);
 }

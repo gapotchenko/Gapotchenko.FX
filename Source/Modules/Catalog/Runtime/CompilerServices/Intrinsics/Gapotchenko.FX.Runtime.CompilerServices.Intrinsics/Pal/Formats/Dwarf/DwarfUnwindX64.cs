@@ -9,15 +9,12 @@ using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Formats.Dwarf;
 
 /// <summary>
-/// Encodes DWARF unwind information for macOS x64 intrinsic trampolines.
+/// Encodes DWARF unwind information for x64 intrinsic trampolines.
 /// </summary>
-#if NET
-[SupportedOSPlatform("macos")]
-#endif
-static class UnwindMacOSX64
+static class DwarfUnwindX64
 {
     public static UnwindAnalysisResult Analyze(ReadOnlySpan<byte> code, out UnwindX64.UnwindInfo info)
     {
@@ -38,7 +35,7 @@ static class UnwindMacOSX64
             out int epilogueCount,
             out var info);
         if (result != UnwindAnalysisResult.Supported || info != expectedInfo)
-            throw new ArgumentException("The code does not have a supported macOS x64 unwind prologue.", nameof(code));
+            throw new ArgumentException("The code does not have a supported x64 DWARF unwind prologue.", nameof(code));
 
         var serializer = new DwarfSerializer();
         WriteInstructions(
@@ -64,7 +61,7 @@ static class UnwindMacOSX64
             out int epilogueCount,
             out var info);
         if (result != UnwindAnalysisResult.Supported || info != expectedInfo)
-            throw new ArgumentException("The code does not have a supported macOS x64 unwind prologue.", nameof(code));
+            throw new ArgumentException("The code does not have a supported x64 DWARF unwind prologue.", nameof(code));
 
         int size = GetSize(code, info);
         destination = destination[..size];

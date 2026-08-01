@@ -6,6 +6,8 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Formats.Dwarf;
+using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -19,6 +21,27 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 #endif
 sealed class AdapterLinuxX64 : AdapterX64
 {
+    protected override PatchResult ValidateCode(ReadOnlySpan<byte> code) =>
+        DwarfUnwindX64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
+        PatchResult.UnsupportedUnwindPrologue :
+        PatchResult.Success;
+
+    protected override bool RequiresTrampoline(ReadOnlySpan<byte> code) =>
+        DwarfUnwindX64.Analyze(code, out _) == UnwindAnalysisResult.Supported;
+
+    protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code)
+    {
+        int codeSize = checked(code.Length + 1);
+        var result = DwarfUnwindX64.Analyze(code, out var info);
+        if (result == UnwindAnalysisResult.Leaf)
+            return codeSize;
+        if (result != UnwindAnalysisResult.Supported)
+            throw new InvalidOperationException("The intrinsic has an unsupported Linux x64 unwind prologue.");
+
+        int unwindOffset = MemoryArithmetics.Align4(codeSize);
+        return checked(unwindOffset + DwarfUnwindX64.GetSize(code, info) + sizeof(uint));
+    }
+
     protected override bool IsWriteAllowed(Span<byte> span) => true;
 
     protected override unsafe bool TryAllocateTrampoline(
@@ -39,9 +62,39 @@ sealed class AdapterLinuxX64 : AdapterX64
         WriteCodeCore(destination, code);
     }
 
-    protected override void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code)
+    protected override unsafe void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code)
     {
-        WriteCodeCore(destination, code);
+        var result = DwarfUnwindX64.Analyze(code, out var info);
+        if (result == UnwindAnalysisResult.Leaf)
+        {
+            WriteCodeCore(destination, code);
+            return;
+        }
+        if (result != UnwindAnalysisResult.Supported)
+            throw new InvalidOperationException("The intrinsic has an unsupported Linux x64 unwind prologue.");
+
+        int codeSize = checked(code.Length + 1);
+        int unwindOffset = MemoryArithmetics.Align4(codeSize);
+        int unwindSize = DwarfUnwindX64.GetSize(code, info);
+        destination = destination[..checked(unwindOffset + unwindSize + sizeof(uint))];
+
+        ref byte baseAddress = ref MemoryMarshal.GetReference(destination);
+        var unwindDestination = destination.Slice(unwindOffset, unwindSize);
+        using (var scope = CreateWriteScope(destination))
+        {
+            code.CopyTo(destination);
+            destination[code.Length] = InstructionsX64.Ret;
+            destination[codeSize..unwindOffset].Clear();
+            DwarfUnwindX64.Write(
+                unwindDestination,
+                code,
+                info,
+                Unsafe.AsPointer(ref baseAddress));
+            destination[(unwindOffset + unwindSize)..].Clear();
+            scope.FlushInstructions();
+        }
+
+        NativeMethods.RegisterFrame(Unsafe.AsPointer(ref MemoryMarshal.GetReference(unwindDestination)));
     }
 
     static void WriteCodeCore(Span<byte> destination, ReadOnlySpan<byte> code)

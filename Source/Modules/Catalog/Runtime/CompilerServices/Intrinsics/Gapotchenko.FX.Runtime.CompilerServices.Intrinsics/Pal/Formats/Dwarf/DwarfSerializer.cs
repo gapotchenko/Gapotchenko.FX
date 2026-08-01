@@ -5,20 +5,18 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX;
 using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 #pragma warning disable CS9191 // The 'ref' modifier for an argument corresponding to 'in' parameter is equivalent to 'in'. Consider using 'in' instead.
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.MacOS;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Formats.Dwarf;
 
 /// <summary>
 /// Serializes DWARF call-frame information used by dynamically registered FDEs.
 /// </summary>
-#if NET
-[SupportedOSPlatform("macos")]
-#endif
 ref struct DwarfSerializer
 {
     public DwarfSerializer()
