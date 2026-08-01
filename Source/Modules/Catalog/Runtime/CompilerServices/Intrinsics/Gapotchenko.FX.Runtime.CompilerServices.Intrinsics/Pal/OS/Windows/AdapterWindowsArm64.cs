@@ -7,6 +7,8 @@
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 #pragma warning disable CS9191 // The 'ref' modifier for an argument corresponding to 'in' parameter is equivalent to 'in'. Consider using 'in' instead.
 
@@ -20,6 +22,25 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #endif
 sealed class AdapterWindowsArm64 : AdapterArm64
 {
+    protected override PatchResult ValidateCode(ReadOnlySpan<uint> code) =>
+        UnwindArm64.Analyze(code, out _) == UnwindArm64.AnalysisResult.Unsupported ?
+        PatchResult.UnsupportedUnwindPrologue :
+        PatchResult.Success;
+
+    protected override bool RequiresTrampoline(ReadOnlySpan<uint> code) =>
+        UnwindArm64.Analyze(code, out _) == UnwindArm64.AnalysisResult.Supported;
+
+    protected override int GetTrampolineAllocationCount(ReadOnlySpan<uint> code)
+    {
+        var result = UnwindArm64.Analyze(code, out _);
+        return result switch
+        {
+            UnwindArm64.AnalysisResult.Leaf => base.GetTrampolineAllocationCount(code),
+            UnwindArm64.AnalysisResult.Supported => checked(code.Length + 1 + RuntimeFunctionWordCount),
+            _ => throw new InvalidOperationException("The intrinsic has an unsupported Windows ARM64 unwind prologue.")
+        };
+    }
+
     public override bool IsFeatureSupported(MachineCodeIntrinsicFeature feature)
     {
         return feature switch
@@ -106,6 +127,42 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         scope.FlushInstructions();
     }
 
+    protected override unsafe void WriteTrampoline(Span<uint> destination, ReadOnlySpan<uint> code)
+    {
+        var result = UnwindArm64.Analyze(code, out uint unwindData);
+        if (result == UnwindArm64.AnalysisResult.Leaf)
+        {
+            WriteCode(destination, code);
+            return;
+        }
+        if (result != UnwindArm64.AnalysisResult.Supported)
+            throw new InvalidOperationException("The intrinsic has an unsupported Windows ARM64 unwind prologue.");
+
+        int codeCount = checked(code.Length + 1);
+        int allocationCount = checked(codeCount + RuntimeFunctionWordCount);
+        destination = destination[..allocationCount];
+
+        ref uint baseAddress = ref MemoryMarshal.GetReference(destination);
+        ref var runtimeFunction = ref Unsafe.As<uint, NativeMethods.RuntimeFunctionArm64>(ref destination[codeCount]);
+
+        using (var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite))
+        {
+            code.CopyTo(destination);
+            destination[code.Length] = Ret;
+            runtimeFunction.BeginAddress = 0;
+            runtimeFunction.UnwindData = unwindData;
+            scope.FlushInstructions();
+        }
+
+        if (!NativeMethods.RtlAddFunctionTable(
+            (NativeMethods.RuntimeFunctionArm64*)Unsafe.AsPointer(ref runtimeFunction),
+            1,
+            (nuint)Unsafe.AsPointer(ref baseAddress)))
+        {
+            throw new InvalidOperationException("Failed to register unwind information for an ARM64 trampoline.");
+        }
+    }
+
     protected override void WriteBranch(Span<uint> destination, uint displacement)
     {
         using var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite);
@@ -127,4 +184,6 @@ sealed class AdapterWindowsArm64 : AdapterArm64
         using var scope = VirtualProtectionScope.Create(destination, NativeMethods.PageProtect.ExecuteReadWrite);
         destination[0] = address;
     }
+
+    const int RuntimeFunctionWordCount = 2;
 }

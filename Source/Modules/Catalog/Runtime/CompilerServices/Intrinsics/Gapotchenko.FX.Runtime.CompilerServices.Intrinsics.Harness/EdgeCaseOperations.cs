@@ -71,6 +71,33 @@ static class EdgeCaseOperations
     public const int ManagedResult = -1;
     public const int IntrinsicResult = 31;
 
+    public static class Unwind
+    {
+        static Unwind()
+        {
+            Intrinsics.InitializeType(typeof(Unwind));
+        }
+
+        [MachineCodeIntrinsic(
+            Architecture.Arm64,
+            0xff, 0x43, 0x00, 0xd1, // SUB SP,SP,#16
+            0xe0, 0x03, 0x80, 0x52, // MOV W0,31
+            0xff, 0x43, 0x00, 0x91, // ADD SP,SP,#16
+            SupportedOSPlatforms = ["windows"])]
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static int StackAllocationIntrinsic() => ManagedResult;
+
+        [MachineCodeIntrinsic(
+            Architecture.Arm64,
+            0xfd, 0x7b, 0xbf, 0xa9, // STP X29,LR,[SP,#-16]!
+            0xfd, 0x03, 0x00, 0x91, // MOV X29,SP
+            0xe0, 0x03, 0x80, 0x52, // MOV W0,31
+            0xfd, 0x7b, 0xc1, 0xa8, // LDP X29,LR,[SP],#16
+            SupportedOSPlatforms = ["windows"])]
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static int FrameChainIntrinsic() => ManagedResult;
+    }
+
     public static class LongFrameActivation
     {
         static readonly object m_InitializationSentinel = Initialize();

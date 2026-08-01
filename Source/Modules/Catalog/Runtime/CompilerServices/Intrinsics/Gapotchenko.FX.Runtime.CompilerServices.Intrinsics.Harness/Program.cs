@@ -123,6 +123,32 @@ static class Program
 
         #endregion
 
+        #region Unwind
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
+            RuntimeInformation.ProcessArchitecture == Architecture.Arm64)
+        {
+            result = EdgeCaseOperations.Unwind.StackAllocationIntrinsic();
+            Assert.IsTrue(
+                result is EdgeCaseOperations.ManagedResult or EdgeCaseOperations.IntrinsicResult,
+                "The first unwind intrinsic invocation returned an unexpected value.");
+
+            Assert.AreEqual(
+                EdgeCaseOperations.IntrinsicResult,
+                EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
+
+            result = EdgeCaseOperations.Unwind.FrameChainIntrinsic();
+            Assert.IsTrue(
+                result is EdgeCaseOperations.ManagedResult or EdgeCaseOperations.IntrinsicResult,
+                "The first frame-chain intrinsic invocation returned an unexpected value.");
+
+            Assert.AreEqual(
+                EdgeCaseOperations.IntrinsicResult,
+                EdgeCaseOperations.Unwind.FrameChainIntrinsic());
+        }
+
+        #endregion
+
         #region Long frame activation
 
         result = EdgeCaseOperations.LongFrameActivation.LongFrameIntrinsic();

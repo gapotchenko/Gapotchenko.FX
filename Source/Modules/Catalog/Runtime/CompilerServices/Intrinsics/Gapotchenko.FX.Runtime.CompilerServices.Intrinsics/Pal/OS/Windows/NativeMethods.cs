@@ -131,4 +131,8 @@ static unsafe class NativeMethods
     [DllImport("kernel32.dll", ExactSpelling = true)]
     [return: MarshalAs(UnmanagedType.U1)]
     public static extern bool RtlAddFunctionTable(RuntimeFunctionX64* functionTable, uint entryCount, nuint baseAddress);
+
+    [DllImport("kernel32.dll", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.U1)]
+    public static extern bool RtlAddFunctionTable(RuntimeFunctionArm64* functionTable, uint entryCount, nuint baseAddress);
 }
