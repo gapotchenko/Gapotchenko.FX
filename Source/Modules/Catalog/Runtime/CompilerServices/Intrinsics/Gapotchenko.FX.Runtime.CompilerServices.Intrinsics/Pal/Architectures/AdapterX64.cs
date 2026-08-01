@@ -15,6 +15,10 @@ abstract class AdapterX64 : AdapterX86Base
 {
     public sealed override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
+        var codeValidationResult = ValidateCode(code);
+        if (codeValidationResult != PatchResult.Success)
+            return codeValidationResult;
+
         GetMethodInstructions(method, out var instructions, out var entryPoint, out bool hasExactBoundaries);
         int prologueSize = GetPatchablePrologueSize(instructions);
         if (prologueSize < 0)
@@ -138,6 +142,8 @@ abstract class AdapterX64 : AdapterX86Base
     ];
 
     protected abstract bool IsWriteAllowed(Span<byte> span);
+
+    protected virtual PatchResult ValidateCode(ReadOnlySpan<byte> code) => PatchResult.Success;
 
     protected virtual bool RequiresTrampoline(ReadOnlySpan<byte> code) => false;
 

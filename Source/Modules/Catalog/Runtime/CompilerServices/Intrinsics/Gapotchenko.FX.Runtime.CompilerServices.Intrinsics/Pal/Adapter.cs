@@ -22,6 +22,7 @@ abstract class Adapter
     {
         Success,
         UnexpectedPrologue,
+        UnsupportedUnwindPrologue,
         InvalidAlignment,
         NoSpace,
         WriteProtected

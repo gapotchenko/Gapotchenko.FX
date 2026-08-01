@@ -119,6 +119,10 @@ public static class Intrinsics
                         1932901008,
                         "Intrinsic method code cannot be made writable on the current platform. Giving up on intrinsic compilation for the current environment.");
                     return;
+
+                case Adapter.PatchResult.UnsupportedUnwindPrologue:
+                    Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901009, "Unsupported unwind prologue encountered in intrinsic method '{0}'. Compilation discarded.", method);
+                    break;
             }
         }
 

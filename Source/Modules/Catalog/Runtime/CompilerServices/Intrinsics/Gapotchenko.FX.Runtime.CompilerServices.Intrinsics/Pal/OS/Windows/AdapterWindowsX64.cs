@@ -23,18 +23,29 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #endif
 sealed class AdapterWindowsX64 : AdapterX64
 {
-    protected override bool RequiresTrampoline(ReadOnlySpan<byte> code) =>
-        X64UnwindInfo.GetPrologueSize(code) != 0;
+    protected override PatchResult ValidateCode(ReadOnlySpan<byte> code)
+    {
+        return UnwindX64.Analyze(code, out _) == UnwindX64.AnalysisResult.Unsupported ?
+            PatchResult.UnsupportedUnwindPrologue :
+            PatchResult.Success;
+    }
+
+    protected override bool RequiresTrampoline(ReadOnlySpan<byte> code)
+    {
+        return UnwindX64.Analyze(code, out _) == UnwindX64.AnalysisResult.Supported;
+    }
 
     protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code)
     {
         int codeSize = checked(code.Length + 1);
-        int prologueSize = X64UnwindInfo.GetPrologueSize(code);
-        if (prologueSize == 0)
+        var analysisResult = UnwindX64.Analyze(code, out int prologueSize);
+        if (analysisResult == UnwindX64.AnalysisResult.Leaf)
             return codeSize;
+        if (analysisResult != UnwindX64.AnalysisResult.Supported)
+            throw new InvalidOperationException("The intrinsic has an unsupported Windows x64 unwind prologue.");
 
         int unwindInfoOffset = MemoryArithmetics.Align4(codeSize);
-        int unwindInfoSize = X64UnwindInfo.GetSize(code, prologueSize);
+        int unwindInfoSize = UnwindX64.GetSize(code, prologueSize);
         return checked(unwindInfoOffset + unwindInfoSize + Unsafe.SizeOf<NativeMethods.RuntimeFunctionX64>());
     }
 
@@ -93,16 +104,18 @@ sealed class AdapterWindowsX64 : AdapterX64
 
     protected override unsafe void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code)
     {
-        int prologueSize = X64UnwindInfo.GetPrologueSize(code);
-        if (prologueSize == 0)
+        var analysisResult = UnwindX64.Analyze(code, out int prologueSize);
+        if (analysisResult == UnwindX64.AnalysisResult.Leaf)
         {
             WriteCodeCore(destination, code);
             return;
         }
+        if (analysisResult != UnwindX64.AnalysisResult.Supported)
+            throw new InvalidOperationException("The intrinsic has an unsupported Windows x64 unwind prologue.");
 
         int codeSize = checked(code.Length + 1);
         int unwindInfoOffset = MemoryArithmetics.Align4(codeSize);
-        int unwindInfoSize = X64UnwindInfo.GetSize(code, prologueSize);
+        int unwindInfoSize = UnwindX64.GetSize(code, prologueSize);
         int runtimeFunctionOffset = checked(unwindInfoOffset + unwindInfoSize);
         int allocationSize = checked(runtimeFunctionOffset + Unsafe.SizeOf<NativeMethods.RuntimeFunctionX64>());
         destination = destination[..allocationSize];
@@ -115,7 +128,7 @@ sealed class AdapterWindowsX64 : AdapterX64
         {
             code.CopyTo(destination);
             destination[code.Length] = Ret;
-            X64UnwindInfo.Write(destination[unwindInfoOffset..runtimeFunctionOffset], code, prologueSize);
+            UnwindX64.Write(destination[unwindInfoOffset..runtimeFunctionOffset], code, prologueSize);
 
             runtimeFunction.BeginAddress = 0;
             runtimeFunction.EndAddress = checked((uint)codeSize);

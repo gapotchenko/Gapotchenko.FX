@@ -59,6 +59,19 @@ static unsafe class NativeMethods
         MemCommit = 0x1000
     }
 
+    public enum UnwindOperation : byte
+    {
+        PushNonvolatile = 0,
+        AllocateLarge = 1,
+        AllocateSmall = 2,
+        SetFramePointer = 3,
+        SaveNonvolatile = 4,
+        SaveNonvolatileFar = 5,
+        SaveXmm128 = 8,
+        SaveXmm128Far = 9,
+        PushMachineFrame = 10
+    }
+
     public enum ProcessorFeature : uint
     {
         ArmV8Crc32InstructionsAvailable = 31
