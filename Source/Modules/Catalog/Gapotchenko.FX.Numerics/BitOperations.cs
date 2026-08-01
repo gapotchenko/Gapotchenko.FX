@@ -94,6 +94,14 @@ public static class BitOperations
         SupportedOSPlatforms = ["windows"],
         Priority = 10)]         // LZCNT is faster than BSR on AMD processors
     [MachineCodeIntrinsic(
+        Architecture.Arm,
+        0x01, 0x21,              // MOVS R1,1
+        0x08, 0x43,              // ORRS R0,R1
+        0xb0, 0xfa, 0x80, 0xf0,  // CLZ R0,R0
+        0x1f, 0x21,              // MOVS R1,31
+        0x48, 0x40,              // EORS R0,R1
+        SupportedOSPlatforms = ["linux"])]
+    [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x00, 0x32,   // ORR W0,W0,#1
         0x00, 0x10, 0xc0, 0x5a,   // CLZ W0,W0
