@@ -65,11 +65,8 @@ static class EdgeCaseOperations
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static int LongIntrinsic()
     {
-        return ManagedResult;
+        return OperationResults.Managed;
     }
-
-    public const int ManagedResult = -1;
-    public const int IntrinsicResult = 31;
 
     public static class Unwind
     {
@@ -103,7 +100,7 @@ static class EdgeCaseOperations
             0x83, 0xc4, 0x10,              // ADD ESP,16
             SupportedOSPlatforms = ["linux"])]
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static int StackAllocationIntrinsic() => ManagedResult;
+        public static int StackAllocationIntrinsic() => OperationResults.Managed;
 
         [MachineCodeIntrinsic(
             Architecture.Arm64,
@@ -134,7 +131,7 @@ static class EdgeCaseOperations
             0x5d,                          // POP EBP
             SupportedOSPlatforms = ["linux"])]
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static int FrameChainIntrinsic() => ManagedResult;
+        public static int FrameChainIntrinsic() => OperationResults.Managed;
     }
 
     public static class LongFrameActivation
@@ -188,7 +185,7 @@ static class EdgeCaseOperations
         public static int LongFrameIntrinsic()
         {
             GC.KeepAlive(m_InitializationSentinel);
-            return ManagedResult;
+            return OperationResults.Managed;
         }
     }
 }

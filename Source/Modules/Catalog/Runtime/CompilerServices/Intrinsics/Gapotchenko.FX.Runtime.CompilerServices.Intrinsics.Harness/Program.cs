@@ -73,6 +73,7 @@ static class Program
     {
         DoExercise(() => NormalExercise(), "Normal exercise");
         DoExercise(() => EdgeCaseExercise(), "Edge-case exercise");
+        DoExercise(() => StressExercise.Run(), "Stress exercise");
         DoExercise(() => ExerciseBitOperations(), "Bit operations exercise");
     }
 
@@ -114,7 +115,7 @@ static class Program
         // finishes by executing the original body. Every later invocation must be redirected.
         Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.LongIntrinsic());
         for (int i = 1; i < 100_000; ++i)
-            Assert.AreEqual(EdgeCaseOperations.IntrinsicResult, EdgeCaseOperations.LongIntrinsic());
+            Assert.AreEqual(OperationResults.Intrinsic, EdgeCaseOperations.LongIntrinsic());
 
         #endregion
 
@@ -126,21 +127,21 @@ static class Program
         {
             Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
             Assert.AreEqual(
-                EdgeCaseOperations.IntrinsicResult,
+                OperationResults.Intrinsic,
                 EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
 
             Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.Unwind.FrameChainIntrinsic());
             Assert.AreEqual(
-                EdgeCaseOperations.IntrinsicResult,
+                OperationResults.Intrinsic,
                 EdgeCaseOperations.Unwind.FrameChainIntrinsic());
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.Arm)
         {
             // Leaf functions support only.
-            Assert.AreEqual(EdgeCaseOperations.ManagedResult, EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
-            Assert.AreEqual(EdgeCaseOperations.ManagedResult, EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
-            Assert.AreEqual(EdgeCaseOperations.ManagedResult, EdgeCaseOperations.Unwind.FrameChainIntrinsic());
-            Assert.AreEqual(EdgeCaseOperations.ManagedResult, EdgeCaseOperations.Unwind.FrameChainIntrinsic());
+            Assert.AreEqual(OperationResults.Managed, EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
+            Assert.AreEqual(OperationResults.Managed, EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
+            Assert.AreEqual(OperationResults.Managed, EdgeCaseOperations.Unwind.FrameChainIntrinsic());
+            Assert.AreEqual(OperationResults.Managed, EdgeCaseOperations.Unwind.FrameChainIntrinsic());
         }
 
         #endregion
@@ -151,7 +152,7 @@ static class Program
         for (int i = 1; i < 100_000; ++i)
         {
             Assert.AreEqual(
-                EdgeCaseOperations.IntrinsicResult,
+                OperationResults.Intrinsic,
                 EdgeCaseOperations.LongFrameActivation.LongFrameIntrinsic());
         }
 
@@ -169,4 +170,5 @@ static class Program
         Assert.AreEqual(12, BitOperations.PopCount(120431));
         Assert.AreEqual(0x15555833u, BitOperations.Crc32C(0x19c2f193u, 0xb6));
     }
+
 }
