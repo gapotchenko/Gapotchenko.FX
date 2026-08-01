@@ -5,6 +5,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using System.Buffers.Binary;
+
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 
 /// <summary>
@@ -48,7 +50,8 @@ static class UnwindX86
 
             if (TryDecodeStackAllocation(remaining, out instructionSize, out uint allocationSize))
             {
-                if (allocationSize == 0 || (allocationSize & 3) != 0 ||
+                if (allocationSize == 0 ||
+                    (allocationSize & 3) != 0 ||
                     !TryAddOperation(
                         operations, ref operationCount, ref prologueSize,
                         instructionSize, UnwindOperationKind.StackAllocation, 0, allocationSize))
@@ -61,7 +64,8 @@ static class UnwindX86
 
             if (TryDecodeFrameRegister(remaining, out instructionSize))
             {
-                if (!ebpSaved || frameRegister != 0 ||
+                if (!ebpSaved ||
+                    frameRegister != 0 ||
                     !TryAddOperation(
                         operations, ref operationCount, ref prologueSize,
                         instructionSize, UnwindOperationKind.SetFramePointer, InstructionsX86.RegisterBp, 0))
@@ -91,14 +95,16 @@ static class UnwindX86
 
     public static bool TryDecodeStackDeallocationEndingAt(ReadOnlySpan<byte> code, int end, uint size, out int start)
     {
-        if (end >= 3 && code[end - 3] == InstructionsX86.Group1Immediate8 &&
+        if (end >= 3 &&
+            code[end - 3] == InstructionsX86.Group1Immediate8 &&
             code[end - 2] == InstructionsX86.ModRmAddEsp && code[end - 1] == size)
         {
             start = end - 3;
             return true;
         }
-        if (end >= 6 && code[end - 6] == InstructionsX86.Group1Immediate32 &&
-            code[end - 5] == InstructionsX86.ModRmAddEsp && ReadUInt32(code[(end - 4)..]) == size)
+        if (end >= 6 &&
+            code[end - 6] == InstructionsX86.Group1Immediate32 &&
+            code[end - 5] == InstructionsX86.ModRmAddEsp && BinaryPrimitives.ReadUInt32LittleEndian(code[(end - 4)..]) == size)
         {
             start = end - 6;
             return true;
@@ -148,7 +154,7 @@ static class UnwindX86
         if (code.Length >= 6 && code[0] == InstructionsX86.Group1Immediate32 && code[1] == InstructionsX86.ModRmSubEsp)
         {
             size = 6;
-            allocationSize = ReadUInt32(code[2..]);
+            allocationSize = BinaryPrimitives.ReadUInt32LittleEndian(code[2..]);
             if (allocationSize > int.MaxValue)
                 allocationSize = 0;
             return true;
@@ -208,9 +214,6 @@ static class UnwindX86
         offset = end;
         return true;
     }
-
-    static uint ReadUInt32(ReadOnlySpan<byte> value) =>
-        (uint)(value[0] | value[1] << 8 | value[2] << 16 | value[3] << 24);
 
     public readonly record struct UnwindInfo(int PrologueSize, int FrameRegister);
     public readonly record struct UnwindOperation(byte CodeOffset, UnwindOperationKind Kind, byte Register, uint Value);

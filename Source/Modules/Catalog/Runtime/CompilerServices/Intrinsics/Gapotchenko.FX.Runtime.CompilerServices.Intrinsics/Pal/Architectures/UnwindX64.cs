@@ -5,6 +5,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using System.Buffers.Binary;
+
 using Instructions = Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.InstructionsX64;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
@@ -126,7 +128,7 @@ static class UnwindX64
             code[end - 7] == Instructions.RexW &&
             code[end - 6] == Instructions.Group1Immediate32 &&
             code[end - 5] == Instructions.ModRmAddRsp &&
-            ReadUInt32(code[(end - 4)..]) == allocationSize)
+            BinaryPrimitives.ReadUInt32LittleEndian(code[(end - 4)..]) == allocationSize)
         {
             start = end - 7;
             return true;
@@ -233,7 +235,7 @@ static class UnwindX64
             code[2] == Instructions.ModRmSubRsp)
         {
             instructionSize = 7;
-            allocationSize = ReadUInt32(code[3..]);
+            allocationSize = BinaryPrimitives.ReadUInt32LittleEndian(code[3..]);
             if (allocationSize > int.MaxValue)
                 allocationSize = 0;
             return true;
@@ -272,7 +274,7 @@ static class UnwindX64
             code[2] == Instructions.ModRmLeaRbpRspDisp32 &&
             code[3] == Instructions.SibRsp)
         {
-            uint offset = ReadUInt32(code[4..]);
+            uint offset = BinaryPrimitives.ReadUInt32LittleEndian(code[4..]);
             if (offset > int.MaxValue)
                 return false;
             instructionSize = 8;
@@ -321,9 +323,6 @@ static class UnwindX64
 
         return false;
     }
-
-    static uint ReadUInt32(ReadOnlySpan<byte> value) =>
-        (uint)(value[0] | value[1] << 8 | value[2] << 16 | value[3] << 24);
 
     public readonly record struct UnwindInfo(
         int PrologueSize,
