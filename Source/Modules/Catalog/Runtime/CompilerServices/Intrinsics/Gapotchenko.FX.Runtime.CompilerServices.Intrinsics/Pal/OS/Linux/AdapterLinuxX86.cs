@@ -21,27 +21,39 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 #endif
 sealed class AdapterLinuxX86 : AdapterX86
 {
-    protected override PatchResult ValidateCode(ReadOnlySpan<byte> code)
+    protected override UnwindX86.AnalysisLevel UnwindAnalysisLevel =>
+        UnwindX86.AnalysisLevel.EpilogueOperations;
+
+    protected override UnwindX86.Analysis AnalyzeCode(
+        ReadOnlySpan<byte> code,
+        Span<UnwindX86.UnwindOperation> unwindOperations,
+        Span<UnwindX86.EpilogueOperation> epilogueOperations)
     {
-        return DwarfUnwindX86.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
+        return DwarfUnwindX86.Analyze(code, unwindOperations, epilogueOperations);
+    }
+
+    protected override PatchResult ValidateCode(in UnwindX86.Analysis analysis)
+    {
+        return analysis.Result == UnwindAnalysisResult.Unsupported ?
             PatchResult.UnsupportedUnwindPrologue :
             PatchResult.Success;
     }
 
-    protected override bool RequiresTrampoline(ReadOnlySpan<byte> code) =>
-        DwarfUnwindX86.Analyze(code, out _) == UnwindAnalysisResult.Supported;
+    protected override bool RequiresTrampoline(in UnwindX86.Analysis analysis)
+    {
+        return analysis.Result == UnwindAnalysisResult.Supported;
+    }
 
-    protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code)
+    protected override int GetTrampolineAllocationSize(
+        ReadOnlySpan<byte> code,
+        in UnwindX86.Analysis analysis)
     {
         int codeSize = checked(code.Length + 1);
-        var result = DwarfUnwindX86.Analyze(code, out var info);
-        if (result == UnwindAnalysisResult.Leaf)
+        if (analysis.Result == UnwindAnalysisResult.Leaf)
             return codeSize;
-        if (result != UnwindAnalysisResult.Supported)
-            throw new InvalidOperationException("The intrinsic has an unsupported Linux x86 unwind prologue.");
 
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
-        return checked(unwindOffset + DwarfUnwindX86.GetSize(code, info) + sizeof(uint));
+        return checked(unwindOffset + DwarfUnwindX86.GetSize(analysis) + sizeof(uint));
     }
 
     protected override unsafe void GetMethodInstructions(
@@ -67,20 +79,19 @@ sealed class AdapterLinuxX86 : AdapterX86
         WriteCodeCore(destination, code);
     }
 
-    protected override unsafe void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code)
+    protected override unsafe void WriteTrampoline(
+        Span<byte> destination,
+        ReadOnlySpan<byte> code,
+        in UnwindX86.Analysis analysis)
     {
-        var result = DwarfUnwindX86.Analyze(code, out var info);
-        if (result == UnwindAnalysisResult.Leaf)
+        if (analysis.Result == UnwindAnalysisResult.Leaf)
         {
             WriteCodeCore(destination, code);
             return;
         }
-        if (result != UnwindAnalysisResult.Supported)
-            throw new InvalidOperationException("The intrinsic has an unsupported Linux x86 unwind prologue.");
-
         int codeSize = checked(code.Length + 1);
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
-        int unwindSize = DwarfUnwindX86.GetSize(code, info);
+        int unwindSize = DwarfUnwindX86.GetSize(analysis);
         destination = destination[..checked(unwindOffset + unwindSize + sizeof(uint))];
 
         ref byte baseAddress = ref MemoryMarshal.GetReference(destination);
@@ -90,7 +101,7 @@ sealed class AdapterLinuxX86 : AdapterX86
             code.CopyTo(destination);
             destination[code.Length] = InstructionsX86.Ret;
             destination[codeSize..unwindOffset].Clear();
-            DwarfUnwindX86.Write(unwindDestination, code, info, Unsafe.AsPointer(ref baseAddress));
+            DwarfUnwindX86.Write(unwindDestination, code, analysis, Unsafe.AsPointer(ref baseAddress));
             destination[(unwindOffset + unwindSize)..].Clear();
             scope.FlushInstructions();
         }

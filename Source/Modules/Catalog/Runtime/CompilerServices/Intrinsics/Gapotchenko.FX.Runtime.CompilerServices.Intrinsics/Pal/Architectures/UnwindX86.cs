@@ -14,13 +14,15 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 /// </summary>
 static class UnwindX86
 {
-    public static UnwindAnalysisResult Analyze(ReadOnlySpan<byte> code, out UnwindInfo info)
+    public static Analysis Analyze(
+        ReadOnlySpan<byte> code,
+        Span<UnwindOperation> unwindOperations)
     {
-        Span<UnwindOperation> operations = stackalloc UnwindOperation[MaximumOperationCount];
-        return Analyze(code, operations, out _, out info);
+        var result = Analyze(code, unwindOperations, out int operationCount, out var info);
+        return new(result, info, unwindOperations[..operationCount]);
     }
 
-    public static UnwindAnalysisResult Analyze(
+    static UnwindAnalysisResult Analyze(
         ReadOnlySpan<byte> code,
         Span<UnwindOperation> operations,
         out int operationCount,
@@ -217,6 +219,27 @@ static class UnwindX86
 
     public readonly record struct UnwindInfo(int PrologueSize, int FrameRegister);
     public readonly record struct UnwindOperation(byte CodeOffset, UnwindOperationKind Kind, byte Register, uint Value);
+    public readonly record struct EpilogueOperation(int Start, int End, int OperationIndex);
     public enum UnwindOperationKind { PushNonvolatile, StackAllocation, SetFramePointer }
+
+    public readonly ref struct Analysis(
+        UnwindAnalysisResult result,
+        UnwindInfo info,
+        ReadOnlySpan<UnwindOperation> unwindOperations,
+        ReadOnlySpan<EpilogueOperation> epilogueOperations = default)
+    {
+        public UnwindAnalysisResult Result { get; init; } = result;
+        public UnwindInfo Info { get; } = info;
+        public ReadOnlySpan<UnwindOperation> UnwindOperations { get; } = unwindOperations;
+        public ReadOnlySpan<EpilogueOperation> EpilogueOperations { get; init; } = epilogueOperations;
+    }
+
+    public enum AnalysisLevel
+    {
+        None,
+        UnwindOperations,
+        EpilogueOperations
+    }
+
     public const int MaximumOperationCount = byte.MaxValue;
 }

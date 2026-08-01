@@ -15,7 +15,30 @@ abstract class AdapterX86 : AdapterX86Base
 {
     public sealed override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
-        var codeValidationResult = ValidateCode(code);
+        var level = UnwindAnalysisLevel;
+        if (level >= UnwindX86.AnalysisLevel.UnwindOperations)
+        {
+            Span<UnwindX86.UnwindOperation> unwindOperations =
+                stackalloc UnwindX86.UnwindOperation[UnwindX86.MaximumOperationCount];
+
+            scoped Span<UnwindX86.EpilogueOperation> epilogueOperations;
+            if (level >= UnwindX86.AnalysisLevel.EpilogueOperations)
+                epilogueOperations = stackalloc UnwindX86.EpilogueOperation[UnwindX86.MaximumOperationCount];
+            else
+                epilogueOperations = [];
+
+            var analysis = AnalyzeCode(code, unwindOperations, epilogueOperations);
+            return PatchMethod(method, code, analysis);
+        }
+        else
+        {
+            return PatchMethod(method, code, default);
+        }
+    }
+
+    PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code, in UnwindX86.Analysis analysis)
+    {
+        var codeValidationResult = ValidateCode(analysis);
         if (codeValidationResult != PatchResult.Success)
             return codeValidationResult;
 
@@ -36,7 +59,7 @@ abstract class AdapterX86 : AdapterX86Base
         finally
 #endif
         {
-            result = ApplyPatch(instructions, code);
+            result = ApplyPatch(instructions, code, analysis);
         }
         return result;
     }
@@ -46,10 +69,13 @@ abstract class AdapterX86 : AdapterX86Base
         out Span<byte> instructions,
         out bool hasExactBoundaries);
 
-    PatchResult ApplyPatch(Span<byte> instructions, ReadOnlySpan<byte> code)
+    PatchResult ApplyPatch(
+        Span<byte> instructions,
+        ReadOnlySpan<byte> code,
+        in UnwindX86.Analysis analysis)
     {
         int patchSize = checked(code.Length + 1);
-        if (!RequiresTrampoline(code) && patchSize <= instructions.Length)
+        if (!RequiresTrampoline(analysis) && patchSize <= instructions.Length)
         {
             var destination = instructions[..patchSize];
             if (!IsWriteAllowed(destination))
@@ -65,8 +91,8 @@ abstract class AdapterX86 : AdapterX86Base
         if (!IsWriteAllowed(redirection))
             return PatchResult.WriteProtected;
 
-        var trampoline = AllocateTrampoline(GetTrampolineAllocationSize(code));
-        WriteTrampoline(trampoline, code);
+        var trampoline = AllocateTrampoline(GetTrampolineAllocationSize(code, analysis));
+        WriteTrampoline(trampoline, code, analysis);
         WriteRedirection(redirection, trampoline);
         return PatchResult.Success;
     }
@@ -94,13 +120,44 @@ abstract class AdapterX86 : AdapterX86Base
     ];
 
     protected abstract bool IsWriteAllowed(Span<byte> span);
-    protected virtual PatchResult ValidateCode(ReadOnlySpan<byte> code) => PatchResult.Success;
-    protected virtual bool RequiresTrampoline(ReadOnlySpan<byte> code) => false;
-    protected virtual int GetTrampolineAllocationSize(ReadOnlySpan<byte> code) =>
-        checked(code.Length + 1);
+
+    protected virtual UnwindX86.AnalysisLevel UnwindAnalysisLevel => UnwindX86.AnalysisLevel.None;
+
+    protected virtual UnwindX86.Analysis AnalyzeCode(
+        ReadOnlySpan<byte> code,
+        Span<UnwindX86.UnwindOperation> unwindOperations,
+        Span<UnwindX86.EpilogueOperation> epilogueOperations)
+    {
+        return UnwindX86.Analyze(code, unwindOperations);
+    }
+
+    protected virtual PatchResult ValidateCode(in UnwindX86.Analysis analysis)
+    {
+        return PatchResult.Success;
+    }
+
+    protected virtual bool RequiresTrampoline(in UnwindX86.Analysis analysis)
+    {
+        return false;
+    }
+
+    protected virtual int GetTrampolineAllocationSize(
+        ReadOnlySpan<byte> code,
+        in UnwindX86.Analysis analysis)
+    {
+        return checked(code.Length + sizeof(byte) /* RET */);
+    }
+
     protected abstract Span<byte> AllocateTrampoline(int size);
     protected abstract void WriteCode(Span<byte> destination, ReadOnlySpan<byte> code);
-    protected virtual void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code) =>
+
+    protected virtual void WriteTrampoline(
+        Span<byte> destination,
+        ReadOnlySpan<byte> code,
+        in UnwindX86.Analysis analysis)
+    {
         WriteCode(destination, code);
+    }
+
     protected abstract void WriteRedirection(Span<byte> destination, Span<byte> trampoline);
 }

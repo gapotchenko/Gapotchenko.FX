@@ -16,59 +16,18 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Formats.Dwarf;
 /// </summary>
 static class DwarfUnwindX86
 {
-    public static UnwindAnalysisResult Analyze(ReadOnlySpan<byte> code, out UnwindX86.UnwindInfo info)
+    public static UnwindX86.Analysis Analyze(
+        ReadOnlySpan<byte> code,
+        Span<UnwindX86.UnwindOperation> unwindOperations,
+        Span<UnwindX86.EpilogueOperation> epilogueOperations)
     {
-        Span<UnwindX86.UnwindOperation> operations = stackalloc UnwindX86.UnwindOperation[UnwindX86.MaximumOperationCount];
-        Span<EpilogueOperation> epilogue = stackalloc EpilogueOperation[UnwindX86.MaximumOperationCount];
-        return Analyze(code, operations, out _, epilogue, out _, out info);
-    }
+        var analysis = UnwindX86.Analyze(code, unwindOperations);
+        if (analysis.Result != UnwindAnalysisResult.Supported)
+            return analysis;
 
-    public static int GetSize(ReadOnlySpan<byte> code, UnwindX86.UnwindInfo expectedInfo)
-    {
-        Span<UnwindX86.UnwindOperation> operations = stackalloc UnwindX86.UnwindOperation[UnwindX86.MaximumOperationCount];
-        Span<EpilogueOperation> epilogue = stackalloc EpilogueOperation[UnwindX86.MaximumOperationCount];
-        var result = Analyze(code, operations, out int operationCount, epilogue, out int epilogueCount, out var info);
-        if (result != UnwindAnalysisResult.Supported || info != expectedInfo)
-            throw new ArgumentException("The code does not have a supported x86 DWARF unwind prologue.", nameof(code));
-
-        var serializer = new DwarfSerializer();
-        WriteInstructions(ref serializer, operations[..operationCount], epilogue[..epilogueCount]);
-        return DwarfSerializer.GetFdeSize(CieSize, serializer.Position);
-    }
-
-    public static unsafe void Write(Span<byte> destination, ReadOnlySpan<byte> code,
-        UnwindX86.UnwindInfo expectedInfo, void* codeAddress)
-    {
-        Span<UnwindX86.UnwindOperation> operations = stackalloc UnwindX86.UnwindOperation[UnwindX86.MaximumOperationCount];
-        Span<EpilogueOperation> epilogue = stackalloc EpilogueOperation[UnwindX86.MaximumOperationCount];
-        var result = Analyze(code, operations, out int operationCount, epilogue, out int epilogueCount, out var info);
-        if (result != UnwindAnalysisResult.Supported || info != expectedInfo)
-            throw new ArgumentException("The code does not have a supported x86 DWARF unwind prologue.", nameof(code));
-
-        int size = GetSize(code, info);
-        destination = destination[..size];
-        byte* unwindAddress = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(destination));
-        Cie.CopyTo(destination);
-        var serializer = new DwarfSerializer(destination[CieSize..]);
-        int fdeSize = size - CieSize;
-        serializer.WriteFdeHeader(CieSize, unwindAddress, codeAddress, checked(code.Length + 1), fdeSize);
-        WriteInstructions(ref serializer, operations[..operationCount], epilogue[..epilogueCount]);
-        serializer.CompleteFde(fdeSize);
-    }
-
-    static UnwindAnalysisResult Analyze(ReadOnlySpan<byte> code,
-        Span<UnwindX86.UnwindOperation> operations, out int operationCount,
-        Span<EpilogueOperation> epilogue, out int epilogueCount,
-        out UnwindX86.UnwindInfo info)
-    {
-        epilogueCount = 0;
-        var result = UnwindX86.Analyze(code, operations, out operationCount, out info);
-        if (result != UnwindAnalysisResult.Supported)
-            return result;
-
-        operations = operations[..operationCount];
+        var analyzedUnwindOperations = analysis.UnwindOperations;
         int cfaOffset = InitialCfaOffset;
-        foreach (ref readonly var operation in operations)
+        foreach (ref readonly var operation in analyzedUnwindOperations)
         {
             switch (operation.Kind)
             {
@@ -81,13 +40,14 @@ static class DwarfUnwindX86
             }
         }
 
+        int epilogueOperationCount = 0;
         int end = code.Length;
         // Decode backwards from the end of the method. Stack operations are
         // undone in reverse execution order, so they match prologue operations
         // in their original order here.
-        for (int i = 0; i < operations.Length; ++i)
+        for (int i = 0; i < analyzedUnwindOperations.Length; ++i)
         {
-            ref readonly var operation = ref operations[i];
+            ref readonly var operation = ref analyzedUnwindOperations[i];
             int start;
             switch (operation.Kind)
             {
@@ -95,26 +55,52 @@ static class DwarfUnwindX86
                     continue;
                 case UnwindX86.UnwindOperationKind.StackAllocation:
                     if (!UnwindX86.TryDecodeStackDeallocationEndingAt(code, end, operation.Value, out start))
-                        return UnwindAnalysisResult.Unsupported;
+                        return analysis with { Result = UnwindAnalysisResult.Unsupported };
                     break;
                 case UnwindX86.UnwindOperationKind.PushNonvolatile:
                     if (!UnwindX86.TryDecodePopNonvolatileEndingAt(code, end, operation.Register, out start))
-                        return UnwindAnalysisResult.Unsupported;
+                        return analysis with { Result = UnwindAnalysisResult.Unsupported };
                     break;
                 default:
-                    return UnwindAnalysisResult.Unsupported;
+                    return analysis with { Result = UnwindAnalysisResult.Unsupported };
             }
-            if (start < info.PrologueSize || epilogueCount >= epilogue.Length)
-                return UnwindAnalysisResult.Unsupported;
-            epilogue[epilogueCount++] = new(start, end, i);
+            if (start < analysis.Info.PrologueSize || epilogueOperationCount >= epilogueOperations.Length)
+                return analysis with { Result = UnwindAnalysisResult.Unsupported };
+            epilogueOperations[epilogueOperationCount++] = new(start, end, i);
             end = start;
         }
-        return UnwindAnalysisResult.Supported;
+
+        return analysis with { EpilogueOperations = epilogueOperations[..epilogueOperationCount] };
     }
 
-    static void WriteInstructions(scoped ref DwarfSerializer serializer,
-        scoped ReadOnlySpan<UnwindX86.UnwindOperation> operations,
-        scoped ReadOnlySpan<EpilogueOperation> epilogue)
+    public static int GetSize(in UnwindX86.Analysis analysis)
+    {
+        var serializer = new DwarfSerializer();
+        WriteInstructions(ref serializer, analysis.UnwindOperations, analysis.EpilogueOperations);
+        return DwarfSerializer.GetFdeSize(CieSize, serializer.Position);
+    }
+
+    public static unsafe void Write(
+        Span<byte> destination,
+        ReadOnlySpan<byte> code,
+        in UnwindX86.Analysis analysis,
+        void* codeAddress)
+    {
+        int size = GetSize(analysis);
+        destination = destination[..size];
+        byte* unwindAddress = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(destination));
+        Cie.CopyTo(destination);
+        var serializer = new DwarfSerializer(destination[CieSize..]);
+        int fdeSize = size - CieSize;
+        serializer.WriteFdeHeader(CieSize, unwindAddress, codeAddress, checked(code.Length + 1), fdeSize);
+        WriteInstructions(ref serializer, analysis.UnwindOperations, analysis.EpilogueOperations);
+        serializer.CompleteFde(fdeSize);
+    }
+
+    static void WriteInstructions(
+        ref DwarfSerializer serializer,
+        ReadOnlySpan<UnwindX86.UnwindOperation> operations,
+        ReadOnlySpan<UnwindX86.EpilogueOperation> epilogue)
     {
         int location = 0;
         int espCfaOffset = InitialCfaOffset;
@@ -178,8 +164,6 @@ static class DwarfUnwindX86
             nextOperationIndex = item.OperationIndex - 1;
         }
     }
-
-    readonly record struct EpilogueOperation(int Start, int End, int OperationIndex);
 
     static ReadOnlySpan<byte> Cie =>
     [
