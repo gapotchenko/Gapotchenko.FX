@@ -23,29 +23,37 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #endif
 sealed class AdapterWindowsX64 : AdapterX64
 {
-    protected override PatchResult ValidateCode(ReadOnlySpan<byte> code)
+    protected override bool UsesUnwindAnalysis => true;
+
+    protected override UnwindX64.Analysis AnalyzeCode(
+        ReadOnlySpan<byte> code,
+        Span<UnwindX64.UnwindOperation> operations) =>
+        UnwindWindowsX64.Analyze(code, operations);
+
+    protected override PatchResult ValidateCode(
+        ReadOnlySpan<byte> code,
+        scoped ref readonly UnwindX64.Analysis analysis)
     {
-        return UnwindWindowsX64.Analyze(code, out _) == UnwindAnalysisResult.Unsupported ?
+        return analysis.Result == UnwindAnalysisResult.Unsupported ?
             PatchResult.UnsupportedUnwindPrologue :
             PatchResult.Success;
     }
 
-    protected override bool RequiresTrampoline(ReadOnlySpan<byte> code)
-    {
-        return UnwindWindowsX64.Analyze(code, out _) == UnwindAnalysisResult.Supported;
-    }
+    protected override bool RequiresTrampoline(
+        ReadOnlySpan<byte> code,
+        scoped ref readonly UnwindX64.Analysis analysis) =>
+        analysis.Result == UnwindAnalysisResult.Supported;
 
-    protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code)
+    protected override int GetTrampolineAllocationSize(
+        ReadOnlySpan<byte> code,
+        scoped ref readonly UnwindX64.Analysis analysis)
     {
         int codeSize = checked(code.Length + 1);
-        var analysisResult = UnwindWindowsX64.Analyze(code, out int prologueSize);
-        if (analysisResult == UnwindAnalysisResult.Leaf)
+        if (analysis.Result == UnwindAnalysisResult.Leaf)
             return codeSize;
-        if (analysisResult != UnwindAnalysisResult.Supported)
-            throw new InvalidOperationException("The intrinsic has an unsupported Windows x64 unwind prologue.");
 
         int unwindInfoOffset = MemoryArithmetics.Align4(codeSize);
-        int unwindInfoSize = UnwindWindowsX64.GetSize(code, prologueSize);
+        int unwindInfoSize = UnwindWindowsX64.GetSize(in analysis);
         return checked(unwindInfoOffset + unwindInfoSize + Unsafe.SizeOf<NativeMethods.RuntimeFunctionX64>());
     }
 
@@ -102,20 +110,20 @@ sealed class AdapterWindowsX64 : AdapterX64
     protected override void WriteCode(Span<byte> destination, ReadOnlySpan<byte> code) =>
         WriteCodeCore(destination, code);
 
-    protected override unsafe void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code)
+    protected override unsafe void WriteTrampoline(
+        Span<byte> destination,
+        ReadOnlySpan<byte> code,
+        scoped ref readonly UnwindX64.Analysis analysis)
     {
-        var analysisResult = UnwindWindowsX64.Analyze(code, out int prologueSize);
-        if (analysisResult == UnwindAnalysisResult.Leaf)
+        if (analysis.Result == UnwindAnalysisResult.Leaf)
         {
             WriteCodeCore(destination, code);
             return;
         }
-        if (analysisResult != UnwindAnalysisResult.Supported)
-            throw new InvalidOperationException("The intrinsic has an unsupported Windows x64 unwind prologue.");
 
         int codeSize = checked(code.Length + 1);
         int unwindInfoOffset = MemoryArithmetics.Align4(codeSize);
-        int unwindInfoSize = UnwindWindowsX64.GetSize(code, prologueSize);
+        int unwindInfoSize = UnwindWindowsX64.GetSize(in analysis);
         int runtimeFunctionOffset = checked(unwindInfoOffset + unwindInfoSize);
         int allocationSize = checked(runtimeFunctionOffset + Unsafe.SizeOf<NativeMethods.RuntimeFunctionX64>());
         destination = destination[..allocationSize];
@@ -128,7 +136,7 @@ sealed class AdapterWindowsX64 : AdapterX64
         {
             code.CopyTo(destination);
             destination[code.Length] = InstructionsX64.Ret;
-            UnwindWindowsX64.Write(destination[unwindInfoOffset..runtimeFunctionOffset], code, prologueSize);
+            UnwindWindowsX64.Write(destination[unwindInfoOffset..runtimeFunctionOffset], in analysis);
 
             runtimeFunction.BeginAddress = 0;
             runtimeFunction.EndAddress = checked((uint)codeSize);

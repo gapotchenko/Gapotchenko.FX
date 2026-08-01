@@ -15,7 +15,24 @@ abstract class AdapterX64 : AdapterX86Base
 {
     public sealed override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
-        var codeValidationResult = ValidateCode(code);
+        if (UsesUnwindAnalysis)
+        {
+            Span<UnwindX64.UnwindOperation> operations =
+                stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
+            var analysis = AnalyzeCode(code, operations);
+            return PatchMethod(method, code, ref analysis);
+        }
+
+        var emptyAnalysis = default(UnwindX64.Analysis);
+        return PatchMethod(method, code, ref emptyAnalysis);
+    }
+
+    PatchResult PatchMethod(
+        MethodInfo method,
+        ReadOnlySpan<byte> code,
+        scoped ref UnwindX64.Analysis analysis)
+    {
+        var codeValidationResult = ValidateCode(code, ref analysis);
         if (codeValidationResult != PatchResult.Success)
             return codeValidationResult;
 
@@ -36,7 +53,7 @@ abstract class AdapterX64 : AdapterX86Base
         finally
 #endif
         {
-            result = ApplyPatch(instructions, entryPoint, code);
+            result = ApplyPatch(instructions, entryPoint, code, ref analysis);
         }
         return result;
     }
@@ -72,10 +89,14 @@ abstract class AdapterX64 : AdapterX86Base
         return p;
     }
 
-    PatchResult ApplyPatch(Span<byte> instructions, Span<byte> entryPoint, ReadOnlySpan<byte> code)
+    PatchResult ApplyPatch(
+        Span<byte> instructions,
+        Span<byte> entryPoint,
+        ReadOnlySpan<byte> code,
+        scoped ref UnwindX64.Analysis analysis)
     {
         int patchSize = checked(code.Length + 1);
-        if (!RequiresTrampoline(code) && patchSize <= instructions.Length)
+        if (!RequiresTrampoline(code, ref analysis) && patchSize <= instructions.Length)
         {
             var destination = instructions[..patchSize];
             if (!IsWriteAllowed(destination))
@@ -104,10 +125,13 @@ abstract class AdapterX64 : AdapterX86Base
                 return PatchResult.WriteProtected;
         }
 
-        if (!TryAllocateTrampoline(redirection, GetTrampolineAllocationSize(code), out var trampoline))
+        if (!TryAllocateTrampoline(
+            redirection,
+            GetTrampolineAllocationSize(code, ref analysis),
+            out var trampoline))
             return PatchResult.NoSpace;
 
-        WriteTrampoline(trampoline, code);
+        WriteTrampoline(trampoline, code, ref analysis);
         WriteRedirection(redirection, trampoline);
         if (!bodyRedirection.IsEmpty)
             WriteBodyRedirection(bodyRedirection, redirection);
@@ -143,16 +167,44 @@ abstract class AdapterX64 : AdapterX86Base
 
     protected abstract bool IsWriteAllowed(Span<byte> span);
 
+    protected virtual bool UsesUnwindAnalysis => false;
+
+    protected virtual UnwindX64.Analysis AnalyzeCode(
+        ReadOnlySpan<byte> code,
+        Span<UnwindX64.UnwindOperation> operations) =>
+        UnwindX64.Analyze(code, operations);
+
+    protected virtual PatchResult ValidateCode(
+        ReadOnlySpan<byte> code,
+        scoped ref readonly UnwindX64.Analysis analysis) =>
+        ValidateCode(code);
+
     protected virtual PatchResult ValidateCode(ReadOnlySpan<byte> code) => PatchResult.Success;
 
+    protected virtual bool RequiresTrampoline(
+        ReadOnlySpan<byte> code,
+        scoped ref readonly UnwindX64.Analysis analysis) =>
+        RequiresTrampoline(code);
+
     protected virtual bool RequiresTrampoline(ReadOnlySpan<byte> code) => false;
+
+    protected virtual int GetTrampolineAllocationSize(
+        ReadOnlySpan<byte> code,
+        scoped ref readonly UnwindX64.Analysis analysis) =>
+        GetTrampolineAllocationSize(code);
 
     protected virtual int GetTrampolineAllocationSize(ReadOnlySpan<byte> code) =>
         checked(code.Length + 1);
 
     protected abstract bool TryAllocateTrampoline(Span<byte> redirection, int size, out Span<byte> trampoline);
     protected abstract void WriteCode(Span<byte> destination, ReadOnlySpan<byte> code);
-    protected abstract void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code);
+    protected virtual void WriteTrampoline(
+        Span<byte> destination,
+        ReadOnlySpan<byte> code,
+        scoped ref readonly UnwindX64.Analysis analysis) =>
+        WriteTrampoline(destination, code);
+    protected virtual void WriteTrampoline(Span<byte> destination, ReadOnlySpan<byte> code) =>
+        WriteCode(destination, code);
 
     protected abstract int RedirectionSize { get; }
 

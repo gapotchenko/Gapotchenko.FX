@@ -18,53 +18,35 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Windows;
 #endif
 static class UnwindWindowsX64
 {
-    public static UnwindAnalysisResult Analyze(ReadOnlySpan<byte> code, out int prologueSize)
+    public static UnwindX64.Analysis Analyze(
+        ReadOnlySpan<byte> code,
+        Span<UnwindX64.UnwindOperation> operations)
     {
-        Span<UnwindX64.UnwindOperation> operations = stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
-        var result = UnwindX64.Analyze(code, operations, out int operationCount, out var info);
-        prologueSize = info.PrologueSize;
-        if (result != UnwindAnalysisResult.Supported)
-            return result;
+        var analysis = UnwindX64.Analyze(code, operations);
+        if (analysis.Result != UnwindAnalysisResult.Supported)
+            return analysis;
 
-        return IsSupported(operations[..operationCount], info) ?
-            UnwindAnalysisResult.Supported :
-            UnwindAnalysisResult.Unsupported;
+        return IsSupported(analysis.Operations, analysis.Info) ?
+            analysis :
+            analysis with { Result = UnwindAnalysisResult.Unsupported };
     }
 
-    public static int GetSize(ReadOnlySpan<byte> code, int prologueSize)
+    public static int GetSize(scoped ref readonly UnwindX64.Analysis analysis)
     {
-        Span<UnwindX64.UnwindOperation> operations = stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
-        var result = UnwindX64.Analyze(code, operations, out int operationCount, out var info);
-        operations = operations[..operationCount];
-        if (result != UnwindAnalysisResult.Supported ||
-            info.PrologueSize != prologueSize ||
-            !IsSupported(operations, info))
-        {
-            throw new ArgumentException("The code does not have a supported Windows x64 prologue.", nameof(code));
-        }
-
-        return HeaderSize + UnwindCodeSize * AlignUnwindCodeCount(CountUnwindCodes(operations));
+        return HeaderSize + UnwindCodeSize * AlignUnwindCodeCount(CountUnwindCodes(analysis.Operations));
     }
 
-    public static void Write(Span<byte> destination, ReadOnlySpan<byte> code, int prologueSize)
+    public static void Write(Span<byte> destination, scoped ref readonly UnwindX64.Analysis analysis)
     {
-        Span<UnwindX64.UnwindOperation> operations = stackalloc UnwindX64.UnwindOperation[UnwindX64.MaximumOperationCount];
-        var result = UnwindX64.Analyze(code, operations, out int operationCount, out var info);
-        operations = operations[..operationCount];
-        if (result != UnwindAnalysisResult.Supported ||
-            info.PrologueSize != prologueSize ||
-            !IsSupported(operations, info))
-        {
-            throw new ArgumentException("The code does not have a supported Windows x64 prologue.", nameof(code));
-        }
-
+        var operations = analysis.Operations;
+        var info = analysis.Info;
         int unwindCodeCount = CountUnwindCodes(operations);
         int size = HeaderSize + UnwindCodeSize * AlignUnwindCodeCount(unwindCodeCount);
         destination = destination[..size];
         destination.Clear();
 
         destination[0] = Version;
-        destination[1] = checked((byte)prologueSize);
+        destination[1] = checked((byte)info.PrologueSize);
         destination[2] = checked((byte)unwindCodeCount);
         destination[3] = checked((byte)(info.FrameOffset / FrameOffsetUnit << 4 | info.FrameRegister));
 
