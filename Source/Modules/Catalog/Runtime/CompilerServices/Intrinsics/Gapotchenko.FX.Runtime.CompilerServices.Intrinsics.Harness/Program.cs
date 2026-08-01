@@ -137,6 +137,7 @@ static class Program
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.Arm)
         {
+            // Leaf functions support only.
             Assert.AreEqual(EdgeCaseOperations.ManagedResult, EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
             Assert.AreEqual(EdgeCaseOperations.ManagedResult, EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
             Assert.AreEqual(EdgeCaseOperations.ManagedResult, EdgeCaseOperations.Unwind.FrameChainIntrinsic());
