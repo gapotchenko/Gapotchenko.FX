@@ -40,12 +40,12 @@ static class UnwindMacOSX64
         if (result != UnwindAnalysisResult.Supported || info != expectedInfo)
             throw new ArgumentException("The code does not have a supported macOS x64 unwind prologue.", nameof(code));
 
-        var writer = new Writer([]);
+        var serializer = new DwarfSerializer();
         WriteInstructions(
-            ref writer,
+            ref serializer,
             operations[..operationCount],
             epilogue[..epilogueCount]);
-        return checked(CieSize + Align4(FdeHeaderSize + writer.Position));
+        return DwarfSerializer.GetFdeSize(CieSize, serializer.Position);
     }
 
     public static unsafe void Write(
@@ -71,22 +71,19 @@ static class UnwindMacOSX64
         byte* unwindAddress = (byte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference(destination));
         Cie.CopyTo(destination);
 
-        var writer = new Writer(destination[CieSize..]);
+        var serializer = new DwarfSerializer(destination[CieSize..]);
         int fdeSize = size - CieSize;
-        writer.WriteUInt32(checked((uint)(fdeSize - sizeof(uint))));
-        writer.WriteUInt32(CiePointer);
-
-        byte* initialLocationAddress = unwindAddress + CieSize + InitialLocationOffset;
-        writer.WriteInt32(checked((int)((byte*)codeAddress - initialLocationAddress)));
-        writer.WriteInt32(checked(code.Length + 1));
-        writer.WriteByte(0); // FDE augmentation data length.
-
+        serializer.WriteFdeHeader(
+            CieSize,
+            unwindAddress,
+            codeAddress,
+            checked(code.Length + 1),
+            fdeSize);
         WriteInstructions(
-            ref writer,
+            ref serializer,
             operations[..operationCount],
             epilogue[..epilogueCount]);
-        while (writer.Position < fdeSize)
-            writer.WriteByte(DwCfaNop);
+        serializer.CompleteFde(fdeSize);
     }
 
     static UnwindAnalysisResult Analyze(
@@ -157,7 +154,7 @@ static class UnwindMacOSX64
     }
 
     static void WriteInstructions(
-        scoped ref Writer writer,
+        scoped ref DwarfSerializer serializer,
         scoped ReadOnlySpan<UnwindX64.UnwindOperation> operations,
         scoped ReadOnlySpan<EpilogueOperation> epilogue)
     {
@@ -167,7 +164,7 @@ static class UnwindMacOSX64
 
         foreach (ref readonly var operation in operations)
         {
-            writer.AdvanceLocation(operation.CodeOffset - location);
+            serializer.AdvanceLocation(operation.CodeOffset - location);
             location = operation.CodeOffset;
 
             switch (operation.Kind)
@@ -175,8 +172,8 @@ static class UnwindMacOSX64
                 case UnwindX64.UnwindOperationKind.PushNonvolatile:
                     rspCfaOffset = checked(rspCfaOffset + StackSlotSize);
                     if (cfaRegister == InstructionsX64.RegisterSp)
-                        writer.DefCfaOffset(rspCfaOffset);
-                    writer.RegisterOffset(
+                        serializer.DefCfaOffset(rspCfaOffset);
+                    serializer.RegisterOffset(
                         GetDwarfRegister(operation.Register),
                         checked((uint)(rspCfaOffset / StackSlotSize)));
                     break;
@@ -184,12 +181,12 @@ static class UnwindMacOSX64
                 case UnwindX64.UnwindOperationKind.StackAllocation:
                     rspCfaOffset = checked(rspCfaOffset + (int)operation.Value);
                     if (cfaRegister == InstructionsX64.RegisterSp)
-                        writer.DefCfaOffset(rspCfaOffset);
+                        serializer.DefCfaOffset(rspCfaOffset);
                     break;
 
                 case UnwindX64.UnwindOperationKind.SetFramePointer:
                     cfaRegister = InstructionsX64.RegisterBp;
-                    writer.DefCfa(
+                    serializer.DefCfa(
                         GetDwarfRegister(cfaRegister),
                         checked((uint)(rspCfaOffset - operation.Value)));
                     break;
@@ -212,13 +209,13 @@ static class UnwindMacOSX64
 
             if (leavesFramePointer)
             {
-                writer.AdvanceLocation(item.Start - location);
+                serializer.AdvanceLocation(item.Start - location);
                 location = item.Start;
                 cfaRegister = InstructionsX64.RegisterSp;
-                writer.DefCfa(GetDwarfRegister(cfaRegister), checked((uint)rspCfaOffset));
+                serializer.DefCfa(GetDwarfRegister(cfaRegister), checked((uint)rspCfaOffset));
             }
 
-            writer.AdvanceLocation(item.End - location);
+            serializer.AdvanceLocation(item.End - location);
             location = item.End;
             ref readonly var operation = ref operations[item.OperationIndex];
             switch (operation.Kind)
@@ -226,14 +223,14 @@ static class UnwindMacOSX64
                 case UnwindX64.UnwindOperationKind.StackAllocation:
                     rspCfaOffset = checked(rspCfaOffset - (int)operation.Value);
                     if (cfaRegister == InstructionsX64.RegisterSp)
-                        writer.DefCfaOffset(rspCfaOffset);
+                        serializer.DefCfaOffset(rspCfaOffset);
                     break;
 
                 case UnwindX64.UnwindOperationKind.PushNonvolatile:
-                    writer.SameValue(GetDwarfRegister(operation.Register));
+                    serializer.SameValue(GetDwarfRegister(operation.Register));
                     rspCfaOffset = checked(rspCfaOffset - StackSlotSize);
                     if (cfaRegister == InstructionsX64.RegisterSp)
-                        writer.DefCfaOffset(rspCfaOffset);
+                        serializer.DefCfaOffset(rspCfaOffset);
                     break;
             }
 
@@ -255,106 +252,6 @@ static class UnwindMacOSX64
             >= 8 and <= 15 => (uint)register,
             _ => throw new ArgumentOutOfRangeException(nameof(register))
         };
-
-    static int Align4(int value) => checked((value + 3) & ~3);
-
-    ref struct Writer
-    {
-        public Writer(Span<byte> destination)
-        {
-            m_Destination = destination;
-            Position = 0;
-        }
-
-        public int Position { get; private set; }
-
-        public void AdvanceLocation(int offset)
-        {
-            if (offset == 0)
-                return;
-            if ((uint)offset <= DwCfaAdvanceLocationMask)
-            {
-                WriteByte((byte)(DwCfaAdvanceLocation | offset));
-            }
-            else if ((uint)offset <= byte.MaxValue)
-            {
-                WriteByte(DwCfaAdvanceLocation1);
-                WriteByte((byte)offset);
-            }
-            else if ((uint)offset <= ushort.MaxValue)
-            {
-                WriteByte(DwCfaAdvanceLocation2);
-                WriteUInt16((ushort)offset);
-            }
-            else
-            {
-                WriteByte(DwCfaAdvanceLocation4);
-                WriteUInt32((uint)offset);
-            }
-        }
-
-        public void DefCfa(uint register, uint offset)
-        {
-            WriteByte(DwCfaDefCfa);
-            WriteUleb128(register);
-            WriteUleb128(offset);
-        }
-
-        public void DefCfaOffset(int offset)
-        {
-            WriteByte(DwCfaDefCfaOffset);
-            WriteUleb128(checked((uint)offset));
-        }
-
-        public void RegisterOffset(uint register, uint offset)
-        {
-            WriteByte(DwCfaOffsetExtended);
-            WriteUleb128(register);
-            WriteUleb128(offset);
-        }
-
-        public void SameValue(uint register)
-        {
-            WriteByte(DwCfaSameValue);
-            WriteUleb128(register);
-        }
-
-        public void WriteByte(byte value)
-        {
-            if (!m_Destination.IsEmpty)
-                m_Destination[Position] = value;
-            ++Position;
-        }
-
-        public void WriteUInt16(ushort value)
-        {
-            WriteByte((byte)value);
-            WriteByte((byte)(value >> 8));
-        }
-
-        public void WriteUInt32(uint value)
-        {
-            WriteUInt16((ushort)value);
-            WriteUInt16((ushort)(value >> 16));
-        }
-
-        public void WriteInt32(int value) => WriteUInt32((uint)value);
-
-        void WriteUleb128(uint value)
-        {
-            do
-            {
-                byte chunk = (byte)(value & 0x7f);
-                value >>= 7;
-                if (value != 0)
-                    chunk |= 0x80;
-                WriteByte(chunk);
-            }
-            while (value != 0);
-        }
-
-        Span<byte> m_Destination;
-    }
 
     readonly record struct EpilogueOperation(int Start, int End, int OperationIndex);
 
@@ -378,20 +275,6 @@ static class UnwindMacOSX64
     ];
 
     const int CieSize = 24;
-    const int FdeHeaderSize = 17;
-    const uint CiePointer = 28;
-    const int InitialLocationOffset = 8;
     const int InitialCfaOffset = 8;
     const int StackSlotSize = 8;
-
-    const byte DwCfaNop = 0x00;
-    const byte DwCfaAdvanceLocation1 = 0x02;
-    const byte DwCfaAdvanceLocation2 = 0x03;
-    const byte DwCfaAdvanceLocation4 = 0x04;
-    const byte DwCfaOffsetExtended = 0x05;
-    const byte DwCfaSameValue = 0x08;
-    const byte DwCfaDefCfa = 0x0c;
-    const byte DwCfaDefCfaOffset = 0x0e;
-    const byte DwCfaAdvanceLocation = 0x40;
-    const byte DwCfaAdvanceLocationMask = 0x3f;
 }
