@@ -104,10 +104,10 @@ static class EdgeCaseOperations
 
         [MachineCodeIntrinsic(
             Architecture.Arm64,
-            0xfd, 0x7b, 0xbf, 0xa9,  // STP X29,LR,[SP,#-16]!
+            0xfd, 0x7b, 0xbe, 0xa9,  // STP X29,LR,[SP,#-32]!
             0xfd, 0x03, 0x00, 0x91,  // MOV X29,SP
             0xe0, 0x03, 0x80, 0x52,  // MOV W0,31
-            0xfd, 0x7b, 0xc1, 0xa8,  // LDP X29,LR,[SP],#16
+            0xfd, 0x7b, 0xc2, 0xa8,  // LDP X29,LR,[SP],#32
             SupportedOSPlatforms = ["windows", "linux", "macos"])]
         [MachineCodeIntrinsic(
             Architecture.Arm,
