@@ -6,6 +6,7 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.x86;
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Formats.Dwarf;
 using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 using System.Reflection;

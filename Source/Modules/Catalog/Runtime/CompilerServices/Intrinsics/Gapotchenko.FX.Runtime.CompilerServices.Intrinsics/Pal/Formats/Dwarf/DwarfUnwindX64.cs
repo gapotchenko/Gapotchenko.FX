@@ -6,6 +6,7 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.x64;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

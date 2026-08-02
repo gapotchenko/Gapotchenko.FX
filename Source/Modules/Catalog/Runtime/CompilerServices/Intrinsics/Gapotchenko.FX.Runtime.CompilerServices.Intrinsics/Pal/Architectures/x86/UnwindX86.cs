@@ -7,7 +7,7 @@
 
 using System.Buffers.Binary;
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.x86;
 
 /// <summary>
 /// Analyzes x86 unwind prologues.

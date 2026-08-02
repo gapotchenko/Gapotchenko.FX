@@ -6,9 +6,9 @@
 // Year of introduction: 2026
 
 using System.Buffers.Binary;
-using Instructions = Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.InstructionsX64;
+using Instructions = Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.x64.InstructionsX64;
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.x64;
 
 /// <summary>
 /// Analyzes x64 unwind prologues.

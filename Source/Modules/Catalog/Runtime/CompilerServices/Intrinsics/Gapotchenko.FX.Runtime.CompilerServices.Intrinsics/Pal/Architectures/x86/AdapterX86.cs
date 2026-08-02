@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Reflection;
 using Gapotchenko.FX.Runtime.CompilerServices.Utils;
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.x86;
 
 abstract class AdapterX86 : AdapterX86Base
 {

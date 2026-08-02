@@ -6,6 +6,7 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.Arm.Arm32;
 using System.Reflection;
 using System.Runtime.InteropServices;
 

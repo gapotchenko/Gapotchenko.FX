@@ -9,7 +9,7 @@
 using System.Runtime.Intrinsics.Arm;
 #endif
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.Arm;
 
 abstract class AdapterArm : Adapter
 {

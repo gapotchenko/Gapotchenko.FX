@@ -14,7 +14,7 @@ using System.Runtime.Intrinsics.X86;
 
 #pragma warning disable CS3016 // Arrays as attribute arguments is not CLS-compliant
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.x86;
 
 abstract class AdapterX86Base : Adapter
 {

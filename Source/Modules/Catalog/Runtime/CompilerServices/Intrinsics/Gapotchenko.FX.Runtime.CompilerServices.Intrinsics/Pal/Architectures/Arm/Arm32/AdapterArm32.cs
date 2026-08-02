@@ -5,8 +5,9 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
-namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
+namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.Arm.Arm32;
 
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.Arm;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
