@@ -17,14 +17,8 @@ static class UnwindLinuxArm32
 {
     public static UnwindAnalysisResult Analyze(ReadOnlySpan<ushort> code)
     {
-        if (!code.IsEmpty &&
-            (InstructionsArm32.IsPushRegisters(code[0]) ||
-             InstructionsArm32.IsPushRegistersWide(code) ||
-             InstructionsArm32.IsStackAllocation(code[0])))
-        {
-            return UnwindAnalysisResult.Unsupported;
-        }
-
-        return UnwindAnalysisResult.Leaf;
+        return UnwindArm32.Analyze(code) == UnwindAnalysisResult.Leaf ?
+            UnwindAnalysisResult.Leaf :
+            UnwindAnalysisResult.Unsupported;
     }
 }
