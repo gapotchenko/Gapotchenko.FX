@@ -68,12 +68,6 @@ static class StressOperations
         0x04, 0xb0,  // ADD SP,#16
         0x80, 0xbd,  // POP {R7,PC}
         SupportedOSPlatforms = ["linux"])]
-    [MethodImpl(
-        MethodImplOptions.NoInlining
-#if NET
-        // Prevent tiered compilation.
-        | MethodImplOptions.AggressiveOptimization
-#endif
-        )]
+    [MethodImpl(Intrinsics.MethodImplOptions)]
     public static int UnwindIntrinsic() => OperationResults.Managed;
 }

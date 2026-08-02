@@ -9,6 +9,7 @@ using Gapotchenko.FX.Runtime.CompilerServices.Pal;
 using Gapotchenko.FX.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Gapotchenko.FX.Runtime.CompilerServices;
@@ -341,4 +342,14 @@ public static class Intrinsics
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Advanced)]
     public static TraceSource TraceSource => Log.TraceSource;
+
+    /// <summary>
+    /// Gets the implementation options that should be set on an intrinsic method using <see cref="MethodImplAttribute"/>.
+    /// </summary>
+    public const MethodImplOptions MethodImplOptions =
+        MethodImplOptions.NoInlining
+#if NET
+        | MethodImplOptions.AggressiveOptimization // prevent tiered compilation
+#endif
+        ;
 }

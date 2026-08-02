@@ -62,7 +62,7 @@ static class EdgeCaseOperations
         0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf,
         0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf,
         SupportedOSPlatforms = ["linux"])]
-    [MethodImpl(MethodImplOptions.NoInlining)]
+    [MethodImpl(Intrinsics.MethodImplOptions)]
     public static int LongIntrinsic()
     {
         return OperationResults.Managed;
@@ -99,7 +99,7 @@ static class EdgeCaseOperations
             0xb8, 0x1f, 0x00, 0x00, 0x00,  // MOV EAX,31
             0x83, 0xc4, 0x10,              // ADD ESP,16
             SupportedOSPlatforms = ["windows", "linux"])]
-        [MethodImpl(MethodImplOptions.NoInlining)]
+        [MethodImpl(Intrinsics.MethodImplOptions)]
         public static int StackAllocationIntrinsic() => OperationResults.Managed;
 
         [MachineCodeIntrinsic(
@@ -130,7 +130,7 @@ static class EdgeCaseOperations
             0xb8, 0x1f, 0x00, 0x00, 0x00,  // MOV EAX,31
             0x5d,                          // POP EBP
             SupportedOSPlatforms = ["windows", "linux"])]
-        [MethodImpl(MethodImplOptions.NoInlining)]
+        [MethodImpl(Intrinsics.MethodImplOptions)]
         public static int FrameChainIntrinsic() => OperationResults.Managed;
     }
 
@@ -181,7 +181,7 @@ static class EdgeCaseOperations
             0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf,
             0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf,
             SupportedOSPlatforms = ["linux"])]
-        [MethodImpl(MethodImplOptions.NoInlining)]
+        [MethodImpl(Intrinsics.MethodImplOptions)]
         public static int LongFrameIntrinsic()
         {
             GC.KeepAlive(m_InitializationSentinel);

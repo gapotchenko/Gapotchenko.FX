@@ -120,7 +120,7 @@ abstract class AdapterX86Base : Adapter
             0x41, 0x89, 0x50, 0x0c,  // MOV [R8+12], EDX
             0x5b,                    // POP RBX
             SupportedOSPlatforms = ["linux"])]
-        [MethodImpl(MethodImplOptions.NoInlining)]
+        [MethodImpl(Intrinsics.MethodImplOptions)]
         static unsafe void CallCpuid(int* cpuInfo, int functionId, int subFunctionId)
         {
             cpuInfo[0] = 0;
