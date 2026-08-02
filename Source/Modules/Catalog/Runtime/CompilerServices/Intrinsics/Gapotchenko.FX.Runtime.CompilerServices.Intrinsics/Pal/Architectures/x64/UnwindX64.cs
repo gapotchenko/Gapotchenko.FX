@@ -96,7 +96,7 @@ static class UnwindX64
                 continue;
             }
 
-            if (IsPotentialPrologueInstruction(remainingCode))
+            if (IsPotentialStackFrameInstruction(remainingCode))
             {
                 info = default;
                 return UnwindAnalysisResult.Unsupported;
@@ -105,8 +105,75 @@ static class UnwindX64
             break;
         }
 
+        if (operationCount == 0)
+        {
+            if (ContainsPotentialStackFrameInstruction(code))
+            {
+                info = default;
+                return UnwindAnalysisResult.Unsupported;
+            }
+
+            info = new(prologueSize, frameRegister, frameOffset);
+            return UnwindAnalysisResult.Leaf;
+        }
+
+        if (!TryGetEpilogueStart(code, operations[..operationCount], prologueSize, out int epilogueStart) ||
+            ContainsPotentialStackFrameInstruction(code[prologueSize..epilogueStart]))
+        {
+            info = default;
+            return UnwindAnalysisResult.Unsupported;
+        }
+
         info = new(prologueSize, frameRegister, frameOffset);
-        return operationCount == 0 ? UnwindAnalysisResult.Leaf : UnwindAnalysisResult.Supported;
+        return UnwindAnalysisResult.Supported;
+    }
+
+    static bool TryGetEpilogueStart(
+        ReadOnlySpan<byte> code,
+        ReadOnlySpan<UnwindOperation> operations,
+        int prologueSize,
+        out int epilogueStart)
+    {
+        int end = code.Length;
+        foreach (ref readonly var operation in operations)
+        {
+            int start;
+            switch (operation.Kind)
+            {
+                case UnwindOperationKind.SetFramePointer:
+                    continue;
+
+                case UnwindOperationKind.StackAllocation:
+                    if (!TryDecodeStackDeallocationEndingAt(code, end, operation.Value, out start))
+                    {
+                        epilogueStart = 0;
+                        return false;
+                    }
+                    break;
+
+                case UnwindOperationKind.PushNonvolatile:
+                    if (!TryDecodePopNonvolatileEndingAt(code, end, operation.Register, out start))
+                    {
+                        epilogueStart = 0;
+                        return false;
+                    }
+                    break;
+
+                default:
+                    epilogueStart = 0;
+                    return false;
+            }
+
+            if (start < prologueSize)
+            {
+                epilogueStart = 0;
+                return false;
+            }
+            end = start;
+        }
+
+        epilogueStart = end;
+        return true;
     }
 
     public static bool TryDecodeStackDeallocationEndingAt(
@@ -286,7 +353,48 @@ static class UnwindX64
         return false;
     }
 
-    static bool IsPotentialPrologueInstruction(ReadOnlySpan<byte> code)
+    static bool ContainsPotentialStackFrameInstruction(ReadOnlySpan<byte> code)
+    {
+        for (int i = 0; i < code.Length; ++i)
+        {
+            var remainingCode = code[i..];
+            if (IsPotentialInteriorStackFrameInstruction(remainingCode))
+                return true;
+
+            if (TryDecodePushNonvolatile(remainingCode, out _, out int register))
+            {
+                for (int end = i + 1; end <= code.Length; ++end)
+                {
+                    if (TryDecodePopNonvolatileEndingAt(code, end, register, out int start) && start > i)
+                        return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    static bool IsPotentialInteriorStackFrameInstruction(ReadOnlySpan<byte> code)
+    {
+        if (code.Length >= 3 && code[0] == Instructions.RexW &&
+            code[1] is Instructions.Group1Immediate32 or Instructions.Group1Immediate8 &&
+            code[2] is Instructions.ModRmAddRsp or Instructions.ModRmAndRsp or Instructions.ModRmSubRsp)
+        {
+            return true;
+        }
+
+        if (code.Length >= 3 && code[0] == Instructions.RexW &&
+            code[1] is Instructions.MovRmRegister or Instructions.MovRegisterRm or Instructions.Lea)
+        {
+            int destinationRegister =
+                code[1] == Instructions.MovRmRegister ? code[2] & 7 : code[2] >> 3 & 7;
+            return destinationRegister is Instructions.RegisterSp or Instructions.RegisterBp;
+        }
+
+        return false;
+    }
+
+    static bool IsPotentialStackFrameInstruction(ReadOnlySpan<byte> code)
     {
         if (code.IsEmpty)
             return false;
