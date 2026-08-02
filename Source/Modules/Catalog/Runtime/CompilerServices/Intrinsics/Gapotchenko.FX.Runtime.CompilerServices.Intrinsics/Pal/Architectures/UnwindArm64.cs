@@ -48,12 +48,15 @@ static class UnwindArm64
         }
         else
         {
-            return IsPotentialPrologueInstruction(code[0]) ?
+            return ContainsPotentialStackFrameInstruction(code) ?
                 UnwindAnalysisResult.Unsupported :
                 UnwindAnalysisResult.Leaf;
         }
 
         if (frameSize == 0 || frameSize % StackAlignment != 0)
+            return UnwindAnalysisResult.Unsupported;
+
+        if (ContainsPotentialStackFrameInstruction(code[prologueInstructionCount..^1]))
             return UnwindAnalysisResult.Unsupported;
 
         info = new(frameKind, frameSize, prologueInstructionCount);
@@ -93,9 +96,22 @@ static class UnwindArm64
         (instruction & InstructionsArm64.LdpFpLrPostIndexMask) == InstructionsArm64.LdpFpLrPostIndex &&
         InstructionsArm64.DecodeSignedImmediate7Scaled8(instruction) == frameSize;
 
-    static bool IsPotentialPrologueInstruction(uint instruction) =>
-        (instruction & InstructionsArm64.AddSubSpSpImmediateMask) == InstructionsArm64.AddSpSpImmediate ||
+    static bool ContainsPotentialStackFrameInstruction(ReadOnlySpan<uint> code)
+    {
+        foreach (uint instruction in code)
+        {
+            if (IsPotentialStackFrameInstruction(instruction))
+                return true;
+        }
+
+        return false;
+    }
+
+    static bool IsPotentialStackFrameInstruction(uint instruction) =>
+        (instruction & InstructionsArm64.AddSubSpSpImmediateMask) is
+            InstructionsArm64.AddSpSpImmediate or InstructionsArm64.SubSpSpImmediate ||
         (instruction & InstructionsArm64.StpRegistersPreIndexSpMask) == InstructionsArm64.StpRegistersPreIndexSp ||
+        (instruction & InstructionsArm64.LdpRegistersPostIndexSpMask) == InstructionsArm64.LdpRegistersPostIndexSp ||
         instruction is InstructionsArm64.MovFpSp or InstructionsArm64.Pacibsp;
 
     public readonly record struct UnwindInfo(

@@ -133,6 +133,24 @@ static class Program
 
         #endregion
 
+        #region Pathological unwind
+
+        Assert.AreEqual(
+            OperationResults.Managed,
+            EdgeCaseOperations.PathologicalUnwind.DelayedFrameChainIntrinsic());
+        Assert.AreEqual(
+            OperationResults.Managed,
+            EdgeCaseOperations.PathologicalUnwind.DelayedFrameChainIntrinsic());
+
+        Assert.AreEqual(
+            OperationResults.Managed,
+            EdgeCaseOperations.PathologicalUnwind.InteriorStackManipulationIntrinsic());
+        Assert.AreEqual(
+            OperationResults.Managed,
+            EdgeCaseOperations.PathologicalUnwind.InteriorStackManipulationIntrinsic());
+
+        #endregion
+
         #region Long frame activation
 
         Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.LongFrameActivation.LongFrameIntrinsic());

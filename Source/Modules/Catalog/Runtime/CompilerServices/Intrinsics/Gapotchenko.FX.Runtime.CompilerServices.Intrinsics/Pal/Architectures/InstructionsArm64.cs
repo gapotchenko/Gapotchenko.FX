@@ -99,6 +99,8 @@ abstract class InstructionsArm64
     public const uint StpFpLrPreIndexMask = 0xffc07fff;
     public const uint StpRegistersPreIndexSp = 0xa980001f;
     public const uint StpRegistersPreIndexSpMask = 0xffc0001f;
+    public const uint LdpRegistersPostIndexSp = 0xa8c0001f;
+    public const uint LdpRegistersPostIndexSpMask = 0xffc0001f;
     public const uint LdpFpLrPostIndex = 0xa8c07bfd;
     public const uint LdpFpLrPostIndexMask = 0xffc07fff;
 
