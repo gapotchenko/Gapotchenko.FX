@@ -57,7 +57,13 @@ static class NormalOperations
         0x1f, 0x21,              // MOVS R1,31
         0x48, 0x40,              // EORS R0,R1
         SupportedOSPlatforms = ["linux"])]
-    [MethodImpl(MethodImplOptions.NoInlining)]
+    [MethodImpl(
+        MethodImplOptions.NoInlining
+#if NET
+        // Prevent tiered compilation.
+        | MethodImplOptions.AggressiveOptimization
+#endif
+        )]
     public static int Log2_Intrinsic(uint value)
     {
         // Round down to one less than a power of 2.
