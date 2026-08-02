@@ -89,9 +89,6 @@ public static class Intrinsics
                 continue;
 
             ValidateMethod(method, intrinsicAttribute);
-#if NET
-            WarnAboutTieredCompilation(method);
-#endif
 
             Adapter.PatchResult patchResult;
 
@@ -194,6 +191,10 @@ public static class Intrinsics
 
             if (code.Length == 0 && method.ReturnType != typeof(void))
                 throw CreateInvalidMethodException(method, "has empty intrinsic machine code despite returning a value");
+
+#if NET
+            WarnAboutTieredCompilation(method);
+#endif
 
             static Exception CreateInvalidMethodException(MethodInfo method, string reason)
             {
