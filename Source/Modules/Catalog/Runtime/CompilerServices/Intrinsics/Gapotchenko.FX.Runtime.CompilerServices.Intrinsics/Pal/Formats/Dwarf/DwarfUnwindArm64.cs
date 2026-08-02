@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.Arm.Arm64;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -19,7 +20,7 @@ static class DwarfUnwindArm64
     public static int GetSize(ReadOnlySpan<uint> code, in UnwindArm64.Analysis analysis)
     {
         var serializer = new DwarfSerializer();
-        WriteInstructions(ref serializer, code, analysis.Info);
+        WriteInstructions(ref serializer, code, analysis);
         return DwarfSerializer.GetFdeSize(CieSize, serializer.Position);
     }
 
@@ -42,15 +43,19 @@ static class DwarfUnwindArm64
             codeAddress,
             checked((code.Length + 1) * sizeof(uint)),
             fdeSize);
-        WriteInstructions(ref serializer, code, analysis.Info);
+        WriteInstructions(ref serializer, code, analysis);
         serializer.CompleteFde(fdeSize);
     }
 
     static void WriteInstructions(
         ref DwarfSerializer serializer,
         ReadOnlySpan<uint> code,
-        UnwindArm64.UnwindInfo info)
+        in UnwindArm64.Analysis analysis)
     {
+        if (analysis.Result == UnwindAnalysisResult.Leaf)
+            return;
+
+        var info = analysis.Info;
         int returnOffset = checked(code.Length * sizeof(uint));
         switch (info.FrameKind)
         {

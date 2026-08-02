@@ -32,8 +32,7 @@ sealed class AdapterMacOSArm64 : AdapterArm64
     {
         return unwindAnalysis.Result switch
         {
-            UnwindAnalysisResult.Leaf => base.GetTrampolineAllocationCount(code, unwindAnalysis),
-            UnwindAnalysisResult.Supported => checked(
+            UnwindAnalysisResult.Leaf or UnwindAnalysisResult.Supported => checked(
                 code.Length + 1 +
                 (DwarfUnwindArm64.GetSize(code, unwindAnalysis) + sizeof(uint) - 1) / sizeof(uint)),
             _ => throw new InvalidOperationException("The intrinsic has an unsupported macOS ARM64 unwind prologue.")
@@ -89,11 +88,6 @@ sealed class AdapterMacOSArm64 : AdapterArm64
         ReadOnlySpan<uint> code,
         in UnwindArm64.Analysis unwindAnalysis)
     {
-        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
-        {
-            WriteCode(destination, code);
-            return;
-        }
         int codeCount = checked(code.Length + 1);
         int unwindSize = DwarfUnwindArm64.GetSize(code, unwindAnalysis);
         int allocationCount = checked(codeCount + (unwindSize + sizeof(uint) - 1) / sizeof(uint));

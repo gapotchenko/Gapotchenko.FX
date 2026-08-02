@@ -32,8 +32,7 @@ sealed class AdapterLinuxArm64 : AdapterArm64
     {
         return unwindAnalysis.Result switch
         {
-            UnwindAnalysisResult.Leaf => base.GetTrampolineAllocationCount(code, unwindAnalysis),
-            UnwindAnalysisResult.Supported => checked(
+            UnwindAnalysisResult.Leaf or UnwindAnalysisResult.Supported => checked(
                 code.Length + 1 +
                 (DwarfUnwindArm64.GetSize(code, unwindAnalysis) + sizeof(uint) - 1) / sizeof(uint) +
                 1),
@@ -94,11 +93,6 @@ sealed class AdapterLinuxArm64 : AdapterArm64
         ReadOnlySpan<uint> code,
         in UnwindArm64.Analysis unwindAnalysis)
     {
-        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
-        {
-            WriteCode(destination, code);
-            return;
-        }
         int codeCount = checked(code.Length + 1);
         int unwindSize = DwarfUnwindArm64.GetSize(code, unwindAnalysis);
         int unwindCount = checked((unwindSize + sizeof(uint) - 1) / sizeof(uint));
