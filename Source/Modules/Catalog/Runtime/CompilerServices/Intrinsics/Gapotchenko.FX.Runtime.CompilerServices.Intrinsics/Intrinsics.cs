@@ -89,6 +89,9 @@ public static class Intrinsics
                 continue;
 
             ValidateMethod(method, intrinsicAttribute);
+#if NET
+            WarnAboutTieredCompilation(method);
+#endif
 
             Adapter.PatchResult patchResult;
 
@@ -161,7 +164,10 @@ public static class Intrinsics
             {
                 throw CreateInvalidMethodException(
                     method,
-                    string.Format("is not marked with {0} implementation flag", nameof(MethodImplAttributes.NoInlining)));
+                    string.Format(
+                        "is not marked with {0} (or {1}) implementation flag",
+                        $"{nameof(MethodImplAttributes)}.{nameof(MethodImplAttributes.NoInlining)}",
+                        $"{nameof(Intrinsics)}.{nameof(MethodImplOptions)}"));
             }
 
             if (!method.IsStatic)
@@ -199,6 +205,23 @@ public static class Intrinsics
                         reason));
             }
         }
+
+#if NET
+        static void WarnAboutTieredCompilation(MethodInfo method)
+        {
+            if ((method.MethodImplementationFlags & MethodImplAttributes.AggressiveOptimization) != 0)
+                return;
+
+            Log.TraceSource.TraceEvent(
+                TraceEventType.Warning,
+                1932901010,
+                "Intrinsic method '{0}' declared in type '{1}' is not marked with the {2} implementation flag. Tiered compilation may replace the patched method implementation with a new compilation tier. Use {3} for the complete set of recommended implementation options.",
+                method,
+                method.DeclaringType,
+                nameof(MethodImplOptions.AggressiveOptimization),
+                $"{nameof(Intrinsics)}.{nameof(MethodImplOptions)}");
+        }
+#endif
     }
 
     static readonly Lock m_PatchingLock = new();
