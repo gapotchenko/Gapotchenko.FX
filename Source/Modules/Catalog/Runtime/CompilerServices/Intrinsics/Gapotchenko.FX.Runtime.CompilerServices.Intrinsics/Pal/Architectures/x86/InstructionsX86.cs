@@ -31,6 +31,8 @@ abstract class InstructionsX86
     public const byte ModRmMovEspEbp = 0xe5;
 
     public const byte Ret = 0xc3;
+    public const byte RetImmediate16 = 0xc2;
+    public const int RetImmediate16Size = 3;
     public const int JmpRel32 = 0xe9;
     public const int JmpRel32Size = 5;
 

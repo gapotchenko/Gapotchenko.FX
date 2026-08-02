@@ -101,6 +101,14 @@ partial class EdgeCaseOperations
             0xb8, 0x1f, 0x00, 0x00, 0x00,  // MOV EAX,31
             0x5d,                          // POP RBP
             SupportedOSPlatforms = ["windows", "linux", "macos"])]
+        [MachineCodeIntrinsic(
+            Architecture.X86,
+            0x90,                          // NOP
+            0x55,                          // PUSH EBP
+            0x89, 0xe5,                    // MOV EBP,ESP
+            0xb8, 0x1f, 0x00, 0x00, 0x00,  // MOV EAX,31
+            0x5d,                          // POP EBP
+            SupportedOSPlatforms = ["linux"])]
         [MethodImpl(Intrinsics.MethodImplOptions)]
         public static int DelayedFrameChainIntrinsic()
         {
@@ -123,6 +131,14 @@ partial class EdgeCaseOperations
             0xb8, 0x1f, 0x00, 0x00, 0x00,  // MOV EAX,31
             0x48, 0x83, 0xc4, 0x28,        // ADD RSP,40
             SupportedOSPlatforms = ["windows", "linux", "macos"])]
+        [MachineCodeIntrinsic(
+            Architecture.X86,
+            0x83, 0xec, 0x10,              // SUB ESP,16
+            0x83, 0xc4, 0x10,              // ADD ESP,16
+            0x83, 0xec, 0x10,              // SUB ESP,16
+            0xb8, 0x1f, 0x00, 0x00, 0x00,  // MOV EAX,31
+            0x83, 0xc4, 0x10,              // ADD ESP,16
+            SupportedOSPlatforms = ["linux"])]
         [MethodImpl(Intrinsics.MethodImplOptions)]
         public static int InteriorStackManipulationIntrinsic()
         {
