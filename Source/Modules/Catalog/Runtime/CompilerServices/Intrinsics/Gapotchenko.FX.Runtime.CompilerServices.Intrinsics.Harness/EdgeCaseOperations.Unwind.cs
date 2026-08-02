@@ -109,6 +109,13 @@ partial class EdgeCaseOperations
             0xb8, 0x1f, 0x00, 0x00, 0x00,  // MOV EAX,31
             0x5d,                          // POP EBP
             SupportedOSPlatforms = ["linux"])]
+        [MachineCodeIntrinsic(
+            Architecture.Arm,
+            0x00, 0xbf,  // NOP
+            0x10, 0xb5,  // PUSH {R4,LR}
+            0x1f, 0x20,  // MOVS R0,31
+            0x10, 0xbd,  // POP {R4,PC}
+            SupportedOSPlatforms = ["linux"])]
         [MethodImpl(Intrinsics.MethodImplOptions)]
         public static int DelayedFrameChainIntrinsic()
         {
