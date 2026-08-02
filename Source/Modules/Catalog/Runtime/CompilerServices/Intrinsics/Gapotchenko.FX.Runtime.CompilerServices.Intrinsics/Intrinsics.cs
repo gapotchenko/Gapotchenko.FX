@@ -322,12 +322,6 @@ public static class Intrinsics
 
     static Adapter? CreateAdapter()
     {
-        if (!CodeSafetyStrategy.UnsafeCodeRecommended)
-        {
-            Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901003, "Intrinsic compiler is not activated because code safety strategy does not recommend unsafe code usage.");
-            return null;
-        }
-
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             var architecture = RuntimeInformation.ProcessArchitecture;
