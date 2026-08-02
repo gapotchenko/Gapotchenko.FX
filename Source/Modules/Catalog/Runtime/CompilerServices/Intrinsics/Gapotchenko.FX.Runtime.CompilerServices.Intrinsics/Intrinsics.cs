@@ -235,10 +235,52 @@ public static class Intrinsics
             !m_GiveUpOnPatching &&
             ActivationMode switch
             {
-                IntrinsicsActivationMode.Auto => CodeSafetyStrategy.UnsafeCodeRecommended,
+                IntrinsicsActivationMode.Auto => IsActiveAuto(),
                 IntrinsicsActivationMode.AlwaysOff => false,
-                IntrinsicsActivationMode.PreferablyOn => CodeSafetyStrategy.UnsafeCodeAllowed
+                IntrinsicsActivationMode.PreferablyOn => IsActivePreferablyOn()
             };
+
+        static bool IsActiveAuto()
+        {
+            bool active = CodeSafetyStrategy.UnsafeCodeRecommended;
+            if (!active && ShouldTraceOnce(TracedEvents.Event_1932901003))
+                Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901003, "Intrinsic compiler is not activated because code safety strategy does not recommend unsafe code usage.");
+            return active;
+        }
+
+        static bool IsActivePreferablyOn()
+        {
+            bool active = CodeSafetyStrategy.UnsafeCodeAllowed;
+            if (!active && ShouldTraceOnce(TracedEvents.Event_1932901011))
+                Log.TraceSource.TraceEvent(TraceEventType.Verbose, 1932901011, "Intrinsic compiler is not activated because code safety strategy does not allow unsafe code usage.");
+            return active;
+        }
+    }
+
+    static bool ShouldTraceOnce(TracedEvents events)
+    {
+        if ((m_TracedEvents & events) == 0)
+        {
+            lock (m_PatchingLock)
+            {
+                if ((m_TracedEvents & events) == 0)
+                {
+                    m_TracedEvents |= events;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    static TracedEvents m_TracedEvents;
+
+    [Flags]
+    enum TracedEvents
+    {
+        Event_1932901003 = 1 << 0,
+        Event_1932901011 = 1 << 1
     }
 
     static bool m_GiveUpOnPatching;
