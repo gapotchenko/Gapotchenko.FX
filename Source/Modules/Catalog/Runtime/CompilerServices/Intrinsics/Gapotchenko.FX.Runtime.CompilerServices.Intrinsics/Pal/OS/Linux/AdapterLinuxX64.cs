@@ -42,9 +42,6 @@ sealed class AdapterLinuxX64 : AdapterX64
     protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code, in UnwindX64.Analysis unwindAnalysis)
     {
         int codeSize = checked(code.Length + 1);
-        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
-            return codeSize;
-
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
         return checked(unwindOffset + DwarfUnwindX64.GetSize(unwindAnalysis) + sizeof(uint));
     }
@@ -74,11 +71,6 @@ sealed class AdapterLinuxX64 : AdapterX64
         ReadOnlySpan<byte> code,
         in UnwindX64.Analysis unwindAnalysis)
     {
-        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
-        {
-            WriteCodeCore(destination, code);
-            return;
-        }
         int codeSize = checked(code.Length + 1);
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
         int unwindSize = DwarfUnwindX64.GetSize(unwindAnalysis);

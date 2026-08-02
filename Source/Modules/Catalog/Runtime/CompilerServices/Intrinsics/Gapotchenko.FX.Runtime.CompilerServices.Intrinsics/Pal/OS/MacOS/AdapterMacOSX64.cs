@@ -42,9 +42,6 @@ sealed class AdapterMacOSX64 : AdapterX64
     protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code, in UnwindX64.Analysis unwindAnalysis)
     {
         int codeSize = checked(code.Length + 1);
-        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
-            return codeSize;
-
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
         return checked(unwindOffset + DwarfUnwindX64.GetSize(unwindAnalysis));
     }
@@ -76,14 +73,6 @@ sealed class AdapterMacOSX64 : AdapterX64
         ReadOnlySpan<byte> code,
         in UnwindX64.Analysis unwindAnalysis)
     {
-        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
-        {
-            using var leafScope = JitWriteProtectionScope.Create(destination);
-            code.CopyTo(destination);
-            destination[code.Length] = InstructionsX64.Ret;
-            leafScope.FlushInstructions();
-            return;
-        }
         int codeSize = checked(code.Length + 1);
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
         int unwindSize = DwarfUnwindX64.GetSize(unwindAnalysis);
