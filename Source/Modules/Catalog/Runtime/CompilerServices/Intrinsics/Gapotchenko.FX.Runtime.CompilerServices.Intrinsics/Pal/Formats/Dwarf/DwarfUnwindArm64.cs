@@ -64,8 +64,9 @@ static class DwarfUnwindArm64
             case UnwindArm64.FrameKind.FrameChain:
                 serializer.AdvanceLocation(sizeof(uint));
                 serializer.DefCfaOffset(info.FrameSize);
-                serializer.RegisterOffset(DwarfRegisterFp, 2);
-                serializer.RegisterOffset(DwarfRegisterLr, 1);
+                uint fpOffset = checked((uint)(info.FrameSize / sizeof(ulong)));
+                serializer.RegisterOffset(DwarfRegisterFp, fpOffset);
+                serializer.RegisterOffset(DwarfRegisterLr, checked(fpOffset - 1));
                 serializer.AdvanceLocation(sizeof(uint));
                 serializer.DefCfaRegister(DwarfRegisterFp);
                 serializer.AdvanceLocation(checked(returnOffset - 2 * sizeof(uint)));
