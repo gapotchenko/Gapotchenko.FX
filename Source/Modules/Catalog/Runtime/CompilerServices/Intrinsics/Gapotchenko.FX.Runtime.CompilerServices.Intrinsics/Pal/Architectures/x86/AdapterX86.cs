@@ -141,7 +141,7 @@ abstract class AdapterX86 : AdapterX86Base
 
     protected virtual bool RequiresTrampoline(in UnwindX86.Analysis unwindAnalysis)
     {
-        return false;
+        return true;
     }
 
     protected virtual int GetTrampolineAllocationSize(
