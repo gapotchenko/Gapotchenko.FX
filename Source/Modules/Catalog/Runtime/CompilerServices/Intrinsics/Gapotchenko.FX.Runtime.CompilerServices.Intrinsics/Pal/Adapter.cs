@@ -25,6 +25,7 @@ abstract class Adapter
         UnsupportedUnwindPrologue,
         InvalidAlignment,
         NoSpace,
-        WriteProtected
+        WriteProtected,
+        NotSupported
     }
 }

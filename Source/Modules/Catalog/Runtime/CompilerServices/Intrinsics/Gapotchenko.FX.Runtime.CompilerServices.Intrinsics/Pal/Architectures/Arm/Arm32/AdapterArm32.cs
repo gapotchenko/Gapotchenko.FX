@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 
 abstract class AdapterArm32 : AdapterArm
 {
-    public sealed override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
+    public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
         if ((code.Length & (sizeof(ushort) - 1)) != 0)
             return PatchResult.InvalidAlignment;

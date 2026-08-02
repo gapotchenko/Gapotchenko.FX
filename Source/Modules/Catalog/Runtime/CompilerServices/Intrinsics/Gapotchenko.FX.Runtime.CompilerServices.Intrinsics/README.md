@@ -173,11 +173,14 @@ The intrinsic compiler supports the following processor architecture and operati
 |------------------------|:-------:|:-----:|:-----:|
 | x86                    | ✓       | ✓     |       |
 | x64                    | ✓       | ✓     | ✓     |
-| ARM                    |         | ✓     |       |
+| ARM (32-bit)           |         | ◇     |       |
 | ARM64                  | ✓       | ✓     | ✓     |
 
-The table describes intrinsic compiler support for the current process architecture.
-An individual intrinsic is applied only when it provides machine code for that architecture and its other requirements
+✓ Machine-code intrinsic compilation and processor feature detection are supported
+<br>
+◇ Processor feature detection is supported, but machine-code intrinsic compilation is not available
+
+An individual intrinsic is applied only when it provides machine code for a corresponding architecture and its other requirements
 such as processor features and operating system constraints are satisfied.
 When a combination or requirement is unsupported, the original managed method implementation remains in use.
 

@@ -5,7 +5,6 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
-using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures;
 using Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.Arm.Arm32;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -17,11 +16,10 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.OS.Linux;
 #endif
 sealed class AdapterLinuxArm32 : AdapterArm32
 {
-    protected override PatchResult ValidateCode(ReadOnlySpan<ushort> code)
+    public override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
-        return UnwindLinuxArm32.Analyze(code) == UnwindAnalysisResult.Unsupported ?
-            PatchResult.UnsupportedUnwindPrologue :
-            PatchResult.Success;
+        // Disallow method patching for now due to absence of a battle-tested implementation.
+        return PatchResult.NotSupported;
     }
 
     protected override unsafe void GetMethodInstructions(

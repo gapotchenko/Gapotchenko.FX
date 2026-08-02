@@ -152,6 +152,10 @@ public static class Intrinsics
                 case Adapter.PatchResult.UnsupportedUnwindPrologue:
                     Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901009, "Unsupported unwind prologue encountered in intrinsic method '{0}' declared in type '{1}'. Compilation discarded.", method, method.DeclaringType);
                     break;
+
+                case Adapter.PatchResult.NotSupported:
+                    Log.TraceSource.TraceEvent(TraceEventType.Warning, 1932901012, "Machine code patching is not supported for intrinsic method '{0}' declared in type '{1}' on the current platform. Compilation discarded.", method, method.DeclaringType);
+                    break;
             }
         }
 
