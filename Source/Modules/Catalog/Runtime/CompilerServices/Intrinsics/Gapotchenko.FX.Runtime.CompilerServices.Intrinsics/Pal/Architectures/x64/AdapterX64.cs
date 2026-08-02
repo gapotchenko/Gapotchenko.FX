@@ -190,7 +190,7 @@ abstract class AdapterX64 : AdapterX86Base
 
     protected virtual PatchResult ValidateCode(in UnwindX64.Analysis unwindAnalysis) => PatchResult.Success;
 
-    protected virtual bool RequiresTrampoline(in UnwindX64.Analysis unwindAnalysis) => false;
+    protected virtual bool RequiresTrampoline(in UnwindX64.Analysis unwindAnalysis) => true;
 
     protected virtual int GetTrampolineAllocationSize(ReadOnlySpan<byte> code, in UnwindX64.Analysis unwindAnalysis)
     {

@@ -39,11 +39,6 @@ sealed class AdapterLinuxX64 : AdapterX64
             PatchResult.Success;
     }
 
-    protected override bool RequiresTrampoline(in UnwindX64.Analysis unwindAnalysis)
-    {
-        return unwindAnalysis.Result == UnwindAnalysisResult.Supported;
-    }
-
     protected override int GetTrampolineAllocationSize(ReadOnlySpan<byte> code, in UnwindX64.Analysis unwindAnalysis)
     {
         int codeSize = checked(code.Length + 1);
