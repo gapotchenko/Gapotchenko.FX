@@ -172,17 +172,19 @@ The intrinsic compiler supports the following processor architecture and operati
 | Processor Architecture | Windows | Linux | macOS |
 |------------------------|:-------:|:-----:|:-----:|
 | x86                    | ✓       | ✓     |       |
-| x64                    | ✓       | ✓     | ✓     |
+| x64                    | ✓       | ✓     | □     |
 | ARM (32-bit)           |         | ◇     |       |
-| ARM64                  | ✓       | ✓     | ✓     |
+| ARM64                  | ✓       | ✓     | □     |
 
-✓ Machine-code intrinsic compilation and processor feature detection are supported
+✓ Intrinsic compilation is supported, including Native AOT
 <br>
-◇ Processor feature detection is supported, but machine-code intrinsic compilation is not available
+□ Intrinsic compilation is supported, except in Native AOT due to restrictions imposed by OS on self-modifiable code
+<br>
+◇ Processor feature detection is supported, but intrinsic compilation is not available
 
 An individual intrinsic is applied only when it provides machine code for a corresponding architecture and its other requirements
 such as processor features and operating system constraints are satisfied.
-When a combination or requirement is unsupported, the original managed method implementation remains in use.
+When a combination or requirement is unsupported, or operating environment does not support intrinsic compilation, the original managed method implementation remains in use.
 
 ## Native AOT Compatibility
 
