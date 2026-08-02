@@ -49,11 +49,6 @@ sealed class AdapterWindowsArm64 : AdapterArm64
             PatchResult.Success;
     }
 
-    protected override bool RequiresTrampoline(in UnwindArm64.Analysis unwindAnalysis)
-    {
-        return unwindAnalysis.Result == UnwindAnalysisResult.Supported;
-    }
-
     protected override int GetTrampolineAllocationCount(
         ReadOnlySpan<uint> code,
         in UnwindArm64.Analysis unwindAnalysis)

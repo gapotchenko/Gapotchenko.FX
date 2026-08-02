@@ -229,7 +229,7 @@ abstract class AdapterArm64 : AdapterArm
     }
 
     protected virtual PatchResult ValidateCode(in UnwindArm64.Analysis unwindAnalysis) => PatchResult.Success;
-    protected virtual bool RequiresTrampoline(in UnwindArm64.Analysis unwindAnalysis) => false;
+    protected virtual bool RequiresTrampoline(in UnwindArm64.Analysis unwindAnalysis) => true;
 
     protected virtual int GetTrampolineAllocationCount(ReadOnlySpan<uint> code, in UnwindArm64.Analysis unwindAnalysis)
     {
