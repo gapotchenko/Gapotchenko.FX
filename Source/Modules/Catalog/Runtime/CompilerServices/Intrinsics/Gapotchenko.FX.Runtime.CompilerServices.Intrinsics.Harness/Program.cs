@@ -121,28 +121,15 @@ static class Program
 
         #region Unwind
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture is Architecture.X64 or Architecture.Arm64 ||
-            RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture is Architecture.X64 or Architecture.Arm64 ||
-            RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture is Architecture.X86 or Architecture.X64 or Architecture.Arm64)
-        {
-            Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
-            Assert.AreEqual(
-                OperationResults.Intrinsic,
-                EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
+        Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
+        Assert.AreEqual(
+            OperationResults.NonLeafIntrinsic,
+            EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
 
-            Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.Unwind.FrameChainIntrinsic());
-            Assert.AreEqual(
-                OperationResults.Intrinsic,
-                EdgeCaseOperations.Unwind.FrameChainIntrinsic());
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture == Architecture.Arm)
-        {
-            // Leaf functions support only.
-            Assert.AreEqual(OperationResults.Managed, EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
-            Assert.AreEqual(OperationResults.Managed, EdgeCaseOperations.Unwind.StackAllocationIntrinsic());
-            Assert.AreEqual(OperationResults.Managed, EdgeCaseOperations.Unwind.FrameChainIntrinsic());
-            Assert.AreEqual(OperationResults.Managed, EdgeCaseOperations.Unwind.FrameChainIntrinsic());
-        }
+        Assert.That.FirstIntrinsicInvocationIsOK(EdgeCaseOperations.Unwind.FrameChainIntrinsic());
+        Assert.AreEqual(
+            OperationResults.NonLeafIntrinsic,
+            EdgeCaseOperations.Unwind.FrameChainIntrinsic());
 
         #endregion
 

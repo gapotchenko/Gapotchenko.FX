@@ -19,7 +19,7 @@ static class StressExercise
     static void ExerciseUnwindIntrinsic()
     {
         Assert.That.FirstIntrinsicInvocationIsOK(StressOperations.UnwindIntrinsic());
-        Assert.AreEqual(OperationResults.Intrinsic, StressOperations.UnwindIntrinsic());
+        Assert.AreEqual(OperationResults.NonLeafIntrinsic, StressOperations.UnwindIntrinsic());
 
         using var cancellation = new CancellationTokenSource();
         var workers = StartWorkers(cancellation.Token);
@@ -52,7 +52,7 @@ static class StressExercise
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     Assert.AreEqual(
-                        OperationResults.Intrinsic,
+                        OperationResults.NonLeafIntrinsic,
                         StressOperations.UnwindIntrinsic());
                     Thread.Yield();
                 }
