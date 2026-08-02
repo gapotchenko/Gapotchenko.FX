@@ -48,7 +48,7 @@ static class DwarfUnwindX64
 
         int epilogueOperationCount = 0;
         int end = code.Length;
-        for (int i = analyzedOperations.Length - 1; i >= 0; --i)
+        for (int i = 0; i < analyzedOperations.Length; ++i)
         {
             ref readonly var operation = ref analyzedOperations[i];
             int start;
