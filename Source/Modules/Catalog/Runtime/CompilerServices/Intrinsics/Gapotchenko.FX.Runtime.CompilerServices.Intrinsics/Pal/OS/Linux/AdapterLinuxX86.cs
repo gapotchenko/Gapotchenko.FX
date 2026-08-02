@@ -45,9 +45,6 @@ sealed class AdapterLinuxX86 : AdapterX86
         in UnwindX86.Analysis unwindAnalysis)
     {
         int codeSize = checked(code.Length + 1);
-        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
-            return codeSize;
-
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
         return checked(unwindOffset + DwarfUnwindX86.GetSize(unwindAnalysis) + sizeof(uint));
     }
@@ -80,11 +77,6 @@ sealed class AdapterLinuxX86 : AdapterX86
         ReadOnlySpan<byte> code,
         in UnwindX86.Analysis unwindAnalysis)
     {
-        if (unwindAnalysis.Result == UnwindAnalysisResult.Leaf)
-        {
-            WriteCodeCore(destination, code);
-            return;
-        }
         int codeSize = checked(code.Length + 1);
         int unwindOffset = MemoryArithmetics.Align4(codeSize);
         int unwindSize = DwarfUnwindX86.GetSize(unwindAnalysis);
