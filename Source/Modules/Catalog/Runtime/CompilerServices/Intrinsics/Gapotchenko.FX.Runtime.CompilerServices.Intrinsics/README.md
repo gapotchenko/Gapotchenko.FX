@@ -182,38 +182,6 @@ Its exact magnitude depends on the processor, operating system, runtime, code lo
 
 This overhead is most noticeable for very short intrinsic implementations, where a call and a jump may cost as much as the operation itself. Consequently, a compiled intrinsic is not guaranteed to outperform a well-optimized managed implementation. Larger intrinsic bodies amortize the redirection cost, while hot callers may favor managed code that the JIT compiler can inline and optimize together with the caller. Performance-sensitive intrinsic implementations should therefore be benchmarked in their actual calling patterns on every targeted platform.
 
-## Supported Architectures
-
-The intrinsic compiler supports the following processor architecture and operating system combinations:
-
-| Processor Architecture | Windows | Linux | macOS |
-|------------------------|:-------:|:-----:|:-----:|
-| x86                    | ✓       | ✓     |       |
-| x64                    | ✓       | ✓     | ⧈     |
-| ARM                    |         | ◇     |       |
-| ARM64                  | ✓       | ✓     | ⧈     |
-
-✓ Intrinsic compilation is supported, including Native AOT
-<br>
-⧈ Intrinsic compilation is supported, except in Native AOT due to restrictions imposed by OS on self-modifiable code
-<br>
-◇ Processor feature detection is supported, but intrinsic compilation is not available
-
-An individual intrinsic is applied only when it provides machine code for a corresponding architecture and its other requirements
-such as processor features and operating system constraints are satisfied.
-When a combination or requirement is unsupported, or operating environment does not support intrinsic compilation, the original managed method implementation remains in use.
-
-## Native AOT Compatibility
-
-The methods defined using intrinsic machine code are fully compatible with native ahead-of-time compilation provided by .NET.
-
-When intrinsic initialization is triggered by the first direct call to a method in a Native AOT application,
-that call may continue executing the original ahead-of-time compiled implementation even though the method entry point is patched during type initialization.
-Subsequent calls execute the intrinsic machine code through the patched entry point.
-
-This behavior does not affect correctness because the original method implementation is the semantic fallback for the intrinsic.
-It only means that the managed implementation may be used for the first call; subsequent calls receive the intrinsic performance benefit.
-
 ## Diagnostics
 
 The intrinsic compiler reports diagnostics through the
@@ -280,6 +248,38 @@ Intrinsics.ActivationMode = IntrinsicsActivationMode.PreferablyOn;
 ```
 
 `AlwaysOff` mode is also useful for diagnostics and comparative testing because it keeps the managed implementations active without requiring changes to individual intrinsic declarations.
+
+## Supported Architectures
+
+The intrinsic compiler supports the following processor architecture and operating system combinations:
+
+| Processor Architecture | Windows | Linux | macOS |
+|------------------------|:-------:|:-----:|:-----:|
+| x86                    | ✓       | ✓     |       |
+| x64                    | ✓       | ✓     | ⧈     |
+| ARM                    |         | ◇     |       |
+| ARM64                  | ✓       | ✓     | ⧈     |
+
+✓ Intrinsic compilation is supported, including Native AOT
+<br>
+⧈ Intrinsic compilation is supported, except in Native AOT due to restrictions imposed by OS on self-modifiable code
+<br>
+◇ Processor feature detection is supported, but intrinsic compilation is not available
+
+An individual intrinsic is applied only when it provides machine code for a corresponding architecture and its other requirements
+such as processor features and operating system constraints are satisfied.
+When a combination or requirement is unsupported, or operating environment does not support intrinsic compilation, the original managed method implementation remains in use.
+
+## Native AOT Compatibility
+
+The methods defined using intrinsic machine code are fully compatible with native ahead-of-time compilation provided by .NET.
+
+When intrinsic initialization is triggered by the first direct call to a method in a Native AOT application,
+that call may continue executing the original ahead-of-time compiled implementation even though the method entry point is patched during type initialization.
+Subsequent calls execute the intrinsic machine code through the patched entry point.
+
+This behavior does not affect correctness because the original method implementation is the semantic fallback for the intrinsic.
+It only means that the managed implementation may be used for the first call; subsequent calls receive the intrinsic performance benefit.
 
 ## Usage
 
