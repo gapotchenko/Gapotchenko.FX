@@ -408,7 +408,7 @@ public static class Intrinsics
     public static TraceSource TraceSource => Log.TraceSource;
 
     /// <summary>
-    /// Gets the implementation options that should be set on an intrinsic method using <see cref="MethodImplAttribute"/>.
+    /// Gets the implementation options that should be applied to an intrinsic method using <see cref="MethodImplAttribute"/>.
     /// </summary>
     public const MethodImplOptions MethodImplOptions =
         MethodImplOptions.NoInlining

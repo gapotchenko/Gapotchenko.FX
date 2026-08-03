@@ -64,12 +64,7 @@ public static class BitOperationsPolyfills
             0x00, 0x50, 0xc1, 0x1a,  // CRC32CB W0,W0,W1
             RequiredFeatures = [MachineCodeIntrinsicFeature.Crc32],
             SupportedOSPlatforms = ["windows", "linux", "macos"])]
-        [MethodImpl(
-            MethodImplOptions.NoInlining
-#if NET            
-            | MethodImplOptions.AggressiveOptimization
-#endif        
-        )]
+        [MethodImpl(Intrinsics.MethodImplOptions)]
 #endif
         public static uint Crc32C(uint crc, byte data)
         {
