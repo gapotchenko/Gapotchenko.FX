@@ -173,6 +173,15 @@ For the given example, ARM64 benchmark has similar outcomes.
 The intrinsic compiler may or may not apply machine code to a method depending on the current app host environment.
 When intrinsic is not applied, the original method implementation is used, thus providing a graceful, albeit less performant, fallback.
 
+## Compiled Intrinsic Overheads
+
+Compiled intrinsics are not inlined into their callers.
+A call enters the original managed method and is then redirected by an unconditional jump to a separately allocated machine code trampoline.
+The trampoline preserves the runtime metadata of the managed method and provides appropriate unwind information for the intrinsic code, but the extra control transfer has a small steady-state cost.
+Its exact magnitude depends on the processor, operating system, runtime, code locality, and surrounding workload.
+
+This overhead is most noticeable for very short intrinsic implementations, where a call and a jump may cost as much as the operation itself. Consequently, a compiled intrinsic is not guaranteed to outperform a well-optimized managed implementation. Larger intrinsic bodies amortize the redirection cost, while hot callers may favor managed code that the JIT compiler can inline and optimize together with the caller. Performance-sensitive intrinsic implementations should therefore be benchmarked in their actual calling patterns on every targeted platform.
+
 ## Supported Architectures
 
 The intrinsic compiler supports the following processor architecture and operating system combinations:
