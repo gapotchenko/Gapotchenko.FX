@@ -168,6 +168,8 @@ Here are the execution times of all three implementations benchmarked on a Windo
 
 `Log2_Intrinsic` is a clear winner.
 
+For the given example, ARM64 benchmark has similar outcomes.
+
 The intrinsic compiler may or may not apply machine code to a method depending on the current app host environment.
 When intrinsic is not applied, the original method implementation is used, thus providing a graceful, albeit less performant, fallback.
 
