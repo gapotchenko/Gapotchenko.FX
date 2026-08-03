@@ -107,21 +107,27 @@ class BitOperations
         SupportedOSPlatforms = ["windows"])]
     [MachineCodeIntrinsic(
         Architecture.X86,
-        0x8b, 0x44, 0x24, 0x04,  // MOV EAX,[ESP+4]
-        0x83, 0xc8, 0x01,        // OR EAX,1
-        0x0f, 0xbd, 0xc0,        // BSR EAX,EAX
-        SupportedOSPlatforms = ["linux"])]
+        0x83, 0xc9, 0x01,        // OR ECX,1
+        0xf3, 0x0f, 0xbd, 0xc1,  // LZCNT EAX,ECX
+        0x83, 0xf0, 0x1f,        // XOR EAX,31
+        AdditionalArchitectures = [Architecture.X64],
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["windows"],
+        Priority = 10)]         // LZCNT is faster than BSR on AMD processors
     [MachineCodeIntrinsic(
-        Architecture.X64,
-        0x83, 0xcf, 0x01,  // OR EDI,1
-        0x0f, 0xbd, 0xc7,  // BSR EAX,EDI
-        SupportedOSPlatforms = ["linux", "macos"])]
+        Architecture.Arm,
+        0x01, 0x21,              // MOVS R1,1
+        0x08, 0x43,              // ORRS R0,R1
+        0xb0, 0xfa, 0x80, 0xf0,  // CLZ R0,R0
+        0x1f, 0x21,              // MOVS R1,31
+        0x48, 0x40,              // EORS R0,R1
+        SupportedOSPlatforms = ["linux"])]
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x00, 0x32,   // ORR W0,W0,#1
         0x00, 0x10, 0xc0, 0x5a,   // CLZ W0,W0
         0x00, 0x10, 0x00, 0x52,   // EOR W0,W0,#31
-        SupportedOSPlatforms = ["windows", "linux", "macos"])]
+        SupportedOSPlatforms = ["windows"])]
     [MethodImpl(Intrinsics.MethodImplOptions)]
     public static int Log2_Intrinsic(uint value)
     {
