@@ -190,7 +190,7 @@ The intrinsic compiler supports the following processor architecture and operati
 |------------------------|:-------:|:-----:|:-----:|
 | x86                    | ✓       | ✓     |       |
 | x64                    | ✓       | ✓     | ⧈     |
-| ARM (32-bit)           |         | ◇     |       |
+| ARM                    |         | ◇     |       |
 | ARM64                  | ✓       | ✓     | ⧈     |
 
 ✓ Intrinsic compilation is supported, including Native AOT
@@ -259,6 +259,27 @@ On .NET Framework, the trace source can alternatively be configured in the appli
 ```
 
 On .NET 7.0+, a similar effect can be achieved by utilizing `System.Diagnostics.TraceSource.Initializing` property.
+
+## Activation Mode
+
+The activation policy of the intrinsic compiler can be configured through the `Intrinsics.ActivationMode` property:
+
+- `IntrinsicsActivationMode.Auto` is the default. The compiler is activated when the current execution environment both allows and recommends unsafe code usage
+- `IntrinsicsActivationMode.AlwaysOff` disables subsequent intrinsic compilation. Managed fallback implementations remain in use
+- `IntrinsicsActivationMode.PreferablyOn` expresses the strongest preference for intrinsic compilation. The compiler is activated whenever the current execution environment allows unsafe code usage, even if it does not recommend it
+
+`PreferablyOn` mode does not guarantee that machine code will be applied.
+Platform and architecture support, intrinsic requirements, code validation, memory protection, and other runtime constraints still apply.
+
+The activation mode affects only subsequent calls to `Intrinsics.InitializeType` method.
+Changing the mode does not revert or otherwise modify intrinsic methods that have already been compiled.
+You can configure the property before initializing any type that contains intrinsic methods, preferably during application startup:
+
+``` C#
+Intrinsics.ActivationMode = IntrinsicsActivationMode.PreferablyOn;
+```
+
+`AlwaysOff` mode is also useful for diagnostics and comparative testing because it keeps the managed implementations active without requiring changes to individual intrinsic declarations.
 
 ## Usage
 
