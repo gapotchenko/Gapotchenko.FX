@@ -39,10 +39,12 @@ public static class BitOperations
 
     /// <inheritdoc cref="Log2(uint)"/>
     [CLSCompliant(false)]
+    #region Intrinsics
+    // x64
     [MachineCodeIntrinsic(
         Architecture.X64,
-        0x48, 0x83, 0xc9, 0x01,   // OR RCX,1
-        0x48, 0x0f, 0xbd, 0xc1,   // BSR RAX,RCX
+        0x48, 0x83, 0xc9, 0x01,  // OR RCX,1
+        0x48, 0x0f, 0xbd, 0xc1,  // BSR RAX,RCX
         SupportedOSPlatforms = ["windows"])]
     [MachineCodeIntrinsic(
         Architecture.X64,
@@ -51,14 +53,16 @@ public static class BitOperations
         0x48, 0x83, 0xf0, 0x3f,        // XOR RAX,63
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
         SupportedOSPlatforms = ["windows"],
-        Priority = 10)]               // LZCNT is faster than BSR on AMD processors
+        Priority = 10)]  // LZCNT is faster than BSR on AMD processors
+    // ARM64
     [MachineCodeIntrinsic(
         Architecture.Arm64,
-        0x00, 0x00, 0x40, 0xb2,   // ORR X0,X0,#1
-        0x00, 0x10, 0xc0, 0xda,   // CLZ X0,X0
-        0x00, 0x14, 0x40, 0xd2,   // EOR X0,X0,#63
+        0x00, 0x00, 0x40, 0xb2,  // ORR X0,X0,#1
+        0x00, 0x10, 0xc0, 0xda,  // CLZ X0,X0
+        0x00, 0x14, 0x40, 0xd2,  // EOR X0,X0,#63
         SupportedOSPlatforms = ["windows"])]
     [MethodImpl(Intrinsics.MethodImplOptions)]
+    #endregion
     public static int Log2(ulong value)
     {
         uint hi = (uint)(value >> 32);
