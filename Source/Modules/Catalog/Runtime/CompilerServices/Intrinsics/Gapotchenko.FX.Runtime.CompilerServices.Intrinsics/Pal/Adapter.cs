@@ -14,6 +14,8 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal;
 /// </summary>
 abstract class Adapter
 {
+    public abstract IntrinsicCapabilities GetCapabilities();
+
     public virtual bool IsFeatureSupported(MachineCodeIntrinsicFeature feature) => false;
 
     public abstract PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code);

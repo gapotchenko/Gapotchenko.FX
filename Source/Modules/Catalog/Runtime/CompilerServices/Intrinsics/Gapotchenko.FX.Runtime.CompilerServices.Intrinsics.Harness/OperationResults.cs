@@ -23,7 +23,7 @@ static class OperationResults
 
     static int GetIntrinsic()
     {
-        return IntrinsicCapabilities.Compilation ? 31 : Managed;
+        return (Intrinsics.Capabilities & IntrinsicCapabilities.Compilation) != 0 ? 31 : Managed;
     }
 
     /// <summary>

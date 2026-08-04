@@ -140,6 +140,7 @@
   <Folder Name="/01. Modules/Runtime/CompilerServices/" />
   <Folder Name="/01. Modules/Runtime/CompilerServices/Intrinsics/">
     <Project Path="Modules/Catalog/Runtime/CompilerServices/Intrinsics/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.Harness/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.Harness.csproj" Id="fd0a7195-55e2-48c1-a4c1-ca08fc1d7b40" />
+    <Project Path="Modules/Catalog/Runtime/CompilerServices/Intrinsics/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.Tests/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.Tests.csproj" Id="f7699452-0da6-4ca2-b60f-b62b8f0aa932" />
     <Project Path="Modules/Catalog/Runtime/CompilerServices/Intrinsics/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics/Gapotchenko.FX.Runtime.CompilerServices.Intrinsics.csproj" />
   </Folder>
   <Folder Name="/01. Modules/Runtime/InteropServices/">

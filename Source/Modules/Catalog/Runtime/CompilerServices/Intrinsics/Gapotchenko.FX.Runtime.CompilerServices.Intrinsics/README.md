@@ -270,6 +270,8 @@ An individual intrinsic is applied only when it provides machine code for a corr
 such as processor features and operating system constraints are satisfied.
 When a combination or requirement is unsupported, or operating environment does not support intrinsic compilation, the original managed method implementation remains in use.
 
+You can retrieve the intrinsic capabilities in run time be checking the value of `Intrinsics.Capabilities` property.
+
 ## Native AOT Compatibility
 
 The methods defined using intrinsic machine code are fully compatible with native ahead-of-time compilation provided by .NET.

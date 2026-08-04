@@ -18,6 +18,11 @@ namespace Gapotchenko.FX.Runtime.CompilerServices.Pal.Architectures.x86;
 
 abstract class AdapterX86Base : Adapter
 {
+    public sealed override IntrinsicCapabilities GetCapabilities()
+    {
+        return IntrinsicCapabilities.FeatureSupport | IntrinsicCapabilities.Compilation;
+    }
+
     public override bool IsFeatureSupported(MachineCodeIntrinsicFeature feature)
     {
         return feature switch

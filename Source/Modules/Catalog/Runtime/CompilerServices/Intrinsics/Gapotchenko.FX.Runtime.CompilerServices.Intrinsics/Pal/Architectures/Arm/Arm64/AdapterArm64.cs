@@ -14,6 +14,11 @@ using System.Runtime.InteropServices;
 
 abstract class AdapterArm64 : AdapterArm
 {
+    public sealed override IntrinsicCapabilities GetCapabilities()
+    {
+        return IntrinsicCapabilities.FeatureSupport | IntrinsicCapabilities.Compilation;
+    }
+
     public sealed override PatchResult PatchMethod(MethodInfo method, ReadOnlySpan<byte> code)
     {
         if ((code.Length & (sizeof(uint) - 1)) != 0)

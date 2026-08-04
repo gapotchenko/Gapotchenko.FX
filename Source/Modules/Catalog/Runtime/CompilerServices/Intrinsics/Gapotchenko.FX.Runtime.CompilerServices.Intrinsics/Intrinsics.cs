@@ -65,7 +65,9 @@ public static class Intrinsics
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        if (!IsActive())
+        // The m_GiveUpOnPatching flag is checked authoritatively under m_PatchingLock further in the code.
+        // Here it's used as a fast-path check only.
+        if (m_GiveUpOnPatching || !IsActive())
             return;
 
         var adapter = m_Adapter;
@@ -234,9 +236,6 @@ public static class Intrinsics
     static bool IsActive()
     {
         return
-            // The m_GiveUpOnPatching flag is checked authoritatively under m_PatchingLock further in the code.
-            // Here it's used as a fast-path check only.
-            !m_GiveUpOnPatching &&
             ActivationMode switch
             {
                 IntrinsicsActivationMode.Auto => IsActiveAuto(),
@@ -416,4 +415,20 @@ public static class Intrinsics
         | MethodImplOptions.AggressiveOptimization // prevent tiered compilation
 #endif
         ;
+
+    /// <summary>
+    /// Gets intrinsic capabilities available in the current environment.
+    /// </summary>
+    public static IntrinsicCapabilities Capabilities { get; } = GetCapabilities();
+
+    static IntrinsicCapabilities GetCapabilities()
+    {
+        if (!CodeSafetyStrategy.UnsafeCodeAllowed)
+            return IntrinsicCapabilities.None;
+
+        // Normally the result corresponds to the support matrix table in README.md file.
+        return
+            m_Adapter?.GetCapabilities() ??
+            IntrinsicCapabilities.None;
+    }
 }
