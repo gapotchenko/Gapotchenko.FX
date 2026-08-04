@@ -260,6 +260,13 @@ public static class BitOperations
         AdditionalArchitectures = [Architecture.X64],
         RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt],
         SupportedOSPlatforms = ["windows"])]
+    [MachineCodeIntrinsic(
+        Architecture.X86,
+        0xf3, 0x0f, 0xb8, 0x44, 0x24, 0x04,  // POPCNT EAX,[ESP+4]
+        0xf3, 0x0f, 0xb8, 0x4c, 0x24, 0x08,  // POPCNT ECX,[ESP+8]
+        0x03, 0xc1,                          // ADD EAX,ECX
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt],
+        SupportedOSPlatforms = ["linux"])]
     // x64
     [MachineCodeIntrinsic(
         Architecture.X64,
@@ -294,6 +301,8 @@ public static class BitOperations
     /// </summary>
     /// <param name="value">The value.</param>
     [CLSCompliant(false)]
+    #region Intrinsics
+    // x86
     [MachineCodeIntrinsic(
         Architecture.X86,
         0xf3, 0x0f, 0xb8, 0x44, 0x24, 0x04,  // POPCNT EAX,[ESP+4]
@@ -302,11 +311,18 @@ public static class BitOperations
         0xc2, 0x08, 0x00,                    // RET 8
         RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt],
         SupportedOSPlatforms = ["windows"])]
+    // x64
     [MachineCodeIntrinsic(
         Architecture.X64,
         0xf3, 0x48, 0x0f, 0xb8, 0xc1,  // POPCNT RAX,RCX
         RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt],
         SupportedOSPlatforms = ["windows"])]
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0xf3, 0x48, 0x0f, 0xb8, 0xc7,  // POPCNT RAX,RDI
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt],
+        SupportedOSPlatforms = ["linux", "macos"])]
+    // ARM64
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x67, 0x9e,   // FMOV D0,X0
@@ -314,8 +330,9 @@ public static class BitOperations
         0x00, 0xb8, 0x31, 0x0e,   // ADDV B0,V0.8B
         0x00, 0x3c, 0x01, 0x0e,   // UMOV W0,V0.B[0]
         RequiredFeatures = [MachineCodeIntrinsicFeature.AdvSimd],
-        SupportedOSPlatforms = ["windows"])]
+        SupportedOSPlatforms = ["windows", "linux", "macos"])]
     [MethodImpl(Intrinsics.MethodImplOptions)]
+    #endregion
     public static int PopCount(ulong value)
     {
         const ulong Mask01010101 = 0x5555555555555555UL;
