@@ -187,17 +187,21 @@ public static class BitOperations
     /// <param name="value">The mask.</param>
     /// <returns>The number of leading zero bits in a mask.</returns>
     [CLSCompliant(false)]
+    #region Intrinsics
+    // x86/x64
     [MachineCodeIntrinsic(
         Architecture.X86,
         0xf3, 0x0f, 0xbd, 0xc1,  // LZCNT EAX,ECX
         AdditionalArchitectures = [Architecture.X64],
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
         SupportedOSPlatforms = ["windows"])]
+    // ARM64
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x10, 0xc0, 0x5a,  // CLZ W0,W0
         SupportedOSPlatforms = ["windows"])]
     [MethodImpl(Intrinsics.MethodImplOptions)]
+    #endregion
     public static int LeadingZeroCount(uint value)
     {
         return (31 ^ Log2(value)) + (value == 0 ? 1 : 0);
