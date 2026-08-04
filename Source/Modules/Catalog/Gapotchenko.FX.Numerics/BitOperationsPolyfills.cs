@@ -40,6 +40,14 @@ public static class BitOperationsPolyfills
         /// <returns>The updated checksum.</returns>
         [CLSCompliant(false)]
 #if !TFF_BITOPERATIONS_CRC32C
+        // x86
+        [MachineCodeIntrinsic(
+            Architecture.X86,
+            0x8b, 0x44, 0x24, 0x04,                    // MOV EAX,[ESP+4]
+            0xf2, 0x0f, 0x38, 0xf0, 0x44, 0x24, 0x08,  // CRC32 EAX,BYTE PTR [ESP+8]
+            RequiredFeatures = [MachineCodeIntrinsicFeature.Crc32],
+            SupportedOSPlatforms = ["linux"])]
+        // x86/x64
         [MachineCodeIntrinsic(
             Architecture.X86,
             0x8b, 0xc1,                    // MOV EAX,ECX
@@ -47,18 +55,14 @@ public static class BitOperationsPolyfills
             AdditionalArchitectures = [Architecture.X64],
             RequiredFeatures = [MachineCodeIntrinsicFeature.Crc32],
             SupportedOSPlatforms = ["windows"])]
-        [MachineCodeIntrinsic(
-            Architecture.X86,
-            0x8b, 0x44, 0x24, 0x04,                    // MOV EAX,[ESP+4]
-            0xf2, 0x0f, 0x38, 0xf0, 0x44, 0x24, 0x08,  // CRC32 EAX,BYTE PTR [ESP+8]
-            RequiredFeatures = [MachineCodeIntrinsicFeature.Crc32],
-            SupportedOSPlatforms = ["linux"])]
+        // x64
         [MachineCodeIntrinsic(
             Architecture.X64,
             0x8b, 0xc7,                          // MOV EAX,EDI
             0xf2, 0x40, 0x0f, 0x38, 0xf0, 0xc6,  // CRC32 EAX,SIL
             RequiredFeatures = [MachineCodeIntrinsicFeature.Crc32],
             SupportedOSPlatforms = ["linux", "macos"])]
+        // ARM64
         [MachineCodeIntrinsic(
             Architecture.Arm64,
             0x00, 0x50, 0xc1, 0x1a,  // CRC32CB W0,W0,W1

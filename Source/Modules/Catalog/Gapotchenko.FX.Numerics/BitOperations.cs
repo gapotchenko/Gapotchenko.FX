@@ -37,54 +37,6 @@ public static class BitOperations
     // Some routines use techniques from the "Bit Twiddling Hacks" by Sean Eron Anderson:
     // http://graphics.stanford.edu/~seander/bithacks.html
 
-    /// <inheritdoc cref="Log2(uint)"/>
-    [CLSCompliant(false)]
-    #region Intrinsics
-    // x64
-    [MachineCodeIntrinsic(
-        Architecture.X64,
-        0x48, 0x83, 0xc9, 0x01,  // OR RCX,1
-        0x48, 0x0f, 0xbd, 0xc1,  // BSR RAX,RCX
-        SupportedOSPlatforms = ["windows"])]
-    [MachineCodeIntrinsic(
-        Architecture.X64,
-        0x48, 0x83, 0xc9, 0x01,        // OR RCX,1
-        0xf3, 0x48, 0x0f, 0xbd, 0xc1,  // LZCNT RAX,RCX
-        0x48, 0x83, 0xf0, 0x3f,        // XOR RAX,63
-        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
-        SupportedOSPlatforms = ["windows"],
-        Priority = 10)]  // LZCNT is faster than BSR on AMD processors
-    [MachineCodeIntrinsic(
-        Architecture.X64,
-        0x48, 0x83, 0xcf, 0x01,  // OR RDI,1
-        0x48, 0x0f, 0xbd, 0xc7,  // BSR RAX,RDI
-        SupportedOSPlatforms = ["linux", "macos"])]
-    [MachineCodeIntrinsic(
-        Architecture.X64,
-        0x48, 0x83, 0xcf, 0x01,        // OR RDI,1
-        0xf3, 0x48, 0x0f, 0xbd, 0xc7,  // LZCNT RAX,RDI
-        0x48, 0x83, 0xf0, 0x3f,        // XOR RAX,63
-        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
-        SupportedOSPlatforms = ["linux", "macos"],
-        Priority = 10)]  // LZCNT is faster than BSR on AMD processors
-    // ARM64
-    [MachineCodeIntrinsic(
-        Architecture.Arm64,
-        0x00, 0x00, 0x40, 0xb2,  // ORR X0,X0,#1
-        0x00, 0x10, 0xc0, 0xda,  // CLZ X0,X0
-        0x00, 0x14, 0x40, 0xd2,  // EOR X0,X0,#63
-        SupportedOSPlatforms = ["windows", "linux", "macos"])]
-    [MethodImpl(Intrinsics.MethodImplOptions)]
-    #endregion
-    public static int Log2(ulong value)
-    {
-        uint hi = (uint)(value >> 32);
-        if (hi == 0)
-            return Log2((uint)value);
-        else
-            return 32 + Log2(hi);
-    }
-
     /// <summary>
     /// Returns the integer (floor) base 2 logarithm of a specified number.
     /// </summary>
@@ -97,6 +49,8 @@ public static class BitOperations
     // x86
     [MachineCodeIntrinsic(
         Architecture.X86,
+        // The 0 -> 0 contract is fulfilled by setting the LSB to 1.
+        // Log2(1) is 0, and setting the LSB for values > 1 does not change the log2 result.
         0x8b, 0x44, 0x24, 0x04,  // MOV EAX,[ESP+4]
         0x83, 0xc8, 0x01,        // OR EAX,1
         0x0f, 0xbd, 0xc0,        // BSR EAX,EAX
@@ -113,8 +67,6 @@ public static class BitOperations
     // x86/x64
     [MachineCodeIntrinsic(
         Architecture.X86,
-        // The 0 -> 0 contract is fulfilled by setting the LSB to 1.
-        // Log2(1) is 0, and setting the LSB for values > 1 does not change the log2 result.
         0x83, 0xc9, 0x01,  // OR ECX,1
         0x0f, 0xbd, 0xc1,  // BSR EAX,ECX
         AdditionalArchitectures = [Architecture.X64],
@@ -171,6 +123,54 @@ public static class BitOperations
          8, 12, 20, 28, 15, 17, 24,  7,
         19, 27, 23,  6, 26,  5,  4, 31
     ];
+
+    /// <inheritdoc cref="Log2(uint)"/>
+    [CLSCompliant(false)]
+    #region Intrinsics
+    // x64
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x48, 0x83, 0xc9, 0x01,  // OR RCX,1
+        0x48, 0x0f, 0xbd, 0xc1,  // BSR RAX,RCX
+        SupportedOSPlatforms = ["windows"])]
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x48, 0x83, 0xc9, 0x01,        // OR RCX,1
+        0xf3, 0x48, 0x0f, 0xbd, 0xc1,  // LZCNT RAX,RCX
+        0x48, 0x83, 0xf0, 0x3f,        // XOR RAX,63
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["windows"],
+        Priority = 10)]  // LZCNT is faster than BSR on AMD processors
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x48, 0x83, 0xcf, 0x01,  // OR RDI,1
+        0x48, 0x0f, 0xbd, 0xc7,  // BSR RAX,RDI
+        SupportedOSPlatforms = ["linux", "macos"])]
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x48, 0x83, 0xcf, 0x01,        // OR RDI,1
+        0xf3, 0x48, 0x0f, 0xbd, 0xc7,  // LZCNT RAX,RDI
+        0x48, 0x83, 0xf0, 0x3f,        // XOR RAX,63
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["linux", "macos"],
+        Priority = 10)]  // LZCNT is faster than BSR on AMD processors
+    // ARM64
+    [MachineCodeIntrinsic(
+        Architecture.Arm64,
+        0x00, 0x00, 0x40, 0xb2,  // ORR X0,X0,#1
+        0x00, 0x10, 0xc0, 0xda,  // CLZ X0,X0
+        0x00, 0x14, 0x40, 0xd2,  // EOR X0,X0,#63
+        SupportedOSPlatforms = ["windows", "linux", "macos"])]
+    [MethodImpl(Intrinsics.MethodImplOptions)]
+    #endregion
+    public static int Log2(ulong value)
+    {
+        uint hi = (uint)(value >> 32);
+        if (hi == 0)
+            return Log2((uint)value);
+        else
+            return 32 + Log2(hi);
+    }
 
     /// <summary>
     /// Counts the number of leading zero bits in an unsigned 32-bit integer mask.
@@ -325,10 +325,10 @@ public static class BitOperations
     // ARM64
     [MachineCodeIntrinsic(
         Architecture.Arm64,
-        0x00, 0x00, 0x67, 0x9e,   // FMOV D0,X0
-        0x00, 0x58, 0x20, 0x0e,   // CNT V0.8B,V0.8B
-        0x00, 0xb8, 0x31, 0x0e,   // ADDV B0,V0.8B
-        0x00, 0x3c, 0x01, 0x0e,   // UMOV W0,V0.B[0]
+        0x00, 0x00, 0x67, 0x9e,  // FMOV D0,X0
+        0x00, 0x58, 0x20, 0x0e,  // CNT V0.8B,V0.8B
+        0x00, 0xb8, 0x31, 0x0e,  // ADDV B0,V0.8B
+        0x00, 0x3c, 0x01, 0x0e,  // UMOV W0,V0.B[0]
         RequiredFeatures = [MachineCodeIntrinsicFeature.AdvSimd],
         SupportedOSPlatforms = ["windows", "linux", "macos"])]
     [MethodImpl(Intrinsics.MethodImplOptions)]
