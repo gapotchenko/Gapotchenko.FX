@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageTag Include="security;cryptography;fips;rc4;md5;des;3des" />
+    <PackageTag Include="security;cryptography;fips;rc4;md5;des;3des;rsa" />
   </ItemGroup>
 
   <ItemGroup>
