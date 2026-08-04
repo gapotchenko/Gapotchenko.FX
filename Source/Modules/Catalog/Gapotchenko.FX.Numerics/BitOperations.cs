@@ -76,6 +76,24 @@ public static class BitOperations
     /// </remarks>
     /// <param name="value">A number whose integer (floor) base 2 logarithm is to be found.</param>
     [CLSCompliant(false)]
+    #region Intrinsics
+    // x86
+    [MachineCodeIntrinsic(
+        Architecture.X86,
+        0x8b, 0x44, 0x24, 0x04,  // MOV EAX,[ESP+4]
+        0x83, 0xc8, 0x01,        // OR EAX,1
+        0x0f, 0xbd, 0xc0,        // BSR EAX,EAX
+        SupportedOSPlatforms = ["linux"])]
+    [MachineCodeIntrinsic(
+        Architecture.X86,
+        0x8b, 0x44, 0x24, 0x04,  // MOV EAX,[ESP+4]
+        0x83, 0xc8, 0x01,        // OR EAX,1
+        0xf3, 0x0f, 0xbd, 0xc0,  // LZCNT EAX,EAX
+        0x83, 0xf0, 0x1f,        // XOR EAX,31
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["linux"],
+        Priority = 10)]  // LZCNT is faster than BSR on AMD processors
+    // x86/x64
     [MachineCodeIntrinsic(
         Architecture.X86,
         // The 0 -> 0 contract is fulfilled by setting the LSB to 1.
@@ -92,7 +110,22 @@ public static class BitOperations
         AdditionalArchitectures = [Architecture.X64],
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
         SupportedOSPlatforms = ["windows"],
-        Priority = 10)]         // LZCNT is faster than BSR on AMD processors
+        Priority = 10)]  // LZCNT is faster than BSR on AMD processors
+    // x64
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x83, 0xcf, 0x01,  // OR EDI,1
+        0x0f, 0xbd, 0xc7,  // BSR EAX,EDI
+        SupportedOSPlatforms = ["linux", "macos"])]
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x83, 0xcf, 0x01,        // OR EDI,1
+        0xf3, 0x0f, 0xbd, 0xc7,  // LZCNT EAX,EDI
+        0x83, 0xf0, 0x1f,        // XOR EAX,31
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["linux", "macos"],
+        Priority = 10)]
+    // ARM
     [MachineCodeIntrinsic(
         Architecture.Arm,
         0x01, 0x21,              // MOVS R1,1
@@ -101,13 +134,15 @@ public static class BitOperations
         0x1f, 0x21,              // MOVS R1,31
         0x48, 0x40,              // EORS R0,R1
         SupportedOSPlatforms = ["linux"])]
+    // ARM64
     [MachineCodeIntrinsic(
         Architecture.Arm64,
-        0x00, 0x00, 0x00, 0x32,   // ORR W0,W0,#1
-        0x00, 0x10, 0xc0, 0x5a,   // CLZ W0,W0
-        0x00, 0x10, 0x00, 0x52,   // EOR W0,W0,#31
-        SupportedOSPlatforms = ["windows"])]
+        0x00, 0x00, 0x00, 0x32,  // ORR W0,W0,#1
+        0x00, 0x10, 0xc0, 0x5a,  // CLZ W0,W0
+        0x00, 0x10, 0x00, 0x52,  // EOR W0,W0,#31
+        SupportedOSPlatforms = ["windows", "linux", "macos"])]
     [MethodImpl(Intrinsics.MethodImplOptions)]
+    #endregion
     public static int Log2(uint value)
     {
         // Round down to one less than a power of 2.
