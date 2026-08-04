@@ -188,6 +188,12 @@ public static class BitOperations
     /// <returns>The number of leading zero bits in a mask.</returns>
     [CLSCompliant(false)]
     #region Intrinsics
+    // x86
+    [MachineCodeIntrinsic(
+        Architecture.X86,
+        0xf3, 0x0f, 0xbd, 0x44, 0x24, 0x04,  // LZCNT EAX,[ESP+4]
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["linux"])]
     // x86/x64
     [MachineCodeIntrinsic(
         Architecture.X86,
@@ -195,11 +201,22 @@ public static class BitOperations
         AdditionalArchitectures = [Architecture.X64],
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
         SupportedOSPlatforms = ["windows"])]
+    // x64
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0xf3, 0x0f, 0xbd, 0xc7,  // LZCNT EAX,EDI
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["linux", "macos"])]
+    // ARM
+    [MachineCodeIntrinsic(
+        Architecture.Arm,
+        0xb0, 0xfa, 0x80, 0xf0,  // CLZ R0,R0
+        SupportedOSPlatforms = ["linux"])]
     // ARM64
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x10, 0xc0, 0x5a,  // CLZ W0,W0
-        SupportedOSPlatforms = ["windows"])]
+        SupportedOSPlatforms = ["windows", "linux", "macos"])]
     [MethodImpl(Intrinsics.MethodImplOptions)]
     #endregion
     public static int LeadingZeroCount(uint value)
@@ -213,16 +230,25 @@ public static class BitOperations
     /// <param name="value">The mask.</param>
     /// <returns>The number of leading zero bits in a mask.</returns>
     [CLSCompliant(false)]
+    #region Intrinsics
+    // x64
     [MachineCodeIntrinsic(
         Architecture.X64,
         0xf3, 0x48, 0x0f, 0xbd, 0xc1,  // LZCNT RAX,RCX
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
         SupportedOSPlatforms = ["windows"])]
     [MachineCodeIntrinsic(
+        Architecture.X64,
+        0xf3, 0x48, 0x0f, 0xbd, 0xc7,  // LZCNT RAX,RDI
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["linux", "macos"])]
+    // ARM64
+    [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x10, 0xc0, 0xda,  // CLZ X0,X0
-        SupportedOSPlatforms = ["windows"])]
+        SupportedOSPlatforms = ["windows", "linux", "macos"])]
     [MethodImpl(Intrinsics.MethodImplOptions)]
+    #endregion
     public static int LeadingZeroCount(ulong value)
     {
         return (63 ^ Log2(value)) + (value == 0 ? 1 : 0);
