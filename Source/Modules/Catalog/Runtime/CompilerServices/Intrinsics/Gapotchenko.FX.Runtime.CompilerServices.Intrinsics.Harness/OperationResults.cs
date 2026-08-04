@@ -19,7 +19,12 @@ static class OperationResults
     /// <summary>
     /// Indicates the result of machine code.
     /// </summary>
-    public const int Intrinsic = 31;
+    public static int Intrinsic { get; } = GetIntrinsic();
+
+    static int GetIntrinsic()
+    {
+        return IntrinsicCapabilities.Compilation ? 31 : Managed;
+    }
 
     /// <summary>
     /// Indicates the result of a non-leaf machine code.
@@ -28,16 +33,14 @@ static class OperationResults
 
     static int GetNonLeafIntrinsic()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RuntimeInformation.ProcessArchitecture is Architecture.X86 or Architecture.X64 or Architecture.Arm64 ||
-            RuntimeInformation.IsOSPlatform(OSPlatform.OSX) && RuntimeInformation.ProcessArchitecture is Architecture.X64 or Architecture.Arm64 ||
-            RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.ProcessArchitecture is Architecture.X86 or Architecture.X64 or Architecture.Arm64)
+        if (RuntimeInformation.ProcessArchitecture is Architecture.Arm)
         {
-            // Platforms with unwind support can handle non-leaf intrinsic functions.
-            return Intrinsic;
+            // Platforms without unwind support cannot handle non-leaf intrinsic functions.
+            return Managed;
         }
         else
         {
-            return Managed;
+            return Intrinsic;
         }
     }
 }

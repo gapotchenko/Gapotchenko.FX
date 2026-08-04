@@ -12,7 +12,7 @@ static class AssertExtensions
     public static void FirstIntrinsicInvocationIsOK(this Assert _, int result)
     {
         Assert.IsTrue(
-            result is OperationResults.Managed or OperationResults.Intrinsic,
+            result == OperationResults.Managed || result == OperationResults.Intrinsic,
             "The first intrinsic invocation returned an unexpected value.");
     }
 }
