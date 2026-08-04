@@ -36,7 +36,13 @@ static class Program
     static void Run(IReadOnlyList<string> args)
     {
         InitializeLogging();
+
         ShowEnvironmentInfo();
+        Console.WriteLine();
+
+        ShowCapabilitiesInfo();
+        Console.WriteLine();
+
         Exercise();
     }
 
@@ -64,13 +70,22 @@ static class Program
 
     static void ShowEnvironmentInfo()
     {
+        Console.WriteLine("*** Environment ***");
         Console.WriteLine("OS: {0}", RuntimeInformation.OSDescription);
         Console.WriteLine("Process architecture: {0}", RuntimeInformation.ProcessArchitecture);
         Console.WriteLine(".NET environment: {0}", RuntimeInformation.FrameworkDescription);
     }
 
+    static void ShowCapabilitiesInfo()
+    {
+        Console.WriteLine("*** Capabilities ***");
+        Console.WriteLine("Intrinsics: {0}", Intrinsics.Capabilities);
+    }
+
     static void Exercise()
     {
+        Console.WriteLine("*** Exercises ***");
+
         DoExercise(() => NormalExercise(), "Normal exercise");
         DoExercise(() => EdgeCaseExercise(), "Edge-case exercise");
         DoExercise(() => StressExercise.Run(), "Stress exercise");
@@ -79,7 +94,10 @@ static class Program
 
     static void DoExercise(Action action, string title)
     {
-        Console.WriteLine("{0}: in progress...", title);
+        Console.WriteLine();
+        Console.WriteLine("--- {0} ---", title);
+
+        Console.WriteLine("In progress...", title);
         try
         {
             action();
@@ -87,14 +105,14 @@ static class Program
         catch
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write("{0}: FAIL", title);
+            Console.Write("Result: FAIL");
             Console.ResetColor();
             Console.WriteLine();
             throw;
         }
 
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.Write("{0}: PASS", title);
+        Console.Write("Result: PASS");
         Console.ResetColor();
         Console.WriteLine();
     }
