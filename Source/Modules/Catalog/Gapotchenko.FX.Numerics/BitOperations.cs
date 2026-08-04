@@ -260,21 +260,37 @@ public static class BitOperations
     /// </summary>
     /// <param name="value">The value.</param>
     [CLSCompliant(false)]
+    #region Intrinsics
+    // x86
+    [MachineCodeIntrinsic(
+        Architecture.X86,
+        0xf3, 0x0f, 0xb8, 0x44, 0x24, 0x04,  // POPCNT EAX,[ESP+4]
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt],
+        SupportedOSPlatforms = ["linux"])]
+    // x86/x64
     [MachineCodeIntrinsic(
         Architecture.X86,
         0xf3, 0x0f, 0xb8, 0xc1,  // POPCNT EAX,ECX
         AdditionalArchitectures = [Architecture.X64],
         RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt],
         SupportedOSPlatforms = ["windows"])]
+    // x64
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0xf3, 0x0f, 0xb8, 0xc7,  // POPCNT EAX,EDI
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Popcnt],
+        SupportedOSPlatforms = ["linux", "macos"])]
+    // ARM64
     [MachineCodeIntrinsic(
         Architecture.Arm64,
-        0x00, 0x00, 0x27, 0x1e,   // FMOV S0,W0
-        0x00, 0x58, 0x20, 0x0e,   // CNT V0.8B,V0.8B
-        0x00, 0xb8, 0x31, 0x0e,   // ADDV B0,V0.8B
-        0x00, 0x3c, 0x01, 0x0e,   // UMOV W0,V0.B[0]
+        0x00, 0x00, 0x27, 0x1e,  // FMOV S0,W0
+        0x00, 0x58, 0x20, 0x0e,  // CNT V0.8B,V0.8B
+        0x00, 0xb8, 0x31, 0x0e,  // ADDV B0,V0.8B
+        0x00, 0x3c, 0x01, 0x0e,  // UMOV W0,V0.B[0]
         RequiredFeatures = [MachineCodeIntrinsicFeature.AdvSimd],
-        SupportedOSPlatforms = ["windows"])]
+        SupportedOSPlatforms = ["windows", "linux", "macos"])]
     [MethodImpl(Intrinsics.MethodImplOptions)]
+    #endregion
     public static int PopCount(uint value)
     {
         uint x = value;
