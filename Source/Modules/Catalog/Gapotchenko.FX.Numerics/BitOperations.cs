@@ -142,15 +142,6 @@ public static class BitOperations
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
         SupportedOSPlatforms = ["linux", "macos"],
         Priority = 10)]
-    // ARM
-    [MachineCodeIntrinsic(
-        Architecture.Arm,
-        0x01, 0x21,              // MOVS R1,1
-        0x08, 0x43,              // ORRS R0,R1
-        0xb0, 0xfa, 0x80, 0xf0,  // CLZ R0,R0
-        0x1f, 0x21,              // MOVS R1,31
-        0x48, 0x40,              // EORS R0,R1
-        SupportedOSPlatforms = ["linux"])]
     // ARM64
     [MachineCodeIntrinsic(
         Architecture.Arm64,
@@ -207,11 +198,6 @@ public static class BitOperations
         0xf3, 0x0f, 0xbd, 0xc7,  // LZCNT EAX,EDI
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
         SupportedOSPlatforms = ["linux", "macos"])]
-    // ARM
-    [MachineCodeIntrinsic(
-        Architecture.Arm,
-        0xb0, 0xfa, 0x80, 0xf0,  // CLZ R0,R0
-        SupportedOSPlatforms = ["linux"])]
     // ARM64
     [MachineCodeIntrinsic(
         Architecture.Arm64,
