@@ -54,13 +54,26 @@ public static class BitOperations
         RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
         SupportedOSPlatforms = ["windows"],
         Priority = 10)]  // LZCNT is faster than BSR on AMD processors
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x48, 0x83, 0xcf, 0x01,  // OR RDI,1
+        0x48, 0x0f, 0xbd, 0xc7,  // BSR RAX,RDI
+        SupportedOSPlatforms = ["linux", "macos"])]
+    [MachineCodeIntrinsic(
+        Architecture.X64,
+        0x48, 0x83, 0xcf, 0x01,        // OR RDI,1
+        0xf3, 0x48, 0x0f, 0xbd, 0xc7,  // LZCNT RAX,RDI
+        0x48, 0x83, 0xf0, 0x3f,        // XOR RAX,63
+        RequiredFeatures = [MachineCodeIntrinsicFeature.Lzcnt],
+        SupportedOSPlatforms = ["linux", "macos"],
+        Priority = 10)]  // LZCNT is faster than BSR on AMD processors
     // ARM64
     [MachineCodeIntrinsic(
         Architecture.Arm64,
         0x00, 0x00, 0x40, 0xb2,  // ORR X0,X0,#1
         0x00, 0x10, 0xc0, 0xda,  // CLZ X0,X0
         0x00, 0x14, 0x40, 0xd2,  // EOR X0,X0,#63
-        SupportedOSPlatforms = ["windows"])]
+        SupportedOSPlatforms = ["windows", "linux", "macos"])]
     [MethodImpl(Intrinsics.MethodImplOptions)]
     #endregion
     public static int Log2(ulong value)
