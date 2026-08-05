@@ -1,4 +1,11 @@
-﻿namespace Gapotchenko.FX.Security.Cryptography.Utils;
+﻿// Gapotchenko.FX
+//
+// Copyright © Gapotchenko and Contributors
+//
+// File introduced by: Oleksiy Gapotchenko
+// Year of introduction: 2026
+
+namespace Gapotchenko.FX.Security.Cryptography.Utils;
 
 static class RngUtil
 {

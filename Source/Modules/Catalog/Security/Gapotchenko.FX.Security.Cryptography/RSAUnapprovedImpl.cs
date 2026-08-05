@@ -7,6 +7,7 @@
 
 using Gapotchenko.FX.Security.Cryptography.Utils;
 using System.Buffers.Binary;
+using System.Diagnostics;
 using System.Numerics;
 
 #pragma warning disable CA5350 // Do Not Use Weak Cryptographic Algorithms
@@ -474,6 +475,24 @@ sealed class RSAUnapprovedImpl : RSA
 
     static byte[] ToBytes(in BigInteger value, int length)
     {
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
+        int byteCount = value.GetByteCount(isUnsigned: true);
+        if (byteCount > length)
+            throw new CryptographicException("Integer value is too large.");
+
+        byte[] result = new byte[length];
+
+        bool success = value.TryWriteBytes(
+            result.AsSpan(length - byteCount),
+            out int bytesWritten,
+            isUnsigned: true,
+            isBigEndian: true);
+
+        Debug.Assert(success);
+        Debug.Assert(bytesWritten == byteCount);
+
+        return result;
+#else
         byte[] bytes = ToBytes(value);
         if (bytes.Length == length)
             return bytes;
@@ -484,6 +503,7 @@ sealed class RSAUnapprovedImpl : RSA
         byte[] result = new byte[length];
         bytes.CopyTo(result.AsSpan(length - bytes.Length));
         return result;
+#endif
     }
 
     static byte[] Mgf1(byte[] seed, int length, HashAlgorithmName hashAlgorithm)
