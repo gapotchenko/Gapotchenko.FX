@@ -14,8 +14,10 @@ using RSA = System.Security.Cryptography.RSA;
 public sealed class RSAUnapprovedTests
 {
     const int KeySize = 1024;
+    const int KeyGenerationTimeout = 30 * 1000;
 
     [TestMethod]
+    [Timeout(KeyGenerationTimeout)]
     public void RSAUnapproved_GenerateKey()
     {
         using var algorithm = CreateActualAlgorithm();

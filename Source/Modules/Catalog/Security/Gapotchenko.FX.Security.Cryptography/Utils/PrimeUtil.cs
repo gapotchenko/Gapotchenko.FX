@@ -6,23 +6,37 @@ static class PrimeUtil
 {
     public static BigInteger GeneratePrime(int bits)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(bits, 2);
+
         int byteCount = (bits + 7) / 8;
         int excessBits = byteCount * 8 - bits;
 
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
         Span<byte> bytes = stackalloc byte[byteCount];
 #else
-        byte[] bytes = new byte[byteCount];
+        byte[] bytes = new byte[byteCount + 1];
 #endif
 
         for (; ; )
         {
             RandomNumberGenerator.Fill(bytes);
-            bytes[^1] &= (byte)(0xff >>> excessBits);
-            bytes[^1] |= (byte)(0x80 >>> excessBits);
+
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
+            ref byte last = ref bytes[^1];
+#else
+            bytes[^1] = 0; // unsigned
+            ref byte last = ref bytes[^2];
+#endif
+            last = (byte)((last & (0xff >>> excessBits)) | (0x80 >>> excessBits));
             bytes[0] |= 1;
 
-            var candidate = new BigInteger(bytes);
+            BigInteger candidate;
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
+            candidate = new BigInteger(bytes, isUnsigned: true);
+#else
+            candidate = new BigInteger(bytes);
+#endif
+
             if (IsProbablePrime(candidate))
                 return candidate;
         }
@@ -49,23 +63,27 @@ static class PrimeUtil
             ++s;
         }
 
-        int byteCount;
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
-        byteCount = value.GetByteCount();
-#else
-        byteCount = value.ToByteArray().Length;
-#endif
+        int byteCount = BigIntegerUtil.GetByteCount(value, isUnsigned: true);
 
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
         Span<byte> witnessBytes = stackalloc byte[byteCount];
 #else
-        byte[] witnessBytes = new byte[byteCount];
+        byte[] witnessBytes = new byte[byteCount + 1];
 #endif
 
         for (int i = 0; i < 64; ++i)
         {
+            BigInteger witness;
+
             RandomNumberGenerator.Fill(witnessBytes);
-            var a = new BigInteger(witnessBytes) % (value - 3) + 2;
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
+            witness = new BigInteger(witnessBytes, isUnsigned: true);
+#else
+            witnessBytes[^1] = 0;
+            witness = new BigInteger(witnessBytes);
+#endif
+
+            var a = witness % (value - 3) + 2;
             var x = BigInteger.ModPow(a, d, value);
             if (x == 1 || x == value - 1)
                 continue;

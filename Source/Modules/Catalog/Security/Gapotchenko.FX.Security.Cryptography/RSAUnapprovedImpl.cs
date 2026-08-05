@@ -28,6 +28,7 @@ sealed class RSAUnapprovedImpl : RSA
     public override void ImportParameters(RSAParameters parameters)
     {
         ValidateRequiredParameter(parameters.Modulus, nameof(parameters.Modulus));
+
         int keySize = parameters.Modulus.Length * 8;
         if (!IsValidKeySize(keySize))
             throw new CryptographicException("Specified key is not a valid size for this algorithm.");
@@ -215,7 +216,7 @@ sealed class RSAUnapprovedImpl : RSA
             while (q == p);
 
             var n = p * q;
-            if (BitLength(n) != keySize)
+            if (BigIntegerUtil.GetBitLength(n) != keySize)
                 continue;
 
             var pMinus1 = p - 1;
@@ -461,19 +462,9 @@ sealed class RSAUnapprovedImpl : RSA
         return false;
     }
 
-    static int BitLength(BigInteger value)
-    {
-        byte[] bytes = ToBytes(value);
-        byte mostSignificantByte = bytes[0];
-        return (bytes.Length - 1) * 8 + BitOperations.Log2(mostSignificantByte) + 1;
-    }
-
     static BigInteger FromBytes(ReadOnlySpan<byte> bytes)
     {
-        byte[] littleEndian = new byte[bytes.Length + 1];
-        for (int i = 0; i < bytes.Length; ++i)
-            littleEndian[i] = bytes[bytes.Length - i - 1];
-        return new BigInteger(littleEndian);
+        return BigIntegerUtil.FromBytes(bytes, true, true);
     }
 
     static byte[] ToBytes(BigInteger value)
