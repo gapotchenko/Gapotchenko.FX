@@ -43,6 +43,31 @@ public sealed class RSAUnapprovedTests
     }
 
     [TestMethod]
+    [Timeout(KeyGenerationTimeout)]
+    public void RSAUnapproved_ChangingKeySizeRegeneratesKey()
+    {
+        using var algorithm = CreateActualAlgorithm();
+
+        // -----------------------------------------------------
+
+        algorithm.KeySize = KeySize;
+        byte[]? oldModulus = algorithm.ExportParameters(false).Modulus;
+
+        Assert.IsNotNull(oldModulus);
+        Assert.HasCount(algorithm.KeySize / 8, oldModulus);
+        Assert.AreNotEqual(0, oldModulus[0]);
+
+        // -----------------------------------------------------
+
+        algorithm.KeySize = KeySize + 256;
+        byte[]? newModulus = algorithm.ExportParameters(false).Modulus;
+
+        Assert.IsNotNull(newModulus);
+        Assert.HasCount(algorithm.KeySize / 8, newModulus);
+        Assert.AreNotEqual(0, newModulus[0]);
+    }
+
+    [TestMethod]
     public void RSAUnapproved_ImportExportParameters()
     {
         using var exampleAlgorithm = CreateExampleAlgorithm();
