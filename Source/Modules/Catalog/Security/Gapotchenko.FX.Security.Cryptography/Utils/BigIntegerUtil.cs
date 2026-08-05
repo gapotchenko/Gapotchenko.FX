@@ -95,28 +95,15 @@ static class BigIntegerUtil
             return 0;
 
         return length * 8L + BitOperations.Log2(mostSignificantByte) + 1;
+
+        static (int Length, byte Zero) GetSignificantLength(int sign, byte[] bytes)
+        {
+            int length = bytes.Length;
+            byte zero = sign < 0 ? (byte)0xff : (byte)0x00;
+            while (length > 1 && bytes[length - 1] == zero)
+                --length;
+            return (length, zero);
+        }
 #endif
     }
-
-    static (int Length, byte Zero) GetSignificantLength(int sign, byte[] bytes)
-    {
-        int length = bytes.Length;
-        byte zero = sign < 0 ? (byte)0xff : (byte)0x00;
-        while (length > 1 && bytes[length - 1] == zero)
-            --length;
-        return (length, zero);
-    }
-
-    //static byte[] ToBytesLE(BigInteger value)
-    //{
-    //    byte[] bytes = value.ToByteArray();
-    //    int length = bytes.Length;
-    //    while (length > 1 && bytes[length - 1] == 0)
-    //        --length;
-
-    //    if (length == bytes.Length)
-    //        return bytes;
-    //    else
-    //        return bytes[..length];
-    //}
 }

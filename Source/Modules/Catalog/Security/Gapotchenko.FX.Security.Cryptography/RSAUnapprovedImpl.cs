@@ -87,7 +87,7 @@ sealed class RSAUnapprovedImpl : RSA
         return new RSAParameters
         {
             Modulus = ToBytes(m_Modulus, KeyByteSize),
-            Exponent = BigIntegerUtil.ToBytes(m_Exponent, true, true),
+            Exponent = ToBytes(m_Exponent),
             P = includePrivateParameters ? ToBytes(m_P, primeByteSize) : null,
             Q = includePrivateParameters ? ToBytes(m_Q, KeySize / 16) : null,
             DP = includePrivateParameters ? ToBytes(m_DP, primeByteSize) : null,
@@ -467,9 +467,17 @@ sealed class RSAUnapprovedImpl : RSA
         return BigIntegerUtil.FromBytes(bytes, true, true);
     }
 
-    static byte[] ToBytes(BigInteger value, int length)
+    static byte[] ToBytes(in BigInteger value)
     {
-        byte[] bytes = BigIntegerUtil.ToBytes(value, true, true);
+        return BigIntegerUtil.ToBytes(value, true, true);
+    }
+
+    static byte[] ToBytes(in BigInteger value, int length)
+    {
+        byte[] bytes = ToBytes(value);
+        if (bytes.Length == length)
+            return bytes;
+
         if (bytes.Length > length)
             throw new CryptographicException("Integer value is too large.");
 
