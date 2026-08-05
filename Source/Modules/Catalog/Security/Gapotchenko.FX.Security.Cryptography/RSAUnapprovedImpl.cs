@@ -22,9 +22,29 @@ sealed class RSAUnapprovedImpl : RSA
         KeySizeValue = 2048;
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+            ClearKey();
+
+        base.Dispose(disposing);
+    }
+
     public override string? KeyExchangeAlgorithm => "RSA";
 
     public override string SignatureAlgorithm => "RSA";
+
+    public override int KeySize
+    {
+        get => base.KeySize;
+        set
+        {
+            int oldValue = KeySizeValue;
+            base.KeySize = value;
+            if (value != oldValue)
+                ClearKey();
+        }
+    }
 
     public override void ImportParameters(RSAParameters parameters)
     {
@@ -192,6 +212,20 @@ sealed class RSAUnapprovedImpl : RSA
     {
         if (!m_HasKey)
             GenerateKey();
+    }
+
+    void ClearKey()
+    {
+        m_Modulus = default;
+        m_Exponent = default;
+        m_P = default;
+        m_Q = default;
+        m_DP = default;
+        m_DQ = default;
+        m_InverseQ = default;
+        m_D = default;
+        m_HasKey = false;
+        m_HasPrivateParameters = false;
     }
 
     void EnsurePrivateKey()
