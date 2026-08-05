@@ -17,6 +17,15 @@ public sealed class RSAUnapprovedTests
     const int KeyGenerationTimeout = 30 * 1000;
 
     [TestMethod]
+    public void RSAUnapproved_DefaultKeySize()
+    {
+        using var exampleAlgorithm = CreateExampleAlgorithm();
+        using var actualAlgorithm = CreateActualAlgorithm();
+
+        Assert.AreEqual(exampleAlgorithm.KeySize, actualAlgorithm.KeySize);
+    }
+
+    [TestMethod]
     [Timeout(KeyGenerationTimeout)]
     public void RSAUnapproved_GenerateKey()
     {

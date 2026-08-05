@@ -19,7 +19,21 @@ sealed class RSAUnapprovedImpl : RSA
     public RSAUnapprovedImpl()
     {
         LegalKeySizesValue = [new KeySizes(384, 16384, 8)];
-        KeySizeValue = 2048;
+        KeySizeValue = GetDefaultKeySize();
+    }
+
+    static int GetDefaultKeySize()
+    {
+#if NETCOREAPP
+        return 2048;
+#elif NETFRAMEWORK
+        return 1024;
+#else
+        if (Environment.Version.Major >= 5)
+            return 2048;
+        else
+            return 1024;
+#endif
     }
 
     protected override void Dispose(bool disposing)
