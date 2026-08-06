@@ -638,7 +638,10 @@ sealed class RSAUnapprovedImpl : RSA
             throw new CryptographicException(name + " parameter is required.");
     }
 
-    static void ValidatePublicParameters(BigInteger modulus, BigInteger exponent, int keySize)
+    static void ValidatePublicParameters(
+        in BigInteger modulus,
+        in BigInteger exponent,
+        int keySize)
     {
         /*
          * Validates that:
@@ -659,14 +662,14 @@ sealed class RSAUnapprovedImpl : RSA
     }
 
     static void ValidatePrivateParameters(
-        BigInteger modulus,
-        BigInteger exponent,
-        BigInteger d,
-        BigInteger p,
-        BigInteger q,
-        BigInteger dp,
-        BigInteger dq,
-        BigInteger inverseQ)
+        in BigInteger modulus,
+        in BigInteger exponent,
+        in BigInteger d,
+        in BigInteger p,
+        in BigInteger q,
+        in BigInteger dp,
+        in BigInteger dq,
+        in BigInteger inverseQ)
     {
         /*
          * Validates that:
