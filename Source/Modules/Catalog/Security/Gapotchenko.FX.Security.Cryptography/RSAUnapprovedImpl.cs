@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Numerics;
 using Gapotchenko.FX.Security.Cryptography.Utils;
 using System.Buffers.Binary;
 using System.Diagnostics;
@@ -529,12 +530,12 @@ sealed class RSAUnapprovedImpl : RSA
 
     static byte[] ToBytes(in BigInteger value)
     {
-        return BigIntegerUtil.ToBytes(value, true, true);
+        return value.ToByteArray(true, true);
     }
 
     static byte[] ToBytes(in BigInteger value, int length)
     {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
         int byteCount = value.GetByteCount(isUnsigned: true);
         if (byteCount > length)
             throw new CryptographicException("Integer value is too large.");

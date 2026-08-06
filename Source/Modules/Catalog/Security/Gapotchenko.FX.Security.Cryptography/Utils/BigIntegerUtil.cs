@@ -31,43 +31,6 @@ static class BigIntegerUtil
 #endif
     }
 
-    public static byte[] ToBytes(in BigInteger value, bool isUnsigned = false, bool isBigEndian = false)
-    {
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
-        return value.ToByteArray(isUnsigned, isBigEndian);
-#else
-        byte[] bytes = value.ToByteArray();
-        int length = bytes.Length;
-
-        if (isUnsigned)
-        {
-            if (value.Sign < 0)
-                throw new OverflowException("Negative values do not have an unsigned representation.");
-
-            if (length > 1 && bytes[^1] == 0)
-                --length;
-        }
-
-        if (isBigEndian)
-        {
-            byte[] result = new byte[length];
-            for (int i = 0; i < length; ++i)
-                result[i] = bytes[length - i - 1];
-            return result;
-        }
-        else if (length == bytes.Length)
-        {
-            return bytes;
-        }
-        else
-        {
-            byte[] result = new byte[length];
-            Array.Copy(bytes, result, length);
-            return result;
-        }
-#endif
-    }
-
     public static int GetByteCount(in BigInteger value, bool isUnsigned = false)
     {
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
