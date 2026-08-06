@@ -86,26 +86,29 @@ sealed class RSAUnapprovedImpl : RSA
             ValidateRequiredParameter(parameters.DP, nameof(parameters.DP));
             ValidateRequiredParameter(parameters.DQ, nameof(parameters.DQ));
             ValidateRequiredParameter(parameters.InverseQ, nameof(parameters.InverseQ));
-
-            m_D = FromBytes(parameters.D);
-            m_P = FromBytes(parameters.P);
-            m_Q = FromBytes(parameters.Q);
-            m_DP = FromBytes(parameters.DP);
-            m_DQ = FromBytes(parameters.DQ);
-            m_InverseQ = FromBytes(parameters.InverseQ);
-        }
-        else
-        {
-            m_D = default;
-            m_P = default;
-            m_Q = default;
-            m_DP = default;
-            m_DQ = default;
-            m_InverseQ = default;
         }
 
-        m_Modulus = FromBytes(parameters.Modulus);
-        m_Exponent = FromBytes(parameters.Exponent);
+        var modulus = FromBytes(parameters.Modulus);
+        var exponent = FromBytes(parameters.Exponent);
+        var d = hasPrivateParameters ? FromBytes(parameters.D) : default;
+        var p = hasPrivateParameters ? FromBytes(parameters.P) : default;
+        var q = hasPrivateParameters ? FromBytes(parameters.Q) : default;
+        var dp = hasPrivateParameters ? FromBytes(parameters.DP) : default;
+        var dq = hasPrivateParameters ? FromBytes(parameters.DQ) : default;
+        var inverseQ = hasPrivateParameters ? FromBytes(parameters.InverseQ) : default;
+
+        ValidatePublicParameters(modulus, exponent, keySize);
+        if (hasPrivateParameters)
+            ValidatePrivateParameters(modulus, exponent, d, p, q, dp, dq, inverseQ);
+
+        m_Modulus = modulus;
+        m_Exponent = exponent;
+        m_D = d;
+        m_P = p;
+        m_Q = q;
+        m_DP = dp;
+        m_DQ = dq;
+        m_InverseQ = inverseQ;
         m_HasPrivateParameters = hasPrivateParameters;
         m_HasKey = true;
         KeySizeValue = keySize;
@@ -116,20 +119,26 @@ sealed class RSAUnapprovedImpl : RSA
         EnsureKey();
 
         if (includePrivateParameters && !m_HasPrivateParameters)
-            throw new CryptographicException("Private key is not available.");
+            throw PrivateKeyIsNotAvailable();
 
-        int primeByteSize = (KeySize + 15) / 16;
-        return new RSAParameters
-        {
-            Modulus = ToBytes(m_Modulus, KeyByteSize),
-            Exponent = ToBytes(m_Exponent),
-            P = includePrivateParameters ? ToBytes(m_P, primeByteSize) : null,
-            Q = includePrivateParameters ? ToBytes(m_Q, KeySize / 16) : null,
-            DP = includePrivateParameters ? ToBytes(m_DP, primeByteSize) : null,
-            DQ = includePrivateParameters ? ToBytes(m_DQ, KeySize / 16) : null,
-            InverseQ = includePrivateParameters ? ToBytes(m_InverseQ, primeByteSize) : null,
-            D = includePrivateParameters ? ToBytes(m_D, KeyByteSize) : null
-        };
+        int keySize = KeySize;
+        int keyByteSize = KeyByteSize;
+
+        int firstPrimeByteSize = (keySize + 15) / 16;
+        int secondPrimeByteSize = keySize / 16;
+
+        return
+            new RSAParameters
+            {
+                Modulus = ToBytes(m_Modulus, keyByteSize),
+                Exponent = ToBytes(m_Exponent),
+                P = includePrivateParameters ? ToBytes(m_P, firstPrimeByteSize) : null,
+                Q = includePrivateParameters ? ToBytes(m_Q, secondPrimeByteSize) : null,
+                DP = includePrivateParameters ? ToBytes(m_DP, firstPrimeByteSize) : null,
+                DQ = includePrivateParameters ? ToBytes(m_DQ, secondPrimeByteSize) : null,
+                InverseQ = includePrivateParameters ? ToBytes(m_InverseQ, firstPrimeByteSize) : null,
+                D = includePrivateParameters ? ToBytes(m_D, keyByteSize) : null
+            };
     }
 
     public override byte[] Encrypt(byte[] data, RSAEncryptionPadding padding)
@@ -238,6 +247,7 @@ sealed class RSAUnapprovedImpl : RSA
         m_DQ = default;
         m_InverseQ = default;
         m_D = default;
+
         m_HasKey = false;
         m_HasPrivateParameters = false;
     }
@@ -245,8 +255,9 @@ sealed class RSAUnapprovedImpl : RSA
     void EnsurePrivateKey()
     {
         EnsureKey();
+
         if (!m_HasPrivateParameters)
-            throw new CryptographicException("Private key is not available.");
+            throw PrivateKeyIsNotAvailable();
     }
 
     void GenerateKey()
@@ -627,7 +638,78 @@ sealed class RSAUnapprovedImpl : RSA
             throw new CryptographicException(name + " parameter is required.");
     }
 
+    static void ValidatePublicParameters(BigInteger modulus, BigInteger exponent, int keySize)
+    {
+        /*
+         * Validates that:
+         *
+         *   - Modulus is greater than one, odd, and has the advertised bit length
+         *   - Exponent is odd, greater than one, and smaller than the modulus
+         */
+
+        if (modulus <= 1 ||
+            modulus.IsEven ||
+            BigIntegerUtil.GetBitLength(modulus) != keySize ||
+            exponent <= 1 ||
+            exponent.IsEven ||
+            exponent >= modulus)
+        {
+            throw InvalidParameters();
+        }
+    }
+
+    static void ValidatePrivateParameters(
+        BigInteger modulus,
+        BigInteger exponent,
+        BigInteger d,
+        BigInteger p,
+        BigInteger q,
+        BigInteger dp,
+        BigInteger dq,
+        BigInteger inverseQ)
+    {
+        /*
+         * Validates that:
+         *
+         *   - n == p * q, with distinct positive odd factors
+         *   - d is in range and satisfies e * d ≡ 1 mod lcm(p−1, q−1)
+         *   - DP == d mod (p−1)
+         *   - DQ == d mod (q−1)
+         *   - InverseQ * q ≡ 1 mod p, with InverseQ in range
+         */
+
+        if (p <= 1 ||
+            q <= 1 ||
+            p == q ||
+            p.IsEven ||
+            q.IsEven ||
+            p * q != modulus ||
+            d <= 1 ||
+            d >= modulus)
+        {
+            throw InvalidParameters();
+        }
+
+        var pMinus1 = p - 1;
+        var qMinus1 = q - 1;
+        var lambda = pMinus1 / BigInteger.GreatestCommonDivisor(pMinus1, qMinus1) * qMinus1;
+
+        if (exponent * d % lambda != 1 ||
+            dp != d % pMinus1 ||
+            dq != d % qMinus1 ||
+            inverseQ <= 0 ||
+            inverseQ >= p ||
+            inverseQ * q % p != 1)
+        {
+            throw InvalidParameters();
+        }
+    }
+
+    static CryptographicException InvalidParameters() => new("Invalid RSA parameters.");
+
     static CryptographicException PaddingModeNotSupported() => new("Specified padding mode is not supported.");
+
+    static CryptographicException PrivateKeyIsNotAvailable() => new("Private key is not available.");
 
     int KeyByteSize => KeySize / 8;
 

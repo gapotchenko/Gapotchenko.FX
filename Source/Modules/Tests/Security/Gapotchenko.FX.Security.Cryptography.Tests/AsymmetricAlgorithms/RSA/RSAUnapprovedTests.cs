@@ -93,6 +93,50 @@ public sealed class RSAUnapprovedTests
     }
 
     [TestMethod]
+    public void RSAUnapproved_ImportParametersValidation()
+    {
+        using var exampleAlgorithm = CreateExampleAlgorithm();
+        exampleAlgorithm.KeySize = KeySize;
+
+        using var actualAlgorithm = CreateActualAlgorithm();
+        actualAlgorithm.ImportParameters(exampleAlgorithm.ExportParameters(true));
+        var expectedParameters = actualAlgorithm.ExportParameters(true);
+
+        Action<RSAParameters>[] corruptions =
+        [
+            p => p.Modulus?[0] = 0,
+            p => p.Exponent?[^1] &= 0xfe,
+            p => p.D?[^1] ^= 1,
+            p => p.P?[^1] ^= 1,
+            p => p.Q?[^1] ^= 1,
+            p => p.DP?[^1] ^= 1,
+            p => p.DQ?[^1] ^= 1,
+            p => p.InverseQ?[^1] ^= 1
+        ];
+
+        foreach (var corrupt in corruptions)
+        {
+            // Make invalid parameters by corrupting the current valid parameters.
+            var invalidParameters = exampleAlgorithm.ExportParameters(true);
+            corrupt(invalidParameters);
+
+            // Try import invalid parameters.
+            Assert.ThrowsExactly<CryptographicException>(() => actualAlgorithm.ImportParameters(invalidParameters));
+
+            // Ensure that actual parameters stayed intact.
+            var actualParameters = actualAlgorithm.ExportParameters(true);
+            CollectionAssert.AreEqual(expectedParameters.Modulus, actualParameters.Modulus);
+            CollectionAssert.AreEqual(expectedParameters.Exponent, actualParameters.Exponent);
+            CollectionAssert.AreEqual(expectedParameters.D, actualParameters.D);
+            CollectionAssert.AreEqual(expectedParameters.P, actualParameters.P);
+            CollectionAssert.AreEqual(expectedParameters.Q, actualParameters.Q);
+            CollectionAssert.AreEqual(expectedParameters.DP, actualParameters.DP);
+            CollectionAssert.AreEqual(expectedParameters.DQ, actualParameters.DQ);
+            CollectionAssert.AreEqual(expectedParameters.InverseQ, actualParameters.InverseQ);
+        }
+    }
+
+    [TestMethod]
     public void RSAUnapproved_EncryptDecrypt_Pkcs1()
     {
         using var exampleAlgorithm = CreateExampleAlgorithm();
