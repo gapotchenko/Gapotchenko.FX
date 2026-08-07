@@ -12,8 +12,6 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Numerics;
 
-#pragma warning disable CA5350 // Do Not Use Weak Cryptographic Algorithms
-
 namespace Gapotchenko.FX.Security.Cryptography;
 
 sealed class RSAUnapprovedImpl : RSA
@@ -366,7 +364,7 @@ sealed class RSAUnapprovedImpl : RSA
 
     static byte[] EncodePkcs1Signature(byte[] hash, HashAlgorithmName hashAlgorithm, int keyByteSize)
     {
-        byte[] digestInfoPrefix = GetDigestInfoPrefix(hashAlgorithm);
+        var digestInfoPrefix = GetDigestInfoPrefix(hashAlgorithm);
         int hashLength = HashData(hashAlgorithm, []).Length;
         if (hash.Length != hashLength)
             throw new CryptographicException("Invalid hash length.");
@@ -647,8 +645,10 @@ sealed class RSAUnapprovedImpl : RSA
     {
         using HashAlgorithm algorithm = hashAlgorithm.Name switch
         {
+#pragma warning disable CA5350 // Do Not Use Weak Cryptographic Algorithms
             "MD5" => MD5Unapproved.Create(),
             "SHA1" => SHA1.Create(),
+#pragma warning restore CA5350 // Do Not Use Weak Cryptographic Algorithms
             "SHA256" => SHA256.Create(),
             "SHA384" => SHA384.Create(),
             "SHA512" => SHA512.Create(),
@@ -669,7 +669,7 @@ sealed class RSAUnapprovedImpl : RSA
             data[0] &= (byte)(0xff >>> unusedBits);
     }
 
-    static byte[] GetDigestInfoPrefix(HashAlgorithmName hashAlgorithm)
+    static ReadOnlySpan<byte> GetDigestInfoPrefix(HashAlgorithmName hashAlgorithm)
     {
         return hashAlgorithm.Name switch
         {
@@ -777,11 +777,15 @@ sealed class RSAUnapprovedImpl : RSA
         ObjectDisposedException.ThrowIf(m_Flags[F_Disposed], this);
     }
 
+    #region Flags
+
     BitVector32 m_Flags;
 
     const int F_HasKey = 1 << 0;
     const int F_HasPrivateParameters = 1 << 1;
     const int F_Disposed = 1 << 2;
+
+    #endregion
 
     #region Parameters
 
