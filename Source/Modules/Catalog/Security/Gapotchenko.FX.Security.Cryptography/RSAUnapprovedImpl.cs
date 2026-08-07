@@ -8,6 +8,7 @@
 using Gapotchenko.FX.Numerics;
 using Gapotchenko.FX.Security.Cryptography.Utils;
 using System.Buffers.Binary;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Numerics;
 
@@ -110,8 +111,8 @@ sealed class RSAUnapprovedImpl : RSA
         m_DP = dp;
         m_DQ = dq;
         m_InverseQ = inverseQ;
-        m_HasPrivateParameters = hasPrivateParameters;
-        m_HasKey = true;
+        m_Flags[F_HasPrivateParameters] = hasPrivateParameters;
+        m_Flags[F_HasKey] = true;
         KeySizeValue = keySize;
     }
 
@@ -119,7 +120,7 @@ sealed class RSAUnapprovedImpl : RSA
     {
         EnsureKey();
 
-        if (includePrivateParameters && !m_HasPrivateParameters)
+        if (includePrivateParameters && !m_Flags[F_HasPrivateParameters])
             throw PrivateKeyIsNotAvailable();
 
         int keySize = KeySize;
@@ -234,7 +235,7 @@ sealed class RSAUnapprovedImpl : RSA
 
     void EnsureKey()
     {
-        if (!m_HasKey)
+        if (!m_Flags[F_HasKey])
             GenerateKey();
     }
 
@@ -248,16 +249,14 @@ sealed class RSAUnapprovedImpl : RSA
         m_DQ = default;
         m_InverseQ = default;
         m_D = default;
-
-        m_HasKey = false;
-        m_HasPrivateParameters = false;
+        m_Flags[F_HasKey | F_HasPrivateParameters] = false;
     }
 
     void EnsurePrivateKey()
     {
         EnsureKey();
 
-        if (!m_HasPrivateParameters)
+        if (!m_Flags[F_HasPrivateParameters])
             throw PrivateKeyIsNotAvailable();
     }
 
@@ -299,8 +298,7 @@ sealed class RSAUnapprovedImpl : RSA
             m_DP = dp;
             m_DQ = dq;
             m_InverseQ = inverseQ;
-            m_HasPrivateParameters = true;
-            m_HasKey = true;
+            m_Flags[F_HasKey | F_HasPrivateParameters] = true;
             return;
         }
     }
@@ -759,8 +757,11 @@ sealed class RSAUnapprovedImpl : RSA
     BigInteger m_DQ;
     BigInteger m_InverseQ;
     BigInteger m_D;
-    bool m_HasKey;
-    bool m_HasPrivateParameters;
 
     #endregion
+
+    BitVector32 m_Flags;
+
+    const int F_HasKey = 1 << 0;
+    const int F_HasPrivateParameters = 1 << 1;
 }
