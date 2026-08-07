@@ -236,6 +236,25 @@ public sealed class RSAUnapprovedTests
 
     #endregion
 
+    #region Lifecycle
+
+    [TestMethod]
+    [Timeout(KeyGenerationTimeout)]
+    public void RSAUnapproved_DisposedInstanceCannotFunction()
+    {
+        using var exampleAlgorithm = CreateExampleAlgorithm();
+        exampleAlgorithm.KeySize = KeySize;
+        var parameters = exampleAlgorithm.ExportParameters(true);
+
+        var actualAlgorithm = CreateActualAlgorithm();
+        actualAlgorithm.Dispose();
+
+        Assert.ThrowsExactly<ObjectDisposedException>(() => actualAlgorithm.ImportParameters(parameters));
+        Assert.ThrowsExactly<ObjectDisposedException>(() => actualAlgorithm.ExportParameters(false));
+    }
+
+    #endregion
+
     static RSA CreateExampleAlgorithm()
     {
         return RSA.Create();

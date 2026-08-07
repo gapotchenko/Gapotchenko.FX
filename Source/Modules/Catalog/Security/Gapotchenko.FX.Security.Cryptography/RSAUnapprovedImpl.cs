@@ -41,7 +41,10 @@ sealed class RSAUnapprovedImpl : RSA
     protected override void Dispose(bool disposing)
     {
         if (disposing)
+        {
             ClearKey();
+            m_Flags[F_Disposed] = true;
+        }
 
         base.Dispose(disposing);
     }
@@ -64,6 +67,8 @@ sealed class RSAUnapprovedImpl : RSA
 
     public override void ImportParameters(RSAParameters parameters)
     {
+        EnsureNotDisposed();
+
         ValidateRequiredParameter(parameters.Modulus, nameof(parameters.Modulus));
 
         int keySize = parameters.Modulus.Length * 8;
@@ -118,6 +123,7 @@ sealed class RSAUnapprovedImpl : RSA
 
     public override RSAParameters ExportParameters(bool includePrivateParameters)
     {
+        EnsureNotDisposed();
         EnsureKey();
 
         if (includePrivateParameters && !m_Flags[F_HasPrivateParameters])
@@ -148,6 +154,7 @@ sealed class RSAUnapprovedImpl : RSA
         ArgumentNullException.ThrowIfNull(data);
         ArgumentNullException.ThrowIfNull(padding);
 
+        EnsureNotDisposed();
         EnsureKey();
         byte[] encodedMessage;
 
@@ -166,6 +173,7 @@ sealed class RSAUnapprovedImpl : RSA
         ArgumentNullException.ThrowIfNull(data);
         ArgumentNullException.ThrowIfNull(padding);
 
+        EnsureNotDisposed();
         EnsurePrivateKey();
         if (data.Length != KeyByteSize)
             throw new CryptographicException("Ciphertext length does not match the key size.");
@@ -186,6 +194,7 @@ sealed class RSAUnapprovedImpl : RSA
         ArgumentNullException.ThrowIfNull(padding);
         ValidateHashAlgorithm(hashAlgorithm);
 
+        EnsureNotDisposed();
         EnsurePrivateKey();
         byte[] encodedMessage;
 
@@ -205,6 +214,8 @@ sealed class RSAUnapprovedImpl : RSA
         ArgumentNullException.ThrowIfNull(signature);
         ArgumentNullException.ThrowIfNull(padding);
         ValidateHashAlgorithm(hashAlgorithm);
+
+        EnsureNotDisposed();
 
         if (signature.Length != KeyByteSize)
             return false;
@@ -760,8 +771,14 @@ sealed class RSAUnapprovedImpl : RSA
 
     #endregion
 
+    void EnsureNotDisposed()
+    {
+        ObjectDisposedException.ThrowIf(m_Flags[F_Disposed], this);
+    }
+
     BitVector32 m_Flags;
 
     const int F_HasKey = 1 << 0;
     const int F_HasPrivateParameters = 1 << 1;
+    const int F_Disposed = 1 << 2;
 }
