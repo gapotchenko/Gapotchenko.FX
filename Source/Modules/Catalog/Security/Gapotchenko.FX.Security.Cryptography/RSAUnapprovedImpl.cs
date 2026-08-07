@@ -169,7 +169,7 @@ sealed class RSAUnapprovedImpl : RSA
         if (data.Length != KeyByteSize)
             throw new CryptographicException("Ciphertext length does not match the key size.");
 
-        byte[] encodedMessage = Transform(data, m_D, m_Modulus, KeyByteSize);
+        byte[] encodedMessage = TransformPrivate(data);
 
         if (padding == RSAEncryptionPadding.Pkcs1)
             return DecodePkcs1Encryption(encodedMessage);
@@ -195,7 +195,7 @@ sealed class RSAUnapprovedImpl : RSA
         else
             throw PaddingModeNotSupported();
 
-        return Transform(encodedMessage, m_D, m_Modulus, KeyByteSize);
+        return TransformPrivate(encodedMessage);
     }
 
     public override bool VerifyHash(byte[] hash, byte[] signature, HashAlgorithmName hashAlgorithm, RSASignaturePadding padding)
@@ -320,11 +320,23 @@ sealed class RSAUnapprovedImpl : RSA
 
     static byte[] DecodePkcs1Encryption(byte[] encodedMessage)
     {
-        if (encodedMessage.Length < 11 || encodedMessage[0] != 0 || encodedMessage[1] != 2)
+        if (encodedMessage.Length < 11)
             throw new CryptographicException("Invalid PKCS#1 padding.");
 
-        int separatorIndex = Array.IndexOf(encodedMessage, (byte)0, 2);
-        if (separatorIndex < 10)
+        int valid = IsZero(encodedMessage[0]) & IsZero(encodedMessage[1] ^ 2);
+        int separatorIndex = 0;
+        int lookingForSeparator = 1;
+
+        for (int i = 2; i < encodedMessage.Length; ++i)
+        {
+            int isSeparator = IsZero(encodedMessage[i]);
+            int select = lookingForSeparator & isSeparator;
+            separatorIndex = select * i + (1 - select) * separatorIndex;
+            lookingForSeparator &= 1 - isSeparator;
+        }
+
+        valid &= (1 - lookingForSeparator) & (1 - ((separatorIndex - 10 >> 31) & 1));
+        if (valid == 0)
             throw new CryptographicException("Invalid PKCS#1 padding.");
 
         return encodedMessage.AsSpan(separatorIndex + 1).ToArray();
@@ -378,8 +390,10 @@ sealed class RSAUnapprovedImpl : RSA
     {
         byte[] labelHash = HashData(hashAlgorithm, []);
         int hashLength = labelHash.Length;
-        if (encodedMessage.Length < 2 * hashLength + 2 || encodedMessage[0] != 0)
+        if (encodedMessage.Length < 2 * hashLength + 2)
             throw new CryptographicException("Invalid OAEP padding.");
+
+        int valid = IsZero(encodedMessage[0]);
 
         byte[] seed = encodedMessage.AsSpan(1, hashLength).ToArray();
         byte[] dataBlock = encodedMessage.AsSpan(1 + hashLength).ToArray();
@@ -389,23 +403,24 @@ sealed class RSAUnapprovedImpl : RSA
         byte[] dataBlockMask = Mgf1(seed, dataBlock.Length, hashAlgorithm);
         Xor(dataBlock, dataBlockMask);
 
-        if (!CryptographicOperations.FixedTimeEquals(dataBlock.AsSpan(0, hashLength), labelHash))
-            throw new CryptographicException("Invalid OAEP padding.");
+        valid &= CryptographicOperations.FixedTimeEquals(dataBlock.AsSpan(0, hashLength), labelHash) ? 1 : 0;
 
-        int separatorIndex = -1;
+        int separatorIndex = 0;
+        int lookingForSeparator = 1;
         for (int i = hashLength; i < dataBlock.Length; ++i)
         {
-            byte b = dataBlock[i];
-            if (separatorIndex < 0)
-            {
-                if (b == 1)
-                    separatorIndex = i;
-                else if (b != 0)
-                    throw new CryptographicException("Invalid OAEP padding.");
-            }
+            int b = dataBlock[i];
+            int isZero = IsZero(b);
+            int isSeparator = IsZero(b ^ 1);
+            valid &= 1 - (lookingForSeparator & (1 - isZero) & (1 - isSeparator));
+
+            int select = lookingForSeparator & isSeparator;
+            separatorIndex = select * i + (1 - select) * separatorIndex;
+            lookingForSeparator &= 1 - isSeparator;
         }
 
-        if (separatorIndex < 0)
+        valid &= 1 - lookingForSeparator;
+        if (valid == 0)
             throw new CryptographicException("Invalid OAEP padding.");
 
         return dataBlock.AsSpan(separatorIndex + 1).ToArray();
@@ -483,6 +498,25 @@ sealed class RSAUnapprovedImpl : RSA
             throw new CryptographicException("Invalid input data.");
 
         return ToBytes(BigInteger.ModPow(m, exponent, modulus), outputLength);
+    }
+
+    byte[] TransformPrivate(byte[] data)
+    {
+        var m = FromBytes(data);
+        if (m >= m_Modulus)
+            throw new CryptographicException("Invalid input data.");
+
+        BigInteger r;
+        do
+        {
+            r = FromBytes(RandomNumberGenerator.GetBytes(KeyByteSize)) % (m_Modulus - 1) + 1;
+        }
+        while (BigInteger.GreatestCommonDivisor(r, m_Modulus) != 1);
+
+        var blindedMessage = m * BigInteger.ModPow(r, m_Exponent, m_Modulus) % m_Modulus;
+        var blindedResult = BigInteger.ModPow(blindedMessage, m_D, m_Modulus);
+        var result = blindedResult * ModInverse(r, m_Modulus) % m_Modulus;
+        return ToBytes(result, KeyByteSize);
     }
 
     static BigInteger ModInverse(BigInteger value, BigInteger modulus)
@@ -607,6 +641,8 @@ sealed class RSAUnapprovedImpl : RSA
         for (int i = 0; i < x.Length; ++i)
             x[i] ^= y[i];
     }
+
+    static int IsZero(int value) => (value - 1 >> 31) & 1;
 
     static void ClearUnusedBits(byte[] data, int unusedBits)
     {
