@@ -86,8 +86,7 @@ public sealed class RSAUnapprovedTests
     [TestMethod]
     public void RSAUnapproved_ImportExportParameters()
     {
-        using var exampleAlgorithm = CreateExampleAlgorithm();
-        exampleAlgorithm.KeySize = KeySize;
+        using var exampleAlgorithm = CreateExampleAlgorithm(KeySize);
 
         using var actualAlgorithm = CreateActualAlgorithm();
         var parameters = exampleAlgorithm.ExportParameters(true);
@@ -102,8 +101,7 @@ public sealed class RSAUnapprovedTests
     [TestMethod]
     public void RSAUnapproved_ImportParametersValidation()
     {
-        using var exampleAlgorithm = CreateExampleAlgorithm();
-        exampleAlgorithm.KeySize = KeySize;
+        using var exampleAlgorithm = CreateExampleAlgorithm(KeySize);
 
         using var actualAlgorithm = CreateActualAlgorithm();
         actualAlgorithm.ImportParameters(exampleAlgorithm.ExportParameters(true));
@@ -180,8 +178,7 @@ public sealed class RSAUnapprovedTests
 
     static void RSAUnapproved_EncryptDecrypt(RSAEncryptionPadding padding)
     {
-        using var exampleAlgorithm = CreateExampleAlgorithm();
-        exampleAlgorithm.KeySize = KeySize;
+        using var exampleAlgorithm = CreateExampleAlgorithm(KeySize);
 
         using var actualAlgorithm = CreateActualAlgorithm();
         actualAlgorithm.ImportParameters(exampleAlgorithm.ExportParameters(true));
@@ -208,6 +205,30 @@ public sealed class RSAUnapprovedTests
     #region Signature
 
     [TestMethod]
+    public void RSAUnapproved_SignVerifyHash_Pkcs1Md5()
+    {
+        RSAUnapproved_SignVerifyHash(HashAlgorithmName.MD5, MD5.Create, RSASignaturePadding.Pkcs1);
+    }
+
+    [TestMethod]
+    public void RSAUnapproved_SignVerifyHash_PssMd5()
+    {
+        RSAUnapproved_SignVerifyHash(HashAlgorithmName.MD5, MD5.Create, RSASignaturePadding.Pss);
+    }
+
+    [TestMethod]
+    public void RSAUnapproved_SignVerifyHash_Pkcs1Sha1()
+    {
+        RSAUnapproved_SignVerifyHash(HashAlgorithmName.SHA1, SHA1.Create, RSASignaturePadding.Pkcs1);
+    }
+
+    [TestMethod]
+    public void RSAUnapproved_SignVerifyHash_PssSha1()
+    {
+        RSAUnapproved_SignVerifyHash(HashAlgorithmName.SHA1, SHA1.Create, RSASignaturePadding.Pss);
+    }
+
+    [TestMethod]
     public void RSAUnapproved_SignVerifyHash_Pkcs1Sha256()
     {
         RSAUnapproved_SignVerifyHash(HashAlgorithmName.SHA256, SHA256.Create, RSASignaturePadding.Pkcs1);
@@ -219,13 +240,38 @@ public sealed class RSAUnapprovedTests
         RSAUnapproved_SignVerifyHash(HashAlgorithmName.SHA256, SHA256.Create, RSASignaturePadding.Pss);
     }
 
+    [TestMethod]
+    public void RSAUnapproved_SignVerifyHash_Pkcs1Sha384()
+    {
+        RSAUnapproved_SignVerifyHash(HashAlgorithmName.SHA384, SHA384.Create, RSASignaturePadding.Pkcs1);
+    }
+
+    [TestMethod]
+    public void RSAUnapproved_SignVerifyHash_PssSha384()
+    {
+        RSAUnapproved_SignVerifyHash(HashAlgorithmName.SHA384, SHA384.Create, RSASignaturePadding.Pss);
+    }
+
+    [TestMethod]
+    public void RSAUnapproved_SignVerifyHash_Pkcs1Sha512()
+    {
+        RSAUnapproved_SignVerifyHash(HashAlgorithmName.SHA512, SHA512.Create, RSASignaturePadding.Pkcs1);
+    }
+
+    [TestMethod]
+    public void RSAUnapproved_SignVerifyHash_PssSha512()
+    {
+        // A 1024-bit key is too small for PSS with SHA-512 and a 64-byte salt.
+        RSAUnapproved_SignVerifyHash(HashAlgorithmName.SHA512, SHA512.Create, RSASignaturePadding.Pss, 2048);
+    }
+
     static void RSAUnapproved_SignVerifyHash(
         HashAlgorithmName hashAlgorithmName,
         Func<HashAlgorithm> hashAlgorithmFactory,
-        RSASignaturePadding signaturePadding)
+        RSASignaturePadding signaturePadding,
+        int minKeySize = 0)
     {
-        using var exampleAlgorithm = CreateExampleAlgorithm();
-        exampleAlgorithm.KeySize = KeySize;
+        using var exampleAlgorithm = CreateExampleAlgorithm(Math.Max(KeySize, minKeySize));
 
         using var actualAlgorithm = CreateActualAlgorithm();
         actualAlgorithm.ImportParameters(exampleAlgorithm.ExportParameters(true));
@@ -238,7 +284,6 @@ public sealed class RSAUnapprovedTests
         Assert.IsTrue(actualAlgorithm.VerifyHash(hash, signature, hashAlgorithmName, signaturePadding));
 
         // Actual -> example
-        signature = actualAlgorithm.SignHash(hash, hashAlgorithmName, signaturePadding);
         try
         {
             Assert.IsTrue(exampleAlgorithm.VerifyHash(hash, signature, hashAlgorithmName, signaturePadding));
@@ -262,8 +307,7 @@ public sealed class RSAUnapprovedTests
     [Timeout(KeyGenerationTimeout)]
     public void RSAUnapproved_DisposedInstanceCannotFunction()
     {
-        using var exampleAlgorithm = CreateExampleAlgorithm();
-        exampleAlgorithm.KeySize = KeySize;
+        using var exampleAlgorithm = CreateExampleAlgorithm(KeySize);
         var parameters = exampleAlgorithm.ExportParameters(true);
 
         var actualAlgorithm = CreateActualAlgorithm();
@@ -278,6 +322,11 @@ public sealed class RSAUnapprovedTests
     static RSA CreateExampleAlgorithm()
     {
         return RSA.Create();
+    }
+
+    static RSA CreateExampleAlgorithm(int keySize)
+    {
+        return RSA.Create(keySize);
     }
 
     static RSA CreateActualAlgorithm()
