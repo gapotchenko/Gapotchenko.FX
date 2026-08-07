@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Security.Cryptography;
 /// classified as unapproved for new security applications.
 /// </summary>
 /// <remarks>
-/// RSA is retained for compatibility with legacy systems and data formats.
+/// Unapproved RSA is retained for compatibility with legacy systems and data formats.
 /// New security applications should use approved cryptographic algorithms instead.
 /// </remarks>
 public static class RSAUnapproved

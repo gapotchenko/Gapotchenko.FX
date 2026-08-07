@@ -50,7 +50,7 @@ static class PrimeUtil
         }
     }
 
-    static bool IsProbablePrime(BigInteger value)
+    static bool IsProbablePrime(in BigInteger value)
     {
         if (value < 2)
             return false;
