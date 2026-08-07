@@ -13,6 +13,8 @@ using RSA = System.Security.Cryptography.RSA;
 [TestClass]
 public sealed class RSAUnapprovedTests
 {
+    #region Key Generation
+
     const int KeySize = 1024;
     const int KeyGenerationTimeout = 30 * 1000;
 
@@ -76,6 +78,10 @@ public sealed class RSAUnapprovedTests
         Assert.AreNotEqual(0, newModulus[0]);
     }
 
+    #endregion
+
+    #region Import/Export
+
     [TestMethod]
     public void RSAUnapproved_ImportExportParameters()
     {
@@ -136,25 +142,24 @@ public sealed class RSAUnapprovedTests
         }
     }
 
+    #endregion
+
+    #region Encyryption/Decryption
+
     [TestMethod]
     public void RSAUnapproved_EncryptDecrypt_Pkcs1()
     {
-        using var exampleAlgorithm = CreateExampleAlgorithm();
-        exampleAlgorithm.KeySize = KeySize;
-
-        using var actualAlgorithm = CreateActualAlgorithm();
-        actualAlgorithm.ImportParameters(exampleAlgorithm.ExportParameters(true));
-
-        byte[] data = [1, 2, 3, 4, 5];
-        byte[] encryptedData = actualAlgorithm.Encrypt(data, RSAEncryptionPadding.Pkcs1);
-        byte[] decryptedData = actualAlgorithm.Decrypt(encryptedData, RSAEncryptionPadding.Pkcs1);
-
-        CollectionAssert.AreEqual(data, decryptedData);
+        RSAUnapproved_EncryptDecrypt(RSAEncryptionPadding.Pkcs1);
     }
 
     [TestMethod]
     public void RSAUnapproved_EncryptDecrypt_OaepSha1()
     {
+        RSAUnapproved_EncryptDecrypt(RSAEncryptionPadding.OaepSHA1);
+    }
+
+    static void RSAUnapproved_EncryptDecrypt(RSAEncryptionPadding padding)
+    {
         using var exampleAlgorithm = CreateExampleAlgorithm();
         exampleAlgorithm.KeySize = KeySize;
 
@@ -162,43 +167,74 @@ public sealed class RSAUnapprovedTests
         actualAlgorithm.ImportParameters(exampleAlgorithm.ExportParameters(true));
 
         byte[] data = [1, 2, 3, 4, 5];
-        byte[] encryptedData = actualAlgorithm.Encrypt(data, RSAEncryptionPadding.OaepSHA1);
-        byte[] decryptedData = actualAlgorithm.Decrypt(encryptedData, RSAEncryptionPadding.OaepSHA1);
 
+        // Actual -> actual
+        byte[] encryptedData = actualAlgorithm.Encrypt(data, padding);
+        byte[] decryptedData = actualAlgorithm.Decrypt(encryptedData, padding);
+        CollectionAssert.AreEqual(data, decryptedData);
+
+        // Actual -> example
+        decryptedData = exampleAlgorithm.Decrypt(encryptedData, padding);
+        CollectionAssert.AreEqual(data, decryptedData);
+
+        // Example -> actual
+        encryptedData = exampleAlgorithm.Encrypt(data, padding);
+        decryptedData = actualAlgorithm.Decrypt(encryptedData, padding);
         CollectionAssert.AreEqual(data, decryptedData);
     }
+
+    #endregion
+
+    #region Signature
 
     [TestMethod]
     public void RSAUnapproved_SignVerifyHash_Pkcs1Sha256()
     {
-        using var exampleAlgorithm = CreateExampleAlgorithm();
-        exampleAlgorithm.KeySize = KeySize;
-
-        using var actualAlgorithm = CreateActualAlgorithm();
-        actualAlgorithm.ImportParameters(exampleAlgorithm.ExportParameters(true));
-
-        using var sha256 = SHA256.Create();
-        byte[] hash = sha256.ComputeHash([1, 2, 3, 4, 5]);
-        byte[] signature = actualAlgorithm.SignHash(hash, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-
-        Assert.IsTrue(actualAlgorithm.VerifyHash(hash, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
+        RSAUnapproved_SignVerifyHash(HashAlgorithmName.SHA256, SHA256.Create, RSASignaturePadding.Pkcs1);
     }
 
     [TestMethod]
     public void RSAUnapproved_SignVerifyHash_PssSha256()
     {
+        RSAUnapproved_SignVerifyHash(HashAlgorithmName.SHA256, SHA256.Create, RSASignaturePadding.Pss);
+    }
+
+    static void RSAUnapproved_SignVerifyHash(
+        HashAlgorithmName hashAlgorithmName,
+        Func<HashAlgorithm> hashAlgorithmFactory,
+        RSASignaturePadding signaturePadding)
+    {
         using var exampleAlgorithm = CreateExampleAlgorithm();
         exampleAlgorithm.KeySize = KeySize;
 
         using var actualAlgorithm = CreateActualAlgorithm();
         actualAlgorithm.ImportParameters(exampleAlgorithm.ExportParameters(true));
 
-        using var sha256 = SHA256.Create();
-        byte[] hash = sha256.ComputeHash([1, 2, 3, 4, 5]);
-        byte[] signature = actualAlgorithm.SignHash(hash, HashAlgorithmName.SHA256, RSASignaturePadding.Pss);
+        using var hashAlgorithm = hashAlgorithmFactory();
+        byte[] hash = hashAlgorithm.ComputeHash([1, 2, 3, 4, 5]);
 
-        Assert.IsTrue(actualAlgorithm.VerifyHash(hash, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pss));
+        // Actual -> actual
+        byte[] signature = actualAlgorithm.SignHash(hash, hashAlgorithmName, signaturePadding);
+        Assert.IsTrue(actualAlgorithm.VerifyHash(hash, signature, hashAlgorithmName, signaturePadding));
+
+        // Actual -> example
+        signature = actualAlgorithm.SignHash(hash, hashAlgorithmName, signaturePadding);
+        try
+        {
+            Assert.IsTrue(exampleAlgorithm.VerifyHash(hash, signature, hashAlgorithmName, signaturePadding));
+        }
+        catch (CryptographicException)
+        {
+            // Example algorithm lacks the support of the specified padding mode.
+            return;
+        }
+
+        // Example -> actual
+        signature = exampleAlgorithm.SignHash(hash, hashAlgorithmName, signaturePadding);
+        Assert.IsTrue(actualAlgorithm.VerifyHash(hash, signature, hashAlgorithmName, signaturePadding));
     }
+
+    #endregion
 
     static RSA CreateExampleAlgorithm()
     {
