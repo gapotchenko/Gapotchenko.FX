@@ -323,15 +323,14 @@ sealed class RSAUnapprovedImpl : RSA
         if (encodedMessage.Length < 11)
             throw new CryptographicException("Invalid PKCS#1 padding.");
 
-        int valid = IsZero(encodedMessage[0]) & IsZero(encodedMessage[1] ^ 2);
+        int valid = FixedTimeLogic.IsZero(encodedMessage[0]) & FixedTimeLogic.IsZero(encodedMessage[1] ^ 2);
         int separatorIndex = 0;
         int lookingForSeparator = 1;
 
         for (int i = 2; i < encodedMessage.Length; ++i)
         {
-            int isSeparator = IsZero(encodedMessage[i]);
-            int select = lookingForSeparator & isSeparator;
-            separatorIndex = select * i + (1 - select) * separatorIndex;
+            int isSeparator = FixedTimeLogic.IsZero(encodedMessage[i]);
+            separatorIndex = FixedTimeLogic.Select(lookingForSeparator & isSeparator, i, separatorIndex);
             lookingForSeparator &= 1 - isSeparator;
         }
 
@@ -393,7 +392,7 @@ sealed class RSAUnapprovedImpl : RSA
         if (encodedMessage.Length < 2 * hashLength + 2)
             throw new CryptographicException("Invalid OAEP padding.");
 
-        int valid = IsZero(encodedMessage[0]);
+        int valid = FixedTimeLogic.IsZero(encodedMessage[0]);
 
         byte[] seed = encodedMessage.AsSpan(1, hashLength).ToArray();
         byte[] dataBlock = encodedMessage.AsSpan(1 + hashLength).ToArray();
@@ -410,12 +409,11 @@ sealed class RSAUnapprovedImpl : RSA
         for (int i = hashLength; i < dataBlock.Length; ++i)
         {
             int b = dataBlock[i];
-            int isZero = IsZero(b);
-            int isSeparator = IsZero(b ^ 1);
+            int isZero = FixedTimeLogic.IsZero(b);
+            int isSeparator = FixedTimeLogic.IsZero(b ^ 1);
             valid &= 1 - (lookingForSeparator & (1 - isZero) & (1 - isSeparator));
 
-            int select = lookingForSeparator & isSeparator;
-            separatorIndex = select * i + (1 - select) * separatorIndex;
+            separatorIndex = FixedTimeLogic.Select(lookingForSeparator & isSeparator, i, separatorIndex);
             lookingForSeparator &= 1 - isSeparator;
         }
 
@@ -641,8 +639,6 @@ sealed class RSAUnapprovedImpl : RSA
         for (int i = 0; i < x.Length; ++i)
             x[i] ^= y[i];
     }
-
-    static int IsZero(int value) => (value - 1 >> 31) & 1;
 
     static void ClearUnusedBits(byte[] data, int unusedBits)
     {
