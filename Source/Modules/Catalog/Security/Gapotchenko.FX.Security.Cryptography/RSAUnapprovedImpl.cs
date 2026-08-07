@@ -286,15 +286,16 @@ sealed class RSAUnapprovedImpl : RSA
     void GenerateKey()
     {
         int keySize = KeySize;
+        int halfKeySize = keySize / 2;
         BigInteger e = 65537;
 
         for (; ; )
         {
-            var p = PrimeUtil.GeneratePrime(keySize / 2);
+            var p = PrimeUtil.GeneratePrime(halfKeySize);
             BigInteger q;
             do
             {
-                q = PrimeUtil.GeneratePrime(keySize - keySize / 2);
+                q = PrimeUtil.GeneratePrime(keySize - halfKeySize);
             }
             while (q == p);
 
