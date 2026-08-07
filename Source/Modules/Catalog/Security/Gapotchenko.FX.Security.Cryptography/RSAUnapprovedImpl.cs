@@ -772,6 +772,17 @@ sealed class RSAUnapprovedImpl : RSA
 
     int KeyByteSize => KeySize / 8;
 
+    void EnsureNotDisposed()
+    {
+        ObjectDisposedException.ThrowIf(m_Flags[F_Disposed], this);
+    }
+
+    BitVector32 m_Flags;
+
+    const int F_HasKey = 1 << 0;
+    const int F_HasPrivateParameters = 1 << 1;
+    const int F_Disposed = 1 << 2;
+
     #region Parameters
 
     BigInteger m_Modulus;
@@ -784,15 +795,4 @@ sealed class RSAUnapprovedImpl : RSA
     BigInteger m_D;
 
     #endregion
-
-    void EnsureNotDisposed()
-    {
-        ObjectDisposedException.ThrowIf(m_Flags[F_Disposed], this);
-    }
-
-    BitVector32 m_Flags;
-
-    const int F_HasKey = 1 << 0;
-    const int F_HasPrivateParameters = 1 << 1;
-    const int F_Disposed = 1 << 2;
 }
