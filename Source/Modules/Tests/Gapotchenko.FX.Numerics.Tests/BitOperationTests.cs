@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 namespace Gapotchenko.FX.Numerics.Tests;
 
 [TestClass]
-public class BitOperationTests
+public sealed class BitOperationTests
 {
     public BitOperationTests()
     {

@@ -5,6 +5,7 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2026
 
+using Gapotchenko.FX.Numerics;
 using System.Numerics;
 
 namespace Gapotchenko.FX.Security.Cryptography.Utils;
@@ -70,7 +71,7 @@ static class PrimeUtil
             ++s;
         }
 
-        int byteCount = BigIntegerUtil.GetByteCount(value, isUnsigned: true);
+        int byteCount = value.GetByteCount(true);
 
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP
         Span<byte> witnessBytes = stackalloc byte[byteCount];

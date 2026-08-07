@@ -277,7 +277,7 @@ sealed class RSAUnapprovedImpl : RSA
             while (q == p);
 
             var n = p * q;
-            if (BigIntegerUtil.GetBitLength(n) != keySize)
+            if (n.GetBitLength() != keySize)
                 continue;
 
             var pMinus1 = p - 1;
@@ -653,7 +653,7 @@ sealed class RSAUnapprovedImpl : RSA
 
         if (modulus <= 1 ||
             modulus.IsEven ||
-            BigIntegerUtil.GetBitLength(modulus) != keySize ||
+            modulus.GetBitLength() != keySize ||
             exponent <= 1 ||
             exponent.IsEven ||
             exponent >= modulus)

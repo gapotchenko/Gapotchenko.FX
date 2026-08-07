@@ -10,11 +10,11 @@ Release date: not released yet
 - Improved hashing performance of `ArrayEqualityComparer`, `SpanEqualityComparer` and `MemoryEqualityComparer`
 - Improved compatibility with AOT compilation
 - Polyfills:
-    - Added `UIntPtr.MaxValue` polyfill property
+    - Added polyfills for `ToByteArray(Boolean, Boolean)`, `GetByteCount(Boolean)`, and `GetBitLength()` methods of `BigInteger` type
     - Added polyfills for `LeadingZeroCount(UInt32)`, `LeadingZeroCount(UInt64)`, `Log2(UInt64)`, and `Crc32C(UInt32, Byte)` methods of `BitOperations` class
-    - Added polyfill for `ToByteArray(Boolean, Boolean)` method of `BigInteger` structure
+    - Added `UIntPtr.MaxValue` polyfill property
 - Fixed issues:
-    - Fixed issue with `BitOperations.Log2(UInt32)` polyfill method that returned a non-zero value for zero argument on x64 processor architecture
+    - Fixed issue with `BitOperations.Log2(UInt32)` polyfill method that returned an undefined value for zero argument on x64 processor architecture
 
 ### Gapotchenko.FX 2026.8
 
