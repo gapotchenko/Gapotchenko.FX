@@ -65,6 +65,10 @@ sealed class RSAUnapprovedImpl : RSA
         }
     }
 
+    /// <remarks>
+    /// The method does not prove that <c>P</c> and <c>Q</c> are prime by design
+    /// to avoid imposing substantial CPU costs.
+    /// </remarks>
     public override void ImportParameters(RSAParameters parameters)
     {
         EnsureNotDisposed();
@@ -269,6 +273,7 @@ sealed class RSAUnapprovedImpl : RSA
         m_DQ = default;
         m_InverseQ = default;
         m_D = default;
+
         m_Flags[F_HasKey | F_HasPrivateParameters] = false;
     }
 
