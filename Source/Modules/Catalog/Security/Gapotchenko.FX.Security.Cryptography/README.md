@@ -61,6 +61,7 @@ The module provides corresponding `Unapproved` classes for such cases:
 - `DESUnapproved`
 - `MD5Unapproved`
 - `TripleDESUnapproved`
+- `RSAUnapproved` (for smaller key sizes)
 
 These algorithms are intended for scenarios where old data, protocols, or formats must still be processed.
 They may be used in FIPS-restricted environments when the user explicitly permits such usage for compatibility purposes.
