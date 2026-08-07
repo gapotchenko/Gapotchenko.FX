@@ -71,7 +71,8 @@ sealed class RSAUnapprovedImpl : RSA
 
         ValidateRequiredParameter(parameters.Modulus, nameof(parameters.Modulus));
 
-        int keySize = parameters.Modulus.Length * 8;
+        int keyByteSize = parameters.Modulus.Length;
+        int keySize = keyByteSize * 8;
         if (!IsValidKeySize(keySize))
             throw new CryptographicException("Specified key is not a valid size for this algorithm.");
 
@@ -93,6 +94,17 @@ sealed class RSAUnapprovedImpl : RSA
             ValidateRequiredParameter(parameters.DP, nameof(parameters.DP));
             ValidateRequiredParameter(parameters.DQ, nameof(parameters.DQ));
             ValidateRequiredParameter(parameters.InverseQ, nameof(parameters.InverseQ));
+
+            int primeByteSize = (keyByteSize + 1) / 2;
+            if (parameters.D.Length != keyByteSize ||
+                parameters.P.Length != primeByteSize ||
+                parameters.Q.Length != primeByteSize ||
+                parameters.DP.Length != primeByteSize ||
+                parameters.DQ.Length != primeByteSize ||
+                parameters.InverseQ.Length != primeByteSize)
+            {
+                throw InvalidParameters();
+            }
         }
 
         var modulus = FromBytes(parameters.Modulus);
@@ -129,22 +141,19 @@ sealed class RSAUnapprovedImpl : RSA
         if (includePrivateParameters && !m_Flags[F_HasPrivateParameters])
             throw PrivateKeyIsNotAvailable();
 
-        int keySize = KeySize;
         int keyByteSize = KeyByteSize;
-
-        int firstPrimeByteSize = (keySize + 15) / 16;
-        int secondPrimeByteSize = keySize / 16;
+        int primeByteSize = (keyByteSize + 1) / 2;
 
         return
             new RSAParameters
             {
                 Modulus = ToBytes(m_Modulus, keyByteSize),
                 Exponent = ToBytes(m_Exponent),
-                P = includePrivateParameters ? ToBytes(m_P, firstPrimeByteSize) : null,
-                Q = includePrivateParameters ? ToBytes(m_Q, secondPrimeByteSize) : null,
-                DP = includePrivateParameters ? ToBytes(m_DP, firstPrimeByteSize) : null,
-                DQ = includePrivateParameters ? ToBytes(m_DQ, secondPrimeByteSize) : null,
-                InverseQ = includePrivateParameters ? ToBytes(m_InverseQ, firstPrimeByteSize) : null,
+                P = includePrivateParameters ? ToBytes(m_P, primeByteSize) : null,
+                Q = includePrivateParameters ? ToBytes(m_Q, primeByteSize) : null,
+                DP = includePrivateParameters ? ToBytes(m_DP, primeByteSize) : null,
+                DQ = includePrivateParameters ? ToBytes(m_DQ, primeByteSize) : null,
+                InverseQ = includePrivateParameters ? ToBytes(m_InverseQ, primeByteSize) : null,
                 D = includePrivateParameters ? ToBytes(m_D, keyByteSize) : null
             };
     }

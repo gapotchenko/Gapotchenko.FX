@@ -7,6 +7,7 @@
 
 namespace Gapotchenko.FX.Security.Cryptography.Tests.AsymmetricAlgorithms.RSA;
 
+using Gapotchenko.FX.Data.Encoding;
 using System.Security.Cryptography;
 using RSA = System.Security.Cryptography.RSA;
 
@@ -140,6 +141,25 @@ public sealed class RSAUnapprovedTests
             CollectionAssert.AreEqual(expectedParameters.DQ, actualParameters.DQ);
             CollectionAssert.AreEqual(expectedParameters.InverseQ, actualParameters.InverseQ);
         }
+    }
+
+    [TestMethod]
+    public void RSAUnapproved_ImportParametersRejectsUnequalPrimeSizes()
+    {
+        var parameters = new RSAParameters
+        {
+            Modulus = Base16.GetBytes("bffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffec5"),
+            Exponent = [1, 0, 1],
+            D = Base16.GetBytes("124eadb1524eadb1524eadb1524eadb1524eadb1524eadb1524eadb1524eadb1524eadb1524eadb1524eadb1524ead93"),
+            P = [3],
+            Q = Base16.GetBytes("3fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff97"),
+            DP = [1],
+            DQ = Base16.GetBytes("124eadb1524eadb1524eadb1524eadb1524eadb1524eadb1524eadb1524eadb1524eadb1524eadb1524eadb1524ead93"),
+            InverseQ = [1]
+        };
+
+        using var algorithm = CreateActualAlgorithm();
+        Assert.ThrowsExactly<CryptographicException>(() => algorithm.ImportParameters(parameters));
     }
 
     #endregion
