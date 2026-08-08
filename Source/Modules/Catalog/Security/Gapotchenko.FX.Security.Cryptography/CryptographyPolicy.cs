@@ -30,18 +30,13 @@ public static class CryptographyPolicy
     /// </value>
     /// <remarks>
     /// <para>
-    /// The value may be determined by inspecting host cryptographic policy
+    /// The value is determined by inspecting host cryptographic policy
     /// configuration or by probing whether a known FIPS-incompatible algorithm
     /// can be used in the current environment.
     /// </para>
-    /// <para>
-    /// The validity of FIPS certification for the underlying cryptographic
-    /// implementation is the responsibility of the operating system and its
-    /// cryptographic providers.
-    /// </para>
     /// </remarks>
     public static bool AllowOnlyFipsAlgorithms =>
-        m_EnforceOnlyFipsAlgorithms ||
+        m_EnforceFipsOnlyAlgorithms ||
         m_CachedAllowOnlyFipsAlgorithms.Value;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -107,10 +102,10 @@ public static class CryptographyPolicy
     /// under FIPS-only policy conditions.
     /// </para>
     /// </remarks>
-    public static void EnforceOnlyFipsAlgorithms()
+    public static void EnforceFipsOnlyAlgorithms()
     {
-        m_EnforceOnlyFipsAlgorithms = true;
+        m_EnforceFipsOnlyAlgorithms = true;
     }
 
-    static bool m_EnforceOnlyFipsAlgorithms;
+    static bool m_EnforceFipsOnlyAlgorithms;
 }

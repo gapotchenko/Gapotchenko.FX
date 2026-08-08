@@ -71,7 +71,7 @@ They may be used in FIPS-restricted environments when the user explicitly permit
 `CryptographyPolicy` class provides information about the effective cryptographic policy of the current environment.
 Its `AllowOnlyFipsAlgorithms` property indicates whether only FIPS-approved cryptographic algorithms are allowed by the host operating system, runtime environment, cryptographic providers, or by the application itself.
 
-An application can call `CryptographyPolicy.EnforceOnlyFipsAlgorithms()` to opt into a FIPS-only policy for the lifetime of the current process.
+An application can call `CryptographyPolicy.EnforceFipsOnlyAlgorithms()` to opt into a FIPS-only policy for the lifetime of the current process.
 This is useful for gradual FIPS conformity: the application can use approved algorithms by default, while still routing explicitly approved legacy compatibility operations through `Unapproved` algorithm factories.
 
 Example:
@@ -81,7 +81,7 @@ using Gapotchenko.FX.Security.Cryptography;
 using System.Security.Cryptography;
 
 // The application opts into FIPS-only behavior.
-CryptographyPolicy.EnforceOnlyFipsAlgorithms();
+CryptographyPolicy.EnforceFipsOnlyAlgorithms();
 
 byte[] data = ...;
 bool userPermitsLegacyMd5 = ...;
