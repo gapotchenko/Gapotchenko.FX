@@ -61,6 +61,15 @@ namespace Gapotchenko.FX.Security.Cryptography.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid input data..
+        /// </summary>
+        internal static string InvalidInputData {
+            get {
+                return ResourceManager.GetString("InvalidInputData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Length of the data to transform is invalid..
         /// </summary>
         internal static string InvalidLengthOfDataToTransform {
@@ -79,11 +88,38 @@ namespace Gapotchenko.FX.Security.Cryptography.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid {0} parameters..
+        /// </summary>
+        internal static string InvalidXParameters {
+            get {
+                return ResourceManager.GetString("InvalidXParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Specified initialization vector (IV) does not match the block size for {0} algorithm..
         /// </summary>
         internal static string IVDoesNotMatchXAlgorithmBlockSize {
             get {
                 return ResourceManager.GetString("IVDoesNotMatchXAlgorithmBlockSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Private key is not available..
+        /// </summary>
+        internal static string PrivateKeyIsNotAvailable {
+            get {
+                return ResourceManager.GetString("PrivateKeyIsNotAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specified hash algorithm is not supported..
+        /// </summary>
+        internal static string SpecifiedHashAlgorithmIsNotSupported {
+            get {
+                return ResourceManager.GetString("SpecifiedHashAlgorithmIsNotSupported", resourceCulture);
             }
         }
         
@@ -111,6 +147,15 @@ namespace Gapotchenko.FX.Security.Cryptography.Properties {
         internal static string SpecifiedKeyIsNotValidSizeForXAlgorithm {
             get {
                 return ResourceManager.GetString("SpecifiedKeyIsNotValidSizeForXAlgorithm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specified padding mode is not supported..
+        /// </summary>
+        internal static string SpecifiedPaddingModeIsNotSupported {
+            get {
+                return ResourceManager.GetString("SpecifiedPaddingModeIsNotSupported", resourceCulture);
             }
         }
         

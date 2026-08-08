@@ -6,6 +6,7 @@
 // Year of introduction: 2026
 
 using Gapotchenko.FX.Numerics;
+using Gapotchenko.FX.Security.Cryptography.Properties;
 using Gapotchenko.FX.Security.Cryptography.Utils;
 using System.Buffers.Binary;
 using System.Collections.Specialized;
@@ -515,7 +516,7 @@ sealed class RSAUnapprovedImpl : RSA
     {
         var m = FromBytes(data);
         if (m >= modulus)
-            throw new CryptographicException("Invalid input data.");
+            throw new CryptographicException(Resources.InvalidInputData);
 
         return ToBytes(BigInteger.ModPow(m, exponent, modulus), outputLength);
     }
@@ -524,7 +525,7 @@ sealed class RSAUnapprovedImpl : RSA
     {
         var m = FromBytes(data);
         if (m >= m_Modulus)
-            throw new CryptographicException("Invalid input data.");
+            throw new CryptographicException(Resources.InvalidInputData);
 
         BigInteger r;
         do
@@ -653,7 +654,7 @@ sealed class RSAUnapprovedImpl : RSA
             "SHA256" => SHA256.Create(),
             "SHA384" => SHA384.Create(),
             "SHA512" => SHA512.Create(),
-            _ => throw new CryptographicException("Specified hash algorithm is not supported.")
+            _ => throw new CryptographicException(Resources.SpecifiedHashAlgorithmIsNotSupported)
         };
         return algorithm.ComputeHash(data);
     }
@@ -765,11 +766,11 @@ sealed class RSAUnapprovedImpl : RSA
         }
     }
 
-    static CryptographicException InvalidParameters() => new("Invalid RSA parameters.");
+    static CryptographicException InvalidParameters() => new(string.Format(Resources.InvalidXParameters, "RSA"));
 
-    static CryptographicException PaddingModeNotSupported() => new("Specified padding mode is not supported.");
+    static CryptographicException PaddingModeNotSupported() => new(Resources.SpecifiedPaddingModeIsNotSupported);
 
-    static CryptographicException PrivateKeyIsNotAvailable() => new("Private key is not available.");
+    static CryptographicException PrivateKeyIsNotAvailable() => new(Resources.PrivateKeyIsNotAvailable);
 
     int KeyByteSize => KeySize / 8;
 

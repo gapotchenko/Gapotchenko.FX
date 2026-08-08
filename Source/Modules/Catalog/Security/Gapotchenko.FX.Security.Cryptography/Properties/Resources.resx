@@ -147,4 +147,19 @@
   <data name="InvalidLengthOfDataToTransform" xml:space="preserve">
     <value>Length of the data to transform is invalid.</value>
   </data>
+  <data name="InvalidInputData" xml:space="preserve">
+    <value>Invalid input data.</value>
+  </data>
+  <data name="PrivateKeyIsNotAvailable" xml:space="preserve">
+    <value>Private key is not available.</value>
+  </data>
+  <data name="InvalidXParameters" xml:space="preserve">
+    <value>Invalid {0} parameters.</value>
+  </data>
+  <data name="SpecifiedPaddingModeIsNotSupported" xml:space="preserve">
+    <value>Specified padding mode is not supported.</value>
+  </data>
+  <data name="SpecifiedHashAlgorithmIsNotSupported" xml:space="preserve">
+    <value>Specified hash algorithm is not supported.</value>
+  </data>
 </root>
