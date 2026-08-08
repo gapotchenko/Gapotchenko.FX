@@ -110,7 +110,7 @@ public static class UriEx
         var rub = new UriBuilder(nru);
 
         bool absoluteAuthority = false;
-        var ruos = relativeUri.OriginalString;
+        string ruos = relativeUri.OriginalString;
 
         if (IsRootedRelativeUri(ruos))
         {

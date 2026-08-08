@@ -49,7 +49,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     static decimal ToDecimalCore(ReadOnlySpan<byte> value)
     {
         const int n = 4;
-        var bits = new int[n];
+        int[] bits = new int[n];
 
         for (int i = 0; i < n; ++i)
             bits[n - 1 - i] = ToInt32Core(value.Slice(i * sizeof(int)));
@@ -66,7 +66,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     /// <returns>An array of bytes with length 4.</returns>
     public static byte[] GetBytes(int value)
     {
-        var buffer = new byte[4];
+        byte[] buffer = new byte[4];
         FillBytes(value, buffer);
         return buffer;
     }
@@ -102,7 +102,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     [CLSCompliant(false)]
     public static byte[] GetBytes(uint value)
     {
-        var buffer = new byte[4];
+        byte[] buffer = new byte[4];
         FillBytes(value, buffer);
         return buffer;
     }
@@ -131,7 +131,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     /// <returns>An array of bytes with length 2.</returns>
     public static byte[] GetBytes(short value)
     {
-        var buffer = new byte[2];
+        byte[] buffer = new byte[2];
         FillBytes(value, buffer);
         return buffer;
     }
@@ -165,7 +165,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     [CLSCompliant(false)]
     public static byte[] GetBytes(ushort value)
     {
-        var buffer = new byte[2];
+        byte[] buffer = new byte[2];
         FillBytes(value, buffer);
         return buffer;
     }
@@ -194,7 +194,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     /// <returns>An array of bytes with length 8.</returns>
     public static byte[] GetBytes(long value)
     {
-        var buffer = new byte[8];
+        byte[] buffer = new byte[8];
         FillBytes(value, buffer);
         return buffer;
     }
@@ -228,7 +228,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     [CLSCompliant(false)]
     public static byte[] GetBytes(ulong value)
     {
-        var buffer = new byte[8];
+        byte[] buffer = new byte[8];
         FillBytes(value, buffer);
         return buffer;
     }
@@ -257,7 +257,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     /// <returns>An array of bytes with length 4.</returns>
     public static byte[] GetBytes(float value)
     {
-        var buffer = new byte[4];
+        byte[] buffer = new byte[4];
         FillBytes(value, buffer);
         return buffer;
     }
@@ -289,7 +289,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     /// <returns>An array of bytes with length 8.</returns>
     public static byte[] GetBytes(double value)
     {
-        var buffer = new byte[8];
+        byte[] buffer = new byte[8];
         FillBytes(value, buffer);
         return buffer;
     }
@@ -321,7 +321,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     /// <returns>An array of bytes with length 16.</returns>
     public static byte[] GetBytes(decimal value)
     {
-        var buffer = new byte[16];
+        byte[] buffer = new byte[16];
         FillBytes(value, buffer);
         return buffer;
     }
@@ -336,7 +336,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     {
         BitConverterServices.ValidateFillArguments(buffer, startIndex, 16);
 
-        var bits = decimal.GetBits(value);
+        int[] bits = decimal.GetBits(value);
         for (int i = 0; i < bits.Length; ++i)
             FillBytes(bits[i], buffer, startIndex + (3 - i) * sizeof(int));
     }
@@ -355,7 +355,7 @@ public sealed class BigEndianBitConverter : IBitConverter
     /// <returns>An array of bytes with length 1.</returns>
     public static byte[] GetBytes(bool value)
     {
-        var buffer = new byte[1];
+        byte[] buffer = new byte[1];
         FillBytes(value, buffer, 0);
         return buffer;
     }

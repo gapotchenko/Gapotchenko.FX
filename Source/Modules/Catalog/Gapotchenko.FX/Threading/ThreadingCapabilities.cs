@@ -17,7 +17,7 @@ public static class ThreadingCapabilities
     {
         get
         {
-            var now = Environment.TickCount;
+            int now = Environment.TickCount;
 
             if (m_LogicalProcessorCount == 0 ||
                 now - m_LastLogicalProcessorCountRefreshTicks >= LogicalProcessorCountRefreshIntervalMS)
