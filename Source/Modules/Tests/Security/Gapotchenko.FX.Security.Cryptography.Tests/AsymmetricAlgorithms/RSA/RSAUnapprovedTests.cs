@@ -261,7 +261,7 @@ public sealed class RSAUnapprovedTests
     [TestMethod]
     public void RSAUnapproved_SignVerifyHash_PssSha512()
     {
-        // A 1024-bit key is too small for PSS with SHA-512 and a 64-byte salt.
+        // A 2048-bit key is a minimum size for PSS with SHA-512 and a 64-byte salt.
         RSAUnapproved_SignVerifyHash(HashAlgorithmName.SHA512, SHA512.Create, RSASignaturePadding.Pss, 2048);
     }
 
@@ -284,19 +284,29 @@ public sealed class RSAUnapprovedTests
         Assert.IsTrue(actualAlgorithm.VerifyHash(hash, signature, hashAlgorithmName, signaturePadding));
 
         // Actual -> example
+        bool exampleSupport;
         try
         {
             Assert.IsTrue(exampleAlgorithm.VerifyHash(hash, signature, hashAlgorithmName, signaturePadding));
+            exampleSupport = true;
         }
         catch (CryptographicException)
         {
-            // Example algorithm lacks the support of the specified padding mode.
-            return;
+            // Example algorithm does not support the specified padding mode.
+            exampleSupport = false;
         }
 
-        // Example -> actual
-        signature = exampleAlgorithm.SignHash(hash, hashAlgorithmName, signaturePadding);
-        Assert.IsTrue(actualAlgorithm.VerifyHash(hash, signature, hashAlgorithmName, signaturePadding));
+        // Actual -> corruption -> actual
+        for (int i = 0; i < signature.Length; ++i)
+            signature[i] ^= (byte)i;
+        Assert.IsFalse(actualAlgorithm.VerifyHash(hash, signature, hashAlgorithmName, signaturePadding));
+
+        if (exampleSupport)
+        {
+            // Example -> actual
+            signature = exampleAlgorithm.SignHash(hash, hashAlgorithmName, signaturePadding);
+            Assert.IsTrue(actualAlgorithm.VerifyHash(hash, signature, hashAlgorithmName, signaturePadding));
+        }
     }
 
     #endregion
