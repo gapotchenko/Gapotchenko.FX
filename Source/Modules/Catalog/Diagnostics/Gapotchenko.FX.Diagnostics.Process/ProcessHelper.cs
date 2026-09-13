@@ -20,11 +20,19 @@ static class ProcessHelper
 
     public static bool IsValidParentProcess(Process parentProcess, Process childProcess)
     {
-        if (parentProcess.StartTime > childProcess.StartTime)
+        try
         {
-            // The parent process was started after the child process.
-            // This condition indicates that a real parent process has exited before, and
-            // its process ID has been reused by another unrelated process.
+            if (parentProcess.StartTime > childProcess.StartTime)
+            {
+                // The parent process was started after the child process.
+                // This condition indicates that a real parent process has exited before, and
+                // its process ID has been reused by another unrelated process.
+                return false;
+            }
+        }
+        catch (Win32Exception)
+        {
+            // Access is denied
             return false;
         }
 

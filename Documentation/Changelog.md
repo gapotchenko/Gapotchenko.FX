@@ -16,6 +16,7 @@ Release date: not released yet
     - Added `UIntPtr.MaxValue` polyfill property
 - Fixed issues:
     - Fixed issue with `BitOperations.Log2(UInt32)` polyfill method that returned an undefined value for zero argument on x64 processor architecture
+    - Fixed issue with `Process.GetParent()` extension method that could lead to `Access is denied` exception when the parent process was created by another user
 
 ### Gapotchenko.FX 2026.8
 
