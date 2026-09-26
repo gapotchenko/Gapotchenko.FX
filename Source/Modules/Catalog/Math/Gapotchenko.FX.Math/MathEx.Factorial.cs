@@ -5,6 +5,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2020
 
+using System.Numerics;
+
 namespace Gapotchenko.FX.Math;
 
 partial class MathEx
@@ -64,6 +66,25 @@ partial class MathEx
         checked
         {
             for (ulong factor = 2; factor <= value; ++factor)
+                result *= factor;
+        }
+        return result;
+    }
+
+    /// <inheritdoc cref="Factorial(int)"/>
+    public static BigInteger Factorial(BigInteger value)
+    {
+#if NET
+        ArgumentOutOfRangeException.ThrowIfNegative(value);
+#else
+        if (value < 0)
+            throw new ArgumentOutOfRangeException(nameof(value), "Argument value must be non-negative.");
+#endif
+
+        BigInteger result = 1;
+        checked
+        {
+            for (int factor = 2; factor <= value; ++factor)
                 result *= factor;
         }
         return result;
