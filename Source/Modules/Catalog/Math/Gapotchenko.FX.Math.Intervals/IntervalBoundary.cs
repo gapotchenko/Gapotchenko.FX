@@ -39,7 +39,7 @@ public static class IntervalBoundary
     /// </summary>
     /// <typeparam name="T">The type of a boundary value.</typeparam>
     /// <param name="value">The value.</param>
-    /// <returns>The inclusive interval boundary.</returns>
+    /// <returns>The exclusive interval boundary.</returns>
     public static IntervalBoundary<T> Exclusive<T>(T value) => new(IntervalBoundaryKind.Exclusive, value);
 
     /// <summary>
