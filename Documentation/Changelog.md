@@ -6,6 +6,7 @@
 
 Release date: not released yet
 
+- Added .NET 11.0 target framework
 - Added Linux and macOS intrinsic compilation support
 - Added `RSAUnapproved` algorithm implementation that can be used for compatibility with legacy systems and data formats
 - Improved hashing performance of `ArrayEqualityComparer`, `SpanEqualityComparer` and `MemoryEqualityComparer`
