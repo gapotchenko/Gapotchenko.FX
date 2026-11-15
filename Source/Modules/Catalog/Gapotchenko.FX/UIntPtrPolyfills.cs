@@ -7,7 +7,7 @@
 // Year of introduction: 2026
 
 #if NET7_0_OR_GREATER
-#define TFF_UINTPTR_MAXVALUE
+#define TFF_UINTPTR_MINMAXVALUE
 #endif
 
 namespace Gapotchenko.FX;
@@ -22,14 +22,28 @@ public static class UIntPtrPolyfills
     extension(UIntPtr)
     {
         /// <summary>
+        /// Represents the smallest possible value of <see cref="UIntPtr"/>.
+        /// </summary>
+#if TFF_UINTPTR_MINMAXVALUE
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+        [CLSCompliant(false)]
+        public static UIntPtr MinValue =>
+#if TFF_UINTPTR_MINMAXVALUE
+            UIntPtr.MinValue;
+#else
+            (nuint)0;
+#endif
+
+        /// <summary>
         /// Represents the largest possible value of <see cref="UIntPtr"/>.
         /// </summary>
-#if TFF_UINTPTR_MAXVALUE
+#if TFF_UINTPTR_MINMAXVALUE
         [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
         [CLSCompliant(false)]
         public static UIntPtr MaxValue =>
-#if TFF_UINTPTR_MAXVALUE
+#if TFF_UINTPTR_MINMAXVALUE
             UIntPtr.MaxValue;
 #else
             unchecked((nuint)(nint)(-1));
