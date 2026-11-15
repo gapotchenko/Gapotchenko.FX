@@ -13,23 +13,26 @@ namespace Gapotchenko.FX.Math.Intervals;
 public interface IIntervalBoundary
 {
     /// <summary>
-    /// Gets interval boundary kind.
+    /// Gets the kind of the interval boundary.
     /// </summary>
     IntervalBoundaryKind Kind { get; }
 
     /// <summary>
-    /// Gets the value of a bound limit point.
+    /// Gets the value of the finite bound represented by the current boundary.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Interval boundary has no bound limit point.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// The current boundary does not represent a finite bound.
+    /// </exception>
     object? Value { get; }
 
     /// <summary>
-    /// Gets a value indicating whether the current interval boundary has a bound limit point, e.g. is bounded.
+    /// Gets a value indicating whether the current boundary represents a finite bound.
     /// </summary>
     bool HasValue { get; }
 
     /// <summary>
-    /// Gets a value indicating whether the boundary represents either a negative or a positive infinity.
+    /// Gets a value indicating whether the current boundary represents
+    /// negative or positive infinity.
     /// </summary>
     bool IsInfinity { get; }
 }

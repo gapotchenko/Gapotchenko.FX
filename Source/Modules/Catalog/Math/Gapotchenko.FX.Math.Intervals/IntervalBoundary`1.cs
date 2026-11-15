@@ -41,16 +41,16 @@ public readonly struct IntervalBoundary<T> : IIntervalBoundary, IEquatable<Inter
     }
 
     /// <summary>
-    /// Gets the value of a bound limit point, or the <see langword="default"/> value of the underlying type <typeparamref name="T"/> when the boundary is unbounded.
+    /// Gets the value of a bound limit point, or the <see langword="default"/> value of the underlying type <typeparamref name="T"/> when the boundary is not finite.
     /// </summary>
-    /// <returns>The value of a bound limit point, or the <see langword="default"/> value of the underlying type <typeparamref name="T"/> when the boundary is unbounded.</returns>
+    /// <returns>The value of a bound limit point, or the <see langword="default"/> value of the underlying type <typeparamref name="T"/> when the boundary is not finite.</returns>
     public T? GetValueOrDefault() => GetValueOrDefault(default);
 
     /// <summary>
-    /// Gets the value of a bound limit point, or the specified default value when the boundary is unbounded.
+    /// Gets the value of a bound limit point, or the specified default value when the boundary is not finite.
     /// </summary>
     /// <param name="defaultValue">A value to return if the boundary is infinite.</param>
-    /// <returns>The value of a bound limit point, or the specified default value when the boundary is unbounded.</returns>
+    /// <returns>The value of a bound limit point, or the specified default value when the boundary is not finite.</returns>
     [return: NotNullIfNotNull(nameof(defaultValue))]
     public T? GetValueOrDefault(T? defaultValue) => HasValue ? m_Value : defaultValue;
 
@@ -91,7 +91,7 @@ public readonly struct IntervalBoundary<T> : IIntervalBoundary, IEquatable<Inter
     /// <typeparam name="TResult">The type of the value returned by selector.</typeparam>
     /// <param name="selector">
     /// A transform function to apply to the boundary value.
-    /// The function is invoked only when the boundary has a bound limit point, i.e. has a value.
+    /// The function is invoked only when the boundary is finite, i.e. has a value.
     /// </param>
     /// <returns>An <see cref="IntervalBoundary{T}"/> whose value is the result of invoking the transform function on the current boundary value.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="selector"/> is null.</exception>
