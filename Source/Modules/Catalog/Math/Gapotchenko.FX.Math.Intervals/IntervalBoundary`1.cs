@@ -102,6 +102,46 @@ public readonly struct IntervalBoundary<T> : IIntervalBoundary, IEquatable<Inter
         return new(Kind, HasValue ? selector(m_Value) : default!);
     }
 
+    /// <summary>
+    /// Projects the current boundary into a new boundary by applying a selector
+    /// when the current boundary is finite.
+    /// </summary>
+    /// <typeparam name="TResult">
+    /// The type of the value of the resulting boundary.
+    /// </typeparam>
+    /// <param name="selector">
+    /// A transform function to apply to the current finite boundary.
+    /// The function is not invoked when the current boundary is empty or infinite.
+    /// </param>
+    /// <returns>
+    /// The boundary returned by <paramref name="selector"/> when the current boundary is finite;
+    /// otherwise, an empty or infinite boundary of <typeparamref name="TResult"/> having the same <see cref="Kind"/> as the current boundary.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="selector"/> is <see langword="null"/>.
+    /// </exception>
+    /// <remarks>
+    /// Unlike value projection performed by <see cref="SelectValue{TResult}(Func{T, TResult})"/>,
+    /// this operation supplies the complete finite boundary to <paramref name="selector"/>,
+    /// allowing both its value and kind to be transformed.
+    /// </remarks>
+    public IntervalBoundary<TResult> SelectFinite<TResult>(Func<IntervalBoundary<T>, IntervalBoundary<TResult>> selector)
+    {
+        ArgumentNullException.ThrowIfNull(selector);
+
+        if (HasValue)
+            return selector(this);
+
+        // Bridge IntervalBoundary<T> type to IntervalBoundary<TResult>.
+        return Kind switch
+        {
+            IntervalBoundaryKind.Empty => IntervalBoundary.Empty<TResult>(),
+            IntervalBoundaryKind.NegativeInfinity => IntervalBoundary.NegativeInfinity<TResult>(),
+            IntervalBoundaryKind.PositiveInfinity => IntervalBoundary.PositiveInfinity<TResult>(),
+            _ => throw new InvalidOperationException()
+        };
+    }
+
     #region Equality
 
     /// <summary>
