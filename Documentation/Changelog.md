@@ -13,7 +13,8 @@ Release date: not released yet
 - Polyfills:
     - Added polyfills for `ToByteArray(Boolean, Boolean)`, `GetByteCount(Boolean)`, and `GetBitLength()` methods of `BigInteger` type
     - Added polyfills for `LeadingZeroCount(UInt32)`, `LeadingZeroCount(UInt64)`, `Log2(UInt64)`, and `Crc32C(UInt32, Byte)` methods of `BitOperations` class
-    - Added `UIntPtr.MaxValue` polyfill property
+    - Added `UIntPtr.MinValue` and `UIntPtr.MaxValue` polyfill properties
+    - Added `IntPtr.MinValue` and `IntPtr.MaxValue` polyfill properties
 - Fixed issues:
     - Fixed issue with `BitOperations.Log2(UInt32)` polyfill method that returned an undefined value for zero argument on x64 processor architecture
     - Fixed issue with `Process.GetParent()` extension method that could lead to `Access is denied` exception when the parent process was created by another user
