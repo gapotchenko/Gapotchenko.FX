@@ -13,7 +13,7 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// <summary>
 /// Represents a continuous value interval.
 /// </summary>
-/// <typeparam name="T">The type of interval values.</typeparam>
+/// <inheritdoc cref="Interval{T}"/>
 [ImmutableObject(true)]
 [DebuggerDisplay("{ToString(),nq}")]
 public readonly partial struct ValueInterval<T> : IConstructibleInterval<T, ValueInterval<T>>, IEquatable<ValueInterval<T>>

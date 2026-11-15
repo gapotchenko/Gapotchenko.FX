@@ -15,6 +15,20 @@ namespace Gapotchenko.FX.Math.Intervals;
 /// Represents a continuous interval.
 /// </summary>
 /// <typeparam name="T">The type of interval values.</typeparam>
+/// <remarks>
+/// <para>
+/// This type models a mathematical interval as a set of values, rather than
+/// merely storing a pair of endpoints. Its value is determined by the ordering,
+/// inclusion, and boundedness of its boundaries.
+/// </para>
+/// <para>
+/// Consequently, some boundary combinations naturally denote the empty interval.
+/// In particular, an interval is empty when its left boundary follows its right
+/// boundary; coincident boundaries denote a singleton only when their common
+/// limit point is included by both boundaries. These rules apply uniformly
+/// throughout interval construction and operations.
+/// </para>
+/// </remarks>
 [ImmutableObject(true)]
 [DebuggerDisplay("{ToString(),nq}")]
 public sealed partial record Interval<T> : IConstructibleInterval<T, Interval<T>>
