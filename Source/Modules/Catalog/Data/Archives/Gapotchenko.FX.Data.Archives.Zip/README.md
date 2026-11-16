@@ -152,7 +152,8 @@ Console.WriteLine($"Supports last write time: {zip.SupportsLastWriteTime}");
 
 ### Integration with Virtual File System
 
-Since `ZipArchive` implements `IFileSystemView`, it can be used anywhere a file system view is expected. This allows you to write code that works with both regular file systems and ZIP archives:
+Since `ZipArchive` implements `IFileSystemView`, it can be used anywhere a file system view is expected.
+This allows you to write universal code that works with both regular file systems and ZIP archives in a similar manner:
 
 ``` C#
 using Gapotchenko.FX.Data.Archives.Zip;
