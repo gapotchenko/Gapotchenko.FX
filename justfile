@@ -5,9 +5,12 @@
 # File introduced by: Oleksiy Gapotchenko
 # Year of introduction: 2025
 
-set dotenv-load := true
+set dotenv-load
 set working-directory := "Source"
+
+[windows]
 set shell := ["gnu-tk", "-i", "-c"]
+[windows]
 set script-interpreter := ["gnu-tk", "-i", "-l", "/bin/sh", "-eu"]
 
 # -----------------------------------------------------------------------------
@@ -45,12 +48,13 @@ prerequisites:
 # Format source code
 [group("development")]
 [script]
+[working-directory("..")]
 format:
     echo 'Formatting **/*.sh...'
     fd -e sh -x shfmt -l -w
     echo 'Formatting **/justfile...'
     fd --glob justfile -x just --fmt --justfile
-    (cd Mastering; just format)
+    (cd Source/Mastering; just format)
 
 # -----------------------------------------------------------------------------
 # Build
@@ -75,7 +79,7 @@ clean:
 # Run all tests
 [group("build")]
 test configuration="Release":
-    dotnet test -c "{{configuration}}"
+    dotnet test -c "{{ configuration }}"
 
 # Produce publishable artifacts
 [group("build")]
