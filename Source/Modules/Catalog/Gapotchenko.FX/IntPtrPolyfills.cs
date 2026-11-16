@@ -27,7 +27,7 @@ public static class IntPtrPolyfills
 #if TFF_INTPTR_MINMAXVALUE
         [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
-        public static IntPtr MinValue =>
+        public static nint MinValue =>
 #if TFF_INTPTR_MINMAXVALUE
             IntPtr.MinValue;
 #else
@@ -40,7 +40,7 @@ public static class IntPtrPolyfills
 #if TFF_INTPTR_MINMAXVALUE
         [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
-        public static IntPtr MaxValue =>
+        public static nint MaxValue =>
 #if TFF_INTPTR_MINMAXVALUE
             IntPtr.MaxValue;
 #else
@@ -50,9 +50,9 @@ public static class IntPtrPolyfills
 
 #if !TFF_INTPTR_MINMAXVALUE
 
-    static readonly IntPtr m_MaxValue = unchecked((nint)((nuint)UIntPtr.MaxValue >> 1));
+    static readonly nint m_MaxValue = unchecked((nint)((nuint)UIntPtr.MaxValue >> 1));
 
-    static readonly IntPtr m_MinValue = ~(nint)m_MaxValue;
+    static readonly nint m_MinValue = ~m_MaxValue;
 
 #endif
 }

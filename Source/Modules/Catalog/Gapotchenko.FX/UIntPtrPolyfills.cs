@@ -28,11 +28,11 @@ public static class UIntPtrPolyfills
         [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
         [CLSCompliant(false)]
-        public static UIntPtr MinValue =>
+        public static nuint MinValue =>
 #if TFF_UINTPTR_MINMAXVALUE
             UIntPtr.MinValue;
 #else
-            (nuint)0;
+            0;
 #endif
 
         /// <summary>
@@ -42,7 +42,7 @@ public static class UIntPtrPolyfills
         [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
         [CLSCompliant(false)]
-        public static UIntPtr MaxValue =>
+        public static nuint MaxValue =>
 #if TFF_UINTPTR_MINMAXVALUE
             UIntPtr.MaxValue;
 #else

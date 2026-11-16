@@ -13,13 +13,13 @@ public sealed class UIntPtrTests
     [TestMethod]
     public void UIntPtr_MinValue()
     {
-        Assert.AreEqual(UIntPtr.Zero, UIntPtr.MinValue);
+        Assert.AreEqual((nuint)0, UIntPtr.MinValue);
     }
 
     [TestMethod]
     public void UIntPtr_MaxValue()
     {
         nuint expected = UIntPtr.Size == 4 ? new UIntPtr(uint.MaxValue) : new UIntPtr(ulong.MaxValue);
-        Assert.AreEqual<nuint>(expected, UIntPtr.MaxValue);
+        Assert.AreEqual(expected, UIntPtr.MaxValue);
     }
 }
