@@ -10,7 +10,8 @@
 namespace Gapotchenko.FX;
 
 /// <summary>
-/// A special type that allows only one value and thus can hold no information.
+/// Represents a type with a single value, <see cref="Value"/>.
+/// It can be used in place of <see langword="void"/> when a value or generic type argument is required.
 /// </summary>
 public sealed class Unit : IEmptiable<Unit>, IEquatable<Unit>, IComparable<Unit>
 {
