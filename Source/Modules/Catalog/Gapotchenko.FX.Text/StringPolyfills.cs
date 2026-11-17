@@ -18,8 +18,6 @@
 #define TFF_STRING_JOIN_CHAR_ENUMERABLE
 #endif
 
-using Gapotchenko.FX.Text.Properties;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Text;
@@ -61,6 +59,8 @@ public static partial class StringPolyfills
         }
     }
 
+    #region Contains
+
     /// <summary>
     /// <para>
     /// Returns a value indicating whether a specified character occurs within this string,
@@ -93,6 +93,99 @@ public static partial class StringPolyfills
 #else
         ReadOnlySpan<char> span = stackalloc char[] { value };
         return s.AsSpan().Contains(span, comparisonType);
+#endif
+    }
+
+    /// <summary>
+    /// Returns a value indicating whether a specified string occurs within this string, using the specified comparison rules.
+    /// </summary>
+    /// <param name="s">The string instance.</param>
+    /// <param name="value">The string to seek.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="value"/> parameter occurs within this string,
+    /// or if <paramref name="value"/> is the empty string ("");
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+#if TFF_STRING_OPS_COMPARISON
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static bool Contains(
+#if !TFF_STRING_OPS_COMPARISON
+        this
+#endif
+        string s, string value, StringComparison comparisonType)
+    {
+        ArgumentNullException.ThrowIfNull(s);
+
+#if TFF_STRING_OPS_COMPARISON
+        return s.Contains(value, comparisonType);
+#else
+        return s.IndexOf(value, comparisonType) != -1;
+#endif
+    }
+
+    #endregion
+
+    #region IndexOf
+
+    /// <summary>
+    /// Reports the zero-based index of the first occurrence of the specified character in this string,
+    /// using the specified comparison rules.
+    /// </summary>
+    /// <param name="s">The string instance.</param>
+    /// <param name="value">The character to seek.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
+    /// <returns>
+    /// The zero-based index position of <paramref name="value"/> if that character is found;
+    /// otherwise, <c>-1</c>.
+    /// </returns>
+#if TFF_STRING_INDEXOF_CHAR_COMPARISON
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static int IndexOf(
+#if !TFF_STRING_INDEXOF_CHAR_COMPARISON
+        this
+#endif
+        string s, char value, StringComparison comparisonType)
+    {
+        ArgumentNullException.ThrowIfNull(s);
+
+#if TFF_STRING_INDEXOF_CHAR_COMPARISON
+        return s.IndexOf(value, comparisonType);
+#else
+        ReadOnlySpan<char> span = stackalloc char[] { value };
+        return s.AsSpan().IndexOf(span, comparisonType);
+#endif
+    }
+
+    /// <summary>
+    /// Reports the zero-based index of the first occurrence of the specified character in this string.
+    /// Parameters specify the starting search position and the comparison rules to use.
+    /// </summary>
+    /// <param name="s">The string instance.</param>
+    /// <param name="value">The character to seek.</param>
+    /// <param name="startIndex">The search starting position.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
+    /// <returns>
+    /// The zero-based index position of <paramref name="value"/> from the start of this string if that character is found;
+    /// otherwise, <c>-1</c>.
+    /// </returns>
+#if TFF_STRING_INDEXOF_CHAR_COMPARISON
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static int IndexOf(
+#if !TFF_STRING_INDEXOF_CHAR_COMPARISON
+        this
+#endif
+        string s, char value, int startIndex, StringComparison comparisonType)
+    {
+        ArgumentNullException.ThrowIfNull(s);
+
+#if TFF_STRING_INDEXOF_CHAR_COMPARISON
+        return s.IndexOf(value, startIndex, comparisonType);
+#else
+        return IndexOf(s, value, startIndex, s.Length - startIndex, comparisonType);
 #endif
     }
 
@@ -139,6 +232,8 @@ public static partial class StringPolyfills
 #endif
     }
 
+    #endregion
+
 #if !TFF_STRING_INDEXOF_CHAR_COMPARISON
 
     static void ValidateRange(
@@ -156,35 +251,6 @@ public static partial class StringPolyfills
     }
 
 #endif
-
-    /// <summary>
-    /// Returns a value indicating whether a specified string occurs within this string, using the specified comparison rules.
-    /// </summary>
-    /// <param name="s">The string instance.</param>
-    /// <param name="value">The string to seek.</param>
-    /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
-    /// <returns>
-    /// <see langword="true"/> if the <paramref name="value"/> parameter occurs within this string,
-    /// or if <paramref name="value"/> is the empty string ("");
-    /// otherwise, <see langword="false"/>.
-    /// </returns>
-#if TFF_STRING_OPS_COMPARISON
-    [EditorBrowsable(EditorBrowsableState.Never)]
-#endif
-    public static bool Contains(
-#if !TFF_STRING_OPS_COMPARISON
-        this
-#endif
-        string s, string value, StringComparison comparisonType)
-    {
-        ArgumentNullException.ThrowIfNull(s);
-
-#if TFF_STRING_OPS_COMPARISON
-        return s.Contains(value, comparisonType);
-#else
-        return s.IndexOf(value, comparisonType) != -1;
-#endif
-    }
 
     /// <summary>
     /// <para>
