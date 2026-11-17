@@ -6,6 +6,10 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2023
 
+#if NET11_0_OR_GREATER
+#define TFF_STRING_INDEXOF_CHAR_COMPARISON
+#endif
+
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP2_1_OR_GREATER
 #define TFF_STRING_OPS_COMPARISON
 #endif
@@ -13,6 +17,10 @@
 #if NETCOREAPP2_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
 #define TFF_STRING_JOIN_CHAR_ENUMERABLE
 #endif
+
+using Gapotchenko.FX.Text.Properties;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX.Text;
 
@@ -87,6 +95,67 @@ public static partial class StringPolyfills
         return s.AsSpan().Contains(span, comparisonType);
 #endif
     }
+
+    /// <summary>
+    /// Reports the zero-based index of the first occurrence of the specified character in this string.
+    /// Parameters specify the starting search position, the number of characters to search,
+    /// and the comparison rules to use.
+    /// </summary>
+    /// <param name="s">The string instance.</param>
+    /// <param name="value">The character to seek.</param>
+    /// <param name="startIndex">The search starting position.</param>
+    /// <param name="count">The number of character positions to examine.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
+    /// <returns>
+    /// The zero-based index position of <paramref name="value"/> from the start of this string if that character is found;
+    /// otherwise, <c>-1</c>.
+    /// </returns>
+#if TFF_STRING_INDEXOF_CHAR_COMPARISON
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static int IndexOf(
+#if !TFF_STRING_INDEXOF_CHAR_COMPARISON
+        this
+#endif
+        string s, char value, int startIndex, int count, StringComparison comparisonType)
+    {
+        ArgumentNullException.ThrowIfNull(s);
+
+#if TFF_STRING_INDEXOF_CHAR_COMPARISON
+        return s.IndexOf(value, startIndex, count, comparisonType);
+#else
+        if (comparisonType == StringComparison.Ordinal)
+        {
+            return s.IndexOf(value, startIndex, count);
+        }
+        else
+        {
+            ValidateRange(s, startIndex, count);
+
+            ReadOnlySpan<char> valueSpan = stackalloc char[] { value };
+            int index = s.AsSpan(startIndex, count).IndexOf(valueSpan, comparisonType);
+            return index < 0 ? index : startIndex + index;
+        }
+#endif
+    }
+
+#if !TFF_STRING_INDEXOF_CHAR_COMPARISON
+
+    static void ValidateRange(
+        string s,
+        int startIndex,
+        int count,
+        [CallerArgumentExpression(nameof(startIndex))] string? startIndexParameterName = null,
+        [CallerArgumentExpression(nameof(count))] string? countParameterName = null)
+    {
+        if ((uint)startIndex > (uint)s.Length)
+            throw new ArgumentOutOfRangeException(startIndexParameterName);
+
+        if ((uint)count > (uint)(s.Length - startIndex))
+            throw new ArgumentOutOfRangeException(countParameterName);
+    }
+
+#endif
 
     /// <summary>
     /// Returns a value indicating whether a specified string occurs within this string, using the specified comparison rules.

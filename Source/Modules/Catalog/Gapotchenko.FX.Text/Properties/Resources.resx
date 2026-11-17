@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ArgumentException_ComparisonType" xml:space="preserve">
-    <value>The given string comparison type is not supported.</value>
+    <value>Specified string comparison is not supported.</value>
   </data>
   <data name="ArgumentOutOfRange_LengthIndexMismatch" xml:space="preserve">
     <value>Index and length must refer to a location within the string.</value>
