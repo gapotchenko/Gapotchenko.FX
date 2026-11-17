@@ -186,7 +186,7 @@ public static partial class StringPolyfills
 #if TFF_STRING_INDEXOF_CHAR_COMPARISON
         return s.IndexOf(value, startIndex, comparisonType);
 #else
-        return IndexOf(s, value, startIndex, s.Length - startIndex, comparisonType);
+        return IndexOfPolyfill(s, value, startIndex, s.Length - startIndex, comparisonType);
 #endif
     }
 
@@ -218,6 +218,14 @@ public static partial class StringPolyfills
 #if TFF_STRING_INDEXOF_CHAR_COMPARISON
         return s.IndexOf(value, startIndex, count, comparisonType);
 #else
+        return IndexOfPolyfill(s, value, startIndex, count, comparisonType);
+#endif
+    }
+
+#if !TFF_STRING_INDEXOF_CHAR_COMPARISON
+
+    static int IndexOfPolyfill(string s, char value, int startIndex, int count, StringComparison comparisonType)
+    {
         if (comparisonType == StringComparison.Ordinal)
         {
             return s.IndexOf(value, startIndex, count);
@@ -233,8 +241,9 @@ public static partial class StringPolyfills
             int index = s.AsSpan(startIndex, count).IndexOf(valueSpan, comparisonType);
             return index < 0 ? index : startIndex + index;
         }
-#endif
     }
+
+#endif
 
     #endregion
 
@@ -265,7 +274,7 @@ public static partial class StringPolyfills
 #if TFF_STRING_INDEXOF_CHAR_COMPARISON
         return s.LastIndexOf(value, comparisonType);
 #else
-        return LastIndexOf(s, value, s.Length - 1, s.Length, comparisonType);
+        return LastIndexOfPolyfill(s, value, s.Length - 1, comparisonType);
 #endif
     }
 
@@ -295,9 +304,18 @@ public static partial class StringPolyfills
 #if TFF_STRING_INDEXOF_CHAR_COMPARISON
         return s.LastIndexOf(value, startIndex, comparisonType);
 #else
-        return LastIndexOf(s, value, startIndex, startIndex + 1, comparisonType);
+        return LastIndexOfPolyfill(s, value, startIndex, startIndex + 1, comparisonType);
 #endif
     }
+
+#if !TFF_STRING_INDEXOF_CHAR_COMPARISON
+
+    static int LastIndexOfPolyfill(string s, char value, int startIndex, StringComparison comparisonType)
+    {
+        return LastIndexOfPolyfill(s, value, startIndex, startIndex + 1, comparisonType);
+    }
+
+#endif
 
     /// <summary>
     /// Reports the zero-based index of the last occurrence of the specified character in this string.
@@ -327,6 +345,14 @@ public static partial class StringPolyfills
 #if TFF_STRING_INDEXOF_CHAR_COMPARISON
         return s.LastIndexOf(value, startIndex, count, comparisonType);
 #else
+        return LastIndexOfPolyfill(s, value, startIndex, count, comparisonType);
+#endif
+    }
+
+#if !TFF_STRING_INDEXOF_CHAR_COMPARISON
+
+    static int LastIndexOfPolyfill(string s, char value, int startIndex, int count, StringComparison comparisonType)
+    {
         if (s.Length == 0)
             return -1;
 
@@ -361,8 +387,9 @@ public static partial class StringPolyfills
                 _ => throw new ArgumentException(Resources.ArgumentException_ComparisonType, nameof(comparisonType))
             };
         }
-#endif
     }
+
+#endif
 
     #endregion
 
@@ -402,7 +429,7 @@ public static partial class StringPolyfills
                 StringComparison.InvariantCultureIgnoreCase => StringComparer.InvariantCultureIgnoreCase,
                 StringComparison.Ordinal => StringComparer.Ordinal,
                 StringComparison.OrdinalIgnoreCase => StringComparer.OrdinalIgnoreCase,
-                _ => throw new ArgumentException("Specified string comparison is not supported.", nameof(comparisonType))
+                _ => throw new ArgumentException(Resources.ArgumentException_ComparisonType, nameof(comparisonType))
             };
 #endif
     }
