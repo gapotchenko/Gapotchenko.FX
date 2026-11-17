@@ -18,7 +18,8 @@
 #define TFF_STRING_JOIN_CHAR_ENUMERABLE
 #endif
 
-using System.Runtime.CompilerServices;
+using Gapotchenko.FX.Text.Properties;
+using System.Globalization;
 
 namespace Gapotchenko.FX.Text;
 
@@ -223,7 +224,10 @@ public static partial class StringPolyfills
         }
         else
         {
-            ValidateRange(s, startIndex, count);
+            if ((uint)startIndex > (uint)s.Length)
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            if ((uint)count > (uint)(s.Length - startIndex))
+                throw new ArgumentOutOfRangeException(nameof(count));
 
             ReadOnlySpan<char> valueSpan = stackalloc char[] { value };
             int index = s.AsSpan(startIndex, count).IndexOf(valueSpan, comparisonType);
@@ -234,23 +238,133 @@ public static partial class StringPolyfills
 
     #endregion
 
+    #region LastIndexOf
+
+    /// <summary>
+    /// Reports the zero-based index of the last occurrence of the specified character in this string,
+    /// using the specified comparison rules.
+    /// </summary>
+    /// <param name="s">The string instance.</param>
+    /// <param name="value">The character to seek.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
+    /// <returns>
+    /// The zero-based index position of <paramref name="value"/> if that character is found;
+    /// otherwise, <c>-1</c>.
+    /// </returns>
+#if TFF_STRING_INDEXOF_CHAR_COMPARISON
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static int LastIndexOf(
 #if !TFF_STRING_INDEXOF_CHAR_COMPARISON
-
-    static void ValidateRange(
-        string s,
-        int startIndex,
-        int count,
-        [CallerArgumentExpression(nameof(startIndex))] string? startIndexParameterName = null,
-        [CallerArgumentExpression(nameof(count))] string? countParameterName = null)
+        this
+#endif
+        string s, char value, StringComparison comparisonType)
     {
-        if ((uint)startIndex > (uint)s.Length)
-            throw new ArgumentOutOfRangeException(startIndexParameterName);
+        ArgumentNullException.ThrowIfNull(s);
 
-        if ((uint)count > (uint)(s.Length - startIndex))
-            throw new ArgumentOutOfRangeException(countParameterName);
+#if TFF_STRING_INDEXOF_CHAR_COMPARISON
+        return s.LastIndexOf(value, comparisonType);
+#else
+        return LastIndexOf(s, value, s.Length - 1, s.Length, comparisonType);
+#endif
     }
 
+    /// <summary>
+    /// Reports the zero-based index of the last occurrence of the specified character in this string.
+    /// Parameters specify the starting search position and the comparison rules to use.
+    /// </summary>
+    /// <param name="s">The string instance.</param>
+    /// <param name="value">The character to seek.</param>
+    /// <param name="startIndex">The search starting position.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
+    /// <returns>
+    /// The zero-based index position of <paramref name="value"/> from the start of this string if that character is found;
+    /// otherwise, <c>-1</c>.
+    /// </returns>
+#if TFF_STRING_INDEXOF_CHAR_COMPARISON
+    [EditorBrowsable(EditorBrowsableState.Never)]
 #endif
+    public static int LastIndexOf(
+#if !TFF_STRING_INDEXOF_CHAR_COMPARISON
+        this
+#endif
+        string s, char value, int startIndex, StringComparison comparisonType)
+    {
+        ArgumentNullException.ThrowIfNull(s);
+
+#if TFF_STRING_INDEXOF_CHAR_COMPARISON
+        return s.LastIndexOf(value, startIndex, comparisonType);
+#else
+        return LastIndexOf(s, value, startIndex, startIndex + 1, comparisonType);
+#endif
+    }
+
+    /// <summary>
+    /// Reports the zero-based index of the last occurrence of the specified character in this string.
+    /// Parameters specify the starting search position, the number of characters to search,
+    /// and the comparison rules to use.
+    /// </summary>
+    /// <param name="s">The string instance.</param>
+    /// <param name="value">The character to seek.</param>
+    /// <param name="startIndex">The search starting position.</param>
+    /// <param name="count">The number of character positions to examine.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
+    /// <returns>
+    /// The zero-based index position of <paramref name="value"/> from the start of this string if that character is found;
+    /// otherwise, <c>-1</c>.
+    /// </returns>
+#if TFF_STRING_INDEXOF_CHAR_COMPARISON
+    [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
+    public static int LastIndexOf(
+#if !TFF_STRING_INDEXOF_CHAR_COMPARISON
+        this
+#endif
+        string s, char value, int startIndex, int count, StringComparison comparisonType)
+    {
+        ArgumentNullException.ThrowIfNull(s);
+
+#if TFF_STRING_INDEXOF_CHAR_COMPARISON
+        return s.LastIndexOf(value, startIndex, count, comparisonType);
+#else
+        if (s.Length == 0)
+            return -1;
+
+        if (comparisonType == StringComparison.Ordinal)
+        {
+            return s.LastIndexOf(value, startIndex, count);
+        }
+        else
+        {
+            if ((uint)startIndex >= (uint)s.Length)
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            if ((uint)count > (uint)startIndex + 1)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            return comparisonType switch
+            {
+                StringComparison.CurrentCulture =>
+                    CultureInfo.CurrentCulture.CompareInfo.LastIndexOf(s, value, startIndex, count, CompareOptions.None),
+
+                StringComparison.CurrentCultureIgnoreCase =>
+                    CultureInfo.CurrentCulture.CompareInfo.LastIndexOf(s, value, startIndex, count, CompareOptions.IgnoreCase),
+
+                StringComparison.InvariantCulture =>
+                    CultureInfo.InvariantCulture.CompareInfo.LastIndexOf(s, value, startIndex, count, CompareOptions.None),
+
+                StringComparison.InvariantCultureIgnoreCase =>
+                    CultureInfo.InvariantCulture.CompareInfo.LastIndexOf(s, value, startIndex, count, CompareOptions.IgnoreCase),
+
+                StringComparison.OrdinalIgnoreCase =>
+                    CultureInfo.InvariantCulture.CompareInfo.LastIndexOf(s, value, startIndex, count, CompareOptions.OrdinalIgnoreCase),
+
+                _ => throw new ArgumentException(Resources.ArgumentException_ComparisonType, nameof(comparisonType))
+            };
+        }
+#endif
+    }
+
+    #endregion
 
     /// <summary>
     /// <para>
