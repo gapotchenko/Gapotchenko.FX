@@ -12,6 +12,11 @@
 
 The module provides hardware-accelerated operations for numeric data types.
 
+## BitArithmetic Class
+
+`BitArithmetic` class provides operations for aligning integer values to power-of-two boundaries.
+It can align values up or down, check whether a value is aligned, and calculate alignment padding, with checked and non-throwing variants for upward alignment.
+
 ## BitOperations Class
 
 `BitOperations` class provides bit manipulation operations for unsigned integer values of 32 and 64 bit lengths.

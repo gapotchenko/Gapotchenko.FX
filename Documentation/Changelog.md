@@ -6,21 +6,22 @@
 
 Release date: not released yet
 
-- Added .NET 11.0 target framework
-- Added Linux and macOS intrinsic compilation support
-- Added `RSAUnapproved` algorithm implementation that can be used for compatibility with legacy systems and data formats
+- .NET 11.0 target framework support
+- Added intrinsic compilation support for Linux and macOS
+- Added `Gapotchenko.FX.Numerics.BitArithmetic` class that provides operations for aligning integer values to power-of-two boundaries
+- Added `Gapotchenko.FX.Cryptography.RSAUnapproved` algorithm implementation that can be used for compatibility with legacy systems and data formats
 - Improved hashing performance of `ArrayEqualityComparer`, `SpanEqualityComparer` and `MemoryEqualityComparer`
 - Improved compatibility with AOT compilation
 - Polyfills:
-    - Added polyfills for `ToByteArray(Boolean, Boolean)`, `GetByteCount(Boolean)`, and `GetBitLength()` methods of `BigInteger` type
-    - Added polyfills for `LeadingZeroCount(UInt32)`, `LeadingZeroCount(UInt64)`, `Log2(UInt64)`, and `Crc32C(UInt32, Byte)` methods of `BitOperations` class
+    - Added polyfills for `ToByteArray(Boolean, Boolean)`, `GetByteCount(Boolean)`, and `GetBitLength()` methods of `System.Numerics.BigInteger` type
+    - Added polyfills for `LeadingZeroCount(UInt32)`, `LeadingZeroCount(UInt64)`, `Log2(UInt64)`, and `Crc32C(UInt32, Byte)` methods of `System.Numerics.BitOperations` class
     - Added `UIntPtr.MinValue` and `UIntPtr.MaxValue` polyfill properties
     - Added `IntPtr.MinValue` and `IntPtr.MaxValue` polyfill properties
     - Added `string.IndexOf` method polyfills working with `char` values and `StringComparison`
     - Added `string.LastIndexOf` method polyfills working with `char` values and `StringComparison`
 - Fixed issues:
-    - Fixed issue with `BitOperations.Log2(UInt32)` polyfill method that returned an undefined value for zero argument on x64 processor architecture
-    - Fixed issue with `Process.GetParent()` extension method that could lead to `Access is denied` exception when the parent process was created by another user
+    - Fixed issue with `System.Numerics.BitOperations.Log2(UInt32)` polyfill method that returned an undefined value for zero argument on x64 processor architecture
+    - Fixed issue with `System.Diagnostics.Process.GetParent()` extension method that could lead to `Access is denied` exception when the parent process was created by another user
 
 ### Gapotchenko.FX 2026.8
 
