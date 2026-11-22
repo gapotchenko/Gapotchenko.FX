@@ -120,10 +120,10 @@ public abstract class TripleDESTest : SymmetricAlgorithmTest
             algorithm.IV = ivData;
 
         byte[] actualCipher = algorithm.Encrypt(expectedPlainText);
-        CollectionAssert.AreEqual(expectedCipher, actualCipher);
+        Assert.AreSequenceEqual(expectedCipher, actualCipher);
 
         byte[] actualPlainText = algorithm.Decrypt(actualCipher);
-        CollectionAssert.AreEqual(expectedPlainText, actualPlainText);
+        Assert.AreSequenceEqual(expectedPlainText, actualPlainText);
     }
 
     #endregion

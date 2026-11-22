@@ -126,7 +126,7 @@ public abstract class SymmetricAlgorithmTest
 
             byte[] customIV = RandomNumberGenerator.GetBytes(ivRank);
             algorithm.IV = customIV;
-            CollectionAssert.AreEqual(customIV, algorithm.IV, "Symmetric algorithm should preserve a previously set IV.");
+            Assert.AreSequenceEqual(customIV, algorithm.IV, "Symmetric algorithm should preserve a previously set IV.");
         }
 
         Assert.ThrowsExactly<ArgumentNullException>(() => algorithm.IV = null!);
@@ -180,10 +180,10 @@ public abstract class SymmetricAlgorithmTest
             if (expectedCipher1 is null)
                 expectedCipher1 = cipher1;
             else
-                CollectionAssert.AreEqual(expectedCipher1, cipher1);
+                Assert.AreSequenceEqual(expectedCipher1, cipher1);
 
             byte[] actualPlain1 = decryptor.Transform(cipher1);
-            CollectionAssert.AreEqual(plain1, actualPlain1);
+            Assert.AreSequenceEqual(plain1, actualPlain1);
 
             if (expectedCipher2 is null && (!encryptor.CanReuseTransform || !decryptor.CanReuseTransform))
                 break;
@@ -192,10 +192,10 @@ public abstract class SymmetricAlgorithmTest
             if (expectedCipher2 is null)
                 expectedCipher2 = cipher2;
             else
-                CollectionAssert.AreEqual(expectedCipher2, cipher2);
+                Assert.AreSequenceEqual(expectedCipher2, cipher2);
 
             byte[] actualPlain2 = decryptor.Transform(cipher2);
-            CollectionAssert.AreEqual(plain2, actualPlain2);
+            Assert.AreSequenceEqual(plain2, actualPlain2);
         }
     }
 
@@ -235,7 +235,7 @@ public abstract class SymmetricAlgorithmTest
         }
 
         Assert.AreEqual(expectedCount, actualCount);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -270,7 +270,7 @@ public abstract class SymmetricAlgorithmTest
             actualCount,
             "A transform that advertises multiple-block support should transform all complete input blocks.");
 
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     [TestMethod]
@@ -316,8 +316,8 @@ public abstract class SymmetricAlgorithmTest
             Assert.AreEqual(actualInPlace.Length, actualCount);
         }
 
-        CollectionAssert.AreEqual(expected, actual);
-        CollectionAssert.AreEqual(expected, actualInPlace);
+        Assert.AreSequenceEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actualInPlace);
     }
 
     [TestMethod]
@@ -379,8 +379,8 @@ public abstract class SymmetricAlgorithmTest
         byte[] actualInPlacePlain = new byte[actualInPlaceCount];
         Buffer.BlockCopy(actualInPlace, 0, actualInPlacePlain, 0, actualInPlacePlain.Length);
 
-        CollectionAssert.AreEqual(expected, actual);
-        CollectionAssert.AreEqual(expected, actualInPlacePlain);
+        Assert.AreSequenceEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actualInPlacePlain);
     }
 
     [TestMethod]
@@ -426,7 +426,7 @@ public abstract class SymmetricAlgorithmTest
         using (var encryptor = algorithm.CreateEncryptor(key, iv))
             actualCipher = TransformBlockWithForwardOverlap(encryptor, plain);
 
-        CollectionAssert.AreEqual(expectedCipher, actualCipher);
+        Assert.AreSequenceEqual(expectedCipher, actualCipher);
 
         byte[] expectedPlain;
         using (var decryptor = algorithm.CreateDecryptor(key, iv))
@@ -436,8 +436,8 @@ public abstract class SymmetricAlgorithmTest
         using (var decryptor = algorithm.CreateDecryptor(key, iv))
             actualPlain = TransformBlockWithForwardOverlap(decryptor, expectedCipher);
 
-        CollectionAssert.AreEqual(plain, expectedPlain);
-        CollectionAssert.AreEqual(plain, actualPlain);
+        Assert.AreSequenceEqual(plain, expectedPlain);
+        Assert.AreSequenceEqual(plain, actualPlain);
 
         static byte[] TransformBlock(ICryptoTransform transform, byte[] input)
         {
@@ -479,7 +479,7 @@ public abstract class SymmetricAlgorithmTest
         using (var transform = algorithm.CreateEncryptor(key, null))
             actualCipher = TransformBlockWithForwardOverlap(transform, plain);
 
-        CollectionAssert.AreEqual(expectedCipher, actualCipher);
+        Assert.AreSequenceEqual(expectedCipher, actualCipher);
     }
 
     static byte[] TransformBlockWithForwardOverlap(ICryptoTransform transform, byte[] input)

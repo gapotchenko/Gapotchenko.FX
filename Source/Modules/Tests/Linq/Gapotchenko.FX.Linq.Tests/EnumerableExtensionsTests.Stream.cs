@@ -13,7 +13,7 @@ public partial class EnumerableExtensionsTests
     public void Linq_Enumerable_Stream()
     {
         var source = Enumerable.Range(1, int.MaxValue).Stream();
-        CollectionAssert.AreEqual(new int[] { 1, 2 }, source.Take(2).ToList());
-        CollectionAssert.AreEqual(new int[] { 3, 4, 5 }, source.Take(3).ToList());
+        Assert.AreSequenceEqual(new int[] { 1, 2 }, source.Take(2).ToList());
+        Assert.AreSequenceEqual(new int[] { 3, 4, 5 }, source.Take(3).ToList());
     }
 }

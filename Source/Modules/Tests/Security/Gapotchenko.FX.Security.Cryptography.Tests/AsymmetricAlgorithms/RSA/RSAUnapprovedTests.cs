@@ -39,7 +39,7 @@ public sealed class RSAUnapprovedTests
 
         Assert.IsNotNull(parameters.Modulus);
         Assert.HasCount(algorithm.KeySize / 8, parameters.Modulus);
-        CollectionAssert.AreEqual(new byte[] { 1, 0, 1 }, parameters.Exponent);
+        Assert.AreSequenceEqual(new byte[] { 1, 0, 1 }, parameters.Exponent);
         Assert.IsNotNull(parameters.D);
         Assert.IsNotNull(parameters.P);
         Assert.IsNotNull(parameters.Q);
@@ -51,7 +51,7 @@ public sealed class RSAUnapprovedTests
         byte[] encryptedData = algorithm.Encrypt(data, RSAEncryptionPadding.Pkcs1);
         byte[] decryptedData = algorithm.Decrypt(encryptedData, RSAEncryptionPadding.Pkcs1);
 
-        CollectionAssert.AreEqual(data, decryptedData);
+        Assert.AreSequenceEqual(data, decryptedData);
     }
 
     [TestMethod]
@@ -93,9 +93,9 @@ public sealed class RSAUnapprovedTests
         actualAlgorithm.ImportParameters(parameters);
 
         var exportedParameters = actualAlgorithm.ExportParameters(true);
-        CollectionAssert.AreEqual(parameters.Modulus, exportedParameters.Modulus);
-        CollectionAssert.AreEqual(parameters.Exponent, exportedParameters.Exponent);
-        CollectionAssert.AreEqual(parameters.D, exportedParameters.D);
+        Assert.AreSequenceEqual(parameters.Modulus, exportedParameters.Modulus);
+        Assert.AreSequenceEqual(parameters.Exponent, exportedParameters.Exponent);
+        Assert.AreSequenceEqual(parameters.D, exportedParameters.D);
     }
 
     [TestMethod]
@@ -130,14 +130,14 @@ public sealed class RSAUnapprovedTests
 
             // Ensure that actual parameters stayed intact.
             var actualParameters = actualAlgorithm.ExportParameters(true);
-            CollectionAssert.AreEqual(expectedParameters.Modulus, actualParameters.Modulus);
-            CollectionAssert.AreEqual(expectedParameters.Exponent, actualParameters.Exponent);
-            CollectionAssert.AreEqual(expectedParameters.D, actualParameters.D);
-            CollectionAssert.AreEqual(expectedParameters.P, actualParameters.P);
-            CollectionAssert.AreEqual(expectedParameters.Q, actualParameters.Q);
-            CollectionAssert.AreEqual(expectedParameters.DP, actualParameters.DP);
-            CollectionAssert.AreEqual(expectedParameters.DQ, actualParameters.DQ);
-            CollectionAssert.AreEqual(expectedParameters.InverseQ, actualParameters.InverseQ);
+            Assert.AreSequenceEqual(expectedParameters.Modulus, actualParameters.Modulus);
+            Assert.AreSequenceEqual(expectedParameters.Exponent, actualParameters.Exponent);
+            Assert.AreSequenceEqual(expectedParameters.D, actualParameters.D);
+            Assert.AreSequenceEqual(expectedParameters.P, actualParameters.P);
+            Assert.AreSequenceEqual(expectedParameters.Q, actualParameters.Q);
+            Assert.AreSequenceEqual(expectedParameters.DP, actualParameters.DP);
+            Assert.AreSequenceEqual(expectedParameters.DQ, actualParameters.DQ);
+            Assert.AreSequenceEqual(expectedParameters.InverseQ, actualParameters.InverseQ);
         }
     }
 
@@ -188,16 +188,16 @@ public sealed class RSAUnapprovedTests
         // Actual -> actual
         byte[] encryptedData = actualAlgorithm.Encrypt(data, padding);
         byte[] decryptedData = actualAlgorithm.Decrypt(encryptedData, padding);
-        CollectionAssert.AreEqual(data, decryptedData);
+        Assert.AreSequenceEqual(data, decryptedData);
 
         // Actual -> example
         decryptedData = exampleAlgorithm.Decrypt(encryptedData, padding);
-        CollectionAssert.AreEqual(data, decryptedData);
+        Assert.AreSequenceEqual(data, decryptedData);
 
         // Example -> actual
         encryptedData = exampleAlgorithm.Encrypt(data, padding);
         decryptedData = actualAlgorithm.Decrypt(encryptedData, padding);
-        CollectionAssert.AreEqual(data, decryptedData);
+        Assert.AreSequenceEqual(data, decryptedData);
     }
 
     #endregion

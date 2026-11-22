@@ -24,9 +24,9 @@ public sealed class BigIntegerTests
         byte[] unsignedBE)
     {
         var value = BigInteger.Parse(s, NumberFormatInfo.InvariantInfo);
-        CollectionAssert.AreEqual(signedLE, value.ToByteArray(isUnsigned: false, isBigEndian: false));
-        CollectionAssert.AreEqual(signedBE, value.ToByteArray(isUnsigned: false, isBigEndian: true));
-        CollectionAssert.AreEqual(unsignedLE, value.ToByteArray(isUnsigned: true, isBigEndian: false));
-        CollectionAssert.AreEqual(unsignedBE, value.ToByteArray(isUnsigned: true, isBigEndian: true));
+        Assert.AreSequenceEqual(signedLE, value.ToByteArray(isUnsigned: false, isBigEndian: false));
+        Assert.AreSequenceEqual(signedBE, value.ToByteArray(isUnsigned: false, isBigEndian: true));
+        Assert.AreSequenceEqual(unsignedLE, value.ToByteArray(isUnsigned: true, isBigEndian: false));
+        Assert.AreSequenceEqual(unsignedBE, value.ToByteArray(isUnsigned: true, isBigEndian: true));
     }
 }

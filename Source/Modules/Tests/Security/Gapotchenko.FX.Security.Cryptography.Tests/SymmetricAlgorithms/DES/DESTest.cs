@@ -291,10 +291,10 @@ public abstract class DESTest : SymmetricAlgorithmTest
             algorithm.IV = iv;
 
         byte[] cipher = algorithm.Encrypt(plain);
-        CollectionAssert.AreEqual(expectedEncrypted, cipher);
+        Assert.AreSequenceEqual(expectedEncrypted, cipher);
 
         byte[] decrypted = algorithm.Decrypt(cipher);
-        CollectionAssert.AreEqual(expectedDecrypted, decrypted);
+        Assert.AreSequenceEqual(expectedDecrypted, decrypted);
     }
 
     [TestMethod]
@@ -312,7 +312,7 @@ public abstract class DESTest : SymmetricAlgorithmTest
             A51006E33859B03E00F5B57801EFF745F7A577842461CF39AC143505EC326233
             E66343A46FEADE9E8456D8AC6A84A1C32E6792857F062400EA9053D17AD3C35D            
             """);
-        CollectionAssert.AreEqual(expectedCipher, actualCipher);
+        Assert.AreSequenceEqual(expectedCipher, actualCipher);
     }
 
     [TestMethod]
@@ -330,7 +330,7 @@ public abstract class DESTest : SymmetricAlgorithmTest
             6505B8AE96745DE249C1EC3338BBAD4193A9B792205F345E22D45A9A996F21CE
             24697E5A45F600E8C6E71FC7114A3E96EC4EACC9F652DEBC679D22DE7141F67F
             """);
-        CollectionAssert.AreEqual(expectedCipher, actualCipher);
+        Assert.AreSequenceEqual(expectedCipher, actualCipher);
     }
 
     [TestMethod]
@@ -390,7 +390,7 @@ public abstract class DESTest : SymmetricAlgorithmTest
         else
             Assert.ThrowsExactly<ArgumentOutOfRangeException>(DoTransform);
 
-        CollectionAssert.AreEqual(new byte[output.Length], output);
+        Assert.AreSequenceEqual(new byte[output.Length], output);
     }
 
     [TestMethod]

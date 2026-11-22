@@ -26,7 +26,7 @@ public abstract class HashAlgorithmTest
         byte[] hash1 = algorithm.ComputeHash(data);
         byte[] hash2 = algorithm.ComputeHash(data);
 
-        CollectionAssert.AreEqual(hash1, hash2);
+        Assert.AreSequenceEqual(hash1, hash2);
     }
 
     [TestMethod]
@@ -75,9 +75,9 @@ public abstract class HashAlgorithmTest
         Assert.IsGreaterThan(0, hash.HashSize);
         actual = hash.ComputeHash(input, 0, input.Length);
 
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
-        CollectionAssert.AreEqual(expected, hash.Hash);
+        Assert.AreSequenceEqual(expected, hash.Hash);
     }
 
 #if NETCOREAPP
@@ -95,14 +95,14 @@ public abstract class HashAlgorithmTest
         actual = new byte[expected.Length];
         Assert.IsTrue(hash.TryComputeHash(input, actual, out bytesWritten));
         Assert.AreEqual(expected.Length, bytesWritten);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
 
         // Bigger than needed
         actual = new byte[expected.Length + 1];
         actual[^1] = 42;
         Assert.IsTrue(hash.TryComputeHash(input, actual, out bytesWritten));
         Assert.AreEqual(expected.Length, bytesWritten);
-        CollectionAssert.AreEqual(expected, actual.AsSpan(0, expected.Length).ToArray());
+        Assert.AreSequenceEqual(expected, actual.AsSpan(0, expected.Length).ToArray());
         Assert.AreEqual(42, actual[^1]);
     }
 
@@ -113,7 +113,7 @@ public abstract class HashAlgorithmTest
         using var hash = CreateHashAlgorithm();
         Assert.IsGreaterThan(0, hash.HashSize);
         byte[] actual = hash.ComputeHash(input);
-        CollectionAssert.AreEqual(expected, actual);
+        Assert.AreSequenceEqual(expected, actual);
     }
 
     void Verify_ICryptoTransformStream(Stream input, byte[] expected)
@@ -127,7 +127,7 @@ public abstract class HashAlgorithmTest
             // CryptoStream will build up the hash.
         }
 
-        CollectionAssert.AreEqual(expected, hash.Hash, "Crypto transform operations should produce a valid hash.");
+        Assert.AreSequenceEqual(expected, hash.Hash, "Crypto transform operations should produce a valid hash.");
     }
 
     // ------------------------------------------------------------------------
