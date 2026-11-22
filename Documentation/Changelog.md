@@ -14,6 +14,7 @@ Release date: not released yet
 - Improved compatibility with AOT compilation
 - Polyfills:
     - Added polyfills for `ToByteArray(Boolean, Boolean)`, `GetByteCount(Boolean)`, and `GetBitLength()` methods of `System.Numerics.BigInteger` type
+    - Added polyfill for `AppendData(ReadOnlySpan<byte>)` method of `System.Security.Cryptography.IncrementalHash` type
     - Added polyfills for `LeadingZeroCount(UInt32)`, `LeadingZeroCount(UInt64)`, `Log2(UInt64)`, and `Crc32C(UInt32, Byte)` methods of `System.Numerics.BitOperations` class
     - Added `UIntPtr.MinValue` and `UIntPtr.MaxValue` polyfill properties
     - Added `IntPtr.MinValue` and `IntPtr.MaxValue` polyfill properties
