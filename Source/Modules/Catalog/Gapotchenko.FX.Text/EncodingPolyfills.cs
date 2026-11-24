@@ -5,6 +5,12 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
+#if NETCOREAPP2_1_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+#define TFF_TEXT_ENCODING_SPAN
+#endif
+
+using Gapotchenko.FX.Runtime.InteropServices;
+using System.Buffers;
 using System.Text;
 
 namespace Gapotchenko.FX.Text;
@@ -40,5 +46,54 @@ public static class EncodingPolyfills
                     };
             }
         }
+    }
+
+    /// <summary>
+    /// Decodes all the bytes in the specified byte span into a string.
+    /// </summary>
+    /// <param name="encoding">The encoding.</param>
+    /// <param name="bytes">A read-only byte span to decode to a string.</param>
+    /// <returns>
+    /// A string that contains the decoded bytes from the provided read-only span.
+    /// </returns>
+    public static string GetString(
+#if !TFF_TEXT_ENCODING_SPAN
+        this
+#endif
+        Encoding encoding,
+        ReadOnlySpan<byte> bytes)
+    {
+        ArgumentNullException.ThrowIfNull(encoding);
+
+#if TFF_TEXT_ENCODING_SPAN
+        return encoding.GetString(bytes);
+#else
+        if (bytes.IsEmpty)
+            return encoding.GetString([]);
+
+        if (CodeSafetyStrategy.UnsafeCodeAllowed)
+        {
+            unsafe
+            {
+                fixed (byte* ptr = bytes)
+                    return encoding.GetString(ptr, bytes.Length);
+            }
+        }
+        else
+        {
+            var pool = ArrayPool<byte>.Shared;
+            int length = bytes.Length;
+            byte[] buffer = pool.Rent(length);
+            try
+            {
+                bytes.CopyTo(buffer);
+                return encoding.GetString(buffer, 0, length);
+            }
+            finally
+            {
+                pool.Return(buffer);
+            }
+        }
+#endif
     }
 }
