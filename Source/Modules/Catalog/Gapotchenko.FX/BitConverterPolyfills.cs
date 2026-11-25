@@ -5,7 +5,8 @@
 // File introduced by: Oleksiy Gapotchenko
 // Year of introduction: 2025
 
-using System.Runtime.InteropServices;
+using Gapotchenko.FX.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX;
 
@@ -15,9 +16,6 @@ namespace Gapotchenko.FX;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class BitConverterPolyfills
 {
-    /// <summary>
-    /// Provides polyfill extension methods for <see cref="BitConverter"/> class.
-    /// </summary>
     extension(BitConverter)
     {
         /// <summary>
@@ -38,7 +36,7 @@ public static class BitConverterPolyfills
 #if TFF_BITCONVERTER_SINGLETOINT32BITS
             return BitConverter.SingleToInt32Bits(value);
 #else
-            return new ReinterpretCastGround32 { Single = value }.Int32;
+            return Unsafe.BitCast<float, int>(value);
 #endif
         }
 
@@ -60,20 +58,8 @@ public static class BitConverterPolyfills
 #if TFF_BITCONVERTER_SINGLETOINT32BITS
             return BitConverter.Int32BitsToSingle(value);
 #else
-            return new ReinterpretCastGround32 { Int32 = value }.Single;
+            return Unsafe.BitCast<int, float>(value);
 #endif
         }
     }
-
-#if !TFF_BITCONVERTER_SINGLETOINT32BITS
-    [StructLayout(LayoutKind.Explicit)]
-    struct ReinterpretCastGround32
-    {
-        [FieldOffset(0)]
-        public int Int32;
-
-        [FieldOffset(0)]
-        public float Single;
-    }
-#endif
 }
