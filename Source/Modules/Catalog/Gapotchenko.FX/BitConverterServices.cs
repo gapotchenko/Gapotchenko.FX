@@ -1,4 +1,5 @@
 ﻿using Gapotchenko.FX.Properties;
+using System.Runtime.CompilerServices;
 
 namespace Gapotchenko.FX;
 
