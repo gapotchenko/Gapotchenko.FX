@@ -17,7 +17,7 @@ using System.Runtime.CompilerServices;
 namespace Gapotchenko.FX.Runtime.CompilerServices;
 
 /// <summary>
-/// Provides static extension methods for <see cref="Unsafe"/> type.
+/// Provides polyfill members for <see cref="Unsafe"/> type.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class UnsafePolyfills
@@ -30,6 +30,9 @@ public static class UnsafePolyfills
         /// <exception cref="NotSupportedException">
         /// The size of <typeparamref name="TFrom" /> and <typeparamref name="TTo" /> are not the same.
         /// </exception>
+#if TFF_UNSAFE_BITCAST
+        [EditorBrowsable(EditorBrowsableState.Never)]
+#endif
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TTo BitCast<TFrom, TTo>(TFrom source)
             where TFrom : struct

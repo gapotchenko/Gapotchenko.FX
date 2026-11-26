@@ -18,6 +18,7 @@ Release date: not released yet
     - Added polyfill for `AppendData(ReadOnlySpan<byte>)` method of `System.Security.Cryptography.IncrementalHash` type
     - Added polyfills for `LeadingZeroCount(UInt32)`, `LeadingZeroCount(UInt64)`, `Log2(UInt64)`, and `Crc32C(UInt32, Byte)` methods of `System.Numerics.BitOperations` class
     - Added polyfill for `BitCast<TFrom, TTo>(TFrom, TTo)` method of `System.Runtime.CompilerServices.Unsafe` type
+    - Added polyfill methods for `System.Buffers.Binary.BinaryPrimitives` class: `ReadSingleLittleEndian`, `WriteSingleLittleEndian`, `ReadSingleBigEndian`, `WriteSingleBigEndian`, `ReadDoubleLittleEndian`, `WriteDoubleLittleEndian`, `ReadDoubleBigEndian`, `WriteDoubleBigEndian`
     - Added `UIntPtr.MinValue` and `UIntPtr.MaxValue` polyfill properties
     - Added `IntPtr.MinValue` and `IntPtr.MaxValue` polyfill properties
     - Added `string.IndexOf` method polyfills working with `char` values and `StringComparison`
